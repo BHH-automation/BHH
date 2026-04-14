@@ -1,0 +1,24 @@
+# Netlify configuration for BHH Website
+# This enables auto-deploy when you push to any connected git repository
+
+[build]
+  # The directory to deploy - in this case, the root directory
+  publish = "."
+  # No build command needed - we're serving static files directly
+  command = ""
+
+[context.production]
+  environment = { CONTEXT = "production" }
+
+# Redirect thank-you page back to home to prevent 404
+[[redirects]]
+  from = "/thank-you"
+  to = "/"
+  status = 200
+
+# Ensure form submissions work
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
