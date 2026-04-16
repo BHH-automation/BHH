@@ -1,4 +1,49 @@
 <!DOCTYPE html>
+<!--
+================================================================================
+  BHH INDEX — Website | 16 April 2026 | 09:20 PM
+  Version: FIXED — Guest Enquiry Form Patch v5
+================================================================================
+  CHANGES FROM LIVE (production at britishheritagehosts.com):
+  [1] Service dropdown renamed to 3-word versions:
+        "Heritage Guide"         -> "British Heritage Guide"
+        "Canal Cruise"           -> "Private Canal Cruise"
+        "Private Transportation" -> "Airport & Transport"
+  [2] Field order fixed — "Experience of Interest" now appears BEFORE
+      "Number of Adults" / "Number of Children".
+  [3] Conditional FAMILY BLOCK — Adults/Children/Pricing/Ages wrapped in
+      <div id="guest-family-block"> and auto-hidden for flat-rate services.
+  [4] "Multiple / Not sure" keeps family block visible (safe default).
+  [5] PRICING LEAK FIX (v2) — per locked rule "no public prices anywhere":
+      Removed £ symbols, 25% rate disclosures, "Estimated Pricing" heading,
+      adultCost constant. Replaced with composition-only display.
+  [6] COMPOSITION DISPLAY CLARITY (v3):
+        • Children=0: "Family unit: 2 adults (included)"
+        • Ages not yet picked: guidance message
+        • Ages picked: full bracket breakdown
+      Age rule: age 2 and below = complimentary; 3-11 = counted; 12+ = adult.
+  [7] Conditional DIETARY REQUIREMENTS (v4) — shown only for food services
+      (Private Family Dinner, English Afternoon Tea). Hidden for Guide,
+      Cruise, Transport, Multiple/Not sure, and empty. Parent .form-row
+      collapses to single column so Occasion spans full width when Dietary
+      is hidden.
+  [8] ⚠ CRITICAL NETLIFY WIRING FIX (v5) — form submissions were not being
+      captured. Added to all 3 visible forms (#guest-form, #host-form,
+      #partner-form):
+        - data-netlify='true'           (enables Netlify form handling)
+        - data-netlify-honeypot='bot-field' (spam protection)
+        - action='/?success=guest'      (redirect triggers thank-you modal)
+        - <input name="bot-field">      (honeypot field inside form body)
+      WITHOUT THESE, form POSTs never reached Netlify and no emails were
+      sent. The thank-you modal also never triggered because the success=
+      URL parameter was never set on redirect.
+  [9] Note near #guest-subject re "[N] Mr" email subject — fix lives in
+      the Netlify dashboard (Forms → Notifications → Email template).
+  UNCHANGED: All other forms field content, country/city loaders, Stripe
+  payment links (director-only, not in visitor flow), thank-you modal HTML,
+  visual design, cancellation policy.
+================================================================================
+-->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -948,8 +993,13 @@ footer {
       <!-- ═══════ GUEST FORM ═══════ -->
       <div id="tab-guest" class="enquire-panel" style="max-width:560px;margin:0 auto;transition:opacity 0.3s ease-in-out;opacity:1">
         <p class="lead" style="margin:0 auto 2rem;text-align:center">Tell us about your family and your visit. We will arrange the rest.</p>
-        <form name="guest-enquiry" method="POST" data-netlify="true" style="text-align:left" id="guest-form" >
+        <form id='guest-form' method='POST' name='guest-enquiry' data-netlify='true' data-netlify-honeypot='bot-field' action='/?success=guest' style='text-align:left'>
           <input type="hidden" name="form-name" value="guest-enquiry">
+          <p style="display:none"><label>Don't fill this out if you're human: <input name="bot-field"></label></p>
+          <!-- Note: if Netlify email subject shows "[N] Mr" instead of customer name,
+               the fix is in Netlify dashboard → Forms → Notifications → Edit Email template.
+               Ensure the subject template references {{ data.fullname }} or {{ data.Full Name }},
+               not {{ data.salutation }} / {{ data.Title }}. This hidden field just provides a default. -->
           <input type="hidden" name="subject" id="guest-subject" value="BHH Guest Enquiry">
           <p style="font-size:0.75rem;color:rgba(245,240,232,1);margin-bottom:1.2rem;margin-top:0.5rem">Fields marked <span style='color:#C9A84C'>*</span> are required. &nbsp;|&nbsp; Enter phone number without leading zero (e.g. 7911 123456 not 07911 123456).</p>
           <div class="form-row" style="grid-template-columns:140px 1fr">
@@ -1058,6 +1108,20 @@ footer {
             </div>
             <p style="font-size:0.7rem;color:rgba(245,240,232,0.6);margin-top:0.3rem;font-style:italic">Check-out date must be after check-in date.</p>
           </div>
+          <!-- MOVED UP: Experience of Interest now comes BEFORE Number of Adults/Children -->
+          <div class="form-group"><label>Experience of Interest <span style="color:#C9A84C">*</span></label>
+            <select name="Experience Requested" id="enquire-service-select" required onchange="updateFamilyBlockVisibility(); updateChildAgesVisibility(); updatePricingSummary()">
+              <option value="">Select…</option>
+              <option value="Private Family Dinner">Private Family Dinner</option>
+              <option value="English Afternoon Tea">English Afternoon Tea</option>
+              <option value="British Heritage Guide">British Heritage Guide</option>
+              <option value="Private Canal Cruise">Private Canal Cruise</option>
+              <option value="Airport &amp; Transport">Airport &amp; Transport</option>
+              <option value="Multiple / Not sure">Multiple / Not sure</option>
+            </select>
+          </div>
+          <!-- WRAPPED: Adults, Children, Pricing Breakdown, and Age of Each Child are conditional on service selection -->
+          <div id="guest-family-block">
           <div class="form-row">
             <div class="form-group"><label>Number of Adults</label>
               <select name="Number of Adults" id="guest-adults" required onchange="updateChildAges(); updatePricingSummary()">
@@ -1078,30 +1142,22 @@ footer {
             </div>
           </div>
           <div id="adults-breakdown-container" style="display:none;margin-top:0.5rem;padding:0.75rem;background:rgba(201,168,76,0.1);border-left:2px solid #C9A84C;font-size:0.75rem;color:rgba(245,240,232,1)">
-            <label style="display:block;font-size:0.7rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:rgba(245,240,232,1);margin-bottom:0.3rem">Pricing Breakdown</label>
+            <label style="display:block;font-size:0.7rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:rgba(245,240,232,1);margin-bottom:0.3rem">Family Composition</label>
             <div id="adults-breakdown-text"></div>
           </div>
-          <p style="font-size:0.72rem;color:rgba(245,240,232,1);margin:-0.5rem 0 0.5rem;font-style:italic">Family unit = 2 adults + 2 children (age 3–11 only). Extra children age 3–11 charged at 25% adult rate. Age 12+ = adult rate. Children age 2 and below = free and do not count toward family unit. <em>Larger groups subject to host acceptance.</em></p>
+          <p style="font-size:0.72rem;color:rgba(245,240,232,1);margin:-0.5rem 0 0.5rem;font-style:italic">Family unit = 2 adults + 2 children (age 3–11 only). Age 12+ = adult rate. Children age 2 and below = free and do not count toward family unit. <em>Larger groups subject to host acceptance. All pricing quoted upon enquiry.</em></p>
           <p style="font-size:0.72rem;color:rgba(245,240,232,1);margin:0 0 1rem;font-style:italic">Children age 3–11 only (counted in family unit). Age 12+ = adult rate — include in Number of Adults above. Age 2 and below = complimentary. <em>Subject to host acceptance.</em></p>
           <div id="child-ages-container" style="display:none">
             <label style="display:block;font-size:0.72rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:rgba(245,240,232,1);margin-bottom:0.3rem">Age of Each Child</label>
-            <p style="font-size:0.7rem;color:rgba(245,240,232,1);margin-bottom:0.7rem;font-style:italic">Children 1 &amp; 2 (age 3–11) included in family rate &nbsp;·&nbsp; Child 3 onwards (age 3–11): 25% of adult rate &nbsp;·&nbsp; Age 2 and below: complimentary &nbsp;·&nbsp; <em>Acceptance subject to host availability</em></p>
+            <p style="font-size:0.7rem;color:rgba(245,240,232,1);margin-bottom:0.7rem;font-style:italic">Children 1 &amp; 2 (age 3–11) included in family unit &nbsp;·&nbsp; Age 2 and below: complimentary &nbsp;·&nbsp; <em>Acceptance subject to host availability. Pricing quoted upon enquiry.</em></p>
             <div id="child-ages-dropdowns" class="form-row" style="flex-wrap:wrap;gap:0.75rem"></div>
           </div>
-          <div class="form-group"><label>Experience of Interest</label>
-            <select name="Experience Requested" id="enquire-service-select" required onchange="updateChildAgesVisibility(); updatePricingSummary()">
-              <option value="">Select…</option>
-              <option value="Private Family Dinner">Private Family Dinner</option>
-              <option value="English Afternoon Tea">English Afternoon Tea</option>
-              <option value="Heritage Guide">Heritage Guide</option>
-              <option value="Canal Cruise">Canal Cruise</option>
-              <option value="Private Transportation">Private Transportation</option>
-              <option value="Multiple / Not sure">Multiple / Not sure</option>
-            </select>
           </div>
+          <!-- END guest-family-block -->
           <div class="form-row">
-            <div class="form-group"><label>Dietary Requirements</label>
-              <select name="Dietary Requirements" required>
+            <!-- Dietary Requirements — conditional on food service (Dinner or Tea only) -->
+            <div class="form-group" id="guest-dietary-block"><label>Dietary Requirements</label>
+              <select name="Dietary Requirements" id="guest-dietary-select" required>
                 <option value="">Select…</option>
                 <option value="None">None</option>
                 <option value="Halal">Halal</option>
@@ -1150,8 +1206,9 @@ footer {
       <!-- ═══════ HOST FORM ═══════ -->
       <div id="tab-host" class="enquire-panel" style="max-width:560px;margin:0 auto;display:none;transition:opacity 0.3s ease-in-out;opacity:0">
         <p class="lead" style="margin:0 auto 2rem;text-align:center">Share your home and culture with visiting families. We personally vet every host.</p>
-        <form name="host-application" method="POST" data-netlify="true" style="text-align:left" id="host-form" >
+        <form id='host-form' method='POST' name='host-application' data-netlify='true' data-netlify-honeypot='bot-field' action='/?success=host' style='text-align:left'>
           <input type="hidden" name="form-name" value="host-application">
+          <p style="display:none"><label>Don't fill this out if you're human: <input name="bot-field"></label></p>
           <input type="hidden" name="subject" id="host-subject" value="BHH Host Application">
           <p style="font-size:0.75rem;color:rgba(245,240,232,1);margin-bottom:1.2rem;margin-top:0.5rem">Fields marked <span style='color:#C9A84C'>*</span> are required. &nbsp;|&nbsp; Enter phone number without leading zero (e.g. 7911 123456 not 07911 123456).</p>
           <div class="form-row" style="grid-template-columns:140px 1fr">
@@ -1296,8 +1353,9 @@ footer {
       <!-- ═══════ PARTNER FORM ═══════ -->
       <div id="tab-partner" class="enquire-panel" style="max-width:560px;margin:0 auto;display:none;transition:opacity 0.3s ease-in-out;opacity:0">
         <p class="lead" style="margin:0 auto 2rem;text-align:center">Join our network of trusted service providers. We vet every partner professionally.</p>
-        <form name="partner-application" method="POST" data-netlify="true" style="text-align:left" id="partner-form" >
+        <form id='partner-form' method='POST' name='partner-application' data-netlify='true' data-netlify-honeypot='bot-field' action='/?success=partner' style='text-align:left'>
           <input type="hidden" name="form-name" value="partner-application">
+          <p style="display:none"><label>Don't fill this out if you're human: <input name="bot-field"></label></p>
           <input type="hidden" name="subject" id="partner-subject" value="BHH Partner Application">
           <p style="font-size:0.75rem;color:rgba(30,30,30,0.5);margin-bottom:1.2rem;margin-top:0.5rem">Fields marked <span style='color:#C9A84C;font-weight:600'>*</span> are required. &nbsp;|&nbsp; Enter phone number without leading zero (e.g. 7911 123456 not 07911 123456).</p>
           <div class="form-group"><label>Contact Person Full Name <span style="color:#C9A84C">*</span></label><input type="text" name="Contact Name" placeholder="James Williams" required></div>
@@ -1754,6 +1812,10 @@ document.addEventListener('DOMContentLoaded', function() {
     var today = new Date().toISOString().split('T')[0];
     dateFrom.min = today;
   }
+  // Initialize conditional family-block visibility based on current service selection
+  if (typeof updateFamilyBlockVisibility === 'function') {
+    updateFamilyBlockVisibility();
+  }
 });
 
 // loadCities must be global — called from inline onchange attribute
@@ -1816,6 +1878,69 @@ function updateChildAgesVisibility() {
   calculateChildPricing();
 }
 
+// ============================================================
+// CONDITIONAL FAMILY BLOCK — hide Adults/Children/Pricing/Ages
+// when Service = British Heritage Guide / Private Canal Cruise /
+// Airport & Transport (flat-rate services).
+// Show them for Dinner, Tea, Multiple/Not sure, and empty.
+//
+// CONDITIONAL DIETARY BLOCK — show only for food services:
+// Private Family Dinner or English Afternoon Tea. Hide for
+// Guide, Cruise, Transport, Multiple, and empty selection.
+// ============================================================
+function updateFamilyBlockVisibility() {
+  var experienceSel = document.getElementById('enquire-service-select');
+  var block = document.getElementById('guest-family-block');
+  if (!experienceSel || !block) return;
+  var experience = experienceSel.value;
+  // Services that are FLAT-RATE (no adult/child count needed)
+  var flatRateServices = ['British Heritage Guide', 'Private Canal Cruise', 'Airport & Transport'];
+  var isFlatRate = flatRateServices.indexOf(experience) !== -1;
+  // Services where dietary requirements are RELEVANT (food services only)
+  var foodServices = ['Private Family Dinner', 'English Afternoon Tea'];
+  var isFoodService = foodServices.indexOf(experience) !== -1;
+  var adultsSel = document.getElementById('guest-adults');
+  var childrenSel = document.getElementById('guest-children');
+  var dietaryBlock = document.getElementById('guest-dietary-block');
+  var dietarySel = document.getElementById('guest-dietary-select');
+  
+  // --- FAMILY BLOCK (Adults/Children/Pricing/Ages) ---
+  if (isFlatRate) {
+    // HIDE the block and remove required attribute so form can submit
+    block.style.display = 'none';
+    if (adultsSel) { adultsSel.required = false; adultsSel.disabled = true; }
+    if (childrenSel) { childrenSel.required = false; childrenSel.disabled = true; }
+  } else {
+    // SHOW the block and restore required
+    block.style.display = '';
+    if (adultsSel) { adultsSel.required = true; adultsSel.disabled = false; }
+    if (childrenSel) { childrenSel.required = true; childrenSel.disabled = false; }
+  }
+  
+  // --- DIETARY BLOCK (food services only) ---
+  if (dietaryBlock && dietarySel) {
+    // Also grab the parent .form-row so we can adjust its layout when Dietary is hidden
+    var dietaryRow = dietaryBlock.parentElement;
+    if (isFoodService) {
+      // SHOW dietary, make required, restore 2-col grid
+      dietaryBlock.style.display = '';
+      dietarySel.required = true;
+      dietarySel.disabled = false;
+      if (dietaryRow && dietaryRow.classList.contains('form-row')) {
+        dietaryRow.style.gridTemplateColumns = '';
+      }
+    } else {
+      // HIDE dietary, drop required, collapse row to single column so Occasion spans full width
+      dietaryBlock.style.display = 'none';
+      dietarySel.required = false;
+      dietarySel.disabled = true;
+      if (dietaryRow && dietaryRow.classList.contains('form-row')) {
+        dietaryRow.style.gridTemplateColumns = '1fr';
+      }
+    }
+  }
+}
+
 // Calculate pricing based on actual child ages selected
 function calculateChildPricing() {
   var dropdownsDiv = document.getElementById('child-ages-dropdowns');
@@ -1865,8 +1990,8 @@ function calculateChildPricing() {
       // First or second child age 3–11
       label.innerHTML = 'Child ' + childNum + ' (Included in family unit)';
     } else {
-      // Third or more child age 3–11 — HIGHLIGHT IN WHITE BOLD
-      label.innerHTML = 'Child ' + childNum + ' <span style="color:#FFFFFF;font-weight:700;background:rgba(201,168,76,0.2);padding:0.2rem 0.4rem;border-radius:2px">(25% adult rate)</span>';
+      // Third or more child age 3–11 — neutral label, no rate disclosure
+      label.innerHTML = 'Child ' + childNum + ' <span style="color:#FFFFFF;font-weight:700;background:rgba(201,168,76,0.2);padding:0.2rem 0.4rem;border-radius:2px">(Additional — quoted upon enquiry)</span>';
     }
   });
   
@@ -1874,7 +1999,8 @@ function calculateChildPricing() {
   updatePricingSummary();
 }
 
-// Calculate total pricing based on adults, children, and experience
+// Display composition-only summary (NO prices, NO rates shown publicly).
+// Per locked rule: all pricing quoted upon enquiry only.
 function updatePricingSummary() {
   var adultsVal = parseInt(document.getElementById('guest-adults').value) || 0;
   var childrenVal = parseInt(document.getElementById('guest-children').value) || 0;
@@ -1883,19 +2009,22 @@ function updatePricingSummary() {
   if (!experienceSel) return;
   var experience = experienceSel.value;
   
-  // DISPLAY ADULTS BREAKDOWN (always show)
+  // Always refresh the adults composition line (no prices)
   updateAdultsBreakdown(adultsVal);
   
-  // Only calculate for Dinner and Tea
+  // Only show extended composition summary for services with family-unit pricing
   if (experience !== 'Private Family Dinner' && experience !== 'English Afternoon Tea') {
+    // Also remove any stale composition summary from previous selection
+    var stale = document.getElementById('pricing-summary');
+    if (stale) stale.innerHTML = '';
     return;
   }
   
-  var adultCost = 50; // £50 per adult for both services
+  // Count children by age bracket (composition only, NO cost calculation displayed)
+  // Age rule: age 2 and below = FREE infant; age 3–11 = counted child; age 12+ = adult rate
   var childCountedAge3Plus = 0;
-  var infantsUnder2 = 0;
-  
-  // Count children age 3–11
+  var infantsAge2AndBelow = 0;
+  var childrenWithAgeSet = 0;
   if (childrenVal > 0) {
     var dropdownsDiv = document.getElementById('child-ages-dropdowns');
     if (dropdownsDiv) {
@@ -1903,52 +2032,27 @@ function updatePricingSummary() {
       selects.forEach(function(sel) {
         var age = sel.value;
         if (!age) return;
+        childrenWithAgeSet++;
         var ageNum = parseInt(age);
         if (ageNum >= 3 && ageNum <= 11) {
           childCountedAge3Plus++;
         } else if (ageNum <= 2) {
-          infantsUnder2++;
+          infantsAge2AndBelow++;
         }
       });
     }
   }
   
-  // PRICING CALCULATION
-  var totalPrice = 0;
-  var priceBreakdown = '';
+  // Track whether ages are fully specified so the user isn't confused by "0 children" while ages are pending
+  var agesFullySpecified = (childrenVal === 0) || (childrenWithAgeSet === childrenVal);
   
-  // Base family unit: 2 adults + 2 children (age 3–11)
-  var baseAdults = 2;
   var baseChildrenCounted = Math.min(2, childCountedAge3Plus);
-  var basePrice = (baseAdults * adultCost) + (baseChildrenCounted * adultCost);
-  totalPrice = basePrice;
-  priceBreakdown = 'Base (2 adults + ' + baseChildrenCounted + ' children): £' + basePrice;
-  
-  // Extra adults (beyond 2)
   var extraAdults = Math.max(0, adultsVal - 2);
-  if (extraAdults > 0) {
-    var extraAdultCost = extraAdults * adultCost;
-    totalPrice += extraAdultCost;
-    priceBreakdown += ' + ' + extraAdults + ' extra adult' + (extraAdults > 1 ? 's' : '') + ' (£' + extraAdultCost + ')';
-  }
-  
-  // Extra children (3rd+, age 3–11 only, at 25% rate)
   var extraChildrenCounted = Math.max(0, childCountedAge3Plus - 2);
-  if (extraChildrenCounted > 0) {
-    var extraChildCost = extraChildrenCounted * (adultCost * 0.25);
-    totalPrice += extraChildCost;
-    priceBreakdown += ' + ' + extraChildrenCounted + ' extra child' + (extraChildrenCounted > 1 ? 'ren' : '') + ' (£' + extraChildCost.toFixed(2) + ' @ 25%)';
-  }
   
-  // Free infants
-  if (infantsUnder2 > 0) {
-    priceBreakdown += ' + ' + infantsUnder2 + ' infant' + (infantsUnder2 > 1 ? 's' : '') + ' (FREE)';
-  }
-  
-  // Display pricing
+  // Find or create the summary container
   var pricingDisplay = document.getElementById('pricing-summary');
   if (!pricingDisplay) {
-    // Create if doesn't exist
     var container = document.getElementById('child-ages-container');
     if (container) {
       pricingDisplay = document.createElement('div');
@@ -1959,26 +2063,36 @@ function updatePricingSummary() {
   }
   
   if (pricingDisplay) {
-    var breakdown = 'Estimated Pricing:<br>';
-    breakdown += 'Base (2 adults + ' + baseChildrenCounted + ' children): £' + basePrice;
-    
-    if (extraAdults > 0) {
-      breakdown += '<br><span style="color:#FFFFFF;font-weight:700">' + extraAdults + ' extra adult' + (extraAdults > 1 ? 's' : '') + ' — additional cost applies</span>';
+    // COMPOSITION-ONLY OUTPUT — no prices, no rates, no £ symbols, no percentages
+    var summary = '<label style="display:block;font-size:0.7rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:rgba(245,240,232,1);margin-bottom:0.5rem">Your Enquiry Composition</label>';
+    // Line 1: always show the raw counts the user entered
+    summary += 'You selected: ' + adultsVal + ' adult' + (adultsVal === 1 ? '' : 's') + ' + ' + childrenVal + ' child' + (childrenVal === 1 ? '' : 'ren');
+    // Line 2+: age-bracket breakdown only when ages are fully specified
+    if (childrenVal === 0) {
+      // No children — just the family unit framing
+      summary += '<br><br>Family unit: 2 adults' + (adultsVal >= 2 ? ' (included)' : ' — please select at least 2 adults for family rate');
+      if (extraAdults > 0) {
+        summary += '<br>' + extraAdults + ' additional adult' + (extraAdults > 1 ? 's' : '');
+      }
+    } else if (!agesFullySpecified) {
+      // Children declared but ages not yet picked
+      summary += '<br><br><em style="color:rgba(245,240,232,0.75)">Please specify the age of each child below so we can finalise your enquiry composition. Ages 2 and below are complimentary (infants); ages 3–11 count toward the family unit; ages 12+ count as adults.</em>';
+    } else {
+      // Ages fully specified — show the bracket breakdown
+      summary += '<br><br>Family unit: 2 adults + ' + baseChildrenCounted + ' child' + (baseChildrenCounted === 1 ? '' : 'ren') + ' (age 3–11)';
+      if (extraAdults > 0) {
+        summary += '<br>' + extraAdults + ' additional adult' + (extraAdults > 1 ? 's' : '');
+      }
+      if (extraChildrenCounted > 0) {
+        summary += '<br>' + extraChildrenCounted + ' additional child' + (extraChildrenCounted > 1 ? 'ren' : '') + ' (age 3–11)';
+      }
+      if (infantsAge2AndBelow > 0) {
+        summary += '<br>' + infantsAge2AndBelow + ' infant' + (infantsAge2AndBelow > 1 ? 's' : '') + ' (age 2 and below) — complimentary';
+      }
     }
-    
-    if (extraChildrenCounted > 0) {
-      var extraChildCost = extraChildrenCounted * (adultCost * 0.25);
-      breakdown += '<br><span style="color:#FFFFFF;font-weight:700">' + extraChildrenCounted + ' extra child' + (extraChildrenCounted > 1 ? 'ren' : '') + ' (age 3–11) — additional cost applies</span>';
-    }
-    
-    if (infantsUnder2 > 0) {
-      breakdown += '<br>' + infantsUnder2 + ' infant' + (infantsUnder2 > 1 ? 's' : '') + ' (age 2 and below) — FREE';
-    }
-    
-    breakdown += '<br><strong style="font-size:1.1rem;color:#C9A84C">Quoted upon enquiry</strong>';
-    pricingDisplay.innerHTML = breakdown;
+    summary += '<br><br><strong style="font-size:1rem;color:#C9A84C">Pricing quoted upon enquiry</strong>';
+    pricingDisplay.innerHTML = summary;
   }
-
 }
 
 // Display adults breakdown: 2 included in family unit, extra adults show additional cost
@@ -2003,7 +2117,7 @@ function updateAdultsBreakdown(adultsVal) {
   } else {
     breakdown = 'Adult 1: Included in family unit &nbsp;·&nbsp; Adult 2: Included in family unit &nbsp;·&nbsp; ';
     var extraAdults = adultsVal - 2;
-    breakdown += '<span style="color:#FFFFFF;font-weight:700;background:rgba(201,168,76,0.2);padding:0.2rem 0.4rem;border-radius:2px">' + extraAdults + ' extra adult' + (extraAdults > 1 ? 's' : '') + ': Additional cost applies</span>';
+    breakdown += '<span style="color:#FFFFFF;font-weight:700;background:rgba(201,168,76,0.2);padding:0.2rem 0.4rem;border-radius:2px">' + extraAdults + ' additional adult' + (extraAdults > 1 ? 's' : '') + ' — quoted upon enquiry</span>';
   }
   
   textDiv.innerHTML = breakdown;
