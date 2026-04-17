@@ -643,7 +643,7 @@ footer {
   transition: opacity 1s ease-in-out;
 }
 .service-card-carousel img:first-child {
-  opacity: 1;
+  opacity: 1;h
 }
 .service-card-carousel img.active {
   opacity: 1;
@@ -664,7 +664,7 @@ footer {
   <select name="phone-code"><option value="+44">+44</option></select><input name="phone">
   <input name="country"><input name="city">
   <input name="date-from"><input name="date-to">
-  <select name="Number of Adults"><option>2</option></select><select name="Number of Children"><option>0</option></select>
+  <select name="Number of Adults"><option>2</option></select><select name="Number of Children"><option>0</option></select><input name="Child Age 1"><input name="Child Age 2"><input name="Child Age 3"><input name="Child Age 4"><input name="Child Age 5"><input name="Child Age 6"><input name="Child Age 7"><input name="Child Age 8">
   <input name="service"><input name="dietary"><input name="occasion"><textarea name="message"></textarea>
   <input name="referral">
 </form>
@@ -1814,7 +1814,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   // Initialize conditional family-block visibility based on current service selection
   if (typeof updateFamilyBlockVisibility === 'function') {
-    updateFamilyBlockVisibility();
+    updateFamilyBlockVisibility(); (function(){var gf=document.getElementById('guest-form');var gs=document.getElementById('guest-subject');if(gf&&gs){gf.addEventListener('submit',function(){var fn=(gf.querySelector('input[name="Full Name"]')||{}).value||'';var co=(gf.querySelector('select[name="country"]')||{}).value||'';var ex=(document.getElementById('enquire-service-select')||{}).value||'';var p=['BHH Guest Enquiry'];if(ex)p.push(ex);if(fn)p.push(fn);if(co)p[p.length-1]+=' ('+co+')';gs.value=p.join(' \u2014 ');},true);}})();
   }
 });
 
