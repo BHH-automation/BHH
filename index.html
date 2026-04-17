@@ -656,8 +656,8 @@ footer {
 <body>
 
 <!-- Hidden forms for Netlify detection only -->
-<form method='post' name='guest-enquiry' style='display:none'>
-  <input name="form-name" type="hidden" value="guest-enquiry">
+<form method='post' name='guest-enquiry-v2' style='display:none'>
+  <input name="form-name" type="hidden" value="guest-enquiry-v2">
   <input name="subject" type="hidden" value="BHH Guest Enquiry">
   <input name="bot-field">
   <input name="salutation"><input name="fullname"><input name="email">
@@ -993,8 +993,8 @@ footer {
       <!-- ═══════ GUEST FORM ═══════ -->
       <div id="tab-guest" class="enquire-panel" style="max-width:560px;margin:0 auto;transition:opacity 0.3s ease-in-out;opacity:1">
         <p class="lead" style="margin:0 auto 2rem;text-align:center">Tell us about your family and your visit. We will arrange the rest.</p>
-        <form id='guest-form' method='POST' name='guest-enquiry' data-netlify='true' data-netlify-honeypot='bot-field' action='/?success=guest' style='text-align:left'>
-          <input type="hidden" name="form-name" value="guest-enquiry">
+        <form id='guest-form' method='POST' name='guest-enquiry-v2' data-netlify='true' data-netlify-honeypot='bot-field' action='/?success=guest' style='text-align:left'>
+          <input type="hidden" name="form-name" value="guest-enquiry-v2">
           <p style="display:none"><label>Don't fill this out if you're human: <input name="bot-field"></label></p>
           <!-- Note: if Netlify email subject shows "[N] Mr" instead of customer name,
                the fix is in Netlify dashboard → Forms → Notifications → Edit Email template.
