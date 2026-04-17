@@ -1839,10 +1839,10 @@ function updateChildAges() {
     label.textContent = 'Child ' + i;
     var sel = document.createElement('select');
     sel.name = 'Child Age ' + i;
-    sel.required = false;
+    sel.required = true;
     var ages = ['<2 years','1','2','3','4','5','6','7','8','9','10','11']; // IATA: child=2-11, infant=under 2 FREE, age 12+=adult rate
     var placeholder = document.createElement('option');
-    placeholder.value = ''; placeholder.textContent = 'Age… (optional)';
+    placeholder.value = ''; placeholder.textContent = 'Select age…'; placeholder.disabled = true;
     sel.appendChild(placeholder);
     ages.forEach(function(a) {
       var o = document.createElement('option');
@@ -1908,8 +1908,8 @@ function updateFamilyBlockVisibility() {
   if (isFlatRate) {
     // HIDE the block and remove required attribute so form can submit
     block.style.display = 'none';
-    if (adultsSel) { adultsSel.required = false; adultsSel.disabled = true; }
-    if (childrenSel) { childrenSel.required = false; childrenSel.disabled = true; }
+    if (adultsSel) { adultssel.required = true; adultsSel.disabled = true; }
+    if (childrenSel) { childrensel.required = true; childrenSel.disabled = true; }
   } else {
     // SHOW the block and restore required
     block.style.display = '';
@@ -1932,7 +1932,7 @@ function updateFamilyBlockVisibility() {
     } else {
       // HIDE dietary, drop required, collapse row to single column so Occasion spans full width
       dietaryBlock.style.display = 'none';
-      dietarySel.required = false;
+      dietarysel.required = true;
       dietarySel.disabled = true;
       if (dietaryRow && dietaryRow.classList.contains('form-row')) {
         dietaryRow.style.gridTemplateColumns = '1fr';
