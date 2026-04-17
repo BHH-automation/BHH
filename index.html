@@ -1168,7 +1168,7 @@ footer {
               </select>
             </div>
             <div class="form-group"><label>Occasion</label>
-              <select name="Occasion" required>
+              <select name="Occasion" required onchange="toggleOtherField(this,'occasion-other-wrap')">
                 <option value="">Select…</option>
                 <option value="Holiday">Holiday / Leisure</option>
                 <option value="Birthday">Birthday</option>
@@ -1181,7 +1181,7 @@ footer {
           </div>
           <div class="form-group"><label>Special Requests or Questions</label><textarea name="Special Requests" rows="3" placeholder="Allergies, accessibility needs, cultural preferences, or anything else…" required></textarea></div>
           <div class="form-group"><label>How Did You Hear About BHH? <span style="color:#C9A84C">*</span></label>
-            <select name="How Did You Hear" required>
+            <select name="How Did You Hear" required onchange="toggleOtherField(this,'referral-other-wrap')">
               <option value="">Select…</option>
               <option value="Instagram">Instagram</option>
               <option value="Facebook">Facebook</option>
@@ -1329,7 +1329,7 @@ footer {
           <div class="form-group"><label>Languages Spoken <span style="color:#C9A84C">*</span></label><input type="text" name="Languages Spoken" required placeholder="e.g. English, French"></div>
           <div class="form-group"><label>Tell Us About Your Home and Family <span style="color:#C9A84C">*</span></label><textarea name="About" rows="4" placeholder="Describe your home, your family, your cooking skills, and why you would like to host international families." required></textarea></div>
           <div class="form-group"><label>How Did You Hear About BHH? <span style="color:#C9A84C">*</span></label>
-            <select name="How Did You Hear" required>
+            <select name="How Did You Hear" required onchange="toggleOtherField(this,'referral-other-wrap')">
               <option value="">Select…</option>
               <option value="Instagram">Instagram</option>
               <option value="Facebook">Facebook</option>
@@ -1464,7 +1464,7 @@ footer {
           <div class="form-group"><label>Website or Portfolio</label><input type="url" name="Website" placeholder="https://yourwebsite.com"></div>
           <div class="form-group"><label>Describe Your Services and Experience <span style="color:#C9A84C">*</span></label><textarea name="About" rows="4" placeholder="Tell us about your business, the services you offer, your capacity, and why you would like to partner with BHH." required></textarea></div>
           <div class="form-group"><label>How Did You Hear About BHH? <span style="color:#C9A84C">*</span></label>
-          <select name="How Did You Hear" required>
+          <select name="How Did You Hear" required onchange="toggleOtherField(this,'referral-other-wrap')">
             <option value="">Select…</option>
             <option value="Instagram">Instagram</option>
             <option value="Facebook">Facebook</option>
@@ -1819,7 +1819,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // loadCities must be global — called from inline onchange attribute
-var worldData_global = null;
+var worldData_global = null; function toggleOtherField(sel,wrapId){var w=document.getElementById(wrapId);if(!w){var parent=sel.parentElement;w=document.createElement('div');w.id=wrapId;w.style.marginTop='0.5rem';var fieldName=wrapId==='occasion-other-wrap'?'Occasion Detail':'Referral Detail';var input=document.createElement('input');input.type='text';input.name=fieldName;input.placeholder='Please specify…';input.style.cssText='width:100%;padding:0.5rem;background:rgba(255,255,255,0.05);border:1px solid rgba(201,168,76,0.3);color:#F5F0E8;border-radius:4px';w.appendChild(input);parent.appendChild(w);}w.style.display=sel.value==='Other'?'block':'none';}
 
 // Child age dropdowns — global, called from inline onchange
 function updateChildAges() {
