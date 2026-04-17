@@ -1819,7 +1819,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // loadCities must be global — called from inline onchange attribute
-var worldData_global = null; function toggleOtherField(sel,wrapId){var w=document.getElementById(wrapId);if(!w){var parent=sel.parentElement;w=document.createElement('div');w.id=wrapId;w.style.marginTop='0.5rem';var fieldName=wrapId==='occasion-other-wrap'?'Occasion Detail':'Referral Detail';var input=document.createElement('input');input.type='text';input.name=fieldName;input.placeholder='e.g. Eid celebration, or describe in detail';var lbl=document.createElement('label');lbl.textContent='Please specify (required):';lbl.style.cssText='display:block;font-size:0.72rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:#C9A84C;margin-bottom:0.3rem';w.appendChild(lbl);input.style.cssText='width:100%;padding:0.5rem;background:rgba(255,255,255,0.05);border:1px solid rgba(201,168,76,0.3);color:#F5F0E8;border-radius:4px';w.appendChild(input);parent.appendChild(w);}var isOther=sel.value==='Other';w.style.display=isOther?'block':'none';var inp=w.querySelector('input');if(inp){inp.required=isOther;if(!isOther)inp.value='';}} function foldOtherDetails(gf){if(!gf)return;var parts=[];var occSel=gf.querySelector('select[name="Occasion"]');var occInp=gf.querySelector('input[name="Occasion Detail"]');if(occSel&&occSel.value==='Other'&&occInp&&occInp.value.trim()){parts.push('Occasion: '+occInp.value.trim());}var refSel=gf.querySelector('select[name="How Did You Hear"]');var refInp=gf.querySelector('input[name="Referral Detail"]');if(refSel&&refSel.value==='Other'&&refInp&&refInp.value.trim()){parts.push('Heard via: '+refInp.value.trim());}var dietSel=gf.querySelector('select[name="Dietary Requirements"]');if(dietSel&&dietSel.value==='Other'){parts.push('Dietary: Other');}if(parts.length){var sr=gf.querySelector('textarea[name="Special Requests"]');if(sr){var prefix='[AUTO] '+parts.join('. ')+'.';var existing=(sr.value||'').trim();sr.value=existing?prefix+' | '+existing:prefix;}}} document.addEventListener('DOMContentLoaded',function(){['guest-form','host-form','partner-form'].forEach(function(id){var f=document.getElementById(id);if(f)f.addEventListener('submit',function(){foldOtherDetails(f);});});});
+var worldData_global = null; function toggleOtherField(sel,wrapId){var w=document.getElementById(wrapId);if(!w){var parent=sel.parentElement;w=document.createElement('div');w.id=wrapId;w.style.marginTop='0.5rem';var fieldName=wrapId==='occasion-other-wrap'?'Occasion Detail':'Referral Detail';var input=document.createElement('input');input.type='text';input.name=fieldName;input.placeholder='e.g. Eid celebration, or describe in detail';var lbl=document.createElement('label');lbl.textContent='Please specify (required):';lbl.style.cssText='display:block;font-size:0.72rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:#C9A84C;margin-bottom:0.3rem';w.appendChild(lbl);input.style.cssText='width:100%;padding:0.5rem;background:rgba(255,255,255,0.05);border:1px solid rgba(201,168,76,0.3);color:#F5F0E8;border-radius:4px';w.appendChild(input);parent.appendChild(w);}var isOther=sel.value==='Other';w.style.display=isOther?'block':'none';var inp=w.querySelector('input');if(inp){inp.required=isOther;if(!isOther)inp.value='';}} function foldOtherDetails(gf){if(!gf)return;var parts=[];var occSel=gf.querySelector('select[name="Occasion"]');var occInp=gf.querySelector('input[name="Occasion Detail"]');if(occSel&&occSel.value==='Other'&&occInp&&occInp.value.trim()){parts.push('Occasion: '+occInp.value.trim());}var refSel=gf.querySelector('select[name="How Did You Hear"]');var refInp=gf.querySelector('input[name="Referral Detail"]');if(refSel&&refSel.value==='Other'&&refInp&&refInp.value.trim()){parts.push('Heard via: '+refInp.value.trim());}var dietSel=gf.querySelector('select[name="Dietary Requirements"]');if(dietSel&&dietSel.value==='Other'){parts.push('Dietary: Other');} var childSels=gf.querySelectorAll('[name^="Child Age "]');var infants=0,counted=0;childSels.forEach(function(s){if(s.value==='<2 years')infants++;else if(s.value)counted++;});if(infants+counted>0){var billable=Math.max(0,counted-2);var childLine=infants+' infant'+(infants===1?'':'s')+' free, '+counted+' child'+(counted===1?'':'ren')+' 3-11';if(billable>0)childLine+=' ('+billable+' billable at 25%)';parts.push(childLine);}if(parts.length){var sr=gf.querySelector('textarea[name="Special Requests"]');if(sr){var prefix='[AUTO] '+parts.join('. ')+'.';var existing=(sr.value||'').trim();sr.value=existing?prefix+' | '+existing:prefix;}}} document.addEventListener('DOMContentLoaded',function(){['guest-form','host-form','partner-form'].forEach(function(id){var f=document.getElementById(id);if(f)f.addEventListener('submit',function(){foldOtherDetails(f);});});});
 
 // Child age dropdowns — global, called from inline onchange
 function updateChildAges() {
@@ -1840,18 +1840,18 @@ function updateChildAges() {
     var sel = document.createElement('select');
     sel.name = 'Child Age ' + i;
     sel.required = true;
-    var ages = ['<2 years','1','2','3','4','5','6','7','8','9','10','11']; // IATA: child=2-11, infant=under 2 FREE, age 12+=adult rate
+    var ages = ['<2 years','5']; // IATA: child=2-11, infant=under 2 FREE, age 12+=adult rate
     var placeholder = document.createElement('option');
     placeholder.value = ''; placeholder.textContent = 'Select age…'; placeholder.disabled = true;
     sel.appendChild(placeholder);
     ages.forEach(function(a) {
       var o = document.createElement('option');
       if (a === '<2 years') {
-        o.textContent = 'Under 2 years — Infant (FREE)';
+        o.textContent = 'Under 3 — Infant (FREE)';
       } else if (a === '1' || a === '2') {
         o.textContent = a + ' year' + (a === '1' ? '' : 's') + ' (FREE)';
       } else {
-        o.textContent = a + ' years';
+        o.textContent = '3–11 — Child';
       }
       o.value = a;
       sel.appendChild(o);
