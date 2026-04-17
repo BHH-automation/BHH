@@ -1932,7 +1932,7 @@ function updateFamilyBlockVisibility() {
     } else {
       // HIDE dietary, drop required, collapse row to single column so Occasion spans full width
       dietaryBlock.style.display = 'none';
-      dietarysel.required = true;
+      dietarySel.required = true;
       dietarySel.disabled = true;
       if (dietaryRow && dietaryRow.classList.contains('form-row')) {
         dietaryRow.style.gridTemplateColumns = '1fr';
