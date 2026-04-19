@@ -651,6 +651,14 @@ footer {
 .service-card-carousel img.inactive {
   opacity: 0;
 }
+/* Tier card selection — v6 tier block */
+.tier-card.selected {
+  border: 1.5px solid #C9A84C !important;
+  background: rgba(201,168,76,0.18) !important;
+}
+.tier-card:hover {
+  background: rgba(201,168,76,0.12);
+}
 </style>
 </head>
 <body>
@@ -1110,7 +1118,7 @@ footer {
           </div>
           <!-- MOVED UP: Experience of Interest now comes BEFORE Number of Adults/Children -->
           <div class="form-group"><label>Experience of Interest <span style="color:#C9A84C">*</span></label>
-            <select name="Experience Requested" id="enquire-service-select" required onchange="updateFamilyBlockVisibility(); updateChildAgesVisibility(); updatePricingSummary()">
+            <select name="Experience Requested" id="enquire-service-select" required onchange="updateFamilyBlockVisibility(); updateChildAgesVisibility(); updatePricingSummary(); updateTierBlockVisibility()">
               <option value="">Select…</option>
               <option value="Private Family Dinner">Private Family Dinner</option>
               <option value="English Afternoon Tea">English Afternoon Tea</option>
@@ -1120,6 +1128,26 @@ footer {
               <option value="Multiple / Not sure">Multiple / Not sure</option>
             </select>
           </div>
+          <!-- ═══════ EXPERIENCE TIER BLOCK (v6 — tier capture) ═══════
+               Visible only for Private Family Dinner and English Afternoon Tea.
+               Hidden for Guide, Cruise, Transport, Multiple / Not sure, and empty.
+               Optional — if no card picked, Edge Function stores "Unspecified". -->
+          <div class="form-group" id="guest-tier-block" style="display:none">
+            <label>Experience Tier</label>
+            <p style="font-size:0.72rem;color:rgba(245,240,232,0.75);margin:-0.2rem 0 0.8rem;font-style:italic">Optional — we will recommend a tier when we reply if you prefer.</p>
+            <div class="tier-card-row" style="display:grid;grid-template-columns:1fr 1fr;gap:0.8rem">
+              <div class="tier-card" data-tier="Standard" onclick="selectTier('Standard')" style="border:0.5px solid #C9A84C;border-radius:6px;padding:0.9rem 1rem;background:rgba(201,168,76,0.06);cursor:pointer;transition:all 0.15s">
+                <div class="tier-card-name" style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1.05rem;font-weight:500;color:#F5F0E8;margin-bottom:0.2rem;letter-spacing:0.3px">Standard</div>
+                <div class="tier-card-desc" id="tier-standard-desc" style="font-size:0.75rem;color:rgba(245,240,232,0.75);line-height:1.5"></div>
+              </div>
+              <div class="tier-card" data-tier="Premium" onclick="selectTier('Premium')" style="border:0.5px solid #C9A84C;border-radius:6px;padding:0.9rem 1rem;background:rgba(201,168,76,0.06);cursor:pointer;transition:all 0.15s">
+                <div class="tier-card-name" style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1.05rem;font-weight:500;color:#F5F0E8;margin-bottom:0.2rem;letter-spacing:0.3px">Premium</div>
+                <div class="tier-card-desc" id="tier-premium-desc" style="font-size:0.75rem;color:rgba(245,240,232,0.75);line-height:1.5"></div>
+              </div>
+            </div>
+            <input type="hidden" name="Experience Tier" id="guest-tier" value="">
+          </div>
+          <!-- END guest-tier-block -->
           <!-- WRAPPED: Adults, Children, Pricing Breakdown, and Age of Each Child are conditional on service selection -->
           <div id="guest-family-block">
           <div class="form-row">
@@ -1937,6 +1965,56 @@ function updateFamilyBlockVisibility() {
       if (dietaryRow && dietaryRow.classList.contains('form-row')) {
         dietaryRow.style.gridTemplateColumns = '1fr';
       }
+    }
+  }
+}
+
+// ═══════ EXPERIENCE TIER BLOCK (v6) — show/hide + selection + service-tailored copy ═══════
+var TIER_COPY = {
+  'Private Family Dinner': {
+    standard: 'Two carefully chosen courses at your private dining table, fine china, fresh flowers, printed menu cards.',
+    premium:  'Three courses with a signature main, plus a dedicated photographer to capture the evening.'
+  },
+  'English Afternoon Tea': {
+    standard: 'A traditional English afternoon tea with rare teas, sommelier service, fine china and fresh flowers.',
+    premium:  'Everything in Standard, plus a celebration cake prepared for your occasion.'
+  }
+};
+
+function updateTierBlockVisibility() {
+  var experienceSel = document.getElementById('enquire-service-select');
+  var block = document.getElementById('guest-tier-block');
+  if (!experienceSel || !block) return;
+  var service = experienceSel.value;
+  var copy = TIER_COPY[service];
+  var stdDesc = document.getElementById('tier-standard-desc');
+  var prmDesc = document.getElementById('tier-premium-desc');
+  var hidden = document.getElementById('guest-tier');
+
+  if (copy) {
+    // Show the block and populate service-specific copy
+    block.style.display = '';
+    if (stdDesc) stdDesc.textContent = copy.standard;
+    if (prmDesc) prmDesc.textContent = copy.premium;
+  } else {
+    // Hide for flat-rate, Multiple / Not sure, and empty
+    block.style.display = 'none';
+    // Reset any prior selection so stale tier doesn't carry across service changes
+    if (hidden) hidden.value = '';
+    var cards = document.querySelectorAll('#guest-tier-block .tier-card');
+    for (var i = 0; i < cards.length; i++) cards[i].classList.remove('selected');
+  }
+}
+
+function selectTier(tier) {
+  var hidden = document.getElementById('guest-tier');
+  if (hidden) hidden.value = tier;
+  var cards = document.querySelectorAll('#guest-tier-block .tier-card');
+  for (var i = 0; i < cards.length; i++) {
+    if (cards[i].getAttribute('data-tier') === tier) {
+      cards[i].classList.add('selected');
+    } else {
+      cards[i].classList.remove('selected');
     }
   }
 }
