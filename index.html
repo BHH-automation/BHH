@@ -659,6 +659,30 @@ footer {
 .tier-card:hover {
   background: rgba(201,168,76,0.12);
 }
+/* Service card selection — v7 multi-select */
+.service-card.selected {
+  border: 1.5px solid #0a1d3d !important;
+  background: rgba(201,168,76,0.18) !important;
+}
+.service-card.selected .service-card-check {
+  background: #0a1d3d !important;
+  border-color: #0a1d3d !important;
+  position: relative;
+}
+.service-card.selected .service-card-check::after {
+  content: '';
+  position: absolute;
+  left: 3px;
+  top: 0px;
+  width: 4px;
+  height: 8px;
+  border: solid #C9A84C;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+.service-card:hover {
+  background: rgba(201,168,76,0.12);
+}
 </style>
 </head>
 <body>
@@ -1116,25 +1140,47 @@ footer {
             </div>
             <p style="font-size:0.7rem;color:rgba(245,240,232,0.6);margin-top:0.3rem;font-style:italic">Check-out date must be after check-in date.</p>
           </div>
-          <!-- MOVED UP: Experience of Interest now comes BEFORE Number of Adults/Children -->
-          <div class="form-group"><label>Experience of Interest <span style="color:#C9A84C">*</span></label>
-            <select name="Experience Requested" id="enquire-service-select" required onchange="updateTierBlockVisibility(); updateFamilyBlockVisibility(); updateChildAgesVisibility(); updatePricingSummary()">
-              <option value="">Select…</option>
-              <option value="Private Family Dinner">Private Family Dinner</option>
-              <option value="English Afternoon Tea">English Afternoon Tea</option>
-              <option value="British Heritage Guide">British Heritage Guide</option>
-              <option value="Private Canal Cruise">Private Canal Cruise</option>
-              <option value="Airport &amp; Transport">Airport &amp; Transport</option>
-              <option value="Multiple / Not sure">Multiple / Not sure</option>
-            </select>
+          <!-- MOVED UP (v6): Experience of Interest — now MULTI-SELECT card grid.
+               Guests can tap any combination of 1-5 services. Selections are
+               aggregated into a hidden comma-separated field 'Experience Requested'
+               that the Edge Function reads. Tier and family blocks react to whether
+               any food service (Dinner/Tea) is in the selection. -->
+          <div class="form-group">
+            <label>Experiences of Interest <span style="color:#C9A84C">*</span></label>
+            <p style="font-size:0.72rem;color:rgba(245,240,232,0.75);margin:-0.2rem 0 0.8rem;font-style:italic">Select one or more — combine services for a richer visit.</p>
+            <div id="service-card-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:0.8rem">
+              <div class="service-card" data-service="Private Family Dinner" onclick="toggleService(this)" style="border:0.5px solid #C9A84C;border-radius:6px;padding:0.9rem 1rem;background:rgba(201,168,76,0.06);cursor:pointer;transition:all 0.15s;display:flex;align-items:center;justify-content:space-between;gap:0.6rem">
+                <span style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1rem;font-weight:500;color:#F5F0E8;letter-spacing:0.3px">Private Family Dinner</span>
+                <span class="service-card-check" style="width:14px;height:14px;border:1px solid #C9A84C;border-radius:2px;background:#fff;flex-shrink:0"></span>
+              </div>
+              <div class="service-card" data-service="English Afternoon Tea" onclick="toggleService(this)" style="border:0.5px solid #C9A84C;border-radius:6px;padding:0.9rem 1rem;background:rgba(201,168,76,0.06);cursor:pointer;transition:all 0.15s;display:flex;align-items:center;justify-content:space-between;gap:0.6rem">
+                <span style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1rem;font-weight:500;color:#F5F0E8;letter-spacing:0.3px">English Afternoon Tea</span>
+                <span class="service-card-check" style="width:14px;height:14px;border:1px solid #C9A84C;border-radius:2px;background:#fff;flex-shrink:0"></span>
+              </div>
+              <div class="service-card" data-service="British Heritage Guide" onclick="toggleService(this)" style="border:0.5px solid #C9A84C;border-radius:6px;padding:0.9rem 1rem;background:rgba(201,168,76,0.06);cursor:pointer;transition:all 0.15s;display:flex;align-items:center;justify-content:space-between;gap:0.6rem">
+                <span style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1rem;font-weight:500;color:#F5F0E8;letter-spacing:0.3px">British Heritage Guide</span>
+                <span class="service-card-check" style="width:14px;height:14px;border:1px solid #C9A84C;border-radius:2px;background:#fff;flex-shrink:0"></span>
+              </div>
+              <div class="service-card" data-service="Private Canal Cruise" onclick="toggleService(this)" style="border:0.5px solid #C9A84C;border-radius:6px;padding:0.9rem 1rem;background:rgba(201,168,76,0.06);cursor:pointer;transition:all 0.15s;display:flex;align-items:center;justify-content:space-between;gap:0.6rem">
+                <span style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1rem;font-weight:500;color:#F5F0E8;letter-spacing:0.3px">Private Canal Cruise</span>
+                <span class="service-card-check" style="width:14px;height:14px;border:1px solid #C9A84C;border-radius:2px;background:#fff;flex-shrink:0"></span>
+              </div>
+              <div class="service-card" data-service="Airport &amp; Transport" onclick="toggleService(this)" style="grid-column:1 / -1;border:0.5px solid #C9A84C;border-radius:6px;padding:0.9rem 1rem;background:rgba(201,168,76,0.06);cursor:pointer;transition:all 0.15s;display:flex;align-items:center;justify-content:space-between;gap:0.6rem">
+                <span style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1rem;font-weight:500;color:#F5F0E8;letter-spacing:0.3px">Airport &amp; Transport</span>
+                <span class="service-card-check" style="width:14px;height:14px;border:1px solid #C9A84C;border-radius:2px;background:#fff;flex-shrink:0"></span>
+              </div>
+            </div>
+            <!-- Hidden field that carries the comma-separated selection for Netlify.
+                 Kept at name="Experience Requested" for v3.2 Edge Function compatibility.
+                 id="enquire-service-select" is preserved so other scripts that read .value still work. -->
+            <input type="hidden" name="Experience Requested" id="enquire-service-select" value="" required>
           </div>
-          <!-- ═══════ EXPERIENCE TIER BLOCK (v6 — tier capture) ═══════
-               Visible only for Private Family Dinner and English Afternoon Tea.
-               Hidden for Guide, Cruise, Transport, Multiple / Not sure, and empty.
-               Optional — if no card picked, Edge Function stores "Unspecified". -->
+          <!-- ═══════ EXPERIENCE TIER BLOCK (v7 — updated for multi-select) ═══════
+               Visible if Private Family Dinner OR English Afternoon Tea is in the
+               selection. Hidden when only flat-rate services are picked, or nothing. -->
           <div class="form-group" id="guest-tier-block" style="display:none">
             <label>Experience Tier</label>
-            <p style="font-size:0.72rem;color:rgba(245,240,232,0.75);margin:-0.2rem 0 0.8rem;font-style:italic">Optional — we will recommend a tier when we reply if you prefer.</p>
+            <p style="font-size:0.72rem;color:rgba(245,240,232,0.75);margin:-0.2rem 0 0.8rem;font-style:italic">Optional — applies to Dinner and Tea. We will recommend a tier when we reply if you prefer.</p>
             <div class="tier-card-row" style="display:grid;grid-template-columns:1fr 1fr;gap:0.8rem">
               <div class="tier-card" data-tier="Standard" onclick="selectTier('Standard')" style="border:0.5px solid #C9A84C;border-radius:6px;padding:0.9rem 1rem;background:rgba(201,168,76,0.06);cursor:pointer;transition:all 0.15s">
                 <div class="tier-card-name" style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1.05rem;font-weight:500;color:#F5F0E8;margin-bottom:0.2rem;letter-spacing:0.3px">Standard</div>
@@ -1760,19 +1806,18 @@ function switchTab(tab) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-  // Service-specific enquiry — populate form dropdown
-  document.querySelectorAll('.service-card[data-service]').forEach(function(card) {
+  // Service-specific enquiry — when a marketing carousel card is clicked,
+  // switch to the guest form tab and pre-select the matching service card.
+  // Use :not() to avoid catching the multi-select form cards themselves.
+  document.querySelectorAll('.service-card[data-service]:not(#service-card-grid .service-card)').forEach(function(card) {
     card.addEventListener('click', function(e) {
       var service = this.getAttribute('data-service');
       switchTab('guest');
-      var select = document.getElementById('enquire-service-select');
-      if (select && service) {
-        for (var i = 0; i < select.options.length; i++) {
-          if (select.options[i].value === service) {
-            select.selectedIndex = i;
-            break;
-          }
-        }
+      if (!service) return;
+      // Find the matching form card and select it if not already selected
+      var formCard = document.querySelector('#service-card-grid .service-card[data-service="' + service + '"]');
+      if (formCard && !formCard.classList.contains('selected')) {
+        toggleService(formCard);
       }
     });
   });
@@ -1917,40 +1962,36 @@ function updateChildAgesVisibility() {
 // Guide, Cruise, Transport, Multiple, and empty selection.
 // ============================================================
 function updateFamilyBlockVisibility() {
-  var experienceSel = document.getElementById('enquire-service-select');
   var block = document.getElementById('guest-family-block');
-  if (!experienceSel || !block) return;
-  var experience = experienceSel.value;
-  // Services that are FLAT-RATE (no adult/child count needed)
-  var flatRateServices = ['British Heritage Guide', 'Private Canal Cruise', 'Airport & Transport'];
-  var isFlatRate = flatRateServices.indexOf(experience) !== -1;
-  // Services where dietary requirements are RELEVANT (food services only)
-  var foodServices = ['Private Family Dinner', 'English Afternoon Tea'];
-  var isFoodService = foodServices.indexOf(experience) !== -1;
+  if (!block) return;
+
+  // v7: read the multi-selection, not a single dropdown value
+  var services = (typeof getSelectedServices === 'function') ? getSelectedServices() : [];
+  var hasFood = services.indexOf('Private Family Dinner') !== -1 || services.indexOf('English Afternoon Tea') !== -1;
+  // Family block is relevant whenever a food service is in the selection
+  var showFamilyBlock = hasFood;
+  var isFoodService = hasFood;
+
   var adultsSel = document.getElementById('guest-adults');
   var childrenSel = document.getElementById('guest-children');
   var dietaryBlock = document.getElementById('guest-dietary-block');
   var dietarySel = document.getElementById('guest-dietary-select');
-  
+
   // --- FAMILY BLOCK (Adults/Children/Pricing/Ages) ---
-  if (isFlatRate) {
-    // HIDE the block and remove required attribute so form can submit
+  if (!showFamilyBlock) {
     block.style.display = 'none';
-    if (adultsSel) { adultsSel.required = true; adultsSel.disabled = true; }
-    if (childrenSel) { childrenSel.required = true; childrenSel.disabled = true; }
+    if (adultsSel) { adultsSel.required = false; adultsSel.disabled = true; }
+    if (childrenSel) { childrenSel.required = false; childrenSel.disabled = true; }
   } else {
-    // SHOW the block and restore required
     block.style.display = '';
     if (adultsSel) { adultsSel.required = true; adultsSel.disabled = false; }
     if (childrenSel) { childrenSel.required = true; childrenSel.disabled = false; }
   }
-  
+
   // --- DIETARY BLOCK (food services only) ---
   if (dietaryBlock && dietarySel) {
-    // Also grab the parent .form-row so we can adjust its layout when Dietary is hidden
     var dietaryRow = dietaryBlock.parentElement;
     if (isFoodService) {
-      // SHOW dietary, make required, restore 2-col grid
       dietaryBlock.style.display = '';
       dietarySel.required = true;
       dietarySel.disabled = false;
@@ -1958,9 +1999,8 @@ function updateFamilyBlockVisibility() {
         dietaryRow.style.gridTemplateColumns = '';
       }
     } else {
-      // HIDE dietary, drop required, collapse row to single column so Occasion spans full width
       dietaryBlock.style.display = 'none';
-      dietarySel.required = true;
+      dietarySel.required = false;
       dietarySel.disabled = true;
       if (dietaryRow && dietaryRow.classList.contains('form-row')) {
         dietaryRow.style.gridTemplateColumns = '1fr';
@@ -1969,7 +2009,7 @@ function updateFamilyBlockVisibility() {
   }
 }
 
-// ═══════ EXPERIENCE TIER BLOCK (v6) — show/hide + selection + service-tailored copy ═══════
+// ═══════ EXPERIENCE TIER BLOCK (v7) — multi-select aware ═══════
 var TIER_COPY = {
   'Private Family Dinner': {
     standard: 'Two carefully chosen courses at your private dining table, fine china, fresh flowers, printed menu cards.',
@@ -1981,25 +2021,62 @@ var TIER_COPY = {
   }
 };
 
+// Returns the current selected services as an array, reading from the checked .service-card elements.
+function getSelectedServices() {
+  var out = [];
+  var cards = document.querySelectorAll('#service-card-grid .service-card.selected');
+  for (var i = 0; i < cards.length; i++) {
+    // data-service attribute uses &amp; in HTML but the DOM exposes it as & — which is what we want for Netlify
+    out.push(cards[i].getAttribute('data-service'));
+  }
+  return out;
+}
+
+// ═══════ Multi-select service cards — v7 ═══════
+// Toggles the .selected class on the clicked card, updates the hidden
+// 'Experience Requested' field to a comma-separated list, and triggers
+// all downstream visibility/pricing handlers.
+function toggleService(cardEl) {
+  cardEl.classList.toggle('selected');
+  // Update hidden aggregate field
+  var services = getSelectedServices();
+  var hidden = document.getElementById('enquire-service-select');
+  if (hidden) hidden.value = services.join(', ');
+  // Trigger the downstream chain — same functions the old dropdown used to fire
+  updateTierBlockVisibility();
+  updateFamilyBlockVisibility();
+  updateChildAgesVisibility();
+  updatePricingSummary();
+}
+
 function updateTierBlockVisibility() {
-  var experienceSel = document.getElementById('enquire-service-select');
   var block = document.getElementById('guest-tier-block');
-  if (!experienceSel || !block) return;
-  var service = experienceSel.value;
-  var copy = TIER_COPY[service];
+  if (!block) return;
   var stdDesc = document.getElementById('tier-standard-desc');
   var prmDesc = document.getElementById('tier-premium-desc');
   var hidden = document.getElementById('guest-tier');
 
-  if (copy) {
-    // Show the block and populate service-specific copy
+  var services = getSelectedServices();
+  var hasDinner = services.indexOf('Private Family Dinner') !== -1;
+  var hasTea    = services.indexOf('English Afternoon Tea') !== -1;
+
+  if (hasDinner || hasTea) {
+    // Show the block. If both are picked, use generic copy that covers both;
+    // if only one, use its service-specific copy.
     block.style.display = '';
-    if (stdDesc) stdDesc.textContent = copy.standard;
-    if (prmDesc) prmDesc.textContent = copy.premium;
+    if (hasDinner && hasTea) {
+      if (stdDesc) stdDesc.textContent = 'Our signature experience — every detail attended to across Dinner and Tea.';
+      if (prmDesc) prmDesc.textContent = 'Elevated with celebration touches — for moments that deserve something extra.';
+    } else if (hasDinner) {
+      if (stdDesc) stdDesc.textContent = TIER_COPY['Private Family Dinner'].standard;
+      if (prmDesc) prmDesc.textContent = TIER_COPY['Private Family Dinner'].premium;
+    } else {
+      if (stdDesc) stdDesc.textContent = TIER_COPY['English Afternoon Tea'].standard;
+      if (prmDesc) prmDesc.textContent = TIER_COPY['English Afternoon Tea'].premium;
+    }
   } else {
-    // Hide for flat-rate, Multiple / Not sure, and empty
+    // No food services picked — hide tier block and clear any stale selection
     block.style.display = 'none';
-    // Reset any prior selection so stale tier doesn't carry across service changes
     if (hidden) hidden.value = '';
     var cards = document.querySelectorAll('#guest-tier-block .tier-card');
     for (var i = 0; i < cards.length; i++) cards[i].classList.remove('selected');
@@ -2085,13 +2162,17 @@ function updatePricingSummary() {
   var experienceSel = document.getElementById('enquire-service-select');
   
   if (!experienceSel) return;
-  var experience = experienceSel.value;
+  // v7: experience value is now a comma-separated list from multi-select.
+  // Check whether any food service is present instead of exact equality.
+  var experience = experienceSel.value || '';
+  var hasFoodService = experience.indexOf('Private Family Dinner') !== -1
+                    || experience.indexOf('English Afternoon Tea') !== -1;
   
   // Always refresh the adults composition line (no prices)
   updateAdultsBreakdown(adultsVal);
   
   // Only show extended composition summary for services with family-unit pricing
-  if (experience !== 'Private Family Dinner' && experience !== 'English Afternoon Tea') {
+  if (!hasFoodService) {
     // Also remove any stale composition summary from previous selection
     var stale = document.getElementById('pricing-summary');
     if (stale) stale.innerHTML = '';
