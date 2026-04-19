@@ -1118,7 +1118,7 @@ footer {
           </div>
           <!-- MOVED UP: Experience of Interest now comes BEFORE Number of Adults/Children -->
           <div class="form-group"><label>Experience of Interest <span style="color:#C9A84C">*</span></label>
-            <select name="Experience Requested" id="enquire-service-select" required onchange="updateFamilyBlockVisibility(); updateChildAgesVisibility(); updatePricingSummary(); updateTierBlockVisibility()">
+            <select name="Experience Requested" id="enquire-service-select" required onchange="updateTierBlockVisibility(); updateFamilyBlockVisibility(); updateChildAgesVisibility(); updatePricingSummary()">
               <option value="">Select…</option>
               <option value="Private Family Dinner">Private Family Dinner</option>
               <option value="English Afternoon Tea">English Afternoon Tea</option>
@@ -1936,8 +1936,8 @@ function updateFamilyBlockVisibility() {
   if (isFlatRate) {
     // HIDE the block and remove required attribute so form can submit
     block.style.display = 'none';
-    if (adultsSel) { adultssel.required = true; adultsSel.disabled = true; }
-    if (childrenSel) { childrensel.required = true; childrenSel.disabled = true; }
+    if (adultsSel) { adultsSel.required = true; adultsSel.disabled = true; }
+    if (childrenSel) { childrenSel.required = true; childrenSel.disabled = true; }
   } else {
     // SHOW the block and restore required
     block.style.display = '';
