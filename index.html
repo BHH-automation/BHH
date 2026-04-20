@@ -2130,7 +2130,7 @@ var TIER_COPY = {
   },
   'Airport & Transport': {
     standard: 'Driver and porter.',
-    premium:  'Everything in Standard + V-Class / Range Rover, terminal greeter, amenity pack.'
+    premium:  'Everything in Standard + premium vehicle (up to 7 passengers), terminal greeter, amenity pack.'
   }
 };
 
@@ -2185,16 +2185,16 @@ function computeCapacityNote(service, tier) {
   // ── AIRPORT & TRANSPORT: capacity depends on tier ──
   if (service === 'Airport & Transport') {
     if (tier === 'Standard') {
-      // Range Rover = 4 passengers
-      if (total <= 4) return 'Your party of ' + total + ' ' + peopleLabel + ' will travel in one Range Rover (up to 4 passengers).';
+      // Executive vehicle = up to 4 passengers
+      if (total <= 4) return 'Your party of ' + total + ' ' + peopleLabel + ' will travel in one executive vehicle (up to 4 passengers).';
       var vehicles = Math.ceil(total / 4);
-      return '<strong>Group of ' + total + '</strong> exceeds single Range Rover capacity — ' + vehicles + ' vehicles will be arranged (quoted upon enquiry).';
+      return '<strong>Group of ' + total + '</strong> exceeds single-vehicle capacity — ' + vehicles + ' vehicles will be arranged (quoted upon enquiry).';
     }
     if (tier === 'Premium') {
-      // V-Class = 7 passengers
-      if (total <= 7) return 'Your party of ' + total + ' ' + peopleLabel + ' will travel in one V-Class or Range Rover (up to 7 passengers).';
+      // Premium vehicle = up to 7 passengers
+      if (total <= 7) return 'Your party of ' + total + ' ' + peopleLabel + ' will travel in one premium vehicle (up to 7 passengers).';
       var vehiclesP = Math.ceil(total / 7);
-      return '<strong>Group of ' + total + '</strong> exceeds single V-Class capacity — ' + vehiclesP + ' vehicles will be arranged (quoted upon enquiry).';
+      return '<strong>Group of ' + total + '</strong> exceeds single-vehicle capacity — ' + vehiclesP + ' vehicles will be arranged (quoted upon enquiry).';
     }
     // Tier not yet picked — generic hint
     return 'Vehicle size depends on tier: Standard (up to 4) or Premium (up to 7). Select a tier above for an exact recommendation.';
