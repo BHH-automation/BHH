@@ -2048,11 +2048,13 @@ function updateFamilyBlockVisibility() {
   var block = document.getElementById('guest-family-block');
   if (!block) return;
 
-  // v7: read the multi-selection, not a single dropdown value
+  // v8.1: read the multi-selection
   var services = (typeof getSelectedServices === 'function') ? getSelectedServices() : [];
   var hasFood = services.indexOf('Private Family Dinner') !== -1 || services.indexOf('English Afternoon Tea') !== -1;
-  // Family block is relevant whenever a food service is in the selection
-  var showFamilyBlock = hasFood;
+  // Family block (Adults/Children) shows whenever ANY service is selected.
+  // Rationale: headcount drives operational capacity (guides, vehicles, boats)
+  // even when it doesn't affect per-family pricing.
+  var showFamilyBlock = services.length > 0;
   var isFoodService = hasFood;
 
   var adultsSel = document.getElementById('guest-adults');
