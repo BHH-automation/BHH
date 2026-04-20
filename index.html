@@ -773,6 +773,22 @@ footer {
   color: rgba(245,240,232,0.75);
   line-height: 1.4;
 }
+/* v8.2 capacity note shown below each service's tier cards */
+.tier-slot-capacity {
+  margin-top: 0.5rem;
+  padding: 0.5rem 0.7rem;
+  background: rgba(201,168,76,0.08);
+  border-left: 2px solid #C9A84C;
+  border-radius: 3px;
+  font-size: 0.72rem;
+  color: rgba(245,240,232,0.85);
+  line-height: 1.4;
+  font-style: italic;
+}
+.tier-slot-capacity strong {
+  color: #C9A84C;
+  font-style: normal;
+}
 
 @media (max-width: 640px) {
   .service-card-v8 {
@@ -1281,7 +1297,7 @@ footer {
           <div id="guest-family-block">
           <div class="form-row">
             <div class="form-group"><label>Number of Adults</label>
-              <select name="Number of Adults" id="guest-adults" required onchange="updateChildAges(); updatePricingSummary()">
+              <select name="Number of Adults" id="guest-adults" required onchange="updateChildAges(); updatePricingSummary(); refreshCapacityNotes()">
                 <option value="">Select…</option>
                 <option value="1">1</option><option value="2">2</option><option value="3">3</option>
                 <option value="4">4</option><option value="5">5</option><option value="6">6</option>
@@ -1290,7 +1306,7 @@ footer {
               </select>
             </div>
             <div class="form-group"><label>Number of Children</label>
-              <select name="Number of Children" id="guest-children" required onchange="updateChildAges(); updatePricingSummary()">
+              <select name="Number of Children" id="guest-children" required onchange="updateChildAges(); updatePricingSummary(); refreshCapacityNotes()">
                 <option value="">Select…</option>
                 <option value="0">0</option><option value="1">1</option><option value="2">2</option>
                 <option value="3">3</option><option value="4">4</option><option value="5">5</option>
@@ -2145,6 +2161,56 @@ function buildTierString() {
   return parts.join('; ');
 }
 
+// ═══════ v8.2 CAPACITY CALCULATOR ═══════
+// Returns a friendly capacity note (plain HTML) or empty string if not applicable.
+// Reads current headcount from form: total = adults + children.
+function computeCapacityNote(service, tier) {
+  var adultsSel   = document.getElementById('guest-adults');
+  var childrenSel = document.getElementById('guest-children');
+  var adults   = (adultsSel   && parseInt(adultsSel.value,   10)) || 0;
+  var children = (childrenSel && parseInt(childrenSel.value, 10)) || 0;
+  var total = adults + children;
+  if (total === 0) return '';  // No note until the guest enters a headcount
+
+  var peopleLabel = total === 1 ? 'person' : 'people';
+
+  // ── CANAL CRUISE: tiered boat size (6 / 10 / 12) + overflow at 13+ ──
+  if (service === 'Private Canal Cruise') {
+    if (total <= 6)   return 'Your party of ' + total + ' ' + peopleLabel + ' will travel on our Small canal boat (up to 6 passengers).';
+    if (total <= 10)  return 'Your party of ' + total + ' ' + peopleLabel + ' will travel on our Standard canal boat (up to 10 passengers).';
+    if (total <= 12)  return 'Your party of ' + total + ' ' + peopleLabel + ' will travel on our Large canal boat (up to 12 passengers).';
+    return '<strong>Group of ' + total + '</strong> exceeds single-boat capacity — we will arrange multiple boats (quoted upon enquiry).';
+  }
+
+  // ── AIRPORT & TRANSPORT: capacity depends on tier ──
+  if (service === 'Airport & Transport') {
+    if (tier === 'Standard') {
+      // Range Rover = 4 passengers
+      if (total <= 4) return 'Your party of ' + total + ' ' + peopleLabel + ' will travel in one Range Rover (up to 4 passengers).';
+      var vehicles = Math.ceil(total / 4);
+      return '<strong>Group of ' + total + '</strong> exceeds single Range Rover capacity — ' + vehicles + ' vehicles will be arranged (quoted upon enquiry).';
+    }
+    if (tier === 'Premium') {
+      // V-Class = 7 passengers
+      if (total <= 7) return 'Your party of ' + total + ' ' + peopleLabel + ' will travel in one V-Class or Range Rover (up to 7 passengers).';
+      var vehiclesP = Math.ceil(total / 7);
+      return '<strong>Group of ' + total + '</strong> exceeds single V-Class capacity — ' + vehiclesP + ' vehicles will be arranged (quoted upon enquiry).';
+    }
+    // Tier not yet picked — generic hint
+    return 'Vehicle size depends on tier: Standard (up to 4) or Premium (up to 7). Select a tier above for an exact recommendation.';
+  }
+
+  // ── BRITISH HERITAGE GUIDE: 1 guide per 8 people ──
+  if (service === 'British Heritage Guide') {
+    if (total <= 8) return 'Your party of ' + total + ' ' + peopleLabel + ' will be accompanied by one guide.';
+    var guides = Math.ceil(total / 8);
+    return '<strong>Group of ' + total + '</strong> — ' + guides + ' guides recommended for attentive service (quoted upon enquiry).';
+  }
+
+  // Dinner and Tea: no hard capacity limit (host-dependent), no note needed
+  return '';
+}
+
 // ═══════ Multi-select service cards — v8 ═══════
 function toggleService(cardEl) {
   cardEl.classList.toggle('selected');
@@ -2190,7 +2256,8 @@ function renderTierSlots() {
     var copy = TIER_COPY[svc] || { standard: '', premium: '' };
     var currentTier = TIER_STATE[svc] || '';
     var escSvc = svc.replace(/"/g, '&quot;').replace(/&/g, '&amp;');
-    html += '<div class="tier-slot">'
+    var capacityNote = computeCapacityNote(svc, currentTier);
+    html += '<div class="tier-slot" data-svc-key="' + escSvc + '">'
           +   '<div class="tier-slot-header">' + escSvc + '</div>'
           +   '<div class="tier-slot-cards">'
           +     '<div class="tier-slot-card' + (currentTier === 'Standard' ? ' selected' : '') + '" '
@@ -2206,9 +2273,36 @@ function renderTierSlots() {
           +       '<div class="tier-slot-card-desc">' + copy.premium + '</div>'
           +     '</div>'
           +   '</div>'
+          + (capacityNote ? '<div class="tier-slot-capacity">' + capacityNote + '</div>' : '')
           + '</div>';
   }
   slots.innerHTML = html;
+}
+
+// ═══════ Refresh capacity notes only (without re-rendering tier cards) ═══════
+// Called when Adults/Children change, so tier-card visual state (selected) is preserved.
+function refreshCapacityNotes() {
+  var slots = document.querySelectorAll('#per-service-tier-slots .tier-slot');
+  for (var i = 0; i < slots.length; i++) {
+    var slot = slots[i];
+    var escSvc = slot.getAttribute('data-svc-key') || '';
+    var svcKey = escSvc.replace(/&amp;/g, '&').replace(/&quot;/g, '"');
+    var currentTier = TIER_STATE[svcKey] || '';
+    var note = computeCapacityNote(svcKey, currentTier);
+    var existing = slot.querySelector('.tier-slot-capacity');
+    if (note) {
+      if (existing) {
+        existing.innerHTML = note;
+      } else {
+        var newDiv = document.createElement('div');
+        newDiv.className = 'tier-slot-capacity';
+        newDiv.innerHTML = note;
+        slot.appendChild(newDiv);
+      }
+    } else if (existing) {
+      existing.parentElement.removeChild(existing);
+    }
+  }
 }
 
 // Called when a tier card is clicked within a service slot
@@ -2237,6 +2331,9 @@ function selectServiceTier(cardEl) {
       slotCards[i].classList.remove('selected');
     }
   }
+
+  // Refresh capacity note for this slot (Transport capacity depends on tier)
+  refreshCapacityNotes();
 
   // Update hidden field
   var tierHidden = document.getElementById('guest-tier');
