@@ -1,5 +1,6 @@
 # Netlify configuration for BHH Website
 # This enables auto-deploy when you push to any connected git repository
+# Test deploy 8 May 2026
 
 [build]
   # The directory to deploy - in this case, the root directory
