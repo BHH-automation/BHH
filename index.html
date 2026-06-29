@@ -73,6 +73,7 @@ h3 { font-size: clamp(1.4rem, 2.5vw, 2rem); }
   display: block;
 }
 .lead { font-size: 1.1rem; font-weight: 300; line-height: 1.8; color: var(--muted); max-width: 640px; }
+.enquire-panel .lead { color: rgba(245,240,232,0.85); }
 
 /* ── LAYOUT ── */
 .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
@@ -797,6 +798,7 @@ footer {
   <input name="county"><input name="city">
   <input name="partner-type"><input name="experience-years"><input name="staff-count">
   <input name="insurance"><input name="dbs-check"><input name="website">
+  <input name="County Other"><input name="City Other"><input name="DBS Certificate">
   <textarea name="about"></textarea><input name="referral">
 </form>
 <form method='post' name='host-application' style='display:none'>
@@ -809,6 +811,7 @@ footer {
   <input name="property-type"><input name="max-guests">
   <input name="household-adults"><input name="household-children">
   <input name="services"><input name="halal-capable"><input name="languages">
+  <input name="DBS Checked"><input name="County Other"><input name="City Other"><input name="DBS Certificate">
   <textarea name="about"></textarea><input name="referral">
 </form>
 
@@ -992,6 +995,101 @@ footer {
     </div>
   </div>
 </section>
+
+<!-- WAYS TO JOIN -->
+<style>
+  #join .join-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:1.5rem; margin-top:2.8rem; }
+  #join .join-card {
+    background:var(--cream);
+    border:1px solid rgba(201,168,76,0.28);
+    border-radius:10px;
+    padding:2.4rem 1.4rem;
+    text-align:center;
+    cursor:pointer;
+    display:flex; flex-direction:column; align-items:center;
+    transition:transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+  }
+  #join .join-card:hover, #join .join-card:focus-visible {
+    transform:translateY(-6px);
+    border-color:var(--gold);
+    box-shadow:0 14px 34px rgba(0,0,0,0.28);
+    outline:none;
+  }
+  #join .join-icon { width:46px; height:46px; color:var(--gold); margin-bottom:1.2rem; }
+  #join .join-card h3 { font-family:var(--ff-display); font-weight:500; font-size:1.4rem; color:var(--navy); margin:0 0 0.55rem; }
+  #join .join-card p { font-family:var(--ff-body); font-size:0.85rem; line-height:1.55; color:rgba(13,27,42,0.68); margin:0; }
+  @media (max-width:880px){ #join .join-grid { grid-template-columns:repeat(2,1fr); gap:1.2rem; } }
+  @media (max-width:520px){ #join .join-grid { grid-template-columns:1fr; } }
+</style>
+<section class="section section--dark" id="join" style="text-align:center">
+  <div class="container">
+    <div class="fade-up">
+      <span class="eyebrow">Ways to Join</span>
+      <h2 style="color:var(--cream);max-width:620px;margin:0 auto 1rem">Join British Heritage Hosts</h2>
+      <div class="gold-line gold-line--center"></div>
+      <p class="lead" style="margin:0 auto;max-width:560px;color:rgba(245,240,232,0.85)">Four ways to be part of the BHH network — choose the door that fits you.</p>
+      <div class="join-grid">
+
+        <div class="join-card" role="button" tabindex="0" aria-label="Guest — open the guest enquiry form" onclick="joinAs('guest')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();joinAs('guest');}">
+          <svg class="join-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="3" y="7" width="18" height="13" rx="2"/>
+            <path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+            <path d="M9 11v5M15 11v5"/>
+          </svg>
+          <h3>Guest</h3>
+          <p>Enquire about a British heritage experience.</p>
+        </div>
+
+        <div class="join-card" role="button" tabindex="0" aria-label="Host — open the host application form" onclick="joinAs('host')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();joinAs('host');}">
+          <svg class="join-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M3 10.5 12 3l9 7.5"/>
+            <path d="M5 9.5V20a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9.5"/>
+            <path d="M9.5 21v-6h5v6"/>
+          </svg>
+          <h3>Host</h3>
+          <p>Welcome our guests into your home for tea or dinner.</p>
+        </div>
+
+        <div class="join-card" role="button" tabindex="0" aria-label="Partner — open the partner application form" onclick="joinAs('partner')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();joinAs('partner');}">
+          <svg class="join-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="m11 17 2 2a1 1 0 1 0 3-3"/>
+            <path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4"/>
+            <path d="m21 3 1 11h-2"/>
+            <path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3"/>
+            <path d="M3 4h8"/>
+          </svg>
+          <h3>Partner</h3>
+          <p>Offer a service — transport, canal cruises and more.</p>
+        </div>
+
+        <div class="join-card" role="button" tabindex="0" aria-label="Guide — open the partner form with Heritage Guide selected" onclick="joinAs('guide')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();joinAs('guide');}">
+          <svg class="join-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"/>
+            <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>
+          </svg>
+          <h3>Guide</h3>
+          <p>Accompany our guests as a heritage guide.</p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+// "Ways to Join" cards → open the matching EXISTING form via the current tab switcher.
+function joinAs(role){
+  if(role === 'guide'){
+    switchTab('partner');
+    var sel = document.querySelector('#partner-form select[name="Partner Type"]');
+    if(sel){
+      sel.value = 'Heritage Guide';
+      sel.dispatchEvent(new Event('change', {bubbles:true}));
+    }
+  } else {
+    switchTab(role); // 'guest' | 'host' | 'partner'
+  }
+}
+</script>
 
 <!-- OUR PROMISE -->
 <section class="section section--white" id="about">
@@ -1438,13 +1536,21 @@ footer {
                   <option value="+36">🇭🇺 +36</option>
                   <option value="+420">🇨🇿 +420</option>
                 </select>
-                <input type="tel" name="Phone Number" id="phone-number-input" placeholder="7911 123456" style="flex:1" required pattern="[1-9][0-9]{6,13}" title="Enter your number without leading zero (e.g. 7911 123456)">
+                <input type="tel" name="Phone Number" id="phone-number-input" placeholder="7911 123456" style="flex:1" required title="Enter your number without leading zero (e.g. 7911 123456)">
               </div>
             </div>
           </div>
           <div class="form-row">
-            <div class="form-group"><label>County</label><input type="text" name="County" placeholder="e.g. Oxfordshire" required></div>
-            <div class="form-group"><label>City / Village <span style="color:#C9A84C">*</span></label><input type="text" name="city" placeholder="e.g. Woodstock" required></div>
+            <div class="form-group"><label>County</label>
+              <select name="County" id="host-county" required onchange="toggleListOther(this,'County Other')">
+                <option value="">Loading…</option>
+              </select>
+            </div>
+            <div class="form-group"><label>City / Village <span style="color:#C9A84C">*</span></label>
+              <select name="city" id="host-city" required onchange="toggleListOther(this,'City Other')">
+                <option value="">Loading…</option>
+              </select>
+            </div>
           </div>
           <div class="form-group"><label>Full Home Address <span style="color:#C9A84C">*</span></label><input type="text" name="Address" placeholder="House name or number, street, postcode" required></div>
           <div class="form-row">
@@ -1481,6 +1587,28 @@ footer {
               <option value="Yes - willing to learn">Yes — willing to learn</option>
               <option value="No">No</option>
             </select>
+          </div>
+          <div class="form-group"><label>DBS Checked <span style="color:#C9A84C">*</span></label>
+            <select name="DBS Checked" required onchange="onDbsChange(this,'host')">
+              <option value="">Select…</option>
+              <option value="Yes">Yes</option>
+              <option value="No - Will Obtain">No — but willing to obtain</option>
+              <option value="Not Applicable">Not applicable</option>
+            </select>
+          </div>
+          <div id="host-dbs-extra">
+            <div class="form-group" id="host-dbs-upload" style="display:none;margin-top:0.25rem;padding:1rem 1.1rem;background:rgba(201,168,76,0.05);border:1px solid rgba(201,168,76,0.25);border-radius:4px">
+              <label>Upload DBS Certificate <span style="color:#C9A84C">*</span></label>
+              <p style="font-size:0.75rem;color:rgba(245,240,232,0.75);margin:0.2rem 0 0.6rem">Please attach an official copy of your Enhanced DBS certificate (PDF, JPG or PNG · max 10 MB).</p>
+              <input type="file" id="host-dbs-file" data-prefix="host" accept=".pdf,.jpg,.jpeg,.png" onchange="validateDbsFile(this)" style="width:100%;color:var(--cream);font-size:0.8rem">
+              <input type="hidden" name="DBS Certificate" id="host-dbs-path">
+              <p id="host-dbs-status" style="font-size:0.72rem;margin:0.5rem 0 0;color:rgba(245,240,232,0.75)"></p>
+            </div>
+            <div class="form-group" id="host-dbs-info" style="display:none;margin-top:0.25rem;padding:1rem 1.1rem;background:rgba(201,168,76,0.05);border:1px solid rgba(201,168,76,0.25);border-radius:4px">
+              <p style="font-size:0.82rem;line-height:1.6;color:rgba(245,240,232,0.85);margin:0 0 0.6rem">An Enhanced DBS certificate cannot be purchased directly by individuals — it must be arranged through a registered body. British Heritage Hosts will guide approved applicants through obtaining one.</p>
+              <p style="font-size:0.82rem;line-height:1.6;color:rgba(245,240,232,0.85);margin:0 0 0.4rem"><strong style="color:var(--gold)">Required insurance cover:</strong> Public Liability and Professional Indemnity.</p>
+              <p style="font-size:0.78rem;margin:0"><a href="https://www.gov.uk/disclosure-barring-service-check" target="_blank" rel="noopener noreferrer" style="color:var(--gold);text-decoration:underline">Learn more about DBS checks on gov.uk</a></p>
+            </div>
           </div>
           <div class="form-group"><label>Languages Spoken <span style="color:#C9A84C">*</span></label><input type="text" name="Languages Spoken" required placeholder="e.g. English, French"></div>
           <div class="form-group"><label>Tell Us About Your Home and Family <span style="color:#C9A84C">*</span></label><textarea name="About" rows="4" placeholder="Describe your home, your family, your cooking skills, and why you would like to host international families." required></textarea></div>
@@ -1520,7 +1648,7 @@ footer {
           <input type="hidden" name="form-name" value="partner-application">
           <p style="display:none"><label>Don't fill this out if you're human: <input name="bot-field"></label></p>
           <input type="hidden" name="subject" id="partner-subject" value="BHH Partner Application">
-          <p style="font-size:0.75rem;color:rgba(30,30,30,0.5);margin-bottom:1.2rem;margin-top:0.5rem">Fields marked <span style='color:#C9A84C;font-weight:600'>*</span> are required. &nbsp;|&nbsp; Enter phone number without leading zero (e.g. 7911 123456 not 07911 123456).</p>
+          <p style="font-size:0.75rem;color:rgba(245,240,232,1);margin-bottom:1.2rem;margin-top:0.5rem">Fields marked <span style='color:#C9A84C;font-weight:600'>*</span> are required. &nbsp;|&nbsp; Enter phone number without leading zero (e.g. 7911 123456 not 07911 123456).</p>
           <div class="form-group"><label>Contact Person Full Name <span style="color:#C9A84C">*</span></label><input type="text" name="Contact Name" placeholder="James Williams" required></div>
           <div class="form-group"><label>Business / Company Name <span style="color:#C9A84C">*</span></label><input type="text" name="Business Name" placeholder="e.g. Thames Heritage Cruises Ltd" required></div>
           <div class="form-row">
@@ -1580,13 +1708,21 @@ footer {
                   <option value="+36">🇭🇺 +36</option>
                   <option value="+420">🇨🇿 +420</option>
                 </select>
-                <input type="tel" name="Phone Number" id="phone-number-input" placeholder="7911 123456" style="flex:1" required pattern="[1-9][0-9]{6,13}" title="Enter your number without leading zero (e.g. 7911 123456)">
+                <input type="tel" name="Phone Number" id="phone-number-input" placeholder="7911 123456" style="flex:1" required title="Enter your number without leading zero (e.g. 7911 123456)">
               </div>
             </div>
           </div>
           <div class="form-row">
-            <div class="form-group"><label>County <span style="color:#C9A84C">*</span></label><input type="text" name="County" placeholder="e.g. Greater London" required></div>
-            <div class="form-group"><label>City <span style="color:#C9A84C">*</span></label><input type="text" name="city" placeholder="e.g. London" required></div>
+            <div class="form-group"><label>County <span style="color:#C9A84C">*</span></label>
+              <select name="County" id="partner-county" required onchange="toggleListOther(this,'County Other')">
+                <option value="">Loading…</option>
+              </select>
+            </div>
+            <div class="form-group"><label>City <span style="color:#C9A84C">*</span></label>
+              <select name="city" id="partner-city" required onchange="toggleListOther(this,'City Other')">
+                <option value="">Loading…</option>
+              </select>
+            </div>
           </div>
           <div class="form-group"><label>Partner Type <span style="color:#C9A84C">*</span></label>
             <select name="Partner Type" required>
@@ -1616,12 +1752,26 @@ footer {
               </select>
             </div>
             <div class="form-group"><label>DBS Checked <span style="color:#C9A84C">*</span></label>
-              <select name="DBS Checked" required>
+              <select name="DBS Checked" required onchange="onDbsChange(this,'partner')">
                 <option value="">Select…</option>
                 <option value="Yes">Yes</option>
                 <option value="No - Will Obtain">No — but willing to obtain</option>
                 <option value="Not Applicable">Not applicable</option>
               </select>
+            </div>
+          </div>
+          <div id="partner-dbs-extra">
+            <div class="form-group" id="partner-dbs-upload" style="display:none;margin-top:0.25rem;padding:1rem 1.1rem;background:rgba(201,168,76,0.05);border:1px solid rgba(201,168,76,0.25);border-radius:4px">
+              <label>Upload DBS Certificate <span style="color:#C9A84C">*</span></label>
+              <p style="font-size:0.75rem;color:rgba(245,240,232,0.75);margin:0.2rem 0 0.6rem">Please attach an official copy of your Enhanced DBS certificate (PDF, JPG or PNG · max 10 MB).</p>
+              <input type="file" id="partner-dbs-file" data-prefix="partner" accept=".pdf,.jpg,.jpeg,.png" onchange="validateDbsFile(this)" style="width:100%;color:var(--cream);font-size:0.8rem">
+              <input type="hidden" name="DBS Certificate" id="partner-dbs-path">
+              <p id="partner-dbs-status" style="font-size:0.72rem;margin:0.5rem 0 0;color:rgba(245,240,232,0.75)"></p>
+            </div>
+            <div class="form-group" id="partner-dbs-info" style="display:none;margin-top:0.25rem;padding:1rem 1.1rem;background:rgba(201,168,76,0.05);border:1px solid rgba(201,168,76,0.25);border-radius:4px">
+              <p style="font-size:0.82rem;line-height:1.6;color:rgba(245,240,232,0.85);margin:0 0 0.6rem">An Enhanced DBS certificate cannot be purchased directly by individuals — it must be arranged through a registered body. British Heritage Hosts will guide approved applicants through obtaining one.</p>
+              <p style="font-size:0.82rem;line-height:1.6;color:rgba(245,240,232,0.85);margin:0 0 0.4rem"><strong style="color:var(--gold)">Required insurance cover:</strong> Public Liability and Professional Indemnity.</p>
+              <p style="font-size:0.78rem;margin:0"><a href="https://www.gov.uk/disclosure-barring-service-check" target="_blank" rel="noopener noreferrer" style="color:var(--gold);text-decoration:underline">Learn more about DBS checks on gov.uk</a></p>
             </div>
           </div>
           <div class="form-group"><label>Website or Portfolio</label><input type="url" name="Website" placeholder="https://yourwebsite.com"></div>
@@ -2625,6 +2775,213 @@ function closeThankyouModal(modalId) {
   allForms.forEach(function(f) { f.style.display = ''; });
 }
 
+</script>
+
+<!-- ═══════ BHH host/partner form enhancements ═══════
+     Phone validation+formatting per country code, UK county/city dropdowns
+     with "Other → free text", and DBS conditional (upload to Supabase / info note). -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(function(){
+  'use strict';
+
+  // ── Supabase storage (PLACEHOLDERS — fill in after creating the bucket) ──
+  var SUPABASE_URL = 'https://pwqdzitsezblncmewxsf.supabase.co';
+  var SUPABASE_ANON_KEY = 'sb_publishable_H0r74_Q9plT7R3lizr1CQw_GkAVgSlw';
+  var DBS_BUCKET = 'dbs-certificates';
+  // Supabase setup required (do this in the dashboard before going live):
+  //  1. Create a PRIVATE Storage bucket named "dbs-certificates".
+  //  2. Add a storage policy allowing INSERT for the "anon" role on this
+  //     bucket only — NO select / update / delete for anon.
+  //  3. Retrieve files as an admin via signed URLs (dashboard, or a server
+  //     function using the service-role key — never put that key in this file).
+  var _sb = null;
+  function sbClient(){
+    if(_sb) return _sb;
+    if(typeof supabase === 'undefined' || !supabase.createClient) return null;
+    _sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    return _sb;
+  }
+
+  // ── UK counties (ceremonial counties + Welsh/Scottish/NI areas) ──
+  var UK_COUNTIES = ["Bedfordshire","Berkshire","Bristol","Buckinghamshire","Cambridgeshire","Cheshire","City of London","Cornwall","Cumbria","Derbyshire","Devon","Dorset","Durham","East Riding of Yorkshire","East Sussex","Essex","Gloucestershire","Greater London","Greater Manchester","Hampshire","Herefordshire","Hertfordshire","Isle of Wight","Kent","Lancashire","Leicestershire","Lincolnshire","Merseyside","Norfolk","North Yorkshire","Northamptonshire","Northumberland","Nottinghamshire","Oxfordshire","Rutland","Shropshire","Somerset","South Yorkshire","Staffordshire","Suffolk","Surrey","Tyne and Wear","Warwickshire","West Midlands","West Sussex","West Yorkshire","Wiltshire","Worcestershire","Clwyd","Dyfed","Gwent","Gwynedd","Mid Glamorgan","Powys","South Glamorgan","West Glamorgan","Aberdeenshire","Angus","Argyll and Bute","Ayrshire","Clackmannanshire","Dumfries and Galloway","Dunbartonshire","City of Edinburgh","Fife","Highland","Inverness-shire","Lanarkshire","Midlothian","Moray","Perth and Kinross","Renfrewshire","Scottish Borders","Stirlingshire","West Lothian","County Antrim","County Armagh","County Down","County Fermanagh","County Londonderry","County Tyrone"];
+
+  // UK cities — reuse the page's existing dataset if present
+  function ukCities(){
+    try { if(window.worldData_global && worldData_global["United Kingdom"]) return worldData_global["United Kingdom"].cities.slice(); } catch(e){}
+    return ["London","Manchester","Birmingham","Edinburgh","Glasgow","Liverpool","Leeds","Bristol","Oxford","Cambridge","Bath","York","Brighton","Cardiff","Belfast","Newcastle","Nottingham","Sheffield","Leicester","Southampton","Portsmouth","Exeter","Canterbury","Chester","Windsor","Stratford-upon-Avon","Bournemouth","Aberdeen","Inverness","Swansea"];
+  }
+
+  function fillSelect(id, items){
+    var sel = document.getElementById(id);
+    if(!sel) return;
+    var html = '<option value="">Select…</option>';
+    items.forEach(function(i){ html += '<option value="'+i+'">'+i+'</option>'; });
+    html += '<option value="Other">Other (type below)</option>';
+    sel.innerHTML = html;
+  }
+
+  // ── Generic "Other → free text" reveal (county/city selects) ──
+  window.toggleListOther = function(sel, otherName){
+    var grp = (sel.closest && sel.closest('.form-group')) || sel.parentNode;
+    var existing = grp.querySelector('input[data-other="'+otherName+'"]');
+    if(sel.value === 'Other'){
+      if(!existing){
+        var inp = document.createElement('input');
+        inp.type='text'; inp.name=otherName; inp.setAttribute('data-other',otherName);
+        inp.placeholder='Please type and specify'; inp.required=true;
+        inp.style.cssText='margin-top:0.5rem;width:100%';
+        grp.appendChild(inp);
+      }
+    } else if(existing){ existing.remove(); }
+  };
+
+  // ── Phone rules: national-number digit count + preferred display grouping ──
+  var PHONE_RULES = {
+    '+44':{min:9,max:10,g:[4,6]}, '+1':{min:10,max:10,g:[3,3,4]},
+    '+966':{min:9,max:9,g:[3,3,3]}, '+971':{min:8,max:9,g:[3,3,3]},
+    '+974':{min:8,max:8,g:[4,4]}, '+965':{min:8,max:8,g:[4,4]},
+    '+968':{min:8,max:8,g:[4,4]}, '+973':{min:8,max:8,g:[4,4]},
+    '+33':{min:9,max:9,g:[3,3,3]}, '+49':{min:6,max:11,g:null},
+    '+39':{min:9,max:10,g:[3,3,4]}, '+34':{min:9,max:9,g:[3,3,3]},
+    '+31':{min:9,max:9,g:[3,3,3]}, '+32':{min:8,max:9,g:[3,3,3]},
+    '+41':{min:9,max:9,g:[2,3,2,2]}, '+43':{min:7,max:12,g:null},
+    '+46':{min:7,max:10,g:null}, '+47':{min:8,max:8,g:[3,2,3]},
+    '+45':{min:8,max:8,g:[2,2,2,2]}, '+358':{min:6,max:11,g:null},
+    '+48':{min:9,max:9,g:[3,3,3]}, '+7':{min:10,max:10,g:[3,3,2,2]},
+    '+90':{min:10,max:10,g:[3,3,2,2]}, '+91':{min:10,max:10,g:[5,5]},
+    '+86':{min:11,max:11,g:[3,4,4]}, '+81':{min:9,max:10,g:null},
+    '+82':{min:9,max:10,g:null}, '+65':{min:8,max:8,g:[4,4]},
+    '+60':{min:9,max:10,g:null}, '+62':{min:9,max:12,g:null},
+    '+63':{min:10,max:10,g:[3,3,4]}, '+66':{min:9,max:9,g:[2,3,4]},
+    '+92':{min:10,max:10,g:[3,7]}, '+880':{min:10,max:10,g:null},
+    '+20':{min:10,max:10,g:[3,3,4]}, '+212':{min:9,max:9,g:[3,3,3]},
+    '+213':{min:9,max:9,g:[3,3,3]}, '+27':{min:9,max:9,g:[3,3,3]},
+    '+234':{min:10,max:10,g:[3,3,4]}, '+254':{min:9,max:9,g:[3,3,3]},
+    '+55':{min:10,max:11,g:null}, '+52':{min:10,max:10,g:[3,3,4]},
+    '+54':{min:10,max:10,g:[3,3,4]}, '+61':{min:9,max:9,g:[3,3,3]},
+    '+64':{min:8,max:10,g:null}, '+353':{min:7,max:9,g:null},
+    '+351':{min:9,max:9,g:[3,3,3]}, '+30':{min:10,max:10,g:[3,3,4]},
+    '+36':{min:9,max:9,g:[2,3,4]}, '+420':{min:9,max:9,g:[3,3,3]}
+  };
+  var DEFAULT_RULE = {min:6,max:14,g:null};
+
+  function digitsOnly(s){ return (s||'').replace(/\D/g,''); }
+  function groupDigits(d, g){
+    if(g && g.reduce(function(a,b){return a+b;},0) === d.length){
+      var out=[], i=0;
+      g.forEach(function(n){ out.push(d.substr(i,n)); i+=n; });
+      return out.join(' ');
+    }
+    return d.replace(/(.{3})(?=.)/g,'$1 ').trim(); // fallback: groups of 3
+  }
+
+  function setupPhone(form){
+    if(!form) return;
+    var code = form.querySelector('select[name="Country Code"]');
+    var phone = form.querySelector('input[name="Phone Number"]');
+    if(!code || !phone) return;
+    function rule(){ return PHONE_RULES[code.value] || DEFAULT_RULE; }
+    function validate(){
+      var d = digitsOnly(phone.value), r = rule();
+      if(!d){ phone.setCustomValidity(''); return; }
+      if(!code.value){ phone.setCustomValidity('Please select a country code first.'); return; }
+      if(d.length < r.min || d.length > r.max){
+        var range = (r.min===r.max) ? (r.min+' digits') : (r.min+'–'+r.max+' digits');
+        phone.setCustomValidity('Enter a valid phone number for '+code.value+' ('+range+', no leading zero).');
+      } else { phone.setCustomValidity(''); }
+    }
+    function reformat(){
+      var d = digitsOnly(phone.value).replace(/^0+/, ''); // drop leading zero(s)
+      var r = rule();
+      if(d.length > r.max) d = d.slice(0, r.max);
+      phone.value = groupDigits(d, r.g);
+      validate();
+    }
+    phone.addEventListener('input', reformat);
+    code.addEventListener('change', reformat);
+    // strip spaces on submit so the stored value is clean digits
+    form.addEventListener('submit', function(){ phone.value = digitsOnly(phone.value); }, false);
+    validate();
+  }
+
+  // ── DBS conditional reveal ──
+  window.onDbsChange = function(sel, prefix){
+    var v = sel.value;
+    var up = document.getElementById(prefix+'-dbs-upload');
+    var info = document.getElementById(prefix+'-dbs-info');
+    var file = document.getElementById(prefix+'-dbs-file');
+    var path = document.getElementById(prefix+'-dbs-path');
+    var st = document.getElementById(prefix+'-dbs-status');
+    var isYes = (v === 'Yes'), isWilling = (v === 'No - Will Obtain');
+    if(up) up.style.display = isYes ? 'block' : 'none';
+    if(info) info.style.display = isWilling ? 'block' : 'none';
+    if(file){
+      file.required = isYes;
+      if(!isYes){ file.value=''; if(path) path.value=''; if(st) st.textContent=''; }
+    }
+  };
+
+  window.validateDbsFile = function(input){
+    var prefix = input.getAttribute('data-prefix');
+    var st = document.getElementById(prefix+'-dbs-status');
+    var path = document.getElementById(prefix+'-dbs-path');
+    if(path) path.value = ''; // a new file must be re-uploaded
+    if(!input.files || !input.files.length){ if(st) st.textContent=''; return; }
+    var f = input.files[0];
+    if(!/\.(pdf|jpe?g|png)$/i.test(f.name)){ input.value=''; if(st){ st.style.color='#E8A0A0'; st.textContent='Please upload a PDF, JPG or PNG file.'; } return; }
+    if(f.size > 10*1024*1024){ input.value=''; if(st){ st.style.color='#E8A0A0'; st.textContent='File too large — maximum 10 MB.'; } return; }
+    if(st){ st.style.color='rgba(245,240,232,0.75)'; st.textContent='Ready to upload: '+f.name; }
+  };
+
+  function randId(){ return Date.now().toString(36) + '-' + Math.random().toString(36).slice(2,10); }
+  function uploadDbs(file, prefix){
+    var client = sbClient();
+    if(!client) return Promise.reject(new Error('Storage is not configured yet.'));
+    var ext = (file.name.split('.').pop()||'dat').toLowerCase();
+    var objPath = prefix + '/' + randId() + '.' + ext;
+    return client.storage.from(DBS_BUCKET).upload(objPath, file, {contentType:file.type, upsert:false})
+      .then(function(res){ if(res.error) throw res.error; return (res.data && res.data.path) || objPath; });
+  }
+
+  function setupDbsSubmit(formId, prefix){
+    var form = document.getElementById(formId);
+    if(!form) return;
+    form.addEventListener('submit', function(e){
+      var file = document.getElementById(prefix+'-dbs-file');
+      var path = document.getElementById(prefix+'-dbs-path');
+      var st = document.getElementById(prefix+'-dbs-status');
+      if(file && file.files && file.files.length && path && !path.value){
+        e.preventDefault();
+        e.stopPropagation();
+        var btn = form.querySelector('button[type="submit"]');
+        if(btn) btn.disabled = true;
+        if(st){ st.style.color='rgba(245,240,232,0.75)'; st.textContent='Uploading certificate…'; }
+        uploadDbs(file.files[0], prefix).then(function(p){
+          path.value = p;
+          if(st) st.textContent='Upload complete.';
+          form.submit(); // native submit bypasses listeners — no re-loop
+        }).catch(function(err){
+          if(btn) btn.disabled = false;
+          var msg = (err && err.message) ? err.message : 'please try again.';
+          if(st){ st.style.color='#E8A0A0'; st.textContent='Upload failed: '+msg; }
+          else { alert('DBS upload failed: '+msg); }
+        });
+      }
+    }, false);
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    fillSelect('host-county', UK_COUNTIES);
+    fillSelect('partner-county', UK_COUNTIES);
+    fillSelect('host-city', ukCities());
+    fillSelect('partner-city', ukCities());
+    setupPhone(document.getElementById('host-form'));
+    setupPhone(document.getElementById('partner-form'));
+    setupDbsSubmit('host-form','host');
+    setupDbsSubmit('partner-form','partner');
+  });
+})();
 </script>
 
 <!-- Thank-you modals for form success -->
