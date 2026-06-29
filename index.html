@@ -134,6 +134,78 @@ nav {
 }
 .nav-cta:hover { background: var(--gold) !important; color: var(--navy) !important; }
 
+/* ── JOIN US DROPDOWN (desktop) ── */
+.nav-join { position: relative; }
+.nav-join-caret { font-size: 0.85em; margin-left: 0.15rem; }
+.nav-join-menu {
+  position: absolute; right: 0; top: 100%;
+  margin: 0; padding: 0.4rem; min-width: 232px;
+  list-style: none;
+  background: rgba(13,27,42,0.99);
+  border: 1px solid rgba(201,168,76,0.35);
+  border-radius: 6px;
+  box-shadow: 0 14px 34px rgba(0,0,0,0.45);
+  display: flex; flex-direction: column;
+  opacity: 0; visibility: hidden; transform: translateY(-8px);
+  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+  z-index: 200;
+}
+.nav-join:hover .nav-join-menu,
+.nav-join:focus-within .nav-join-menu,
+.nav-join.open .nav-join-menu {
+  opacity: 1; visibility: visible; transform: translateY(0);
+}
+.nav-join-menu a {
+  display: flex; align-items: center; gap: 0.65rem;
+  padding: 0.7rem 0.85rem; border-radius: 4px;
+  color: var(--cream) !important; white-space: nowrap;
+  font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase;
+}
+.nav-join-menu a:hover { background: rgba(201,168,76,0.12); color: var(--gold) !important; }
+.door-icon { width: 18px; height: 18px; color: var(--gold); flex-shrink: 0; }
+
+/* ── HAMBURGER + MOBILE MENU ── */
+.nav-toggle {
+  display: none; background: transparent; border: none; cursor: pointer;
+  padding: 0.3rem; color: var(--gold); line-height: 0;
+}
+.nav-toggle svg { width: 28px; height: 28px; display: block; }
+.nav-toggle .icon-close { display: none; }
+.nav-toggle.is-open .icon-bars { display: none; }
+.nav-toggle.is-open .icon-close { display: block; }
+.mobile-menu {
+  position: fixed; left: 0; right: 0; top: 0; z-index: 95;
+  display: flex; flex-direction: column; gap: 0.15rem;
+  padding: 1rem 1.5rem 1.6rem;
+  background: rgba(13,27,42,0.99);
+  border-bottom: 1px solid rgba(201,168,76,0.3);
+  backdrop-filter: blur(12px);
+  opacity: 0; visibility: hidden; transform: translateY(-12px); pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+}
+.mobile-menu.open { opacity: 1; visibility: visible; transform: translateY(0); pointer-events: auto; }
+.mobile-menu a {
+  color: rgba(245,240,232,0.85); text-decoration: none;
+  font-size: 0.8rem; letter-spacing: 0.12em; text-transform: uppercase;
+  padding: 0.75rem 0.4rem; border-bottom: 1px solid rgba(245,240,232,0.06);
+}
+.mobile-menu a:hover { color: var(--gold); }
+.mobile-menu-label {
+  margin-top: 0.7rem; padding: 0.3rem 0.4rem;
+  font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold);
+}
+.mobile-menu .mobile-door {
+  display: flex; align-items: center; gap: 0.7rem;
+  color: var(--cream); border-bottom: none;
+  background: rgba(201,168,76,0.06);
+  border: 1px solid rgba(201,168,76,0.25);
+  border-radius: 6px; margin-top: 0.4rem; padding: 0.9rem;
+  font-weight: 500;
+}
+.mobile-menu .mobile-door:hover { background: rgba(201,168,76,0.14); color: var(--gold); }
+@media (max-width: 768px) { .nav-toggle { display: inline-flex; } }
+@media (min-width: 769px) { .mobile-menu { display: none; } }
+
 /* ── BUTTONS ── */
 .btn {
   display: inline-block;
@@ -823,12 +895,40 @@ footer {
   <ul class="nav-links">
     <li><a href="#services">Our Services</a></li>
     <li><a href="#about">About</a></li>
-    <li><a href="#enquire" onclick="switchTab('host')">Become a Host</a></li>
-    <li><a href="#enquire" onclick="switchTab('partner')">Become a Partner</a></li>
     <li><a href="#contact">Contact</a></li>
-    <li><a href="#enquire" class="nav-cta" onclick="switchTab('guest')">Become a Guest</a></li>
   </ul>
+  <button class="nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu" onclick="toggleMobileMenu()">
+    <svg class="icon-bars" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    <svg class="icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M5 5l14 14M19 5 5 19"/></svg>
+  </button>
 </nav>
+<!-- Mobile menu -->
+<div class="mobile-menu" id="mobileMenu" role="dialog" aria-label="Menu">
+  <a href="#services" onclick="closeMobileMenu()">Our Services</a>
+  <a href="#about" onclick="closeMobileMenu()">About</a>
+  <a href="#contact" onclick="closeMobileMenu()">Contact</a>
+</div>
+<!-- Shared icon sprite for nav menus -->
+<svg width="0" height="0" style="position:absolute;overflow:hidden" aria-hidden="true">
+  <symbol id="ic-guest" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M9 11v5M15 11v5"/></symbol>
+  <symbol id="ic-host" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9.5"/><path d="M9.5 21v-6h5v6"/></symbol>
+  <symbol id="ic-partner" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m11 17 2 2a1 1 0 1 0 3-3"/><path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4"/><path d="m21 3 1 11h-2"/><path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3"/><path d="M3 4h8"/></symbol>
+  <symbol id="ic-guide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></symbol>
+</svg>
+<script>
+function toggleMobileMenu(){
+  var btn=document.getElementById('navToggle'), menu=document.getElementById('mobileMenu'), nav=document.querySelector('nav');
+  var open=menu.classList.toggle('open');
+  btn.classList.toggle('is-open', open);
+  btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  if(open && nav){ menu.style.top = nav.offsetHeight + 'px'; }
+}
+function closeMobileMenu(){
+  var btn=document.getElementById('navToggle'), menu=document.getElementById('mobileMenu');
+  if(menu) menu.classList.remove('open');
+  if(btn){ btn.classList.remove('is-open'); btn.setAttribute('aria-expanded','false'); }
+}
+</script>
 
 <!-- HERO -->
 <section class="hero">
@@ -848,6 +948,77 @@ footer {
     <div class="gold-line gold-line--center"></div>
     <p class="lead" style="text-align:center;color:rgba(245,240,232,0.7);margin:0 auto;max-width:600px;">Private cultural experiences in real English homes — curated exclusively for discerning international families visiting England.</p>
   </div>
+
+  <!-- FOUR DOORS — primary entry points, visible at a glance (no hover, no menu) -->
+  <style>
+    #doors { position:relative; z-index:2; max-width:1000px; margin:2.4rem auto 0; padding:0 2rem; }
+    #doors .doors-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:1.25rem; }
+    #doors .door-card {
+      background:var(--cream);
+      border:1px solid rgba(201,168,76,0.45);
+      border-radius:10px;
+      padding:1.8rem 1.1rem;
+      text-align:center; text-decoration:none;
+      cursor:pointer;
+      display:flex; flex-direction:column; align-items:center;
+      transition:transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+    #doors .door-card:hover, #doors .door-card:focus-visible {
+      transform:translateY(-6px);
+      border-color:var(--gold);
+      box-shadow:0 14px 34px rgba(0,0,0,0.35);
+      outline:none;
+    }
+    #doors .door-ic { width:40px; height:40px; color:var(--gold); margin-bottom:0.85rem; }
+    #doors .door-card h3 { font-family:var(--ff-display); font-weight:500; font-size:1.25rem; color:var(--navy); margin:0 0 0.35rem; }
+    #doors .door-card p { font-family:var(--ff-body); font-size:0.78rem; line-height:1.5; color:rgba(13,27,42,0.66); margin:0; }
+    @media (max-width:900px){ #doors .doors-grid { grid-template-columns:repeat(2,1fr); } }
+    @media (max-width:560px){
+      /* On mobile, make the four doors the very first content (above the hero text) */
+      .hero { display:flex !important; flex-direction:column; padding-top:124px; }
+      #doors { order:-1; margin:0 0 0.8rem; padding:0 1.2rem; }
+      #doors .doors-grid { grid-template-columns:1fr; gap:0.8rem; }
+      #doors .door-card { flex-direction:row; gap:0.95rem; text-align:left; padding:1rem 1.2rem; }
+      #doors .door-ic { margin-bottom:0; width:34px; height:34px; }
+      #doors .door-card h3 { font-size:1.15rem; }
+    }
+  </style>
+  <div id="doors">
+    <div class="doors-grid">
+      <a class="door-card" href="#enquire" aria-label="Become a Guest — open the guest enquiry form" onclick="joinAs('guest');return false;" onkeydown="if(event.key===' '){event.preventDefault();joinAs('guest');}">
+        <svg class="door-ic" aria-hidden="true"><use href="#ic-guest"/></svg>
+        <h3>Become a Guest</h3>
+        <p>Enquire about a British heritage experience.</p>
+      </a>
+      <a class="door-card" href="#enquire" aria-label="Become a Host — open the host application form" onclick="joinAs('host');return false;" onkeydown="if(event.key===' '){event.preventDefault();joinAs('host');}">
+        <svg class="door-ic" aria-hidden="true"><use href="#ic-host"/></svg>
+        <h3>Become a Host</h3>
+        <p>Welcome our guests into your home for tea or dinner.</p>
+      </a>
+      <a class="door-card" href="#enquire" aria-label="Become a Partner — open the partner application form" onclick="joinAs('partner');return false;" onkeydown="if(event.key===' '){event.preventDefault();joinAs('partner');}">
+        <svg class="door-ic" aria-hidden="true"><use href="#ic-partner"/></svg>
+        <h3>Become a Partner</h3>
+        <p>Offer a service — transport, canal cruises and more.</p>
+      </a>
+      <a class="door-card" href="#enquire" aria-label="Become a Guide — open the partner form with Heritage Guide selected" onclick="joinAs('guide');return false;" onkeydown="if(event.key===' '){event.preventDefault();joinAs('guide');}">
+        <svg class="door-ic" aria-hidden="true"><use href="#ic-guide"/></svg>
+        <h3>Become a Guide</h3>
+        <p>Accompany our guests as a heritage guide.</p>
+      </a>
+    </div>
+  </div>
+  <script>
+  // Four-door cards → open the matching existing form via the tab switcher.
+  function joinAs(role){
+    if(role === 'guide'){
+      switchTab('partner');
+      var sel = document.querySelector('#partner-form select[name="Partner Type"]');
+      if(sel){ sel.value = 'Heritage Guide'; sel.dispatchEvent(new Event('change', {bubbles:true})); }
+    } else {
+      switchTab(role); // 'guest' | 'host' | 'partner'
+    }
+  }
+  </script>
 
   <!-- HERO IMAGE (centred, contained) -->
   <div style="max-width:1000px;margin:0 auto;overflow:hidden;position:relative;">
@@ -996,100 +1167,6 @@ footer {
   </div>
 </section>
 
-<!-- WAYS TO JOIN -->
-<style>
-  #join .join-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:1.5rem; margin-top:2.8rem; }
-  #join .join-card {
-    background:var(--cream);
-    border:1px solid rgba(201,168,76,0.28);
-    border-radius:10px;
-    padding:2.4rem 1.4rem;
-    text-align:center;
-    cursor:pointer;
-    display:flex; flex-direction:column; align-items:center;
-    transition:transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
-  }
-  #join .join-card:hover, #join .join-card:focus-visible {
-    transform:translateY(-6px);
-    border-color:var(--gold);
-    box-shadow:0 14px 34px rgba(0,0,0,0.28);
-    outline:none;
-  }
-  #join .join-icon { width:46px; height:46px; color:var(--gold); margin-bottom:1.2rem; }
-  #join .join-card h3 { font-family:var(--ff-display); font-weight:500; font-size:1.4rem; color:var(--navy); margin:0 0 0.55rem; }
-  #join .join-card p { font-family:var(--ff-body); font-size:0.85rem; line-height:1.55; color:rgba(13,27,42,0.68); margin:0; }
-  @media (max-width:880px){ #join .join-grid { grid-template-columns:repeat(2,1fr); gap:1.2rem; } }
-  @media (max-width:520px){ #join .join-grid { grid-template-columns:1fr; } }
-</style>
-<section class="section section--dark" id="join" style="text-align:center">
-  <div class="container">
-    <div class="fade-up">
-      <span class="eyebrow">Ways to Join</span>
-      <h2 style="color:var(--cream);max-width:620px;margin:0 auto 1rem">Join British Heritage Hosts</h2>
-      <div class="gold-line gold-line--center"></div>
-      <p class="lead" style="margin:0 auto;max-width:560px;color:rgba(245,240,232,0.85)">Four ways to be part of the BHH network — choose the door that fits you.</p>
-      <div class="join-grid">
-
-        <div class="join-card" role="button" tabindex="0" aria-label="Guest — open the guest enquiry form" onclick="joinAs('guest')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();joinAs('guest');}">
-          <svg class="join-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <rect x="3" y="7" width="18" height="13" rx="2"/>
-            <path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
-            <path d="M9 11v5M15 11v5"/>
-          </svg>
-          <h3>Guest</h3>
-          <p>Enquire about a British heritage experience.</p>
-        </div>
-
-        <div class="join-card" role="button" tabindex="0" aria-label="Host — open the host application form" onclick="joinAs('host')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();joinAs('host');}">
-          <svg class="join-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M3 10.5 12 3l9 7.5"/>
-            <path d="M5 9.5V20a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9.5"/>
-            <path d="M9.5 21v-6h5v6"/>
-          </svg>
-          <h3>Host</h3>
-          <p>Welcome our guests into your home for tea or dinner.</p>
-        </div>
-
-        <div class="join-card" role="button" tabindex="0" aria-label="Partner — open the partner application form" onclick="joinAs('partner')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();joinAs('partner');}">
-          <svg class="join-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="m11 17 2 2a1 1 0 1 0 3-3"/>
-            <path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4"/>
-            <path d="m21 3 1 11h-2"/>
-            <path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3"/>
-            <path d="M3 4h8"/>
-          </svg>
-          <h3>Partner</h3>
-          <p>Offer a service — transport, canal cruises and more.</p>
-        </div>
-
-        <div class="join-card" role="button" tabindex="0" aria-label="Guide — open the partner form with Heritage Guide selected" onclick="joinAs('guide')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();joinAs('guide');}">
-          <svg class="join-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <circle cx="12" cy="12" r="10"/>
-            <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>
-          </svg>
-          <h3>Guide</h3>
-          <p>Accompany our guests as a heritage guide.</p>
-        </div>
-
-      </div>
-    </div>
-  </div>
-</section>
-<script>
-// "Ways to Join" cards → open the matching EXISTING form via the current tab switcher.
-function joinAs(role){
-  if(role === 'guide'){
-    switchTab('partner');
-    var sel = document.querySelector('#partner-form select[name="Partner Type"]');
-    if(sel){
-      sel.value = 'Heritage Guide';
-      sel.dispatchEvent(new Event('change', {bubbles:true}));
-    }
-  } else {
-    switchTab(role); // 'guest' | 'host' | 'partner'
-  }
-}
-</script>
 
 <!-- OUR PROMISE -->
 <section class="section section--white" id="about">
