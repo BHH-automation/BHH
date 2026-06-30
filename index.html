@@ -1860,12 +1860,16 @@ function closeMobileMenu(){
   #join .join-options { display:none; flex-direction:column; gap:0.5rem; max-width:340px; margin:1.4rem auto 0; }
   #join details[open] .join-options { display:flex; }
   #join .join-options a {
-    display:block; padding:0.7rem 1rem; border-radius:6px;
+    display:flex; flex-direction:column; padding:0.7rem 1rem; border-radius:6px;
     border:1px solid rgba(201,168,76,0.3);
     background:rgba(201,168,76,0.06);
     color:var(--cream); text-decoration:none;
     font-family:var(--ff-body); font-size:0.78rem; letter-spacing:0.1em; text-transform:uppercase;
     transition:background 0.2s, border-color 0.2s, color 0.2s;
+  }
+  #join .join-opt-note {
+    margin-top:0.25rem; font-size:0.72rem; line-height:1.35;
+    color:rgba(245,240,232,0.6); text-transform:none; letter-spacing:0; font-weight:400;
   }
   #join .join-options a:hover, #join .join-options a:focus-visible { background:rgba(201,168,76,0.14); border-color:var(--gold); color:var(--gold); outline:none; }
 </style>
@@ -1875,11 +1879,11 @@ function closeMobileMenu(){
       <details class="join-disclosure">
         <summary class="btn btn-outline-gold join-summary">Partner with Us</summary>
         <div class="join-options">
-          <a href="#enquire" onclick="joinAs('host');return false;">Become a Host</a>
-          <a href="#enquire" onclick="joinAs('partner');return false;">Become a Partner</a>
-          <a href="#enquire" onclick="joinAs('guide');return false;">Become a Guide</a>
-          <a href="#enquire" onclick="joinAs('interpreter');return false;">Become an Interpreter</a>
-          <a href="#enquire" onclick="joinAs('language-partner');return false;">Become a Language Partner</a>
+          <a href="#enquire" onclick="joinAs('host');return false;"><span class="join-opt-title">Become a Host</span><span class="join-opt-note">Welcome our guests into your home for tea or dinner.</span></a>
+          <a href="#enquire" onclick="joinAs('partner');return false;"><span class="join-opt-title">Become a Partner</span><span class="join-opt-note">Offer a service — transport, canal cruises and more.</span></a>
+          <a href="#enquire" onclick="joinAs('guide');return false;"><span class="join-opt-title">Become a Guide</span><span class="join-opt-note">Accompany our guests as a heritage guide.</span></a>
+          <a href="#enquire" onclick="joinAs('interpreter');return false;"><span class="join-opt-title">Become an Interpreter</span><span class="join-opt-note">Interpret for our guests in your language.</span></a>
+          <a href="#enquire" onclick="joinAs('language-partner');return false;"><span class="join-opt-title">Become a Language Partner</span><span class="join-opt-note">Teach English to our visiting families.</span></a>
         </div>
       </details>
     </div>
