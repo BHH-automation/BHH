@@ -1501,6 +1501,14 @@ function closeMobileMenu(){
                 <span class="svc-label">Airport &amp; Transport</span>
                 <span class="service-card-check"></span>
               </div>
+              <div class="service-card-v8" data-service="Cultural Immersion Program" onclick="toggleService(this)">
+                <span class="svc-label">Cultural Immersion Program</span>
+                <span class="service-card-check"></span>
+              </div>
+              <div class="service-card-v8" data-service="Personal Interpreter Service" onclick="toggleService(this)">
+                <span class="svc-label">Personal Interpreter Service</span>
+                <span class="service-card-check"></span>
+              </div>
             </div>
             <input type="hidden" name="Experience Requested" id="enquire-service-select" value="" required>
           </div>
@@ -2548,13 +2556,15 @@ function renderTierSlots() {
   var html = '';
   for (var i = 0; i < services.length; i++) {
     var svc  = services[i];
-    var copy = TIER_COPY[svc] || { standard: '', premium: '' };
+    var copy = TIER_COPY[svc];
     var currentTier = TIER_STATE[svc] || '';
     var escSvc = svc.replace(/"/g, '&quot;').replace(/&/g, '&amp;');
     var capacityNote = computeCapacityNote(svc, currentTier);
-    html += '<div class="tier-slot" data-svc-key="' + escSvc + '">'
-          +   '<div class="tier-slot-header">' + escSvc + '</div>'
-          +   '<div class="tier-slot-cards">'
+
+    var cardsHtml;
+    if (copy) {
+      // Service with defined tiers — Standard / Premium pair (existing behaviour)
+      cardsHtml = '<div class="tier-slot-cards">'
           +     '<div class="tier-slot-card' + (currentTier === 'Standard' ? ' selected' : '') + '" '
           +          'data-svc="' + escSvc + '" data-tier="Standard" '
           +          'onclick="selectServiceTier(this)">'
@@ -2567,7 +2577,21 @@ function renderTierSlots() {
           +       '<div class="tier-slot-card-name">Premium</div>'
           +       '<div class="tier-slot-card-desc">' + copy.premium + '</div>'
           +     '</div>'
-          +   '</div>'
+          +   '</div>';
+    } else {
+      // Bespoke service (no TIER_COPY entry) — priced on enquiry, no tier choice.
+      // Single full-width block reusing the tier-card styling; not selectable.
+      cardsHtml = '<div class="tier-slot-cards">'
+          +     '<div class="tier-slot-card selected" style="grid-column:1 / -1;cursor:default">'
+          +       '<div class="tier-slot-card-name">Bespoke — priced on enquiry</div>'
+          +       '<div class="tier-slot-card-desc">Tailored to your family. We\'ll confirm the details and your quote after you enquire.</div>'
+          +     '</div>'
+          +   '</div>';
+    }
+
+    html += '<div class="tier-slot" data-svc-key="' + escSvc + '">'
+          +   '<div class="tier-slot-header">' + escSvc + '</div>'
+          +   cardsHtml
           + (capacityNote ? '<div class="tier-slot-capacity">' + capacityNote + '</div>' : '')
           + '</div>';
   }
