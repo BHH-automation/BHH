@@ -969,75 +969,6 @@ function closeMobileMenu(){
     <p class="lead" style="text-align:center;color:rgba(245,240,232,0.7);margin:0 auto;max-width:600px;">Private cultural experiences in real English homes — curated exclusively for discerning international families visiting England.</p>
   </div>
 
-  <!-- FOUR DOORS — primary entry points, visible at a glance (no hover, no menu) -->
-  <style>
-    #doors { position:relative; z-index:2; max-width:1000px; margin:2.4rem auto 0; padding:0 2rem; }
-    #doors .doors-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.25rem; }
-    #doors .door-card {
-      background:var(--cream);
-      border:1px solid rgba(201,168,76,0.45);
-      border-radius:10px;
-      padding:1.8rem 1.1rem;
-      text-align:center; text-decoration:none;
-      cursor:pointer;
-      display:flex; flex-direction:column; align-items:center;
-      transition:transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
-    }
-    #doors .door-card:hover, #doors .door-card:focus-visible {
-      transform:translateY(-6px);
-      border-color:var(--gold);
-      box-shadow:0 14px 34px rgba(0,0,0,0.35);
-      outline:none;
-    }
-    #doors .door-ic { width:40px; height:40px; color:var(--gold); margin-bottom:0.85rem; }
-    #doors .door-card h3 { font-family:var(--ff-display); font-weight:500; font-size:1.25rem; color:var(--navy); margin:0 0 0.35rem; }
-    #doors .door-card p { font-family:var(--ff-body); font-size:0.78rem; line-height:1.5; color:rgba(13,27,42,0.66); margin:0; }
-    @media (max-width:900px){ #doors .doors-grid { grid-template-columns:repeat(2,1fr); } }
-    @media (max-width:560px){
-      /* On mobile, make the doors the very first content (above the hero text) */
-      .hero { display:flex !important; flex-direction:column; padding-top:124px; }
-      #doors { order:-1; margin:0 0 0.8rem; padding:0 1rem; }
-      #doors .doors-grid { grid-template-columns:repeat(2,1fr); gap:0.7rem; }
-      #doors .door-card { padding:1.1rem 0.7rem; }
-      #doors .door-ic { width:32px; height:32px; margin-bottom:0.6rem; }
-      #doors .door-card h3 { font-size:1rem; }
-      #doors .door-card p { font-size:0.72rem; }
-    }
-  </style>
-  <div id="doors">
-    <div class="doors-grid">
-      <a class="door-card" href="#enquire" aria-label="Become a Guest — open the guest enquiry form" onclick="joinAs('guest');return false;" onkeydown="if(event.key===' '){event.preventDefault();joinAs('guest');}">
-        <svg class="door-ic" aria-hidden="true"><use href="#ic-guest"/></svg>
-        <h3>Become a Guest</h3>
-        <p>Enquire about a British heritage experience.</p>
-      </a>
-      <a class="door-card" href="#enquire" aria-label="Become a Host — open the host application form" onclick="joinAs('host');return false;" onkeydown="if(event.key===' '){event.preventDefault();joinAs('host');}">
-        <svg class="door-ic" aria-hidden="true"><use href="#ic-host"/></svg>
-        <h3>Become a Host</h3>
-        <p>Welcome our guests into your home for tea or dinner.</p>
-      </a>
-      <a class="door-card" href="#enquire" aria-label="Become a Partner — open the partner application form" onclick="joinAs('partner');return false;" onkeydown="if(event.key===' '){event.preventDefault();joinAs('partner');}">
-        <svg class="door-ic" aria-hidden="true"><use href="#ic-partner"/></svg>
-        <h3>Become a Partner</h3>
-        <p>Offer a service — transport, canal cruises and more.</p>
-      </a>
-      <a class="door-card" href="#enquire" aria-label="Become a Guide — open the partner form with Heritage Guide selected" onclick="joinAs('guide');return false;" onkeydown="if(event.key===' '){event.preventDefault();joinAs('guide');}">
-        <svg class="door-ic" aria-hidden="true"><use href="#ic-guide"/></svg>
-        <h3>Become a Guide</h3>
-        <p>Accompany our guests as a heritage guide.</p>
-      </a>
-      <a class="door-card" href="#enquire" aria-label="Become an Interpreter — open the partner form with Interpreter selected" onclick="joinAs('interpreter');return false;" onkeydown="if(event.key===' '){event.preventDefault();joinAs('interpreter');}">
-        <svg class="door-ic" aria-hidden="true"><use href="#ic-interpreter"/></svg>
-        <h3>Become an Interpreter</h3>
-        <p>Interpret for our guests in your language.</p>
-      </a>
-      <a class="door-card" href="#enquire" aria-label="Become a Language Partner — open the partner form with Language Partner selected" onclick="joinAs('language-partner');return false;" onkeydown="if(event.key===' '){event.preventDefault();joinAs('language-partner');}">
-        <svg class="door-ic" aria-hidden="true"><use href="#ic-language"/></svg>
-        <h3>Become a Language Partner</h3>
-        <p>Teach English to our visiting families.</p>
-      </a>
-    </div>
-  </div>
   <script>
   // Four-door cards → open the matching existing form via the tab switcher.
   function joinAs(role){
@@ -1062,7 +993,7 @@ function closeMobileMenu(){
   <div class="container" style="position:relative;z-index:2;padding-top:2.5rem;padding-bottom:3.5rem;text-align:center;">
     <p class="hero-tagline" style="margin-bottom:2rem;">"Authentic British Experiences for Discerning Families"</p>
     <div class="hero-btns" style="justify-content:center;display:flex;gap:1rem;flex-wrap:wrap;">
-      <a href="#enquire" class="btn btn-gold">Enquire for Your Family</a>
+      <a href="#enquire" class="btn btn-gold" onclick="joinAs('guest');return false;">Enquire for Your Family</a>
       <a href="#services" class="btn btn-outline-cream">Explore Our Services</a>
     </div>
   </div>
@@ -1960,6 +1891,68 @@ function closeMobileMenu(){
         </form>
       </div>
 
+    </div>
+  </div>
+</section>
+
+<!-- ── JOIN OUR NETWORK (provider recruitment) ── -->
+<style>
+  #join .doors-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(190px, 1fr)); gap:1.2rem; margin-top:2.6rem; }
+  #join .door-card {
+    background:var(--cream);
+    border:1px solid rgba(201,168,76,0.45);
+    border-radius:10px;
+    padding:1.8rem 1.1rem;
+    text-align:center; text-decoration:none;
+    cursor:pointer;
+    display:flex; flex-direction:column; align-items:center;
+    transition:transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+  }
+  #join .door-card:hover, #join .door-card:focus-visible {
+    transform:translateY(-6px);
+    border-color:var(--gold);
+    box-shadow:0 14px 34px rgba(0,0,0,0.35);
+    outline:none;
+  }
+  #join .door-ic { width:40px; height:40px; color:var(--gold); margin-bottom:0.85rem; }
+  #join .door-card h3 { font-family:var(--ff-display); font-weight:500; font-size:1.25rem; color:var(--navy); margin:0 0 0.35rem; }
+  #join .door-card p { font-family:var(--ff-body); font-size:0.78rem; line-height:1.5; color:rgba(13,27,42,0.66); margin:0; }
+  @media (max-width:560px){ #join .doors-grid { grid-template-columns:1fr; } }
+</style>
+<section id="join" class="section section--dark" style="text-align:center">
+  <div class="container">
+    <div class="fade-up">
+      <span class="eyebrow">Join Our Network</span>
+      <h2 style="color:var(--cream);max-width:600px;margin:0 auto 1rem">Partner with Us</h2>
+      <div class="gold-line gold-line--center"></div>
+      <p class="lead" style="margin:0 auto;max-width:600px;color:rgba(245,240,232,0.85)">Become a host, guide, interpreter, language partner or service partner.</p>
+      <div class="doors-grid">
+      <a class="door-card" href="#enquire" aria-label="Become a Host — open the host application form" onclick="joinAs('host');return false;" onkeydown="if(event.key===' '){event.preventDefault();joinAs('host');}">
+        <svg class="door-ic" aria-hidden="true"><use href="#ic-host"/></svg>
+        <h3>Become a Host</h3>
+        <p>Welcome our guests into your home for tea or dinner.</p>
+      </a>
+      <a class="door-card" href="#enquire" aria-label="Become a Partner — open the partner application form" onclick="joinAs('partner');return false;" onkeydown="if(event.key===' '){event.preventDefault();joinAs('partner');}">
+        <svg class="door-ic" aria-hidden="true"><use href="#ic-partner"/></svg>
+        <h3>Become a Partner</h3>
+        <p>Offer a service — transport, canal cruises and more.</p>
+      </a>
+      <a class="door-card" href="#enquire" aria-label="Become a Guide — open the partner form with Heritage Guide selected" onclick="joinAs('guide');return false;" onkeydown="if(event.key===' '){event.preventDefault();joinAs('guide');}">
+        <svg class="door-ic" aria-hidden="true"><use href="#ic-guide"/></svg>
+        <h3>Become a Guide</h3>
+        <p>Accompany our guests as a heritage guide.</p>
+      </a>
+      <a class="door-card" href="#enquire" aria-label="Become an Interpreter — open the partner form with Interpreter selected" onclick="joinAs('interpreter');return false;" onkeydown="if(event.key===' '){event.preventDefault();joinAs('interpreter');}">
+        <svg class="door-ic" aria-hidden="true"><use href="#ic-interpreter"/></svg>
+        <h3>Become an Interpreter</h3>
+        <p>Interpret for our guests in your language.</p>
+      </a>
+      <a class="door-card" href="#enquire" aria-label="Become a Language Partner — open the partner form with Language Partner selected" onclick="joinAs('language-partner');return false;" onkeydown="if(event.key===' '){event.preventDefault();joinAs('language-partner');}">
+        <svg class="door-ic" aria-hidden="true"><use href="#ic-language"/></svg>
+        <h3>Become a Language Partner</h3>
+        <p>Teach English to our visiting families.</p>
+      </a>
+      </div>
     </div>
   </div>
 </section>
