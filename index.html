@@ -932,6 +932,8 @@ footer {
   <symbol id="ic-host" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9.5"/><path d="M9.5 21v-6h5v6"/></symbol>
   <symbol id="ic-partner" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m11 17 2 2a1 1 0 1 0 3-3"/><path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4"/><path d="m21 3 1 11h-2"/><path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3"/><path d="M3 4h8"/></symbol>
   <symbol id="ic-guide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></symbol>
+  <symbol id="ic-interpreter" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 8 6 6"/><path d="m4 14 6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="m22 22-5-10-5 10"/><path d="M14 18h6"/></symbol>
+  <symbol id="ic-language" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/></symbol>
 </svg>
 <script>
 function toggleMobileMenu(){
@@ -970,7 +972,7 @@ function closeMobileMenu(){
   <!-- FOUR DOORS — primary entry points, visible at a glance (no hover, no menu) -->
   <style>
     #doors { position:relative; z-index:2; max-width:1000px; margin:2.4rem auto 0; padding:0 2rem; }
-    #doors .doors-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:1.25rem; }
+    #doors .doors-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.25rem; }
     #doors .door-card {
       background:var(--cream);
       border:1px solid rgba(201,168,76,0.45);
@@ -992,13 +994,14 @@ function closeMobileMenu(){
     #doors .door-card p { font-family:var(--ff-body); font-size:0.78rem; line-height:1.5; color:rgba(13,27,42,0.66); margin:0; }
     @media (max-width:900px){ #doors .doors-grid { grid-template-columns:repeat(2,1fr); } }
     @media (max-width:560px){
-      /* On mobile, make the four doors the very first content (above the hero text) */
+      /* On mobile, make the doors the very first content (above the hero text) */
       .hero { display:flex !important; flex-direction:column; padding-top:124px; }
-      #doors { order:-1; margin:0 0 0.8rem; padding:0 1.2rem; }
-      #doors .doors-grid { grid-template-columns:1fr; gap:0.8rem; }
-      #doors .door-card { flex-direction:row; gap:0.95rem; text-align:left; padding:1rem 1.2rem; }
-      #doors .door-ic { margin-bottom:0; width:34px; height:34px; }
-      #doors .door-card h3 { font-size:1.15rem; }
+      #doors { order:-1; margin:0 0 0.8rem; padding:0 1rem; }
+      #doors .doors-grid { grid-template-columns:repeat(2,1fr); gap:0.7rem; }
+      #doors .door-card { padding:1.1rem 0.7rem; }
+      #doors .door-ic { width:32px; height:32px; margin-bottom:0.6rem; }
+      #doors .door-card h3 { font-size:1rem; }
+      #doors .door-card p { font-size:0.72rem; }
     }
   </style>
   <div id="doors">
@@ -1023,15 +1026,26 @@ function closeMobileMenu(){
         <h3>Become a Guide</h3>
         <p>Accompany our guests as a heritage guide.</p>
       </a>
+      <a class="door-card" href="#enquire" aria-label="Become an Interpreter — open the partner form with Interpreter selected" onclick="joinAs('interpreter');return false;" onkeydown="if(event.key===' '){event.preventDefault();joinAs('interpreter');}">
+        <svg class="door-ic" aria-hidden="true"><use href="#ic-interpreter"/></svg>
+        <h3>Become an Interpreter</h3>
+        <p>Interpret for our guests in your language.</p>
+      </a>
+      <a class="door-card" href="#enquire" aria-label="Become a Language Partner — open the partner form with Language Partner selected" onclick="joinAs('language-partner');return false;" onkeydown="if(event.key===' '){event.preventDefault();joinAs('language-partner');}">
+        <svg class="door-ic" aria-hidden="true"><use href="#ic-language"/></svg>
+        <h3>Become a Language Partner</h3>
+        <p>Teach English to our visiting families.</p>
+      </a>
     </div>
   </div>
   <script>
   // Four-door cards → open the matching existing form via the tab switcher.
   function joinAs(role){
-    if(role === 'guide'){
+    var partnerTypes = { guide:'Heritage Guide', interpreter:'Interpreter', 'language-partner':'Language Partner (English tuition)' };
+    if(partnerTypes[role]){
       switchTab('partner');
       var sel = document.querySelector('#partner-form select[name="Partner Type"]');
-      if(sel){ sel.value = 'Heritage Guide'; sel.dispatchEvent(new Event('change', {bubbles:true})); }
+      if(sel){ sel.value = partnerTypes[role]; sel.dispatchEvent(new Event('change', {bubbles:true})); }
     } else {
       switchTab(role); // 'guest' | 'host' | 'partner'
     }
@@ -1865,6 +1879,8 @@ function closeMobileMenu(){
               <option value="Airport Transfer Service">Airport Transfer Service</option>
               <option value="Catering / Chef">Catering / Chef</option>
               <option value="Event Coordinator">Event Coordinator</option>
+              <option value="Interpreter">Interpreter</option>
+              <option value="Language Partner (English tuition)">Language Partner (English tuition)</option>
               <option value="Other">Other</option>
             </select>
           </div>
