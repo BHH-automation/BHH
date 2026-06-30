@@ -1124,50 +1124,6 @@ function closeMobileMenu(){
   </div>
 </section>
 
-<!-- WHO WE SERVE -->
-<section class="section section--dark" id="hosts">
-  <div class="container">
-    <div class="fade-up" style="text-align:center;margin-bottom:4rem">
-      <span class="eyebrow">Who We Serve</span>
-      <h2 style="color:var(--cream)">Two journeys. One platform.</h2>
-      <div class="gold-line gold-line--center"></div>
-    </div>
-    <div class="serve-grid fade-up">
-      <div class="serve-panel">
-        <span class="eyebrow">For International Families</span>
-        <h3>Guests</h3>
-        <p>You have explored England's famous landmarks. What you have not found — what very few places in the world can offer — is a genuine invitation inside an English home. That is what BHH arranges, exclusively for your family.</p>
-        <ul class="serve-list">
-          <li>Every experience arranged exclusively for your family</li>
-          <li>Exclusively private — every booking, every time</li>
-          <li>Pre-vetted, approved English host families and partners</li>
-          <li>Every family receives a private, personalised proposal from BHH</li>
-          <li>BHH handles everything from first enquiry to final farewell</li>
-        </ul>
-        <div style="margin-top:2rem">
-          <a href="#enquire" class="btn btn-gold">Enquire for Your Family</a>
-        </div>
-      </div>
-      <div class="serve-panel">
-        <span class="eyebrow">For English Families &amp; Professionals</span>
-        <h3>Hosts &amp; Partners</h3>
-        <p>Your English home, your local knowledge, or your professional skill is exactly what our guests are seeking. BHH connects you with international guests, manages all communications, and handles every detail — so you can focus on sharing your home and traditions.</p>
-        <ul class="serve-list">
-          <li>Host families — share your home and your English traditions with guests from around the world</li>
-          <li>Heritage Guides — share your knowledge of England's history and landscapes</li>
-          <li>Canal boat operators — private hire partnerships with volume bookings</li>
-          <li>Professional drivers — advance-booked, pre-paid, no uncertainty</li>
-          <li>All partners personally vetted and approved by BHH</li>
-        </ul>
-        <div style="margin-top:2rem">
-          <a href="#enquire" onclick="switchTab('host')" class="btn btn-outline-gold">Become a Host</a>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-
 <!-- OUR PROMISE -->
 <section class="section section--white" id="about">
   <div class="container">
@@ -1281,8 +1237,8 @@ function closeMobileMenu(){
       <!-- TABS -->
       <div style="display:flex;justify-content:center;gap:0;margin:2rem auto 2.5rem;max-width:660px;border-bottom:1px solid rgba(201,168,76,0.3)">
         <button type="button" class="enquire-tab enquire-tab--active" data-tab="guest" onclick="switchTab('guest'); return false;" style="flex:1;padding:0.9rem 1rem;background:transparent;border:none;border-bottom:2px solid var(--gold);color:var(--gold);font-family:var(--ff-body);font-size:0.72rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:all 0.3s">Become a Guest</button>
-        <button type="button" class="enquire-tab" data-tab="host" onclick="switchTab('host'); return false;" style="flex:1;padding:0.9rem 1rem;background:transparent;border:none;border-bottom:2px solid transparent;color:rgba(245,240,232,0.5);font-family:var(--ff-body);font-size:0.72rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:all 0.3s">Become a Host</button>
-        <button type="button" class="enquire-tab" data-tab="partner" onclick="switchTab('partner'); return false;" style="flex:1;padding:0.9rem 1rem;background:transparent;border:none;border-bottom:2px solid transparent;color:rgba(245,240,232,0.5);font-family:var(--ff-body);font-size:0.72rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:all 0.3s">Become a Partner</button>
+        <button type="button" class="enquire-tab" data-tab="host" onclick="switchTab('host'); return false;" style="display:none;flex:1;padding:0.9rem 1rem;background:transparent;border:none;border-bottom:2px solid transparent;color:rgba(245,240,232,0.5);font-family:var(--ff-body);font-size:0.72rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:all 0.3s">Become a Host</button>
+        <button type="button" class="enquire-tab" data-tab="partner" onclick="switchTab('partner'); return false;" style="display:none;flex:1;padding:0.9rem 1rem;background:transparent;border:none;border-bottom:2px solid transparent;color:rgba(245,240,232,0.5);font-family:var(--ff-body);font-size:0.72rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:all 0.3s">Become a Partner</button>
       </div>
 
       <!-- ═══════ GUEST FORM ═══════ -->
@@ -1897,62 +1853,35 @@ function closeMobileMenu(){
 
 <!-- ── JOIN OUR NETWORK (provider recruitment) ── -->
 <style>
-  #join .doors-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(190px, 1fr)); gap:1.2rem; margin-top:2.6rem; }
-  #join .door-card {
-    background:var(--cream);
-    border:1px solid rgba(201,168,76,0.45);
-    border-radius:10px;
-    padding:1.8rem 1.1rem;
-    text-align:center; text-decoration:none;
-    cursor:pointer;
-    display:flex; flex-direction:column; align-items:center;
-    transition:transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+  #join .join-disclosure { max-width:420px; margin:0 auto; }
+  #join summary.join-summary { list-style:none; cursor:pointer; display:inline-block; }
+  #join summary.join-summary::-webkit-details-marker { display:none; }
+  #join summary.join-summary::marker { content:''; }
+  #join .join-options { display:none; flex-direction:column; gap:0.5rem; max-width:340px; margin:1.4rem auto 0; }
+  #join details[open] .join-options { display:flex; }
+  #join .join-options a {
+    display:block; padding:0.7rem 1rem; border-radius:6px;
+    border:1px solid rgba(201,168,76,0.3);
+    background:rgba(201,168,76,0.06);
+    color:var(--cream); text-decoration:none;
+    font-family:var(--ff-body); font-size:0.78rem; letter-spacing:0.1em; text-transform:uppercase;
+    transition:background 0.2s, border-color 0.2s, color 0.2s;
   }
-  #join .door-card:hover, #join .door-card:focus-visible {
-    transform:translateY(-6px);
-    border-color:var(--gold);
-    box-shadow:0 14px 34px rgba(0,0,0,0.35);
-    outline:none;
-  }
-  #join .door-ic { width:40px; height:40px; color:var(--gold); margin-bottom:0.85rem; }
-  #join .door-card h3 { font-family:var(--ff-display); font-weight:500; font-size:1.25rem; color:var(--navy); margin:0 0 0.35rem; }
-  #join .door-card p { font-family:var(--ff-body); font-size:0.78rem; line-height:1.5; color:rgba(13,27,42,0.66); margin:0; }
-  @media (max-width:560px){ #join .doors-grid { grid-template-columns:1fr; } }
+  #join .join-options a:hover, #join .join-options a:focus-visible { background:rgba(201,168,76,0.14); border-color:var(--gold); color:var(--gold); outline:none; }
 </style>
 <section id="join" class="section section--dark" style="text-align:center">
   <div class="container">
     <div class="fade-up">
-      <span class="eyebrow">Join Our Network</span>
-      <h2 style="color:var(--cream);max-width:600px;margin:0 auto 1rem">Partner with Us</h2>
-      <div class="gold-line gold-line--center"></div>
-      <p class="lead" style="margin:0 auto;max-width:600px;color:rgba(245,240,232,0.85)">Become a host, guide, interpreter, language partner or service partner.</p>
-      <div class="doors-grid">
-      <a class="door-card" href="#enquire" aria-label="Become a Host — open the host application form" onclick="joinAs('host');return false;" onkeydown="if(event.key===' '){event.preventDefault();joinAs('host');}">
-        <svg class="door-ic" aria-hidden="true"><use href="#ic-host"/></svg>
-        <h3>Become a Host</h3>
-        <p>Welcome our guests into your home for tea or dinner.</p>
-      </a>
-      <a class="door-card" href="#enquire" aria-label="Become a Partner — open the partner application form" onclick="joinAs('partner');return false;" onkeydown="if(event.key===' '){event.preventDefault();joinAs('partner');}">
-        <svg class="door-ic" aria-hidden="true"><use href="#ic-partner"/></svg>
-        <h3>Become a Partner</h3>
-        <p>Offer a service — transport, canal cruises and more.</p>
-      </a>
-      <a class="door-card" href="#enquire" aria-label="Become a Guide — open the partner form with Heritage Guide selected" onclick="joinAs('guide');return false;" onkeydown="if(event.key===' '){event.preventDefault();joinAs('guide');}">
-        <svg class="door-ic" aria-hidden="true"><use href="#ic-guide"/></svg>
-        <h3>Become a Guide</h3>
-        <p>Accompany our guests as a heritage guide.</p>
-      </a>
-      <a class="door-card" href="#enquire" aria-label="Become an Interpreter — open the partner form with Interpreter selected" onclick="joinAs('interpreter');return false;" onkeydown="if(event.key===' '){event.preventDefault();joinAs('interpreter');}">
-        <svg class="door-ic" aria-hidden="true"><use href="#ic-interpreter"/></svg>
-        <h3>Become an Interpreter</h3>
-        <p>Interpret for our guests in your language.</p>
-      </a>
-      <a class="door-card" href="#enquire" aria-label="Become a Language Partner — open the partner form with Language Partner selected" onclick="joinAs('language-partner');return false;" onkeydown="if(event.key===' '){event.preventDefault();joinAs('language-partner');}">
-        <svg class="door-ic" aria-hidden="true"><use href="#ic-language"/></svg>
-        <h3>Become a Language Partner</h3>
-        <p>Teach English to our visiting families.</p>
-      </a>
-      </div>
+      <details class="join-disclosure">
+        <summary class="btn btn-outline-gold join-summary">Partner with Us</summary>
+        <div class="join-options">
+          <a href="#enquire" onclick="joinAs('host');return false;">Become a Host</a>
+          <a href="#enquire" onclick="joinAs('partner');return false;">Become a Partner</a>
+          <a href="#enquire" onclick="joinAs('guide');return false;">Become a Guide</a>
+          <a href="#enquire" onclick="joinAs('interpreter');return false;">Become an Interpreter</a>
+          <a href="#enquire" onclick="joinAs('language-partner');return false;">Become a Language Partner</a>
+        </div>
+      </details>
     </div>
   </div>
 </section>
