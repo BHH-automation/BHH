@@ -351,6 +351,24 @@ nav {
   transition: all 0.3s;
 }
 .service-card:hover .service-card-arrow { opacity: 1; transform: translateX(0); }
+/* Icon-based service cards (no photo) — same format as the photo cards */
+.service-card--icon { background: var(--navy); display: block; }
+.service-card--icon .service-card-overlay {
+  background: linear-gradient(to top, rgba(13,27,42,0.95) 0%, rgba(13,27,42,0.55) 45%, rgba(201,168,76,0.05) 100%);
+}
+.service-card--icon:hover .service-card-overlay {
+  background: linear-gradient(to top, rgba(13,27,42,0.97) 0%, rgba(13,27,42,0.6) 55%, rgba(201,168,76,0.08) 100%);
+}
+.service-card-iconwrap {
+  position: absolute; left: 0; right: 0; top: 0; bottom: 34%;
+  display: flex; align-items: center; justify-content: center;
+  pointer-events: none;
+}
+.service-card-iconwrap svg {
+  width: 88px; height: 88px; color: var(--gold);
+  transition: transform 0.7s ease;
+}
+.service-card--icon:hover .service-card-iconwrap svg { transform: scale(1.06); }
 
 /* ── WHO WE SERVE ── */
 .serve-grid {
@@ -1040,7 +1058,7 @@ function closeMobileMenu(){
 <section class="section section--white" id="services">
   <div class="container">
     <div class="services-intro fade-up">
-      <span class="eyebrow">Five Signature Experiences</span>
+      <span class="eyebrow">Seven Signature Experiences</span>
       <h2>Everything England has to offer — privately</h2>
       <div class="gold-line gold-line--center"></div>
       <p class="lead" style="margin:0 auto;text-align:center">Each experience is arranged exclusively for your family. No other guests. No shared itineraries. No compromise.</p>
@@ -1054,7 +1072,7 @@ function closeMobileMenu(){
     </div>
         <div class="service-card-overlay"></div>
         <div class="service-card-content">
-          <div class="service-card-num">01 / 05</div>
+          <div class="service-card-num">01 / 07</div>
           <h3>Private Family Dinner</h3>
           <p class="service-card-desc">A complete traditional Sunday roast in a real English dining room — your host family at the table, your family only.</p>
           <span class="service-card-arrow">Discover more →</span>
@@ -1069,7 +1087,7 @@ function closeMobileMenu(){
     </div>
         <div class="service-card-overlay"></div>
         <div class="service-card-content">
-          <div class="service-card-num">02 / 05</div>
+          <div class="service-card-num">02 / 07</div>
           <h3>English Tea</h3>
           <p class="service-card-desc">Fine china, three-tiered stands, homemade scones and cakes — the quintessential English tradition in a private home.</p>
           <span class="service-card-arrow">Discover more →</span>
@@ -1083,7 +1101,7 @@ function closeMobileMenu(){
     </div>
         <div class="service-card-overlay"></div>
         <div class="service-card-content">
-          <div class="service-card-num">03 / 05</div>
+          <div class="service-card-num">03 / 07</div>
           <h3>Heritage Tour</h3>
           <p class="service-card-desc">A personal female British Heritage Guide takes your family through England's most storied landscapes and history.</p>
           <span class="service-card-arrow">Discover more →</span>
@@ -1099,7 +1117,7 @@ function closeMobileMenu(){
     </div>
         <div class="service-card-overlay"></div>
         <div class="service-card-content">
-          <div class="service-card-num">04 / 05</div>
+          <div class="service-card-num">04 / 07</div>
           <h3>Private Canal Cruise</h3>
           <p class="service-card-desc">England's historic waterways — from a London day cruise to a full narrowboat holiday across the countryside.</p>
           <span class="service-card-arrow">Discover more →</span>
@@ -1113,9 +1131,46 @@ function closeMobileMenu(){
     </div>
         <div class="service-card-overlay"></div>
         <div class="service-card-content">
-          <div class="service-card-num">05 / 05</div>
+          <div class="service-card-num">05 / 07</div>
           <h3>Airport & Private Transportation</h3>
           <p class="service-card-desc">Private airport transfers and chauffeured hire throughout your stay — meet-and-greet, flight-tracked, professionally driven.</p>
+          <span class="service-card-arrow">Discover more →</span>
+        </div>
+      </a>
+
+      <a href="#enquire" data-service="Cultural Immersion Program" class="service-card service-card--icon">
+        <div class="service-card-overlay"></div>
+        <div class="service-card-iconwrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/>
+            <path d="M22 10v6"/>
+            <path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/>
+          </svg>
+        </div>
+        <div class="service-card-content">
+          <div class="service-card-num">06 / 07</div>
+          <h3>Cultural Immersion Program</h3>
+          <p class="service-card-desc">Learn or improve English during your stay. Flexible courses with accredited London institutes — grouped by age, from a few sessions to a full programme — woven around tours, museums and cultural activities.</p>
+          <span class="service-card-arrow">Discover more →</span>
+        </div>
+      </a>
+
+      <a href="#enquire" data-service="Personal Interpreter Service" class="service-card service-card--icon">
+        <div class="service-card-overlay"></div>
+        <div class="service-card-iconwrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="m5 8 6 6"/>
+            <path d="m4 14 6-6 2-3"/>
+            <path d="M2 5h12"/>
+            <path d="M7 2h1"/>
+            <path d="m22 22-5-10-5 10"/>
+            <path d="M14 18h6"/>
+          </svg>
+        </div>
+        <div class="service-card-content">
+          <div class="service-card-num">07 / 07</div>
+          <h3>Personal Interpreter Service</h3>
+          <p class="service-card-desc">A trusted interpreter by your side throughout your visit — for appointments, healthcare, schools, shopping and official matters. Available in Arabic, Russian and many other languages.</p>
           <span class="service-card-arrow">Discover more →</span>
         </div>
       </a>
