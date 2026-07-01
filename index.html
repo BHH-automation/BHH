@@ -101,20 +101,20 @@ nav {
 }
 .nav-logo { display: flex; align-items: center; gap: 1rem; text-decoration: none; }
 .nav-logo-img {
-  height: 80px;
+  height: 100px;
   width: auto;
   display: block;
 }
 .nav-logo-text {
   font-family: var(--ff-display);
-  font-size: 1rem;
+  font-size: 1.25rem;
   font-weight: 500;
   color: var(--white);
   letter-spacing: 0.08em;
 }
 .nav-links { display: flex; align-items: center; gap: 2.5rem; list-style: none; }
 .nav-links a {
-  font-size: 0.72rem;
+  font-size: 0.9rem;
   font-weight: 500;
   letter-spacing: 0.15em;
   text-transform: uppercase;
@@ -245,7 +245,7 @@ nav {
   min-height: auto !important;
   position: relative;
   overflow: hidden;
-  padding-top: 100px;
+  padding-top: 127px;
 }
 /* hero-bg removed - using img approach now */
 .hero-pattern {
@@ -268,19 +268,19 @@ nav {
   margin-bottom: 1.5rem;
   font-weight: 300;
   font-style: italic;
-  font-size: clamp(2rem, 4vw, 2.2rem);
+  font-size: clamp(2.8rem, 5.5vw, 3.8rem);
 }
 .hero h1 em { font-style: normal; color: var(--gold); }
-.hero .lead { color: rgba(245,240,232,0.7); margin-bottom: 2.5rem; max-width: 560px; margin-left: auto; margin-right: auto; }
+.hero .lead { color: rgba(245,240,232,0.7); margin-bottom: 2.5rem; max-width: 560px; margin-left: auto; margin-right: auto; font-size: 1.15rem; }
 .hero-stars {
   display: flex; gap: 0.4rem;
   justify-content: center;
   margin-bottom: 1.5rem;
 }
-.hero-star { color: var(--gold); font-size: 0.9rem; }
+.hero-star { color: var(--gold); font-size: 1.17rem; }
 .hero-tagline {
   font-family: var(--ff-display);
-  font-size: 0.9rem;
+  font-size: 1.05rem;
   font-style: italic;
   color: rgba(201,168,76,0.7);
   margin-bottom: 2.5rem;
@@ -289,11 +289,11 @@ nav {
 /* hero-scroll removed */
 /* Compact hero + trim services top padding so #services is visible on load */
 .hero .gold-line--center { margin: 0.1rem auto; }
-.hero .eyebrow { margin-bottom: 0.1rem; }
+.hero .eyebrow { font-size: 0.91rem; margin-bottom: 0.6rem; }
 @media (max-width: 600px) {
-  .hero { padding-top: 121px; }                     /* mobile nav is 113px tall; +8px clearance */
+  .hero { padding-top: 143px; }                     /* mobile nav is 133px tall; +10px clearance */
   .hero-btns .btn-outline-cream { display: none; }  /* mobile: show only the primary CTA */
-  .hero .lead { font-size: 0.85rem; }               /* wrap to <=3 lines on mobile */
+  .hero .lead { font-size: 1.15rem; }               /* match desktop lead size */
 }
 #services { padding-top: 2rem; }
 
@@ -968,7 +968,7 @@ function closeMobileMenu(){
 
   <!-- TEXT ABOVE IMAGE -->
   <div class="container" style="position:relative;z-index:2;padding-top:0.6rem;padding-bottom:0.2rem;text-align:center;">
-    <div class="hero-stars" style="justify-content:center;display:flex;gap:0.4rem;margin-bottom:0.15rem;">
+    <div class="hero-stars" style="justify-content:center;display:flex;gap:0.6rem;margin-bottom:0.15rem;">
       <span class="hero-star">★</span>
       <span class="hero-star">★</span>
       <span class="hero-star">★</span>
@@ -976,7 +976,7 @@ function closeMobileMenu(){
       <span class="hero-star">★</span>
     </div>
     <span class="eyebrow">British Heritage Hosts Ltd — Est. 2026</span>
-    <h1 style="color:var(--cream);font-weight:300;font-style:italic;margin-bottom:0.1rem;">England, as it <em style="font-style:normal;color:var(--gold)">truly</em> lives</h1>
+    <h1 style="color:var(--cream);font-weight:300;font-style:italic;margin-bottom:1rem;">England, as it <em style="font-style:normal;color:var(--gold)">truly</em> lives</h1>
     <div class="gold-line gold-line--center"></div>
     <p class="lead" style="text-align:center;color:rgba(245,240,232,0.7);margin:0 auto;max-width:600px;">Private cultural experiences in real English homes — curated exclusively for discerning international families visiting England.</p>
   </div>
