@@ -268,7 +268,7 @@ nav {
   margin-bottom: 1.5rem;
   font-weight: 300;
   font-style: italic;
-  font-size: clamp(2.2rem, 4.5vw, 3rem);
+  font-size: clamp(2rem, 4vw, 2.2rem);
 }
 .hero h1 em { font-style: normal; color: var(--gold); }
 .hero .lead { color: rgba(245,240,232,0.7); margin-bottom: 2.5rem; max-width: 560px; margin-left: auto; margin-right: auto; }
@@ -287,15 +287,23 @@ nav {
 }
 .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
 /* hero-scroll removed */
-/* Compact hero so #services is visible on load (no scrolling) */
-.hero .gold-line--center { margin: 0.3rem auto; }
-.hero .eyebrow { margin-bottom: 0.3rem; }
-.hero img { max-height: 240px; }
-@media (max-width: 600px) { .hero img { max-height: 160px; } }
+/* Compact hero + trim services top padding so #services is visible on load */
+.hero .gold-line--center { margin: 0.1rem auto; }
+.hero .eyebrow { margin-bottom: 0.1rem; }
+.hero img { max-height: 120px; }
+@media (max-width: 600px) {
+  .hero img { max-height: 95px; }
+  .hero { padding-top: 121px; }                     /* mobile nav is 113px tall; +8px clearance */
+  .hero-btns .btn-outline-cream { display: none; }  /* mobile: show only the primary CTA */
+  .hero .lead { font-size: 0.85rem; }               /* wrap to <=3 lines on mobile */
+}
+#services { padding-top: 2rem; }
 
 /* ── SERVICES GRID ── */
-.services-intro { text-align: center; margin-bottom: 5rem; }
-.services-intro h2 { color: var(--navy); }
+.services-intro { text-align: center; margin-bottom: 1rem; }
+.services-intro h2 { color: var(--navy); font-size: 2.7rem; }
+.services-intro .lead { font-size: 0.92rem; }
+.services-intro .gold-line--center { margin: 0.3rem auto; }
 .services-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -961,8 +969,8 @@ function closeMobileMenu(){
   <div class="hero-pattern"></div>
 
   <!-- TEXT ABOVE IMAGE -->
-  <div class="container" style="position:relative;z-index:2;padding-top:1.2rem;padding-bottom:0.4rem;text-align:center;">
-    <div class="hero-stars" style="justify-content:center;display:flex;gap:0.4rem;margin-bottom:0.3rem;">
+  <div class="container" style="position:relative;z-index:2;padding-top:0.6rem;padding-bottom:0.2rem;text-align:center;">
+    <div class="hero-stars" style="justify-content:center;display:flex;gap:0.4rem;margin-bottom:0.15rem;">
       <span class="hero-star">★</span>
       <span class="hero-star">★</span>
       <span class="hero-star">★</span>
@@ -970,7 +978,7 @@ function closeMobileMenu(){
       <span class="hero-star">★</span>
     </div>
     <span class="eyebrow">British Heritage Hosts Ltd — Est. 2026</span>
-    <h1 style="color:var(--cream);font-weight:300;font-style:italic;margin-bottom:0.25rem;">England, as it <em style="font-style:normal;color:var(--gold)">truly</em> lives</h1>
+    <h1 style="color:var(--cream);font-weight:300;font-style:italic;margin-bottom:0.1rem;">England, as it <em style="font-style:normal;color:var(--gold)">truly</em> lives</h1>
     <div class="gold-line gold-line--center"></div>
     <p class="lead" style="text-align:center;color:rgba(245,240,232,0.7);margin:0 auto;max-width:600px;">Private cultural experiences in real English homes — curated exclusively for discerning international families visiting England.</p>
   </div>
@@ -997,7 +1005,7 @@ function closeMobileMenu(){
 
   <!-- TAGLINE + BUTTONS BELOW IMAGE -->
   <div class="container" style="position:relative;z-index:2;padding-top:0.5rem;padding-bottom:0.6rem;text-align:center;">
-    <p class="hero-tagline" style="margin-bottom:0.4rem;">"Authentic British Experiences for Discerning Families"</p>
+    <p class="hero-tagline" style="margin-bottom:0.2rem;">"Authentic British Experiences for Discerning Families"</p>
     <div class="hero-btns" style="justify-content:center;display:flex;gap:1rem;flex-wrap:wrap;">
       <a href="#enquire" class="btn btn-gold" onclick="joinAs('guest');return false;">Enquire for Your Family</a>
       <a href="#services" class="btn btn-outline-cream">Explore Our Services</a>
@@ -1885,11 +1893,11 @@ function closeMobileMenu(){
       <details class="join-disclosure">
         <summary class="btn btn-outline-gold join-summary">Partner with Us</summary>
         <div class="join-options">
-          <a href="#enquire" onclick="joinAs('host');return false;"><span class="join-opt-title">Become a Host</span><span class="join-opt-note">Welcome our guests into your home for tea or dinner.</span></a>
+          <a href="#enquire" onclick="joinAs('host');return false;"><span class="join-opt-title">Become a Host</span><span class="join-opt-note">Welcome our guests into your home for tea, dinner, or both.</span></a>
           <a href="#enquire" onclick="joinAs('partner');return false;"><span class="join-opt-title">Become a Partner</span><span class="join-opt-note">Offer a service — transport, canal cruises and more.</span></a>
           <a href="#enquire" onclick="joinAs('guide');return false;"><span class="join-opt-title">Become a Guide</span><span class="join-opt-note">Accompany our guests as a heritage guide.</span></a>
-          <a href="#enquire" onclick="joinAs('interpreter');return false;"><span class="join-opt-title">Become an Interpreter</span><span class="join-opt-note">Interpret for our guests in your language.</span></a>
-          <a href="#enquire" onclick="joinAs('language-partner');return false;"><span class="join-opt-title">Become a Language Partner</span><span class="join-opt-note">Teach English to our visiting families.</span></a>
+          <a href="#enquire" onclick="joinAs('interpreter');return false;"><span class="join-opt-title">Become an Interpreter</span><span class="join-opt-note">Interpret for our guests in the language you are fluent in.</span></a>
+          <a href="#enquire" onclick="joinAs('language-partner');return false;"><span class="join-opt-title">Become a Language Partner</span><span class="join-opt-note">Provide private, face-to-face English coaching for visiting families, focusing on conversational English, pronunciation, listening skills, and speaking confidence through one-to-one or small-group sessions.</span></a>
         </div>
       </details>
     </div>
