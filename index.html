@@ -101,20 +101,20 @@ nav {
 }
 .nav-logo { display: flex; align-items: center; gap: 1rem; text-decoration: none; }
 .nav-logo-img {
-  height: 100px;
+  height: 115px;
   width: auto;
   display: block;
 }
 .nav-logo-text {
   font-family: var(--ff-display);
-  font-size: 1.25rem;
+  font-size: 1.44rem;
   font-weight: 500;
   color: var(--white);
   letter-spacing: 0.08em;
 }
 .nav-links { display: flex; align-items: center; gap: 2.5rem; list-style: none; }
 .nav-links a {
-  font-size: 0.9rem;
+  font-size: 1rem;
   font-weight: 500;
   letter-spacing: 0.15em;
   text-transform: uppercase;
@@ -245,7 +245,7 @@ nav {
   min-height: auto !important;
   position: relative;
   overflow: hidden;
-  padding-top: 127px;
+  padding-top: 142px;
 }
 /* hero-bg removed - using img approach now */
 .hero-pattern {
@@ -271,16 +271,16 @@ nav {
   font-size: clamp(2.8rem, 5.5vw, 3.8rem);
 }
 .hero h1 em { font-style: normal; color: var(--gold); }
-.hero .lead { color: rgba(245,240,232,0.7); margin-bottom: 2.5rem; max-width: 560px; margin-left: auto; margin-right: auto; font-size: 1.15rem; }
+.hero .lead { color: rgba(245,240,232,0.7); margin-bottom: 2.5rem; max-width: 560px; margin-left: auto; margin-right: auto; font-size: 1.4rem; }
 .hero-stars {
   display: flex; gap: 0.4rem;
   justify-content: center;
   margin-bottom: 1.5rem;
 }
-.hero-star { color: var(--gold); font-size: 1.17rem; }
+.hero-star { color: var(--gold); font-size: 1.4rem; }
 .hero-tagline {
   font-family: var(--ff-display);
-  font-size: 1.05rem;
+  font-size: 1.25rem;
   font-style: italic;
   color: rgba(201,168,76,0.7);
   margin-bottom: 2.5rem;
@@ -289,11 +289,11 @@ nav {
 /* hero-scroll removed */
 /* Compact hero + trim services top padding so #services is visible on load */
 .hero .gold-line--center { margin: 0.1rem auto; }
-.hero .eyebrow { font-size: 0.91rem; margin-bottom: 0.6rem; }
+.hero .eyebrow { font-size: 1.1rem; margin-bottom: 0.6rem; }
 @media (max-width: 600px) {
-  .hero { padding-top: 143px; }                     /* mobile nav is 133px tall; +10px clearance */
+  .hero { padding-top: 161px; }                     /* mobile nav is 151px tall; +10px clearance */
   .hero-btns .btn-outline-cream { display: none; }  /* mobile: show only the primary CTA */
-  .hero .lead { font-size: 1.15rem; }               /* match desktop lead size */
+  .hero .lead { font-size: 1.25rem; }               /* scaled up; kept below desktop 1.4rem to avoid heavy wrap at 390px */
 }
 #services { padding-top: 2rem; }
 
