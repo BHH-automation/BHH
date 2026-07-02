@@ -874,6 +874,116 @@ footer {
     flex: 1 1 calc(50% - 0.25rem);
   }
 }
+
+/* ── HERO REBUILD ─────────────────────────────────────────────────── */
+.hero {
+  background: var(--navy);
+  position: relative;
+  overflow: hidden;
+  padding: 0;
+}
+.hero-inner {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-top: 100px; /* nav height */
+}
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+.hero-bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 30%;
+  display: block;
+}
+.hero-bg-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(13,27,42,0.72) 0%,
+    rgba(13,27,42,0.55) 40%,
+    rgba(13,27,42,0.65) 75%,
+    rgba(13,27,42,0.90) 100%
+  );
+}
+.hero-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  max-width: 820px;
+  padding: 0 2rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.hero-content h1 {
+  font-size: clamp(3.2rem, 7vw, 6rem);
+  font-weight: 300;
+  font-style: italic;
+  color: var(--cream);
+  margin: 0.6rem 0 1.2rem;
+  line-height: 1.1;
+  text-shadow: 0 2px 20px rgba(0,0,0,0.4);
+}
+.hero-sub {
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  color: rgba(245,240,232,0.85);
+  max-width: 580px;
+  line-height: 1.7;
+  margin: 0 auto 2.2rem;
+}
+.hero-btns {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 0;
+}
+.hero-services-strip {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  background: rgba(13,27,42,0.75);
+  border-top: 1px solid rgba(201,168,76,0.25);
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  backdrop-filter: blur(6px);
+}
+.hero-svc-pill {
+  font-family: var(--ff-body);
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(245,240,232,0.75);
+  text-decoration: none;
+  transition: color 0.2s;
+  white-space: nowrap;
+}
+.hero-svc-pill:hover { color: var(--gold); }
+.hero-svc-dot { color: var(--gold); opacity: 0.5; font-size: 1.2rem; }
+
+@media (max-width: 600px) {
+  .hero-content h1 { font-size: 2.6rem; }
+  .hero-sub { font-size: 0.95rem; }
+  .hero-svc-dot { display: none; }
+  .hero-svc-pill { font-size: 0.75rem; }
+}
+/* ── END HERO REBUILD ─────────────────────────────────────────────── */
 </style>
 
     <!-- ═══ SEO & SOCIAL ═══════════════════════════════════════════════════ -->
@@ -1062,23 +1172,49 @@ function closeMobileMenu(){
 <section class="hero">
   <div class="hero-pattern"></div>
 
-  <!-- TEXT ABOVE IMAGE -->
-  <div class="container" style="position:relative;z-index:2;padding-top:0.6rem;padding-bottom:0.2rem;text-align:center;">
-    <div class="hero-stars" style="justify-content:center;display:flex;gap:0.6rem;margin-bottom:0.15rem;">
-      <span class="hero-star">★</span>
-      <span class="hero-star">★</span>
-      <span class="hero-star">★</span>
-      <span class="hero-star">★</span>
-      <span class="hero-star">★</span>
+  <!-- HERO: image as background, content overlaid and immediately visible -->
+  <div class="hero-inner">
+
+    <!-- Background image -->
+    <div class="hero-bg">
+      <img src="images/authentic-british-experiences.png" alt="Authentic British Experiences — private English home" loading="eager">
+      <div class="hero-bg-overlay"></div>
     </div>
-    <span class="eyebrow">British Heritage Hosts Ltd — Est. 2026</span>
-    <h1 style="color:var(--cream);font-weight:300;font-style:italic;margin-bottom:1rem;">England, as it <em style="font-style:normal;color:var(--gold)">truly</em> lives</h1>
-    <div class="gold-line gold-line--center"></div>
-    <p class="lead" style="text-align:center;color:rgba(245,240,232,0.7);margin:0 auto;max-width:600px;">Private cultural experiences in real English homes — curated exclusively for discerning international families visiting England.</p>
+
+    <!-- Foreground content — centred, large, immediately readable -->
+    <div class="hero-content">
+      <div class="hero-stars">
+        <span class="hero-star">★</span>
+        <span class="hero-star">★</span>
+        <span class="hero-star">★</span>
+        <span class="hero-star">★</span>
+        <span class="hero-star">★</span>
+      </div>
+      <span class="eyebrow" style="color:var(--gold-light);letter-spacing:0.2em;">British Heritage Hosts Ltd — Est. 2026</span>
+      <h1>England, as it <em style="font-style:normal;color:var(--gold)">truly</em> lives</h1>
+      <p class="hero-sub">Private cultural experiences in real English homes —<br>curated exclusively for discerning international families visiting England.</p>
+      <div class="hero-btns">
+        <a href="#enquire" class="btn btn-gold" onclick="joinAs('guest');return false;">Enquire for Your Family</a>
+        <a href="#services" class="btn btn-outline-cream">Explore Our Services</a>
+      </div>
+    </div>
+
+    <!-- Service preview strip — 5 services visible without scrolling -->
+    <div class="hero-services-strip">
+      <a href="#services" class="hero-svc-pill">Heritage Guide</a>
+      <span class="hero-svc-dot">·</span>
+      <a href="#services" class="hero-svc-pill">English Tea</a>
+      <span class="hero-svc-dot">·</span>
+      <a href="#services" class="hero-svc-pill">Dinner</a>
+      <span class="hero-svc-dot">·</span>
+      <a href="#services" class="hero-svc-pill">Transportation</a>
+      <span class="hero-svc-dot">·</span>
+      <a href="#services" class="hero-svc-pill">Canal Cruise</a>
+    </div>
+
   </div>
 
   <script>
-  // Four-door cards → open the matching existing form via the tab switcher.
   function joinAs(role){
     var partnerTypes = { guide:'Heritage Guide', interpreter:'Interpreter', 'language-partner':'Language Partner (English tuition)' };
     if(partnerTypes[role]){
@@ -1086,25 +1222,11 @@ function closeMobileMenu(){
       var sel = document.querySelector('#partner-form select[name="Partner Type"]');
       if(sel){ sel.value = partnerTypes[role]; sel.dispatchEvent(new Event('change', {bubbles:true})); }
     } else {
-      switchTab(role); // 'guest' | 'host' | 'partner'
+      switchTab(role);
     }
   }
   </script>
 
-  <!-- HERO IMAGE (full-bleed, uncropped) -->
-  <div style="width:100vw;max-width:100vw;position:relative;left:50%;margin-left:-50vw;margin-right:-50vw;overflow:hidden;">
-    <img src="images/authentic-british-experiences.png" alt="Authentic British Experiences" style="width:100%;height:auto;object-fit:cover;object-position:center;display:block;">
-    <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(13,27,42,0.3) 0%,transparent 25%,transparent 75%,rgba(13,27,42,0.4) 100%);"></div>
-  </div>
-
-  <!-- TAGLINE + BUTTONS BELOW IMAGE -->
-  <div class="container" style="position:relative;z-index:2;padding-top:0.5rem;padding-bottom:0.6rem;text-align:center;">
-    <p class="hero-tagline" style="margin-bottom:0.2rem;">"Authentic British Experiences for Discerning Families"</p>
-    <div class="hero-btns" style="justify-content:center;display:flex;gap:1rem;flex-wrap:wrap;">
-      <a href="#enquire" class="btn btn-gold" onclick="joinAs('guest');return false;">Enquire for Your Family</a>
-      <a href="#services" class="btn btn-outline-cream">Explore Our Services</a>
-    </div>
-  </div>
 </section>
 
 <!-- SERVICES -->
