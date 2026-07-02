@@ -304,13 +304,15 @@ nav {
 .services-intro .gold-line--center { margin: 0.3rem auto; }
 .services-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
+  max-height: calc(100vh - 220px);
+  overflow: hidden;
   gap: 2px;
 }
 .service-card {
   position: relative;
   overflow: hidden;
-  aspect-ratio: 3/4;
+  aspect-ratio: 4/3;
   cursor: pointer;
   text-decoration: none;
 }
@@ -444,12 +446,12 @@ nav {
 .process-step-num {
   font-family: var(--ff-display);
   font-size: 4rem;
-  color: rgba(201,168,76,0.15);
+  color: rgba(201,168,76,0.35);
   line-height: 1;
   margin-bottom: 1rem;
 }
-.process-step h4 { font-size: 1rem; color: var(--cream); margin-bottom: 0.5rem; }
-.process-step p { font-size: 0.82rem; color: rgba(245,240,232,0.5); line-height: 1.7; }
+.process-step h4 { font-size: 1.2rem; color: var(--cream); margin-bottom: 0.5rem; font-weight:500; }
+.process-step p { font-size: 0.92rem; color: rgba(245,240,232,0.8); line-height: 1.7; }
 
 /* ── ABOUT ── */
 .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: center; }
@@ -984,6 +986,42 @@ footer {
   .hero-svc-pill { font-size: 0.75rem; }
 }
 /* ── END HERO REBUILD ─────────────────────────────────────────────── */
+
+/* ── LEGAL MODAL ──────────────────────────────────────────────────── */
+.legal-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(13,27,42,0.92);
+  z-index: 9000;
+  overflow-y: auto;
+  padding: 2rem;
+}
+.legal-modal.open { display: block; }
+.legal-modal-inner {
+  max-width: 820px;
+  margin: 4rem auto;
+  background: var(--white);
+  padding: 4rem;
+  position: relative;
+  border-radius: 4px;
+}
+.legal-modal-close {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--navy);
+  font-size: 0.72rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  font-family: var(--ff-body);
+}
+.legal-modal-close:hover { background: var(--navy); color: var(--cream); }
+/* ── END LEGAL MODAL ─────────────────────────────────────────────── */
 </style>
 
     <!-- ═══ SEO & SOCIAL ═══════════════════════════════════════════════════ -->
@@ -1230,7 +1268,7 @@ function closeMobileMenu(){
 </section>
 
 <!-- SERVICES -->
-<section class="section section--white" id="services">
+<section class="section section--white" id="services" style="min-height:100vh;display:flex;align-items:flex-start;padding-top:6rem;">
   <div class="container">
     <div class="services-intro fade-up">
       <span class="eyebrow">Seven Signature Experiences</span>
@@ -1327,20 +1365,15 @@ function closeMobileMenu(){
         </div>
       </a>
 
-      <a href="#enquire" data-service="Personal Interpreter Service" class="service-card service-card--icon">
-        <div class="service-card-overlay"></div>
-        <div class="service-card-iconwrap">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="m5 8 6 6"/>
-            <path d="m4 14 6-6 2-3"/>
-            <path d="M2 5h12"/>
-            <path d="M7 2h1"/>
-            <path d="m22 22-5-10-5 10"/>
-            <path d="M14 18h6"/>
-          </svg>
+      <a href="#enquire" data-service="Personal Interpreter Service" class="service-card">
+        <div class="service-card-img service-card-carousel">
+          <img src="images/interpreter-saudi-men.png" alt="Personal Interpreter Service — interpreter with Saudi clients" style="width:100%;height:100%;object-fit:cover;object-position:center top;" loading="lazy">
+          <img src="images/interpreter-saudi-woman.png" alt="Personal Interpreter Service — interpreter with Saudi lady" style="width:100%;height:100%;object-fit:cover;object-position:center top;" loading="lazy">
+          <img src="images/interpreter-russian-man.png" alt="Personal Interpreter Service — interpreter with European client" style="width:100%;height:100%;object-fit:cover;object-position:center top;" loading="lazy">
         </div>
+        <div class="service-card-overlay"></div>
         <div class="service-card-content">
-          <div class="service-card-num">06 / 07</div>
+          <div class="service-card-num">07 / 07</div>
           <h3>Personal Interpreter Service</h3>
           <p class="service-card-desc">A trusted interpreter by your side throughout your visit — for appointments, healthcare, schools, shopping and official matters. Available in Arabic, Russian and many other languages.</p>
           <span class="service-card-arrow">Discover more →</span>
@@ -1352,7 +1385,7 @@ function closeMobileMenu(){
 </section>
 
 <!-- OUR PROMISE -->
-<section class="section section--white" id="about">
+<section class="section section--white" id="about" style="min-height:100vh;display:flex;align-items:center;">
   <div class="container">
     <div class="fade-up" style="text-align:center">
       <span class="eyebrow">The BHH Standard</span>
@@ -1395,8 +1428,8 @@ function closeMobileMenu(){
 </section>
 
 <!-- HOW IT WORKS -->
-<section class="section section--dark">
-  <div class="container">
+<section class="section section--dark" style="min-height:100vh;display:flex;align-items:center;">
+  <div class="container" style="width:100%">
     <div class="fade-up" style="text-align:center;margin-bottom:2rem">
       <span class="eyebrow">The Guest Journey</span>
       <h2 style="color:var(--cream)">From first enquiry to lasting memory</h2>
@@ -1428,7 +1461,7 @@ function closeMobileMenu(){
 </section>
 
 <!-- CONTACT INFO -->
-<section class="section section--cream" id="contact" style="text-align:center">
+<section class="section section--cream" id="contact" style="min-height:100vh;display:flex;align-items:center;" style="text-align:center">
   <div class="container">
     <div class="fade-up">
       <span class="eyebrow">Contact Us</span>
@@ -1454,7 +1487,7 @@ function closeMobileMenu(){
 </section>
 
 <!-- CTA -->
-<section class="section section--dark" id="enquire" style="text-align:center">
+<section class="section section--dark" id="enquire" style="min-height:100vh;" style="text-align:center">
   <div class="container">
     <div class="fade-up">
       <span class="eyebrow">Get in Touch</span>
@@ -1718,7 +1751,7 @@ function closeMobileMenu(){
           <div style="margin-top:1.5rem;padding:1rem 1.1rem;background:rgba(201,168,76,0.05);border:1px solid rgba(201,168,76,0.25);border-radius:4px">
             <label style="display:flex;align-items:flex-start;gap:0.7rem;cursor:pointer;font-size:0.82rem;line-height:1.6;color:var(--muted)">
               <input type="checkbox" name="GDPR Consent" value="Yes" required style="margin-top:0.25rem;flex-shrink:0;accent-color:#C9A84C;cursor:pointer">
-              <span>I consent to British Heritage Hosts Ltd processing the personal data I have provided for the purpose of responding to this enquiry and arranging my booking, in accordance with the <a href="#privacy" style="color:var(--gold);text-decoration:underline">Privacy Policy</a>. I understand I can withdraw consent at any time by contacting <a href="mailto:info@britishheritagehosts.com" style="color:var(--gold);text-decoration:underline">info@britishheritagehosts.com</a>.</span>
+              <span>I consent to British Heritage Hosts Ltd processing the personal data I have provided for the purpose of responding to this enquiry and arranging my booking, in accordance with the <a href="#" onclick="openLegalModal('privacy');return false;" style="color:var(--gold);text-decoration:underline">Privacy Policy</a>. I understand I can withdraw consent at any time by contacting <a href="mailto:info@britishheritagehosts.com" style="color:var(--gold);text-decoration:underline">info@britishheritagehosts.com</a>.</span>
             </label>
           </div>
           <div style="text-align:center;margin-top:1.5rem"><button type="submit" class="btn btn-gold" style="font-size:0.78rem;padding:1.1rem 3rem;cursor:pointer">Send Enquiry</button></div>
@@ -1902,7 +1935,7 @@ function closeMobileMenu(){
           <div style="margin-top:1.5rem;padding:1rem 1.1rem;background:rgba(201,168,76,0.05);border:1px solid rgba(201,168,76,0.25);border-radius:4px">
             <label style="display:flex;align-items:flex-start;gap:0.7rem;cursor:pointer;font-size:0.82rem;line-height:1.6;color:var(--muted)">
               <input type="checkbox" name="GDPR Consent" value="Yes" required style="margin-top:0.25rem;flex-shrink:0;accent-color:#C9A84C;cursor:pointer">
-              <span>I consent to British Heritage Hosts Ltd processing the personal data I have provided for the purpose of reviewing my host application and, if successful, onboarding me to the BHH network, in accordance with the <a href="#privacy" style="color:var(--gold);text-decoration:underline">Privacy Policy</a>. I understand I can withdraw consent at any time by contacting <a href="mailto:info@britishheritagehosts.com" style="color:var(--gold);text-decoration:underline">info@britishheritagehosts.com</a>.</span>
+              <span>I consent to British Heritage Hosts Ltd processing the personal data I have provided for the purpose of reviewing my host application and, if successful, onboarding me to the BHH network, in accordance with the <a href="#" onclick="openLegalModal('privacy');return false;" style="color:var(--gold);text-decoration:underline">Privacy Policy</a>. I understand I can withdraw consent at any time by contacting <a href="mailto:info@britishheritagehosts.com" style="color:var(--gold);text-decoration:underline">info@britishheritagehosts.com</a>.</span>
             </label>
           </div>
           <div style="text-align:center;margin-top:1.5rem"><button type="submit" class="btn btn-outline-gold" style="font-size:0.78rem;padding:1.1rem 3rem;cursor:pointer;background:transparent;border:1px solid var(--gold);color:var(--gold)">Submit Host Application</button></div>
@@ -2067,7 +2100,7 @@ function closeMobileMenu(){
           <div style="margin-top:1.5rem;padding:1rem 1.1rem;background:rgba(201,168,76,0.05);border:1px solid rgba(201,168,76,0.25);border-radius:4px">
             <label style="display:flex;align-items:flex-start;gap:0.7rem;cursor:pointer;font-size:0.82rem;line-height:1.6;color:var(--muted)">
               <input type="checkbox" name="GDPR Consent" value="Yes" required style="margin-top:0.25rem;flex-shrink:0;accent-color:#C9A84C;cursor:pointer">
-              <span>I consent to British Heritage Hosts Ltd processing the personal data I have provided for the purpose of reviewing my partner application and, if successful, onboarding my organisation to the BHH network, in accordance with the <a href="#privacy" style="color:var(--gold);text-decoration:underline">Privacy Policy</a>. I understand I can withdraw consent at any time by contacting <a href="mailto:info@britishheritagehosts.com" style="color:var(--gold);text-decoration:underline">info@britishheritagehosts.com</a>.</span>
+              <span>I consent to British Heritage Hosts Ltd processing the personal data I have provided for the purpose of reviewing my partner application and, if successful, onboarding my organisation to the BHH network, in accordance with the <a href="#" onclick="openLegalModal('privacy');return false;" style="color:var(--gold);text-decoration:underline">Privacy Policy</a>. I understand I can withdraw consent at any time by contacting <a href="mailto:info@britishheritagehosts.com" style="color:var(--gold);text-decoration:underline">info@britishheritagehosts.com</a>.</span>
             </label>
           </div>
           <div style="text-align:center;margin-top:1.5rem"><button type="submit" class="btn btn-outline-gold" style="font-size:0.78rem;padding:1.1rem 3rem;cursor:pointer;background:transparent;border:1px solid var(--gold);color:var(--gold)">Submit Partner Application</button></div>
@@ -2100,7 +2133,7 @@ function closeMobileMenu(){
   }
   #join .join-options a:hover, #join .join-options a:focus-visible { background:rgba(201,168,76,0.14); border-color:var(--gold); color:var(--gold); outline:none; }
 </style>
-<section id="join" class="section section--dark" style="text-align:center">
+<section id="join" class="section section--dark" style="display:none;" style="text-align:center">
   <div class="container">
     <div class="fade-up">
       <details class="join-disclosure">
@@ -2118,7 +2151,7 @@ function closeMobileMenu(){
 </section>
 
 <!-- ── PRIVACY POLICY ── -->
-<section id="privacy" class="section section--white">
+<section id="privacy" class="section section--white" style="display:none;">
   <div class="container" style="max-width:820px">
     <span class="eyebrow">Last updated: April 2026</span>
     <h2>Privacy Policy</h2>
@@ -2159,7 +2192,7 @@ function closeMobileMenu(){
 </section>
 
 <!-- ── TERMS OF SERVICE ── -->
-<section id="terms" class="section section--cream">
+<section id="terms" class="section section--cream" style="display:none;">
   <div class="container" style="max-width:820px">
     <span class="eyebrow">Last updated: April 2026</span>
     <h2>Terms of Service</h2>
@@ -2248,8 +2281,8 @@ function closeMobileMenu(){
     <div class="footer-bottom">
       <span>&copy; 2026 British Heritage Hosts Ltd</span>
       <div class="footer-legal">
-        <a href="#privacy">Privacy Policy</a>
-        <a href="#terms">Terms of Service</a>
+        <a href="#" onclick="openLegalModal('privacy');return false;">Privacy Policy</a>
+        <a href="#" onclick="openLegalModal('terms');return false;">Terms of Service</a>
       </div>
     </div>
   </div>
@@ -3363,5 +3396,113 @@ function closeThankyouModal(modalId) {
   </div>
 </div>
 
+
+<!-- ── LEGAL MODALS ── -->
+<div id="modal-privacy" class="legal-modal" onclick="if(event.target===this)closeLegalModal('privacy')">
+  <div class="legal-modal-inner">
+    <button class="legal-modal-close" onclick="closeLegalModal('privacy')">Close ✕</button>
+
+  <div class="container" style="max-width:820px">
+    <span class="eyebrow">Last updated: April 2026</span>
+    <h2>Privacy Policy</h2>
+    <div class="gold-line"></div>
+
+    <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">British Heritage Hosts Ltd (&ldquo;BHH&rdquo;, &ldquo;we&rdquo;, &ldquo;our&rdquo;, &ldquo;us&rdquo;), Company No. 17103555, registered at Monomark House, 27 Old Gloucester Street, London WC1N 3AX, is committed to protecting the privacy of every guest, host, and partner who engages with our services. This policy explains how we collect, use, store, and protect your personal data in accordance with the UK General Data Protection Regulation (UK GDPR) and the Data Protection Act 2018.</p>
+
+    <h3>1. Information We Collect</h3>
+    <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">We may collect: full name, title, and contact details; country of residence, city, and nationality; dietary requirements and allergy information; Enhanced DBS certificate status (hosts and partners); payment and billing information (processed by Airwallex); feedback and rating data; and any additional information you voluntarily provide.</p>
+
+    <h3>2. How We Use Your Information</h3>
+    <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">We use your data to: respond to enquiries and prepare proposals; process bookings, payments, and cancellations; match guests with suitable hosts; verify host and partner credentials; send pre-experience briefings and post-experience feedback requests; improve our services; and comply with legal obligations.</p>
+
+    <h3>3. Legal Basis for Processing</h3>
+    <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">We process your data on the basis of: contractual necessity (to fulfil services); legitimate interest (to operate and improve our business and protect safety); consent (where explicitly agreed, such as marketing); and legal obligation (to comply with applicable laws).</p>
+
+    <h3>4. Data Sharing</h3>
+    <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">We do not sell your personal data. We may share data with: approved hosts and partners (to deliver your experience); Airwallex (for payment processing); and professional advisors or regulatory authorities where required by law.</p>
+
+    <h3>5. Data Retention</h3>
+    <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">Booking and transaction records: 7 years. Rating and feedback data: 36 months, then anonymised. Unsuccessful applications: 12 months, then deleted. Marketing preferences: until you withdraw consent.</p>
+
+    <h3>6. Your Rights</h3>
+    <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">Under the UK GDPR, you have the right to access, correct, delete, restrict, or port your personal data, and to withdraw consent at any time. Contact us at <a href="/cdn-cgi/l/email-protection#7e171018113e1c0c170a170d16161b0c170a1f191b16110d0a0d501d1113" style="color:var(--gold)"><span class="__cf_email__" data-cfemail="157c7b737a5577677c617c667d7d70677c617472707d7a6661663b767a78">[email&#160;protected]</span></a>.</p>
+
+    <h3>7. Data Security</h3>
+    <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">We implement appropriate technical and organisational measures to protect your data. Payment data is handled by our PCI-compliant payment partner and is never stored on our systems.</p>
+
+    <h3>8. Cookies</h3>
+    <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">Our website uses essential cookies only. We do not use tracking, advertising, or third-party analytics cookies.</p>
+
+    <h3>9. Changes to This Policy</h3>
+    <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">We may update this policy from time to time. Changes will be posted on this page with an updated date.</p>
+
+    <h3>10. Contact Us</h3>
+    <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">British Heritage Hosts Ltd, Monomark House, 27 Old Gloucester Street, London WC1N 3AX. Email: <a href="/cdn-cgi/l/email-protection#4e272028210e2c3c273a273d26262b3c273a2f292b26213d3a3d602d2123" style="color:var(--gold)"><span class="__cf_email__" data-cfemail="127b7c747d5270607b667b617a7a77607b667375777a7d6166613c717d7f">[email&#160;protected]</span></a>. You also have the right to lodge a complaint with the ICO at <a href="https://ico.org.uk" style="color:var(--gold)" target="_blank" rel="noopener">ico.org.uk</a>.</p>
+  </div>
+
+  </div>
+</div>
+
+<div id="modal-terms" class="legal-modal" onclick="if(event.target===this)closeLegalModal('terms')">
+  <div class="legal-modal-inner">
+    <button class="legal-modal-close" onclick="closeLegalModal('terms')">Close ✕</button>
+
+  <div class="container" style="max-width:820px">
+    <span class="eyebrow">Last updated: April 2026</span>
+    <h2>Terms of Service</h2>
+    <div class="gold-line"></div>
+
+    <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">These terms (&ldquo;Terms&rdquo;) govern your use of the services provided by British Heritage Hosts Ltd (&ldquo;BHH&rdquo;), Company No. 17103555, Monomark House, 27 Old Gloucester Street, London WC1N 3AX. By submitting an enquiry, making a booking, or applying to become a host or partner, you agree to be bound by these Terms.</p>
+
+    <h3>1. Our Services</h3>
+    <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">BHH provides premium, enquiry-based hospitality experiences connecting international families with approved hosts across England. Services include Private Family Dinners, English Afternoon Teas, British Heritage Guide tours, Private Canal Cruises, and Airport &amp; Private Transportation. All services are bespoke, subject to availability, with prices provided individually upon enquiry.</p>
+
+    <h3>2. Bookings and Payment</h3>
+    <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">All bookings are confirmed only upon receipt of full payment, processed securely through Airwallex. A booking reference will be issued upon confirmation. BHH reserves the right to decline any booking at its discretion.</p>
+
+    <h3>3. Cancellation Policy</h3>
+    <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">More than 14 days before: full refund. 7 to 14 days before: 50% refund. Less than 7 days: no refund, unless BHH can rearrange to an alternative date. If BHH cancels: full refund.</p>
+
+    <h3>4. Guest Responsibilities</h3>
+    <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">Guests must provide accurate information including dietary requirements, allergies, and group size. Guests must arrive on time; late arrivals may reduce the experience duration without price adjustment. Guests must treat hosts, their homes, and property with respect. BHH may terminate an experience if behaviour is disruptive or unsafe.</p>
+
+    <h3>5. Host and Partner Standards</h3>
+    <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">All hosts and partners are independently vetted and must hold a valid Enhanced DBS certificate. They operate as independent service providers, not employees of BHH. Performance is monitored through a mandatory two-way rating system.</p>
+
+    <h3>6. Dietary and Allergy Information</h3>
+    <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">Guests must disclose all dietary requirements and allergies at booking. While hosts make every reasonable effort to accommodate requests, BHH cannot guarantee a completely allergen-free environment in private homes.</p>
+
+    <h3>7. Limitation of Liability</h3>
+    <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">BHH acts as an intermediary connecting guests with independent hosts and partners. BHH is not liable for loss, injury, or damage arising from the actions or omissions of hosts, partners, or guests. Our total liability shall not exceed the amount paid for the relevant booking. Nothing in these Terms excludes liability for death or personal injury caused by negligence, fraud, or any liability that cannot be excluded by law.</p>
+
+    <h3>8. Intellectual Property</h3>
+    <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">All website content is the property of British Heritage Hosts Ltd and is protected by copyright. Reproduction without prior written consent is prohibited.</p>
+
+    <h3>9. Feedback and Ratings</h3>
+    <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">Following each experience, both guests and hosts are required to submit feedback. Ratings are confidential and used solely to maintain and improve service quality.</p>
+
+    <h3>10. Governing Law</h3>
+    <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">These Terms are governed by the laws of England and Wales. Disputes shall be subject to the exclusive jurisdiction of the courts of England and Wales.</p>
+
+    <h3>11. Changes to These Terms</h3>
+    <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">We may update these Terms from time to time. Continued use of our services constitutes acceptance of the revised Terms.</p>
+
+    <h3>12. Contact Us</h3>
+    <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">British Heritage Hosts Ltd, Monomark House, 27 Old Gloucester Street, London WC1N 3AX. Email: <a href="/cdn-cgi/l/email-protection#a1c8cfc7cee1c3d3c8d5c8d2c9c9c4d3c8d5c0c6c4c9ced2d5d28fc2cecc" style="color:var(--gold)"><span class="__cf_email__" data-cfemail="0960676f66496b7b607d607a61616c7b607d686e6c61667a7d7a276a6664">[email&#160;protected]</span></a></p>
+  </div>
+
+  </div>
+</div>
+
+<script>
+function openLegalModal(type) {
+  document.getElementById('modal-' + type).classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeLegalModal(type) {
+  document.getElementById('modal-' + type).classList.remove('open');
+  document.body.style.overflow = '';
+}
+</script>
 </body>
 </html>
