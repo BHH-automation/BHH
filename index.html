@@ -1171,13 +1171,17 @@ function switchTab(tab) {
   <input name="form-name" type="hidden" value="guest-enquiry-v2">
   <input name="subject" type="hidden" value="BHH Guest Enquiry">
   <input name="bot-field">
-  <input name="salutation"><input name="fullname"><input name="email">
-  <select name="phone-code"><option value="+44">+44</option></select><input name="phone">
-  <input name="country"><input name="city">
-  <input name="date-from"><input name="date-to">
-  <select name="Number of Adults"><option>2</option></select><select name="Number of Children"><option>0</option></select><input name="Child Age 1"><input name="Child Age 2"><input name="Child Age 3"><input name="Child Age 4"><input name="Child Age 5"><input name="Child Age 6"><input name="Child Age 7"><input name="Child Age 8">
-  <input name="service"><input name="dietary"><input name="occasion"><textarea name="message"></textarea>
-  <input name="referral"><input name="Travel Insurance Confirmed">
+  <input name="Title"><input name="Full Name"><input name="Email">
+  <input name="Country Code"><input name="Phone Number">
+  <input name="country"><input name="city"><input name="city-other"><input name="Nationality">
+  <input name="Date From"><input name="Date To">
+  <input name="Number of Adults"><input name="Number of Children">
+  <input name="Child Age 1"><input name="Child Age 2"><input name="Child Age 3"><input name="Child Age 4"><input name="Child Age 5"><input name="Child Age 6"><input name="Child Age 7"><input name="Child Age 8">
+  <input name="Experience Requested"><input name="Experience Tier">
+  <input name="Dietary Requirements"><input name="Occasion"><input name="Occasion Detail">
+  <textarea name="Special Requests"></textarea>
+  <input name="How Did You Hear"><input name="Referral Detail">
+  <input name="Travel Insurance Confirmed"><input name="GDPR Consent">
 </form>
 <form method='post' name='partner-application' enctype='multipart/form-data' style='display:none'>
   <input name="form-name" type="hidden" value="partner-application">
@@ -1606,6 +1610,9 @@ function closeMobileMenu(){
               </select>
             </div>
             <div class="form-group"><label>Full Name</label><input type="text" name="Full Name" placeholder="Sarah Bisci" required></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>Email <span style="color:#C9A84C">*</span></label><input type="email" name="Email" placeholder="sarah@example.com" required></div>
           </div>
           <div class="form-row">
             <div class="form-group"><label>Phone <span style="color:#C9A84C">*</span></label>
