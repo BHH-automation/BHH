@@ -292,7 +292,6 @@ nav {
 .hero .eyebrow { font-size: 1.1rem; margin-bottom: 0.6rem; }
 @media (max-width: 600px) {
   .hero { padding-top: 161px; }                     /* mobile nav is 151px tall; +10px clearance */
-  .hero-btns .btn-outline-cream { display: none; }  /* mobile: show only the primary CTA */
   .hero .lead { font-size: 1.25rem; }               /* scaled up; kept below desktop 1.4rem to avoid heavy wrap at 390px */
 }
 #services { padding-top: 2rem; }
@@ -1022,6 +1021,44 @@ footer {
 }
 .legal-modal-close:hover { background: var(--navy); color: var(--cream); }
 /* ── END LEGAL MODAL ─────────────────────────────────────────────── */
+
+.svc-pill {
+  display:inline-flex;align-items:center;gap:0.3rem;
+  font-size:0.7rem;color:rgba(245,240,232,0.75);
+  background:rgba(201,168,76,0.06);
+  border:1px solid rgba(201,168,76,0.25);
+  border-radius:20px;padding:0.2rem 0.55rem;
+  white-space:nowrap;cursor:pointer;
+  transition:all 0.2s;
+  text-transform:none;letter-spacing:0;font-weight:400;
+}
+.svc-pill:has(input:checked) {
+  background:rgba(201,168,76,0.2);
+  border-color:#C9A84C;
+  color:#C9A84C;font-weight:500;
+}
+.svc-pill:has(input:checked)::before { content:"✓ "; }
+.svc-pill input[type=checkbox] { display:none; }
+.svc-pill:has(input:checked) {
+  background:rgba(201,168,76,0.2);
+  border-color:#C9A84C;
+  color:#C9A84C;font-weight:500;
+}
+.svc-pill:has(input:checked)::before { content:"✕ "; }
+
+.host-type-pill {
+  display:inline-flex;flex-direction:column;align-items:center;
+  padding:0.8rem 1.4rem;border:1px solid rgba(201,168,76,0.3);
+  border-radius:8px;cursor:pointer;text-align:center;
+  font-size:0.88rem;color:rgba(245,240,232,0.75);
+  background:rgba(201,168,76,0.05);transition:all 0.2s;
+  text-transform:none;letter-spacing:0;font-weight:400;min-width:140px;
+}
+.host-type-pill input[type=radio] { display:none; }
+.host-type-pill.selected {
+  border-color:#C9A84C;background:rgba(201,168,76,0.15);
+  color:#C9A84C;font-weight:500;
+}
 </style>
 
     <!-- ═══ SEO & SOCIAL ═══════════════════════════════════════════════════ -->
@@ -1098,6 +1135,35 @@ footer {
     </script>
     <!-- ═══════════════════════════════════════════════════════════════════ -->
 </head>
+<script>
+function switchTab(tab) {
+  var allPanels = document.querySelectorAll('.enquire-panel');
+  allPanels.forEach(function(panel) {
+    panel.style.display = 'none';
+  });
+  var allTabs = document.querySelectorAll('.enquire-tab');
+  allTabs.forEach(function(tabBtn) {
+    tabBtn.style.borderBottomColor = 'transparent';
+    tabBtn.style.color = 'rgba(245,240,232,0.5)';
+    tabBtn.classList.remove('enquire-tab--active');
+  });
+  var targetPanel = document.getElementById('tab-' + tab);
+  if (targetPanel) {
+    targetPanel.style.display = 'block';
+    targetPanel.style.opacity = '1';
+  }
+  var targetTab = document.querySelector('.enquire-tab[data-tab="' + tab + '"]');
+  if (targetTab) {
+    targetTab.style.borderBottomColor = 'var(--gold)';
+    targetTab.style.color = 'var(--gold)';
+    targetTab.classList.add('enquire-tab--active');
+  }
+  var enquireSection = document.getElementById('enquire');
+  if (enquireSection) {
+    enquireSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+</script>
 <body>
 
 <!-- Hidden forms for Netlify detection only -->
@@ -1111,19 +1177,23 @@ footer {
   <input name="date-from"><input name="date-to">
   <select name="Number of Adults"><option>2</option></select><select name="Number of Children"><option>0</option></select><input name="Child Age 1"><input name="Child Age 2"><input name="Child Age 3"><input name="Child Age 4"><input name="Child Age 5"><input name="Child Age 6"><input name="Child Age 7"><input name="Child Age 8">
   <input name="service"><input name="dietary"><input name="occasion"><textarea name="message"></textarea>
-  <input name="referral">
+  <input name="referral"><input name="Travel Insurance Confirmed">
 </form>
-<form method='post' name='partner-application' style='display:none'>
+<form method='post' name='partner-application' enctype='multipart/form-data' style='display:none'>
   <input name="form-name" type="hidden" value="partner-application">
   <input name="subject" type="hidden" value="BHH Partner Application">
   <input name="bot-field">
-  <input name="contactname"><input name="business-name"><input name="email">
-  <select name="phone-code"><option value="+44">+44</option></select><input name="phone">
-  <input name="county"><input name="city">
-  <input name="partner-type"><input name="experience-years"><input name="staff-count">
-  <input name="insurance"><input name="dbs-check"><input name="website">
-  <input name="County Other"><input name="City Other"><input name="DBS Certificate">
-  <textarea name="about"></textarea><input name="referral">
+  <input name="Contact Name"><input name="Business Name"><input name="email">
+  <select name="Country Code"><option value="+44">+44</option></select><input name="Phone Number">
+  <input name="city"><input name="County">
+  <input name="Partner Type"><input name="Partner Type Detail">
+  <input name="Years of Experience"><input name="Number of Staff">
+  <input name="Partner Home Insurance">
+  <input name="Partner Public Liability"><input name="PL Insurer Name"><input name="PL Policy Number"><input name="PL Certificate">
+  <input name="Partner Professional Indemnity"><input name="PI Insurer Name"><input name="PI Policy Number"><input name="PI Certificate">
+  <input name="DBS Checked"><input name="DBS Certificate"><input name="DBS Not Applicable Reason">
+  <input type="file" name="Overseas Criminal Clearance">
+  <input name="Website"><textarea name="About"></textarea><input name="How Did You Hear"><input name="GDPR Consent">
 </form>
 <form method='post' name='host-application' style='display:none'>
   <input name="form-name" type="hidden" value="host-application">
@@ -1136,6 +1206,7 @@ footer {
   <input name="household-adults"><input name="household-children">
   <input name="services"><input name="halal-capable"><input name="languages">
   <input name="DBS Checked"><input name="County Other"><input name="City Other"><input name="DBS Certificate">
+  <input name="Guide Professional Indemnity"><input name="Guide PI Insurer Name"><input name="Guide PI Policy Number">
   <textarea name="about"></textarea><input name="referral">
 </form>
 
@@ -1155,15 +1226,9 @@ footer {
       </a>
       <ul class="nav-join-menu" id="navJoinMenu" role="menu">
         <li role="none">
-          <a href="#host-application" role="menuitem" onclick="closeMobileMenu();openPanel('host')">
-            <svg width="18" height="18" aria-hidden="true"><use href="#ic-host"/></svg>
-            Become a Host
-          </a>
-        </li>
-        <li role="none">
-          <a href="#partner-application" role="menuitem" onclick="closeMobileMenu();openPanel('partner')">
+          <a href="#partner-application" role="menuitem" onclick="closeMobileMenu();switchTab('partner');document.getElementById('enquire').scrollIntoView({behavior:'smooth'});return false;">
             <svg width="18" height="18" aria-hidden="true"><use href="#ic-partner"/></svg>
-            Become a Provider
+            Become a Partner
           </a>
         </li>
       </ul>
@@ -1179,8 +1244,7 @@ footer {
   <a href="#services" onclick="closeMobileMenu()">Our Services</a>
   <a href="#about" onclick="closeMobileMenu()">About</a>
   <a href="#contact" onclick="closeMobileMenu()">Contact</a>
-  <a href="#host-application" onclick="closeMobileMenu();openPanel('host')">Become a Host</a>
-  <a href="#partner-application" onclick="closeMobileMenu();openPanel('partner')">Become a Provider</a>
+  <a href="#enquire" onclick="closeMobileMenu();switchTab('partner');document.getElementById('enquire').scrollIntoView({behavior:'smooth'});return false;">Become a Partner</a>
 </div>
 <!-- Shared icon sprite for nav menus -->
 <svg width="0" height="0" style="position:absolute;overflow:hidden" aria-hidden="true">
@@ -1232,8 +1296,8 @@ function closeMobileMenu(){
       <h1>England, as it <em style="font-style:normal;color:var(--gold)">truly</em> lives</h1>
       <p class="hero-sub">Private cultural experiences in real English homes —<br>curated exclusively for discerning international families visiting England.</p>
       <div class="hero-btns">
-        <a href="#enquire" class="btn btn-gold" onclick="joinAs('guest');return false;">Enquire for Your Family</a>
-        <a href="#services" class="btn btn-outline-cream">Explore Our Services</a>
+        <a href="#services" class="btn btn-gold">Explore Our Services</a>
+        <a href="#enquire" class="btn btn-outline-cream" onclick="joinAs('guest');return false;">Enquire for Your Family</a>
       </div>
     </div>
 
@@ -1248,14 +1312,26 @@ function closeMobileMenu(){
       <a href="#services" class="hero-svc-pill">Transportation</a>
       <span class="hero-svc-dot">·</span>
       <a href="#services" class="hero-svc-pill">Canal Cruise</a>
+      <span class="hero-svc-dot">·</span>
+      <a href="#services" class="hero-svc-pill">Cultural Immersion Program</a>
+      <span class="hero-svc-dot">·</span>
+      <a href="#services" class="hero-svc-pill">Personal Interpreter Service</a>
+      <span class="hero-svc-dot">·</span>
+      <a href="#services" class="hero-svc-pill">Host Trainer / Etiquette Coach</a>
     </div>
 
   </div>
 
   <script>
   function joinAs(role){
-    var partnerTypes = { guide:'Heritage Guide', interpreter:'Interpreter', 'language-partner':'Language Partner (English tuition)' };
-    if(partnerTypes[role]){
+    // Roles handled by the partner form's "Partner Type" select
+    var partnerTypes = { interpreter:'Interpreter', 'language-partner':'Cultural Immersion Programme (CIP) - School Partner' };
+    if(role === 'guide'){
+      // Heritage Guide is a Host Type in the host form, not a Partner Type
+      switchTab('host');
+      var radio = document.querySelector('#host-form input[name="Host Type"][value="Heritage Guide"]');
+      if(radio){ radio.checked = true; radio.dispatchEvent(new Event('change', {bubbles:true})); }
+    } else if(partnerTypes[role]){
       switchTab('partner');
       var sel = document.querySelector('#partner-form select[name="Partner Type"]');
       if(sel){ sel.value = partnerTypes[role]; sel.dispatchEvent(new Event('change', {bubbles:true})); }
@@ -1292,7 +1368,7 @@ function closeMobileMenu(){
         </div>
       </a>
 
-      <a href="#enquire" data-service="English Afternoon Tea" class="service-card">
+      <a href="#enquire" data-service="English Tea" class="service-card">
     <div class="service-card-img service-card-carousel">
       <img src="images/english-tea-traditional-afternoon-tea.jpg" alt="English Tea — traditional afternoon tea" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
       <img src="images/english-tea-families-enjoying-tea.jpg" alt="English Tea — families enjoying tea" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
@@ -1307,7 +1383,7 @@ function closeMobileMenu(){
         </div>
       </a>
 
-      <a href="#enquire" data-service="Private Family Dinner" class="service-card">
+      <a href="#enquire" data-service="Dinner" class="service-card">
     <div class="service-card-img service-card-carousel">
       <img src="images/private-family-dinner-host-and-guest-fam.jpg" alt="Private Family Dinner — host and guest families" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
       <img src="images/private-family-dinner-traditional-englis.jpg" alt="Private Family Dinner — traditional English table" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
@@ -1321,7 +1397,7 @@ function closeMobileMenu(){
         </div>
       </a>
 
-      <a href="#enquire" data-service="Airport &amp; Private Transportation" class="service-card">
+      <a href="#enquire" data-service="Transportation" class="service-card">
     <div class="service-card-img service-card-carousel">
       <img src="images/airport-private-transportation-airport-p.jpg" alt="Airport & Private Transportation — airport pickup" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
       <img src="images/airport-private-transportation-luxury-lo.jpg" alt="Airport & Private Transportation — luxury London transfer" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
@@ -1335,7 +1411,7 @@ function closeMobileMenu(){
         </div>
       </a>
 
-      <a href="#enquire" data-service="Private Canal Cruise" class="service-card">
+      <a href="#enquire" data-service="Canal Cruise" class="service-card">
     <div class="service-card-img service-card-carousel">
       <img src="images/private-canal-cruise-narrowboat-on-engli.jpg" alt="Private Canal Cruise — narrowboat on English canal" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
       <img src="images/private-canal-cruise-family-dining-on-bo.jpg" alt="Private Canal Cruise — family dining on board" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
@@ -1487,22 +1563,22 @@ function closeMobileMenu(){
 </section>
 
 <!-- CTA -->
-<section class="section section--dark" id="enquire" style="min-height:100vh;" style="text-align:center">
+<section class="section section--dark" id="enquire" style="min-height:100vh;text-align:center;overflow:visible">
   <div class="container">
-    <div class="fade-up">
+    <div class="fade-up" style="min-height:600px">
       <span class="eyebrow">Get in Touch</span>
       <h2 style="color:var(--cream);max-width:600px;margin:0 auto 1rem">How can we help you?</h2>
       <div class="gold-line gold-line--center"></div>
 
       <!-- TABS -->
       <div style="display:flex;justify-content:center;gap:0;margin:2rem auto 2.5rem;max-width:660px;border-bottom:1px solid rgba(201,168,76,0.3)">
-        <button type="button" class="enquire-tab enquire-tab--active" data-tab="guest" onclick="switchTab('guest'); return false;" style="flex:1;padding:0.9rem 1rem;background:transparent;border:none;border-bottom:2px solid var(--gold);color:var(--gold);font-family:var(--ff-body);font-size:0.72rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:all 0.3s">Become a Guest</button>
-        <button type="button" class="enquire-tab" data-tab="host" onclick="switchTab('host'); return false;" style="display:none;flex:1;padding:0.9rem 1rem;background:transparent;border:none;border-bottom:2px solid transparent;color:rgba(245,240,232,0.5);font-family:var(--ff-body);font-size:0.72rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:all 0.3s">Become a Host</button>
-        <button type="button" class="enquire-tab" data-tab="partner" onclick="switchTab('partner'); return false;" style="display:none;flex:1;padding:0.9rem 1rem;background:transparent;border:none;border-bottom:2px solid transparent;color:rgba(245,240,232,0.5);font-family:var(--ff-body);font-size:0.72rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:all 0.3s">Become a Partner</button>
+        <button type="button" class="enquire-tab" data-tab="guest" onclick="switchTab('guest'); return false;" style="flex:1;padding:0.9rem 1rem;background:transparent;border:none;border-bottom:2px solid transparent;color:rgba(245,240,232,0.5);font-family:var(--ff-body);font-size:0.72rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:all 0.3s">Become a Guest</button>
+        <button type="button" class="enquire-tab" data-tab="host" onclick="switchTab('host'); return false;" style="flex:1;padding:0.9rem 1rem;background:transparent;border:none;border-bottom:2px solid transparent;color:rgba(245,240,232,0.5);font-family:var(--ff-body);font-size:0.72rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:all 0.3s">Become a Host</button>
+        <button type="button" class="enquire-tab enquire-tab--active" data-tab="partner" onclick="switchTab('partner'); return false;" style="flex:1;padding:0.9rem 1rem;background:transparent;border:none;border-bottom:2px solid var(--gold);color:var(--gold);font-family:var(--ff-body);font-size:0.72rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:all 0.3s">Become a Partner</button>
       </div>
 
       <!-- ═══════ GUEST FORM ═══════ -->
-      <div id="tab-guest" class="enquire-panel" style="max-width:560px;margin:0 auto;transition:opacity 0.3s ease-in-out;opacity:1">
+      <div id="tab-guest" class="enquire-panel" style="max-width:560px;margin:0 auto;transition:opacity 0.3s ease-in-out;opacity:1;display:none">
         <p class="lead" style="margin:0 auto 2rem;text-align:center">Tell us about your family and your visit. We will arrange the rest.</p>
         <form action='/?success=guest' id='guest-form' method='POST' name='guest-enquiry-v2' style='text-align:left'>
           <input type="hidden" name="form-name" value="guest-enquiry-v2">
@@ -1532,7 +1608,6 @@ function closeMobileMenu(){
             <div class="form-group"><label>Full Name</label><input type="text" name="Full Name" placeholder="Sarah Bisci" required></div>
           </div>
           <div class="form-row">
-            <div class="form-group"><label>Email</label><input type="email" name="email" placeholder="your@email.com" required pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}" title="Please enter a valid email address"></div>
             <div class="form-group"><label>Phone <span style="color:#C9A84C">*</span></label>
               <div style="display:flex;gap:0.5rem">
                 <select name="Country Code" required style="width:130px;flex-shrink:0;text-align:center">
@@ -1628,24 +1703,24 @@ function closeMobileMenu(){
             <label>Experiences of Interest <span style="color:#C9A84C">*</span></label>
             <p style="font-size:0.72rem;color:rgba(245,240,232,0.75);margin:-0.2rem 0 0.8rem;font-style:italic">Select one or more — combine services for a richer visit.</p>
             <div id="service-card-grid">
-              <div class="service-card-v8" data-service="Private Family Dinner" onclick="toggleService(this)">
-                <span class="svc-label">Private Family Dinner</span>
+              <div class="service-card-v8" data-service="Dinner" onclick="toggleService(this)">
+                <span class="svc-label">Dinner</span>
                 <span class="service-card-check"></span>
               </div>
-              <div class="service-card-v8" data-service="English Afternoon Tea" onclick="toggleService(this)">
-                <span class="svc-label">English Afternoon Tea</span>
+              <div class="service-card-v8" data-service="English Tea" onclick="toggleService(this)">
+                <span class="svc-label">English Tea</span>
                 <span class="service-card-check"></span>
               </div>
-              <div class="service-card-v8" data-service="British Heritage Guide" onclick="toggleService(this)">
-                <span class="svc-label">British Heritage Guide</span>
+              <div class="service-card-v8" data-service="Heritage Guide" onclick="toggleService(this)">
+                <span class="svc-label">Heritage Guide</span>
                 <span class="service-card-check"></span>
               </div>
-              <div class="service-card-v8" data-service="Private Canal Cruise" onclick="toggleService(this)">
-                <span class="svc-label">Private Canal Cruise</span>
+              <div class="service-card-v8" data-service="Canal Cruise" onclick="toggleService(this)">
+                <span class="svc-label">Canal Cruise</span>
                 <span class="service-card-check"></span>
               </div>
-              <div class="service-card-v8" data-service="Airport &amp; Transport" onclick="toggleService(this)">
-                <span class="svc-label">Airport &amp; Transport</span>
+              <div class="service-card-v8" data-service="Transportation" onclick="toggleService(this)">
+                <span class="svc-label">Transportation</span>
                 <span class="service-card-check"></span>
               </div>
               <div class="service-card-v8" data-service="Cultural Immersion Program" onclick="toggleService(this)">
@@ -1747,6 +1822,25 @@ function closeMobileMenu(){
               <option value="Other">Other</option>
             </select>
           </div>
+
+          <!-- ═══ TRAVEL INSURANCE ═══ -->
+          <div style="margin-bottom:1.5rem;padding:1rem 1.1rem;background:rgba(201,168,76,0.05);border:1px solid rgba(201,168,76,0.25);border-radius:4px">
+            <p style="font-size:0.7rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);margin:0 0 0.5rem;font-weight:500">Travel Insurance</p>
+            <p style="font-size:0.82rem;line-height:1.6;color:rgba(245,240,232,0.85);margin:0 0 0.8rem">BHH strongly recommends all guests hold travel insurance covering trip cancellation, medical expenses, and personal liability before travelling. The following providers accept international guests including Gulf nationals:</p>
+            <div style="display:flex;flex-direction:column;gap:0.4rem">
+              <a href="https://www.axa.co.uk/travel-insurance/" target="_blank" rel="noopener noreferrer" style="font-size:0.78rem;color:var(--gold);text-decoration:underline">AXA Travel Insurance — covers Gulf nationals visiting the UK →</a>
+              <a href="https://www.allianz-assistance.co.uk/travel-insurance/" target="_blank" rel="noopener noreferrer" style="font-size:0.78rem;color:var(--gold);text-decoration:underline">Allianz Travel Insurance — strong coverage for Middle East travellers →</a>
+              <a href="https://www.worldnomads.com/" target="_blank" rel="noopener noreferrer" style="font-size:0.78rem;color:var(--gold);text-decoration:underline">World Nomads — flexible plans for international travellers →</a>
+            </div>
+            <p style="font-size:0.72rem;color:rgba(245,240,232,0.55);margin:0.7rem 0 0;font-style:italic">BHH is not an insurance provider. Please verify eligibility with your chosen insurer before purchasing.</p>
+            <div style="margin-top:0.8rem">
+              <label style="display:flex;align-items:flex-start;gap:0.6rem;cursor:pointer;font-size:0.82rem;line-height:1.5;color:var(--muted)">
+                <input type="checkbox" name="Travel Insurance Confirmed" value="Yes" style="margin-top:0.2rem;flex-shrink:0;accent-color:#C9A84C;cursor:pointer">
+                <span>I confirm I hold or will arrange travel insurance before my trip.</span>
+              </label>
+            </div>
+          </div>
+
           <!-- ═══ GDPR CONSENT (v8.4) ═══ -->
           <div style="margin-top:1.5rem;padding:1rem 1.1rem;background:rgba(201,168,76,0.05);border:1px solid rgba(201,168,76,0.25);border-radius:4px">
             <label style="display:flex;align-items:flex-start;gap:0.7rem;cursor:pointer;font-size:0.82rem;line-height:1.6;color:var(--muted)">
@@ -1759,30 +1853,35 @@ function closeMobileMenu(){
       </div>
 
       <!-- ═══════ HOST FORM ═══════ -->
-      <div id="tab-host" class="enquire-panel" style="max-width:560px;margin:0 auto;display:none;transition:opacity 0.3s ease-in-out;opacity:0">
+      <div id="tab-host" class="enquire-panel" style="max-width:760px;margin:0 auto;opacity:1;display:none">
         <p class="lead" style="margin:0 auto 2rem;text-align:center">Share your home and culture with visiting families. We personally vet every host.</p>
         <form action='/?success=host' id='host-form' method='POST' name='host-application' style='text-align:left'>
           <input type="hidden" name="form-name" value="host-application">
           <p style="display:none"><label>Don't fill this out if you're human: <input name="bot-field"></label></p>
           <input type="hidden" name="subject" id="host-subject" value="BHH Host Application">
-          <p style="font-size:0.75rem;color:rgba(245,240,232,1);margin-bottom:1.2rem;margin-top:0.5rem">Fields marked <span style='color:#C9A84C'>*</span> are required. &nbsp;|&nbsp; Enter phone number without leading zero (e.g. 7911 123456 not 07911 123456).</p>
-          <div class="form-row" style="grid-template-columns:140px 1fr">
+
+          <p style="font-size:0.75rem;color:rgba(245,240,232,0.75);margin-bottom:1.2rem">Fields marked <span style="color:#C9A84C">*</span> are required.</p>
+
+          <!-- STEP 1: WHO ARE YOU -->
+          <p style="font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin-bottom:0.8rem;font-weight:500">1 · Your Details</p>
+
+          <div class="form-row">
             <div class="form-group"><label>Title <span style="color:#C9A84C">*</span></label>
               <select name="Title" required>
                 <option value="">Select…</option>
                 <option value="Mr">Mr</option>
                 <option value="Mrs">Mrs</option>
                 <option value="Ms">Ms</option>
-                <option value="Miss">Miss</option>
                 <option value="Dr">Dr</option>
                 <option value="Prof">Prof</option>
+                <option value="Other">Other</option>
               </select>
             </div>
-            <div class="form-group"><label>Full Name <span style="color:#C9A84C">*</span></label><input type="text" name="Full Name" placeholder="Jane Ashworth" required></div>
+            <div class="form-group"><label>Full Name <span style="color:#C9A84C">*</span></label><input type="text" name="Full Name" placeholder="Your full name" required></div>
           </div>
-          <div class="form-row">
-            <div class="form-group"><label>Email</label><input type="email" name="email" placeholder="your@email.com" required pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}" title="Please enter a valid email address"></div>
-            <div class="form-group"><label>Phone <span style="color:#C9A84C">*</span></label>
+
+          <div class="form-group"><label>Email <span style="color:#C9A84C">*</span></label><input type="email" name="email" placeholder="your@email.com" required></div>
+        <div class="form-group"><label>Phone <span style="color:#C9A84C">*</span></label>
               <div style="display:flex;gap:0.5rem">
                 <select name="Country Code" required style="width:130px;flex-shrink:0;text-align:center">
                   <option value="">Code…</option>
@@ -1840,61 +1939,382 @@ function closeMobileMenu(){
                 <input type="tel" name="Phone Number" id="phone-number-input" placeholder="7911 123456" style="flex:1" required title="Enter your number without leading zero (e.g. 7911 123456)">
               </div>
             </div>
-          </div>
+
           <div class="form-row">
-            <div class="form-group"><label>County</label>
-              <select name="County" id="host-county" required onchange="toggleListOther(this,'County Other')">
-                <option value="">Loading…</option>
-              </select>
-            </div>
             <div class="form-group"><label>City / Village <span style="color:#C9A84C">*</span></label>
-              <select name="city" id="host-city" required onchange="toggleListOther(this,'City Other')">
+              <select name="city" id="host-city" required onchange="onHostCityChange(this)">
                 <option value="">Loading…</option>
               </select>
             </div>
+            <div class="form-group"><label>County</label>
+              <select name="County" id="host-county" required>
+                <option value="">Select city first…</option>
+              </select>
+            </div>
           </div>
-          <div class="form-group"><label>Full Home Address <span style="color:#C9A84C">*</span></label><input type="text" name="Address" placeholder="House name or number, street, postcode" required></div>
-          <div class="form-row">
+
+          <!-- STEP 2: HOST TYPE -->
+          <p style="font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin:1.5rem 0 0.8rem;font-weight:500">2 · How Would You Like to Host?</p>
+
+          <div class="form-group">
+            <label>I am applying as a <span style="color:#C9A84C">*</span></label>
+            <div style="display:flex;gap:0.8rem;flex-wrap:wrap;margin-top:0.5rem">
+              <label class="host-type-pill" id="pill-home">
+                <input type="radio" name="Host Type" value="Home Host" required onchange="switchHostType('home')">
+                🏡 Home Host
+                <span style="font-size:0.72rem;display:block;opacity:0.7;margin-top:2px">Dinner &amp; English Tea</span>
+              </label>
+              <label class="host-type-pill" id="pill-guide">
+                <input type="radio" name="Host Type" value="Heritage Guide" onchange="switchHostType('guide')">
+                🏛️ Heritage Guide
+                <span style="font-size:0.72rem;display:block;opacity:0.7;margin-top:2px">Tours &amp; cultural experiences</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- STEP 3a: HOME HOST FIELDS -->
+          <div id="host-home-fields" style="display:none">
+            <p style="font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin:1.5rem 0 0.8rem;font-weight:500">3 · Your Home</p>
+
             <div class="form-group"><label>Property Type <span style="color:#C9A84C">*</span></label>
-              <select name="Property Type" required>
+              <select name="Property Type" id="host-property-type" required>
                 <option value="">Select…</option>
-                <option value="Detached House">Detached House</option>
-                <option value="Semi-Detached">Semi-Detached</option>
-                <option value="Terraced House">Terraced House</option>
+                <option value="Detached house">Detached house</option>
+                <option value="Semi-detached house">Semi-detached house</option>
+                <option value="Terraced house">Terraced house</option>
+                <option value="Apartment / flat">Apartment / flat</option>
                 <option value="Cottage">Cottage</option>
-                <option value="Country Estate">Country Estate</option>
-                <option value="Farmhouse">Farmhouse</option>
+                <option value="Country house / manor">Country house / manor</option>
                 <option value="Other">Other</option>
               </select>
             </div>
-            <div class="form-group"><label>Maximum Guests <span style="color:#C9A84C">*</span></label><input type="number" name="Maximum Guests" min="1" max="20" placeholder="6" pattern="[0-9]*" inputmode="numeric" onkeypress="return /[0-9]/.test(event.key)" required></div>
-          </div>
-          <div class="form-row">
-            <div class="form-group"><label>Number of Adults in Household <span style="color:#C9A84C">*</span></label><input type="number" name="Adults in Household" min="1" max="10" placeholder="2" pattern="[0-9]*" inputmode="numeric" onkeypress="return /[0-9]/.test(event.key)" required></div>
-            <div class="form-group"><label>Number of Children in Household <span style="color:#C9A84C">*</span></label><input type="number" name="Children in Household" min="0" max="10" placeholder="0" pattern="[0-9]*" inputmode="numeric" onkeypress="return /[0-9]/.test(event.key)" required></div>
-          </div>
-          <div class="form-group"><label>Services You Can Offer <span style="color:#C9A84C">*</span></label>
-            <div style="display:flex;flex-wrap:wrap;gap:0.8rem;padding:0.5rem 0">
-              <label style="font-size:0.82rem;color:var(--cream);display:flex;align-items:center;gap:0.4rem;text-transform:none;letter-spacing:0"><input type="checkbox" name="services" value="Private Dinner"> Private Dinner</label>
-              <label style="font-size:0.82rem;color:var(--cream);display:flex;align-items:center;gap:0.4rem;text-transform:none;letter-spacing:0"><input type="checkbox" name="services" value="Afternoon Tea"> Afternoon Tea</label>
-              <label style="font-size:0.82rem;color:var(--cream);display:flex;align-items:center;gap:0.4rem;text-transform:none;letter-spacing:0"><input type="checkbox" name="services" value="Overnight Stay"> Overnight Stay</label>
-              <label style="font-size:0.82rem;color:var(--cream);display:flex;align-items:center;gap:0.4rem;text-transform:none;letter-spacing:0"><input type="checkbox" name="services" value="Cultural Tour"> Cultural Tour</label>
+
+            <div class="form-group"><label>Postcode <span style="color:#C9A84C">*</span></label>
+              <div style="display:flex;gap:0.6rem;align-items:flex-start">
+                <input type="text" id="host-postcode" name="Postcode" placeholder="e.g. SW1A 1AA" style="text-transform:uppercase;width:160px" maxlength="8" oninput="this.value=this.value.toUpperCase()">
+                <button type="button" onclick="lookupPostcode()" style="padding:0.75rem 1.2rem;background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.4);color:var(--gold);font-family:var(--ff-body);font-size:0.78rem;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;white-space:nowrap;border-radius:3px;">Find Address</button>
+              </div>
+              <p id="host-postcode-status" style="font-size:0.72rem;margin:0.4rem 0 0;color:rgba(245,240,232,0.6)"></p>
+            </div>
+
+            <div id="host-address-fields" style="display:none">
+              <div class="form-group"><label>Select Your Address <span style="color:#C9A84C">*</span></label>
+                <select id="host-address-select" name="Address Selected" onchange="fillAddress(this)" required>
+                  <option value="">Select your address…</option>
+                </select>
+              </div>
+              <div id="host-house-wrap" style="display:none">
+                <div class="form-group"><label>House Number or Name <span style="color:#C9A84C">*</span></label>
+                  <input type="text" id="host-house-number" name="House Number" placeholder="e.g. 42 or Rose Cottage" required>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group"><label>Street / Road</label>
+                  <input type="text" id="host-street" name="Street Address" placeholder="Auto-filled from postcode" readonly style="background:rgba(245,240,232,0.05)">
+                </div>
+                <div class="form-group"><label>Town / City</label>
+                  <input type="text" id="host-town" name="Town" readonly style="background:rgba(245,240,232,0.05)">
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group"><label>County</label>
+                  <input type="text" id="host-county-auto" name="County Auto" readonly style="background:rgba(245,240,232,0.05)">
+                </div>
+                <div class="form-group"><label>Postcode (confirmed)</label>
+                  <input type="text" id="host-postcode-confirmed" name="Postcode Confirmed" readonly style="background:rgba(245,240,232,0.05)">
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group"><label>Maximum Dining Guests <span style="color:#C9A84C">*</span></label>
+              <input type="number" name="Max Guests" id="host-max-guests" min="2" max="20" placeholder="e.g. 8" required style="width:120px">
+            </div>
+
+            <div class="form-group"><label>Would you like to share how many family members live in your home? <span style="font-size:0.75rem;color:rgba(245,240,232,0.5)">(optional)</span></label>
+              <div class="form-row" style="margin-top:0.4rem">
+                <div class="form-group" style="margin-bottom:0"><label>Adults</label><input type="number" name="Adults in Household" min="1" max="10" placeholder="e.g. 2" style="width:100px"></div>
+                <div class="form-group" style="margin-bottom:0"><label>Children</label><input type="number" name="Children in Household" min="0" max="10" placeholder="e.g. 0" style="width:100px"></div>
+              </div>
+            </div>
+
+            <p style="font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin:1.5rem 0 0.8rem;font-weight:500">4 · Services &amp; Kitchen</p>
+
+            <div class="form-group"><label>Services You Can Offer <span style="color:#C9A84C">*</span></label>
+              <div style="display:flex;flex-wrap:wrap;gap:0.3rem;padding:0.3rem 0;max-width:100%">
+                <label class="svc-pill"><input type="checkbox" name="services" value="Dinner"> Dinner</label>
+                <label class="svc-pill"><input type="checkbox" name="services" value="English Tea"> English Tea</label>
+              </div>
+            </div>
+
+            <div class="form-group"><label>Halal Kitchen Capability <span style="color:#C9A84C">*</span></label>
+              <select name="Halal Kitchen" required>
+                <option value="">Select…</option>
+                <option value="Fully halal kitchen">Fully halal kitchen</option>
+                <option value="Can accommodate halal on request">Can accommodate halal on request</option>
+                <option value="No — not halal">No — not halal</option>
+              </select>
+            </div>
+
+            <div class="form-group"><label>Alcohol-Free Policy <span style="color:#C9A84C">*</span></label>
+              <select name="Alcohol Free" required>
+                <option value="">Select…</option>
+                <option value="Our home is fully alcohol-free">Our home is fully alcohol-free</option>
+                <option value="We can accommodate alcohol-free experiences for all BHH guests">We can accommodate alcohol-free experiences for all BHH guests</option>
+
+              </select>
+            </div>
+
+            <p style="font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin:1.5rem 0 0.8rem;font-weight:500">5 · Home Insurance</p>
+
+                    <!-- ── HOST INSURANCE ─────────────────────────────────────────── -->
+          <!-- ── HOME INSURANCE row: dropdown left, info right ── -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;align-items:start;margin-bottom:1rem">
+            <div style="">
+              <div class="form-group" style="margin-bottom:0">
+                <label>Home Insurance — Business Use <span style="color:#C9A84C">*</span></label>
+                <select name="Home Insurance Business Use" id="host-home-insurance" required onchange="onHostInsuranceChange(this)">
+                  <option value="">Select…</option>
+                  <option value="Yes - Covers paying guests">Yes — my policy covers paying guests</option>
+                  <option value="Yes - Will extend">Yes — I will extend my policy to cover paying guests</option>
+                  <option value="No - Will Obtain">No — but willing to obtain</option>
+                  <option value="Not Sure">Not sure — I will check with my insurer</option>
+                  <option value="BHH Help">I do not have one — help me get insurance</option>
+                </select>
+              </div>
+            </div>
+            <div id="host-home-info-willing" style="display:none;padding:1rem 1.1rem;background:rgba(201,168,76,0.05);border:1px solid rgba(201,168,76,0.25);border-radius:4px">
+              <p style="font-size:0.82rem;line-height:1.6;color:rgba(245,240,232,0.85);margin:0 0 0.4rem">BHH requires all hosts to hold home insurance that covers paying guests. Most standard home policies exclude commercial activity — please contact your insurer to add a business use extension before your first booking.</p>
+              <p style="font-size:0.78rem;color:var(--gold);margin:0 0 0.5rem">You may still apply — insurance confirmation will be required before activation.</p>
+              <a href="https://www.abi.org.uk/products-and-issues/choosing-the-right-insurance/home-insurance/" target="_blank" rel="noopener noreferrer" style="font-size:0.78rem;color:var(--gold);text-decoration:underline">Learn about home insurance business use extensions (ABI) →</a>
+            </div>
+            <div id="host-home-info-bhh" style="display:none;padding:1rem 1.1rem;background:rgba(201,168,76,0.05);border:1px solid rgba(201,168,76,0.25);border-radius:4px">
+              <p style="font-size:0.82rem;line-height:1.6;color:rgba(245,240,232,0.85);margin:0 0 0.4rem">No problem — BHH can help you find suitable home insurance that covers paying guests. A representative will contact you after your application with options tailored to your service type.</p>
+              <p style="font-size:0.78rem;color:var(--gold);margin:0 0 0.5rem">You may still apply — insurance confirmation will be required before activation.</p>
+              <a href="https://www.abi.org.uk/products-and-issues/choosing-the-right-insurance/home-insurance/" target="_blank" rel="noopener noreferrer" style="font-size:0.78rem;color:var(--gold);text-decoration:underline">Browse options in the meantime →</a>
+            </div>
+            <div id="host-home-info-notsure" style="display:none;padding:1rem 1.1rem;background:rgba(201,168,76,0.05);border:1px solid rgba(201,168,76,0.25);border-radius:4px">
+              <p style="font-size:0.82rem;line-height:1.6;color:rgba(245,240,232,0.85);margin:0 0 0.4rem">Please check with your insurer whether your current policy covers paying guests or commercial use. Many standard home policies do not — a business use extension is usually straightforward to add.</p>
+              <p style="font-size:0.78rem;color:var(--gold);margin:0 0 0.5rem">You may still apply — insurance confirmation will be required before activation.</p>
+              <a href="https://www.abi.org.uk/products-and-issues/choosing-the-right-insurance/home-insurance/" target="_blank" rel="noopener noreferrer" style="font-size:0.78rem;color:var(--gold);text-decoration:underline">Learn about home insurance business use extensions (ABI) →</a>
             </div>
           </div>
-          <div class="form-group"><label>Halal Kitchen Capability <span style="color:#C9A84C">*</span></label>
-            <select name="Halal Kitchen" required>
-              <option value="">Select…</option>
-              <option value="Yes - experienced">Yes — experienced with halal preparation</option>
-              <option value="Yes - willing to learn">Yes — willing to learn</option>
-              <option value="No">No</option>
-            </select>
+
+          <!-- Home insurance upload — shown when host confirms cover -->
+          <div id="host-home-insurance-upload" style="display:none;margin-bottom:1rem;padding:1rem 1.1rem;background:rgba(201,168,76,0.05);border:1px solid rgba(201,168,76,0.25);border-radius:4px">
+            <label style="display:block;font-size:0.7rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(245,240,232,0.5);margin-bottom:0.4rem;font-weight:500">Upload Home Insurance Certificate <span style="color:#C9A84C">*</span></label>
+            <p style="font-size:0.75rem;color:rgba(245,240,232,0.75);margin:0.2rem 0 0.6rem">Please upload your home insurance certificate showing business use or paying guest coverage (PDF, JPG or PNG · max 10 MB).</p>
+            <div class="form-row" style="margin-bottom:0.6rem">
+              <div class="form-group" style="margin-bottom:0"><label>Insurer Name</label><input type="text" name="Home Insurer Name" placeholder="e.g. Aviva, Direct Line, AXA"></div>
+              <div class="form-group" style="margin-bottom:0"><label>Policy Number</label><input type="text" name="Home Policy Number" placeholder="e.g. HI-2024-123456"></div>
+            </div>
+            <input type="file" id="host-home-insurance-file" accept=".pdf,.jpg,.jpeg,.png" onchange="validateHostInsuranceFile(this)" style="width:100%;color:var(--cream);font-size:0.8rem">
+            <input type="hidden" name="Home Insurance Certificate" id="host-home-insurance-path">
+            <p id="host-home-insurance-status" style="font-size:0.72rem;margin:0.5rem 0 0;color:rgba(245,240,232,0.75)"></p>
+          </div>
+
+          <!-- ── HOST PUBLIC LIABILITY row: dropdown left, info right ── -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;align-items:start;margin-bottom:1rem">
+            <div style="">
+              <div class="form-group" style="margin-bottom:0">
+                <label>Public Liability Insurance</label>
+                <select name="Host Public Liability" id="host-pl-select" onchange="onHostPLChange(this)">
+                  <option value="">Select…</option>
+                  <option value="Yes">Yes — I hold Public Liability cover</option>
+                  <option value="No - Will Obtain">No — but willing to obtain</option>
+                  <option value="BHH Help">I do not have one — help me get insurance</option>
+                </select>
+              </div>
+            </div>
+            <div id="host-pl-info-willing" style="display:none;padding:1rem 1.1rem;background:rgba(201,168,76,0.05);border:1px solid rgba(201,168,76,0.25);border-radius:4px">
+              <p style="font-size:0.82rem;line-height:1.6;color:rgba(245,240,232,0.85);margin:0 0 0.5rem">Public Liability Insurance protects you if a guest is injured or their property is damaged during a BHH experience. A minimum of £1,000,000 cover is required before your first booking.</p>
+              <p style="font-size:0.78rem;color:var(--gold);margin:0 0 0.5rem">You may still apply — insurance confirmation will be required before activation.</p>
+              <a href="https://www.simplybusiness.co.uk/insurance/public-liability/" target="_blank" rel="noopener noreferrer" style="font-size:0.78rem;color:var(--gold);text-decoration:underline">Compare Public Liability quotes on Simply Business →</a>
+            </div>
+            <div id="host-pl-info-bhh" style="display:none;padding:1rem 1.1rem;background:rgba(201,168,76,0.05);border:1px solid rgba(201,168,76,0.25);border-radius:4px">
+              <p style="font-size:0.82rem;line-height:1.6;color:rgba(245,240,232,0.85);margin:0 0 0.5rem">No problem — BHH can help you find suitable Public Liability cover. A representative will contact you after your application with options tailored to your service type.</p>
+              <p style="font-size:0.78rem;color:var(--gold);margin:0 0 0.5rem">You may still apply — insurance confirmation will be required before activation.</p>
+              <a href="https://www.simplybusiness.co.uk/insurance/public-liability/" target="_blank" rel="noopener noreferrer" style="font-size:0.78rem;color:var(--gold);text-decoration:underline">Browse options in the meantime →</a>
+            </div>
+          </div>
+
+          <!-- Host PL upload — shown when host confirms cover -->
+          <div id="host-pl-upload" style="display:none;margin-bottom:1rem;padding:1rem 1.1rem;background:rgba(201,168,76,0.05);border:1px solid rgba(201,168,76,0.25);border-radius:4px">
+            <label style="display:block;font-size:0.7rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(245,240,232,0.5);margin-bottom:0.4rem;font-weight:500">Upload Public Liability Certificate</label>
+            <p style="font-size:0.75rem;color:rgba(245,240,232,0.75);margin:0.2rem 0 0.6rem">Recommended minimum: £1,000,000 cover (PDF, JPG or PNG · max 10 MB).</p>
+            <div class="form-row" style="margin-bottom:0.6rem">
+              <div class="form-group" style="margin-bottom:0"><label>Insurer Name</label><input type="text" name="Host PL Insurer Name" placeholder="e.g. Aviva, AXA, Hiscox"></div>
+              <div class="form-group" style="margin-bottom:0"><label>Policy Number</label><input type="text" name="Host PL Policy Number" placeholder="e.g. PLI-2024-789012"></div>
+            </div>
+            <input type="file" id="host-pl-file" accept=".pdf,.jpg,.jpeg,.png" onchange="validateHostPLFile(this)" style="width:100%;color:var(--cream);font-size:0.8rem">
+            <input type="hidden" name="Host PL Certificate" id="host-pl-path">
+            <p id="host-pl-status" style="font-size:0.72rem;margin:0.5rem 0 0;color:rgba(245,240,232,0.75)"></p>
+          </div>
+
+          <!-- legacy shared info div — kept for safety, now unused -->
+          <div id="host-insurance-info" style="display:none"></div>
+
+          </div><!-- /host-home-fields -->
+          <!-- END HOME HOST FIELDS -->
+
+          <!-- STEP 3b: HERITAGE GUIDE FIELDS -->
+          <div id="host-guide-fields" style="display:none">
+            <p style="font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin:1.5rem 0 0.8rem;font-weight:500">3 · Your Guiding Experience</p>
+
+            <div class="form-group"><label>Guiding Qualification <span style="color:#C9A84C">*</span></label>
+              <select name="Guiding Experience" id="host-guiding-exp">
+                <option value="">Select…</option>
+                <option value="Self-taught">Self-taught</option>
+                <option value="Academic / Historian">Academic / Historian</option>
+                <option value="No formal experience — open to BHH training programme">No formal experience — open to BHH training programme</option>
+                <option value="Other professional background">Other professional background</option>
+              </select>
+            </div>
+
+            <div class="form-group"><label>Knowledge Areas <span style="color:#C9A84C">*</span></label>
+              <div style="display:flex;flex-wrap:wrap;gap:0.3rem;padding:0.3rem 0;max-width:100%">
+                <label class="svc-pill"><input type="checkbox" name="Knowledge Area" value="English History"> English History</label>
+                <label class="svc-pill"><input type="checkbox" name="Knowledge Area" value="Architecture"> Architecture</label>
+                <label class="svc-pill"><input type="checkbox" name="Knowledge Area" value="Royal Heritage"> Royal Heritage</label>
+                <label class="svc-pill"><input type="checkbox" name="Knowledge Area" value="Literature"> Literature</label>
+                <label class="svc-pill"><input type="checkbox" name="Knowledge Area" value="Art &amp; Museums"> Art &amp; Museums</label>
+                <label class="svc-pill"><input type="checkbox" name="Knowledge Area" value="Countryside &amp; Nature"> Countryside &amp; Nature</label>
+                <label class="svc-pill"><input type="checkbox" name="Knowledge Area" value="Food &amp; Traditions"> Food &amp; Traditions</label>
+                <label class="svc-pill"><input type="checkbox" name="Knowledge Area" value="Islamic Heritage"> Islamic Heritage</label>
+              </div>
+            </div>
+
+            <div class="form-group"><label>Regions Covered <span style="color:#C9A84C">*</span></label>
+              <div style="display:flex;flex-wrap:wrap;gap:0.3rem;padding:0.3rem 0;max-width:100%">
+                <label class="svc-pill"><input type="checkbox" name="Region" value="London"> London</label>
+                <label class="svc-pill"><input type="checkbox" name="Region" value="Oxford &amp; Cotswolds"> Oxford &amp; Cotswolds</label>
+                <label class="svc-pill"><input type="checkbox" name="Region" value="Cambridge"> Cambridge</label>
+                <label class="svc-pill"><input type="checkbox" name="Region" value="Windsor &amp; Surrey"> Windsor &amp; Surrey</label>
+                <label class="svc-pill"><input type="checkbox" name="Region" value="Bath &amp; Somerset"> Bath &amp; Somerset</label>
+                <label class="svc-pill"><input type="checkbox" name="Region" value="Yorkshire"> Yorkshire</label>
+                <label class="svc-pill"><input type="checkbox" name="Region" value="Scotland"> Scotland</label>
+                <label class="svc-pill"><input type="checkbox" name="Region" value="Other"> Other</label>
+              </div>
+            </div>
+
+            <div class="form-group"><label>Duration You Can Offer <span style="color:#C9A84C">*</span></label>
+              <p style="font-size:0.75rem;color:rgba(245,240,232,0.6);margin:0.2rem 0 0.6rem">Select all that apply. Each duration carries the same daily rate.</p>
+              <div style="display:flex;flex-wrap:wrap;gap:0.3rem;padding:0.3rem 0;max-width:100%">
+                <label class="svc-pill"><input type="checkbox" name="Duration Offered" value="Half Day (4 hours)"> Half Day — 4 hours</label>
+                <label class="svc-pill"><input type="checkbox" name="Duration Offered" value="Full Day (8 hours)"> Full Day — 8 hours</label>
+                <label class="svc-pill"><input type="checkbox" name="Duration Offered" value="Extended Day (12 hours)"> Extended Day — 12 hours</label>
+              </div>
+            </div>
+
+            <div class="form-group"><label>Days Available Per Week <span style="color:#C9A84C">*</span></label>
+              <p style="font-size:0.75rem;color:rgba(245,240,232,0.6);margin:0.2rem 0 0.6rem">How many days per week can you commit to BHH bookings?</p>
+              <select name="Days Available Per Week" required>
+                <option value="">Select…</option>
+                <option value="1 day per week">1 day per week</option>
+                <option value="2 days per week">2 days per week</option>
+                <option value="3 days per week">3 days per week</option>
+                <option value="4 days per week">4 days per week</option>
+                <option value="5 days per week">5 days per week</option>
+                <option value="6 days per week">6 days per week</option>
+                <option value="7 days per week — fully available">7 days per week — fully available</option>
+                <option value="Flexible — varies by week">Flexible — varies by week</option>
+              </select>
+            </div>
+
+            <div class="form-group"><label>Do You Provide Transport?</label>
+              <select name="Guide Transport">
+                <option value="">Select…</option>
+                <option value="Yes - I provide private transport">Yes — I provide private transport</option>
+                <option value="No - guests arrange own transport">No — guests arrange their own</option>
+                <option value="Can arrange on request">Can arrange on request</option>
+              </select>
+            </div>
+
+            <p style="font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin:1.5rem 0 0.8rem;font-weight:500">4 · Public Liability Insurance</p>
+
+            <!-- ── GUIDE PL row: dropdown left, info right ── -->
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;align-items:start;margin-bottom:1rem">
+              <div style="">
+                <div class="form-group" style="margin-bottom:0">
+                  <label>Public Liability Insurance <span style="color:#C9A84C">*</span></label>
+                  <select name="Guide Public Liability" id="guide-pl-select" required onchange="onGuidePLChange(this)">
+                    <option value="" selected>Select…</option>
+                    <option value="Yes">Yes — I hold Public Liability cover</option>
+                    <option value="No - Will Obtain">No — but willing to obtain</option>
+                    <option value="BHH Help">I do not have one — help me get insurance</option>
+                  </select>
+                </div>
+              </div>
+              <div id="guide-pl-info-willing" style="display:none;padding:1rem 1.1rem;background:rgba(201,168,76,0.05);border:1px solid rgba(201,168,76,0.25);border-radius:4px">
+                <p style="font-size:0.82rem;line-height:1.6;color:rgba(245,240,232,0.85);margin:0 0 0.5rem">Public Liability Insurance protects you if a guest is injured or their property is damaged during a BHH experience. A minimum of £1,000,000 cover is required before your first booking.</p>
+                <p style="font-size:0.78rem;color:var(--gold);margin:0 0 0.5rem">You may still apply — insurance confirmation will be required before activation.</p>
+                <a href="https://www.simplybusiness.co.uk/insurance/public-liability/" target="_blank" rel="noopener noreferrer" style="font-size:0.78rem;color:var(--gold);text-decoration:underline">Compare Public Liability quotes on Simply Business →</a>
+              </div>
+              <div id="guide-pl-info-bhh" style="display:none;padding:1rem 1.1rem;background:rgba(201,168,76,0.05);border:1px solid rgba(201,168,76,0.25);border-radius:4px">
+                <p style="font-size:0.82rem;line-height:1.6;color:rgba(245,240,232,0.85);margin:0 0 0.5rem">No problem — BHH can help you find suitable Public Liability cover. A representative will contact you after your application with options tailored to your service type.</p>
+                <p style="font-size:0.78rem;color:var(--gold);margin:0 0 0.5rem">You may still apply — insurance confirmation will be required before activation.</p>
+                <a href="https://www.simplybusiness.co.uk/insurance/public-liability/" target="_blank" rel="noopener noreferrer" style="font-size:0.78rem;color:var(--gold);text-decoration:underline">Browse options in the meantime →</a>
+              </div>
+            </div>
+
+            <div id="guide-pl-upload" style="display:none;margin-bottom:1rem;padding:1rem 1.1rem;background:rgba(201,168,76,0.05);border:1px solid rgba(201,168,76,0.25);border-radius:4px">
+              <label style="display:block;font-size:0.7rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(245,240,232,0.5);margin-bottom:0.4rem;font-weight:500">Upload Public Liability Certificate</label>
+              <div class="form-row" style="margin-bottom:0.6rem">
+                <div class="form-group" style="margin-bottom:0"><label>Insurer Name</label><input type="text" name="Guide PL Insurer Name" placeholder="e.g. Aviva, AXA, Hiscox"></div>
+                <div class="form-group" style="margin-bottom:0"><label>Policy Number</label><input type="text" name="Guide PL Policy Number" placeholder="e.g. PLI-2024-123456"></div>
+              </div>
+              <input type="file" id="guide-pl-file" accept=".pdf,.jpg,.jpeg,.png" style="width:100%;color:var(--cream);font-size:0.8rem">
+              <p id="guide-pl-status" style="font-size:0.72rem;margin:0.5rem 0 0;color:rgba(245,240,232,0.75)"></p>
+            </div>
+
+          <!-- ── PROFESSIONAL INDEMNITY (GUIDE) ── -->
+          <p style="font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin:1.5rem 0 0.8rem;font-weight:500">5 · Professional Indemnity Insurance</p>
+
+          <!-- ── GUIDE PI row: dropdown left, info right ── -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;align-items:start;margin-bottom:1rem">
+            <div style="">
+              <div class="form-group" style="margin-bottom:0">
+                <label>Professional Indemnity Insurance <span style="color:#C9A84C">*</span></label>
+                <select name="Guide Professional Indemnity" id="guide-pi-select" required onchange="onGuidePIChange(this)">
+                  <option value="" selected>Select…</option>
+                  <option value="Yes">Yes — I hold Professional Indemnity cover</option>
+                  <option value="No - Will Obtain">No — but willing to obtain</option>
+                  <option value="BHH Help">I do not have one — help me get insurance</option>
+                </select>
+              </div>
+            </div>
+            <div id="guide-pi-info-willing" style="display:none;padding:1rem 1.1rem;background:rgba(201,168,76,0.05);border:1px solid rgba(201,168,76,0.25);border-radius:4px">
+              <p style="font-size:0.82rem;line-height:1.6;color:rgba(245,240,232,0.85);margin:0 0 0.5rem">Professional Indemnity Insurance covers you if a guest makes a claim arising from the advice or guidance you provide during a BHH experience. A minimum of £500,000 cover is required before your first booking.</p>
+              <p style="font-size:0.78rem;color:var(--gold);margin:0 0 0.5rem">You may still apply — insurance confirmation will be required before activation.</p>
+              <a href="https://www.simplybusiness.co.uk/insurance/professional-indemnity/" target="_blank" rel="noopener noreferrer" style="font-size:0.78rem;color:var(--gold);text-decoration:underline">Compare Professional Indemnity quotes on Simply Business →</a>
+            </div>
+            <div id="guide-pi-info-bhh" style="display:none;padding:1rem 1.1rem;background:rgba(201,168,76,0.05);border:1px solid rgba(201,168,76,0.25);border-radius:4px">
+              <p style="font-size:0.82rem;line-height:1.6;color:rgba(245,240,232,0.85);margin:0 0 0.5rem">No problem — BHH can help you find suitable Professional Indemnity cover. A representative will contact you after your application with options tailored to your guiding work.</p>
+              <p style="font-size:0.78rem;color:var(--gold);margin:0 0 0.5rem">You may still apply — insurance confirmation will be required before activation.</p>
+              <a href="https://www.simplybusiness.co.uk/insurance/professional-indemnity/" target="_blank" rel="noopener noreferrer" style="font-size:0.78rem;color:var(--gold);text-decoration:underline">Browse options in the meantime →</a>
+            </div>
+          </div>
+
+          <!-- PI upload — shown when guide confirms cover -->
+          <div id="guide-pi-upload" style="display:none;margin-bottom:1rem;padding:1rem 1.1rem;background:rgba(201,168,76,0.05);border:1px solid rgba(201,168,76,0.25);border-radius:4px">
+            <label style="display:block;font-size:0.7rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(245,240,232,0.5);margin-bottom:0.4rem;font-weight:500">Upload Professional Indemnity Certificate</label>
+            <div class="form-row" style="margin-bottom:0.6rem">
+              <div class="form-group" style="margin-bottom:0"><label>Insurer Name</label><input type="text" name="Guide PI Insurer Name" placeholder="e.g. Hiscox, AXA, Zurich"></div>
+              <div class="form-group" style="margin-bottom:0"><label>Policy Number</label><input type="text" name="Guide PI Policy Number" placeholder="e.g. PI-2024-789012"></div>
+            </div>
+            <input type="file" id="guide-pi-file" accept=".pdf,.jpg,.jpeg,.png" style="width:100%;color:var(--cream);font-size:0.8rem">
+            <p id="guide-pi-status" style="font-size:0.72rem;margin:0.5rem 0 0;color:rgba(245,240,232,0.75)"></p>
+          </div>
+
+          <!-- END HERITAGE GUIDE FIELDS -->
+
+          <!-- STEP 6: VETTING — DBS (EVERYONE) -->
           </div>
           <div class="form-group"><label>DBS Checked <span style="color:#C9A84C">*</span></label>
             <select name="DBS Checked" required onchange="onDbsChange(this,'host')">
               <option value="">Select…</option>
-              <option value="Yes">Yes</option>
-              <option value="No - Will Obtain">No — but willing to obtain</option>
-              <option value="Not Applicable">Not applicable</option>
+              <option value="Yes">Yes — I hold a valid Enhanced DBS certificate</option>
+              <option value="No - Will Obtain">No — I need to obtain one</option>
+              <option value="Not Applicable">Not applicable — I will explain why</option>
             </select>
           </div>
           <div id="host-dbs-extra">
@@ -1906,11 +2326,26 @@ function closeMobileMenu(){
               <p id="host-dbs-status" style="font-size:0.72rem;margin:0.5rem 0 0;color:rgba(245,240,232,0.75)"></p>
             </div>
             <div class="form-group" id="host-dbs-info" style="display:none;margin-top:0.25rem;padding:1rem 1.1rem;background:rgba(201,168,76,0.05);border:1px solid rgba(201,168,76,0.25);border-radius:4px">
-              <p style="font-size:0.82rem;line-height:1.6;color:rgba(245,240,232,0.85);margin:0 0 0.6rem">An Enhanced DBS certificate cannot be purchased directly by individuals — it must be arranged through a registered body. British Heritage Hosts will guide approved applicants through obtaining one.</p>
-              <p style="font-size:0.82rem;line-height:1.6;color:rgba(245,240,232,0.85);margin:0 0 0.4rem"><strong style="color:var(--gold)">Required insurance cover:</strong> Public Liability and Professional Indemnity.</p>
-              <p style="font-size:0.78rem;margin:0"><a href="https://www.gov.uk/disclosure-barring-service-check" target="_blank" rel="noopener noreferrer" style="color:var(--gold);text-decoration:underline">Learn more about DBS checks on gov.uk</a></p>
+              <p style="font-size:0.82rem;line-height:1.6;color:rgba(245,240,232,0.85);margin:0 0 0.5rem">An Enhanced DBS check is required for all BHH hosts before their first booking. As a self-employed individual, you can now apply directly through a registered DBS Umbrella Body — no employer needed.</p>
+              <p style="font-size:0.78rem;color:var(--gold);margin:0 0 0.5rem">You may still apply — DBS confirmation will be required before your first booking is activated.</p>
+              <a href="https://www.gov.uk/guidance/dbs-checks-for-self-employed-people-and-personal-employees" target="_blank" rel="noopener noreferrer" style="font-size:0.78rem;color:var(--gold);text-decoration:underline">How to apply for your Enhanced DBS check — GOV.UK →</a>
+            </div>
+
+            <div class="form-group" id="host-dbs-na" style="display:none;margin-top:0.25rem;padding:1rem 1.1rem;background:rgba(201,168,76,0.05);border:1px solid rgba(201,168,76,0.25);border-radius:4px">
+              <label style="display:block;font-size:0.7rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(245,240,232,0.5);margin-bottom:0.4rem;font-weight:500">Please explain why this does not apply <span style="color:#C9A84C">*</span></label>
+              <p style="font-size:0.75rem;color:rgba(245,240,232,0.75);margin:0.2rem 0 0.6rem">For example: I am an overseas national / I am an EU citizen residing outside the UK.</p>
+              <input type="text" id="host-dbs-na-reason" name="DBS Not Applicable Reason" placeholder="e.g. I am an EU national currently based in France" required style="width:100%;padding:0.8rem 1rem;background:rgba(245,240,232,0.05);border:1px solid rgba(201,168,76,0.2);color:var(--cream);font-family:var(--ff-body);font-size:0.9rem;margin-bottom:0.8rem">
+              <label style="display:block;font-size:0.7rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(245,240,232,0.5);margin-bottom:0.4rem;font-weight:500">Upload Your Country's Criminal Record Clearance <span style="color:#C9A84C">*</span></label>
+              <p style="font-size:0.75rem;color:rgba(245,240,232,0.75);margin:0.2rem 0 0.6rem">Please upload the equivalent criminal record clearance issued by your country of residence (PDF, JPG or PNG · max 10 MB). This document must be dated within the last 12 months.</p>
+              <input type="file" id="host-dbs-na-file" name="Overseas Criminal Clearance" accept=".pdf,.jpg,.jpeg,.png" style="width:100%;color:var(--cream);font-size:0.8rem">
+              <p style="font-size:0.72rem;color:rgba(245,240,232,0.6);margin-top:0.5rem;font-style:italic">BHH will review your clearance document as part of the onboarding process.</p>
+
             </div>
           </div>
+
+          <!-- STEP 7: ABOUT YOU (EVERYONE) -->
+          <p id="host-about-heading" style="font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin:1.5rem 0 0.8rem;font-weight:500">7 · About You</p>
+
           <div class="form-group"><label>Languages Spoken <span style="color:#C9A84C">*</span></label><input type="text" name="Languages Spoken" required placeholder="e.g. English, French"></div>
           <div class="form-group"><label>Tell Us About Your Home and Family <span style="color:#C9A84C">*</span></label><textarea name="About" rows="4" placeholder="Describe your home, your family, your cooking skills, and why you would like to host international families." required></textarea></div>
           <div class="form-group"><label>How Did You Hear About BHH? <span style="color:#C9A84C">*</span></label>
@@ -1943,7 +2378,7 @@ function closeMobileMenu(){
       </div>
 
       <!-- ═══════ PARTNER FORM ═══════ -->
-      <div id="tab-partner" class="enquire-panel" style="max-width:560px;margin:0 auto;display:none;transition:opacity 0.3s ease-in-out;opacity:0">
+      <div id="tab-partner" class="enquire-panel" style="max-width:760px;margin:0 auto;opacity:1">
         <p class="lead" style="margin:0 auto 2rem;text-align:center">Join our network of trusted service providers. We vet every partner professionally.</p>
         <form action='/?success=partner' id='partner-form' method='POST' name='partner-application' style='text-align:left'>
           <input type="hidden" name="form-name" value="partner-application">
@@ -2014,54 +2449,148 @@ function closeMobileMenu(){
             </div>
           </div>
           <div class="form-row">
-            <div class="form-group"><label>County <span style="color:#C9A84C">*</span></label>
-              <select name="County" id="partner-county" required onchange="toggleListOther(this,'County Other')">
+            <div class="form-group"><label>City <span style="color:#C9A84C">*</span></label>
+              <select name="city" id="partner-city" required onchange="onPartnerCityChange(this)">
                 <option value="">Loading…</option>
               </select>
             </div>
-            <div class="form-group"><label>City <span style="color:#C9A84C">*</span></label>
-              <select name="city" id="partner-city" required onchange="toggleListOther(this,'City Other')">
-                <option value="">Loading…</option>
+            <div class="form-group"><label>County <span style="color:#C9A84C">*</span></label>
+              <select name="County" id="partner-county" required>
+                <option value="">Select city first…</option>
               </select>
             </div>
           </div>
           <div class="form-group"><label>Partner Type <span style="color:#C9A84C">*</span></label>
-            <select name="Partner Type" required>
+            <select name="Partner Type" required onchange="togglePartnerTypeOther(this)">
               <option value="">Select…</option>
-              <option value="Heritage Guide">Heritage Guide</option>
               <option value="Canal Boat Operator">Canal Boat Operator</option>
-              <option value="Private Driver / Chauffeur">Private Driver / Chauffeur</option>
-              <option value="Airport Transfer Service">Airport Transfer Service</option>
-              <option value="Catering / Chef">Catering / Chef</option>
-              <option value="Event Coordinator">Event Coordinator</option>
+              <option value="Transportation Provider">Transportation Provider (airport transfers &amp; chauffeured hire)</option>
+              <option value="Cultural Immersion Programme (CIP) - School Partner">Cultural Immersion Programme (CIP) — School Partner</option>
+              <option value="Host Trainer / Etiquette Coach">Host Trainer / Etiquette Coach</option>
               <option value="Interpreter">Interpreter</option>
-              <option value="Language Partner (English tuition)">Language Partner (English tuition)</option>
               <option value="Other">Other</option>
             </select>
+          </div>
+          <div id="partner-type-other-wrap" style="display:none;margin-bottom:1rem">
+            <div class="form-group">
+              <label>Please Describe Your Service <span style="color:#C9A84C">*</span></label>
+              <input type="text" name="Partner Type Detail" id="partner-type-other-input" placeholder="e.g. Luxury florist, event photographer, Arabic calligrapher…">
+              <p style="font-size:0.72rem;color:rgba(245,240,232,0.6);margin-top:0.3rem;font-style:italic">Be specific — this helps us assess whether your service fits the BHH network.</p>
+            </div>
           </div>
           <div class="form-row">
             <div class="form-group"><label>Years of Experience <span style="color:#C9A84C">*</span></label><input type="number" name="Years of Experience" min="0" max="50" placeholder="5" pattern="[0-9]*" inputmode="numeric" onkeypress="return /[0-9]/.test(event.key)" required></div>
             <div class="form-group"><label>Number of Staff <span style="color:#C9A84C">*</span></label><input type="number" name="Number of Staff" min="1" max="100" placeholder="3" pattern="[0-9]*" inputmode="numeric" onkeypress="return /[0-9]/.test(event.key)" required></div>
           </div>
-          <div class="form-row">
-            <div class="form-group"><label>Insurance Cover <span style="color:#C9A84C">*</span></label>
-              <select name="Insurance Cover" required>
+          <!-- ── PARTNER HOME INSURANCE ── -->
+          <p style="font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin:1.5rem 0 0.8rem;font-weight:500">3 · Home Insurance — Business Use</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;align-items:start;margin-bottom:1rem">
+            <div class="form-group" style="margin-bottom:0">
+              <label>Home Insurance — Business Use <span style="color:#C9A84C">*</span></label>
+              <select name="Partner Home Insurance" id="partner-home-insurance" required onchange="onPartnerHomeInsuranceChange(this)">
                 <option value="">Select…</option>
-                <option value="Yes - Public Liability">Yes — Public Liability</option>
-                <option value="Yes - Professional Indemnity">Yes — Professional Indemnity</option>
-                <option value="Yes - Both">Yes — Both</option>
+                <option value="Yes - Covers paying guests">Yes — my policy covers paying guests</option>
+                <option value="Yes - Will extend">Yes — I will extend my policy</option>
                 <option value="No - Will Obtain">No — but willing to obtain</option>
-                <option value="Not Sure">Not sure</option>
+                <option value="Not Sure">Not sure — I will check with my insurer</option>
+                <option value="BHH Help">I do not have one — help me get insurance</option>
               </select>
             </div>
-            <div class="form-group"><label>DBS Checked <span style="color:#C9A84C">*</span></label>
-              <select name="DBS Checked" required onchange="onDbsChange(this,'partner')">
+            <div id="partner-home-info-willing" style="display:none;padding:1rem 1.1rem;background:rgba(201,168,76,0.05);border:1px solid rgba(201,168,76,0.25);border-radius:4px">
+              <p style="font-size:0.82rem;line-height:1.6;color:rgba(245,240,232,0.85);margin:0 0 0.5rem">Most standard home policies exclude commercial activity. Please contact your insurer to add a business use extension before your first booking.</p>
+              <p style="font-size:0.78rem;color:var(--gold);margin:0 0 0.5rem">You may still apply — confirmation required before activation.</p>
+              <a href="https://www.abi.org.uk/products-and-issues/choosing-the-right-insurance/home-insurance/" target="_blank" rel="noopener noreferrer" style="font-size:0.78rem;color:var(--gold);text-decoration:underline">Learn more (ABI) →</a>
+            </div>
+            <div id="partner-home-info-bhh" style="display:none;padding:1rem 1.1rem;background:rgba(201,168,76,0.05);border:1px solid rgba(201,168,76,0.25);border-radius:4px">
+              <p style="font-size:0.82rem;line-height:1.6;color:rgba(245,240,232,0.85);margin:0 0 0.5rem">No problem — BHH can help you find suitable home insurance. A representative will contact you after your application.</p>
+              <p style="font-size:0.78rem;color:var(--gold);margin:0 0 0.5rem">You may still apply — confirmation required before activation.</p>
+              <a href="https://www.abi.org.uk/products-and-issues/choosing-the-right-insurance/home-insurance/" target="_blank" rel="noopener noreferrer" style="font-size:0.78rem;color:var(--gold);text-decoration:underline">Browse options →</a>
+            </div>
+            <div id="partner-home-info-notsure" style="display:none;padding:1rem 1.1rem;background:rgba(201,168,76,0.05);border:1px solid rgba(201,168,76,0.25);border-radius:4px">
+              <p style="font-size:0.82rem;line-height:1.6;color:rgba(245,240,232,0.85);margin:0 0 0.5rem">Please check with your insurer whether your current policy covers paying guests or commercial use.</p>
+              <p style="font-size:0.78rem;color:var(--gold);margin:0 0 0.5rem">You may still apply — confirmation required before activation.</p>
+            </div>
+          </div>
+
+          <!-- ── PARTNER PUBLIC LIABILITY ── -->
+          <p style="font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin:1.5rem 0 0.8rem;font-weight:500">4 · Public Liability (PL) Insurance</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;align-items:start;margin-bottom:1rem">
+            <div class="form-group" style="margin-bottom:0">
+              <label>Public Liability Insurance <span style="color:#C9A84C">*</span></label>
+              <select name="Partner Public Liability" id="partner-pl-select" required onchange="onPartnerPLChange(this)">
                 <option value="">Select…</option>
-                <option value="Yes">Yes</option>
+                <option value="Yes">Yes — I hold Public Liability cover</option>
                 <option value="No - Will Obtain">No — but willing to obtain</option>
-                <option value="Not Applicable">Not applicable</option>
+                <option value="BHH Help">I do not have one — help me get insurance</option>
               </select>
             </div>
+            <div id="partner-pl-info-willing" style="display:none;padding:1rem 1.1rem;background:rgba(201,168,76,0.05);border:1px solid rgba(201,168,76,0.25);border-radius:4px">
+              <p style="font-size:0.82rem;line-height:1.6;color:rgba(245,240,232,0.85);margin:0 0 0.5rem">Public Liability Insurance protects you if a guest is injured or their property is damaged. Minimum £1,000,000 cover required before your first booking.</p>
+              <p style="font-size:0.78rem;color:var(--gold);margin:0 0 0.5rem">You may still apply — confirmation required before activation.</p>
+              <a href="https://www.simplybusiness.co.uk/insurance/public-liability/" target="_blank" rel="noopener noreferrer" style="font-size:0.78rem;color:var(--gold);text-decoration:underline">Compare quotes on Simply Business →</a>
+            </div>
+            <div id="partner-pl-info-bhh" style="display:none;padding:1rem 1.1rem;background:rgba(201,168,76,0.05);border:1px solid rgba(201,168,76,0.25);border-radius:4px">
+              <p style="font-size:0.82rem;line-height:1.6;color:rgba(245,240,232,0.85);margin:0 0 0.5rem">No problem — BHH can help you find suitable Public Liability cover. A representative will contact you after your application.</p>
+              <p style="font-size:0.78rem;color:var(--gold);margin:0 0 0.5rem">You may still apply — confirmation required before activation.</p>
+              <a href="https://www.simplybusiness.co.uk/insurance/public-liability/" target="_blank" rel="noopener noreferrer" style="font-size:0.78rem;color:var(--gold);text-decoration:underline">Browse options →</a>
+            </div>
+          </div>
+          <!-- PL certificate upload — shown when partner holds Public Liability cover -->
+          <div id="partner-pl-block" style="display:none;margin-bottom:1rem;padding:1rem 1.1rem;background:rgba(201,168,76,0.05);border:1px solid rgba(201,168,76,0.25);border-radius:4px">
+            <label style="display:block;font-size:0.7rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(245,240,232,0.5);margin-bottom:0.4rem;font-weight:500">Upload Public Liability Certificate <span style="color:#C9A84C">*</span></label>
+            <p style="font-size:0.75rem;color:rgba(245,240,232,0.75);margin:0.2rem 0 0.6rem">Minimum cover: £1,000,000. Upload your certificate (PDF, JPG or PNG · max 10 MB).</p>
+            <div class="form-row" style="margin-bottom:0.6rem">
+              <div class="form-group" style="margin-bottom:0"><label>Insurer Name</label><input type="text" name="PL Insurer Name" placeholder="e.g. Aviva, AXA, Hiscox"></div>
+              <div class="form-group" style="margin-bottom:0"><label>Policy Number</label><input type="text" name="PL Policy Number" placeholder="e.g. PLI-2024-123456"></div>
+            </div>
+            <input type="file" id="partner-pl-file" accept=".pdf,.jpg,.jpeg,.png" onchange="validateInsuranceFile(this,'pl')" style="width:100%;color:var(--cream);font-size:0.8rem">
+            <input type="hidden" name="PL Certificate" id="partner-pl-path">
+            <p id="partner-pl-status" style="font-size:0.72rem;margin:0.5rem 0 0;color:rgba(245,240,232,0.75)"></p>
+          </div>
+
+          <!-- ── PARTNER PROFESSIONAL INDEMNITY ── -->
+          <p style="font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin:1.5rem 0 0.8rem;font-weight:500">5 · Professional Indemnity (PI) Insurance</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;align-items:start;margin-bottom:1rem">
+            <div class="form-group" style="margin-bottom:0">
+              <label>Professional Indemnity Insurance <span style="color:#C9A84C">*</span></label>
+              <select name="Partner Professional Indemnity" id="partner-pi-select" required onchange="onPartnerPIChange(this)">
+                <option value="">Select…</option>
+                <option value="Yes">Yes — I hold Professional Indemnity cover</option>
+                <option value="No - Will Obtain">No — but willing to obtain</option>
+                <option value="BHH Help">I do not have one — help me get insurance</option>
+              </select>
+            </div>
+            <div id="partner-pi-info-willing" style="display:none;padding:1rem 1.1rem;background:rgba(201,168,76,0.05);border:1px solid rgba(201,168,76,0.25);border-radius:4px">
+              <p style="font-size:0.82rem;line-height:1.6;color:rgba(245,240,232,0.85);margin:0 0 0.5rem">Professional Indemnity Insurance covers you if a guest makes a claim arising from advice or guidance you provide. Minimum £500,000 cover required before your first booking.</p>
+              <p style="font-size:0.78rem;color:var(--gold);margin:0 0 0.5rem">You may still apply — confirmation required before activation.</p>
+              <a href="https://www.simplybusiness.co.uk/insurance/professional-indemnity/" target="_blank" rel="noopener noreferrer" style="font-size:0.78rem;color:var(--gold);text-decoration:underline">Compare quotes on Simply Business →</a>
+            </div>
+            <div id="partner-pi-info-bhh" style="display:none;padding:1rem 1.1rem;background:rgba(201,168,76,0.05);border:1px solid rgba(201,168,76,0.25);border-radius:4px">
+              <p style="font-size:0.82rem;line-height:1.6;color:rgba(245,240,232,0.85);margin:0 0 0.5rem">No problem — BHH can help you find suitable Professional Indemnity cover. A representative will contact you after your application.</p>
+              <p style="font-size:0.78rem;color:var(--gold);margin:0 0 0.5rem">You may still apply — confirmation required before activation.</p>
+              <a href="https://www.simplybusiness.co.uk/insurance/professional-indemnity/" target="_blank" rel="noopener noreferrer" style="font-size:0.78rem;color:var(--gold);text-decoration:underline">Browse options →</a>
+            </div>
+          </div>
+          <!-- PI certificate upload — shown when partner holds Professional Indemnity cover -->
+          <div id="partner-pi-block" style="display:none;margin-bottom:1rem;padding:1rem 1.1rem;background:rgba(201,168,76,0.05);border:1px solid rgba(201,168,76,0.25);border-radius:4px">
+            <label style="display:block;font-size:0.7rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(245,240,232,0.5);margin-bottom:0.4rem;font-weight:500">Upload Professional Indemnity Certificate <span style="color:#C9A84C">*</span></label>
+            <p style="font-size:0.75rem;color:rgba(245,240,232,0.75);margin:0.2rem 0 0.6rem">Minimum cover: £500,000. Upload your certificate (PDF, JPG or PNG · max 10 MB).</p>
+            <div class="form-row" style="margin-bottom:0.6rem">
+              <div class="form-group" style="margin-bottom:0"><label>Insurer Name</label><input type="text" name="PI Insurer Name" placeholder="e.g. Zurich, Lloyd's, Markel"></div>
+              <div class="form-group" style="margin-bottom:0"><label>Policy Number</label><input type="text" name="PI Policy Number" placeholder="e.g. PII-2024-789012"></div>
+            </div>
+            <input type="file" id="partner-pi-file" accept=".pdf,.jpg,.jpeg,.png" onchange="validateInsuranceFile(this,'pi')" style="width:100%;color:var(--cream);font-size:0.8rem">
+            <input type="hidden" name="PI Certificate" id="partner-pi-path">
+            <p id="partner-pi-status" style="font-size:0.72rem;margin:0.5rem 0 0;color:rgba(245,240,232,0.75)"></p>
+          </div>
+
+          <div class="form-group"><label>DBS Checked <span style="color:#C9A84C">*</span></label>
+            <select name="DBS Checked" required onchange="onDbsChange(this,'partner')">
+              <option value="">Select…</option>
+              <option value="Yes">Yes — I hold a valid Enhanced DBS certificate</option>
+              <option value="No - Will Obtain">No — I need to obtain one</option>
+              <option value="Not Applicable">Not applicable — I will explain why</option>
+            </select>
           </div>
           <div id="partner-dbs-extra">
             <div class="form-group" id="partner-dbs-upload" style="display:none;margin-top:0.25rem;padding:1rem 1.1rem;background:rgba(201,168,76,0.05);border:1px solid rgba(201,168,76,0.25);border-radius:4px">
@@ -2072,9 +2601,18 @@ function closeMobileMenu(){
               <p id="partner-dbs-status" style="font-size:0.72rem;margin:0.5rem 0 0;color:rgba(245,240,232,0.75)"></p>
             </div>
             <div class="form-group" id="partner-dbs-info" style="display:none;margin-top:0.25rem;padding:1rem 1.1rem;background:rgba(201,168,76,0.05);border:1px solid rgba(201,168,76,0.25);border-radius:4px">
-              <p style="font-size:0.82rem;line-height:1.6;color:rgba(245,240,232,0.85);margin:0 0 0.6rem">An Enhanced DBS certificate cannot be purchased directly by individuals — it must be arranged through a registered body. British Heritage Hosts will guide approved applicants through obtaining one.</p>
-              <p style="font-size:0.82rem;line-height:1.6;color:rgba(245,240,232,0.85);margin:0 0 0.4rem"><strong style="color:var(--gold)">Required insurance cover:</strong> Public Liability and Professional Indemnity.</p>
-              <p style="font-size:0.78rem;margin:0"><a href="https://www.gov.uk/disclosure-barring-service-check" target="_blank" rel="noopener noreferrer" style="color:var(--gold);text-decoration:underline">Learn more about DBS checks on gov.uk</a></p>
+              <p style="font-size:0.82rem;line-height:1.6;color:rgba(245,240,232,0.85);margin:0 0 0.5rem">An Enhanced DBS check is required for all BHH partners before their first booking. As a self-employed individual, you can now apply directly through a registered DBS Umbrella Body — no employer needed.</p>
+              <p style="font-size:0.78rem;color:var(--gold);margin:0 0 0.5rem">You may still apply — DBS confirmation will be required before your first booking is activated.</p>
+              <a href="https://www.gov.uk/guidance/dbs-checks-for-self-employed-people-and-personal-employees" target="_blank" rel="noopener noreferrer" style="font-size:0.78rem;color:var(--gold);text-decoration:underline">How to apply for your Enhanced DBS check — GOV.UK →</a>
+            </div>
+            <div class="form-group" id="partner-dbs-na" style="display:none;margin-top:0.25rem;padding:1rem 1.1rem;background:rgba(201,168,76,0.05);border:1px solid rgba(201,168,76,0.25);border-radius:4px">
+              <label style="display:block;font-size:0.7rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(245,240,232,0.5);margin-bottom:0.4rem;font-weight:500">Please explain why this does not apply <span style="color:#C9A84C">*</span></label>
+              <p style="font-size:0.75rem;color:rgba(245,240,232,0.75);margin:0.2rem 0 0.6rem">For example: I am an overseas national / I am an EU citizen residing outside the UK.</p>
+              <input type="text" id="partner-dbs-na-reason" name="DBS Not Applicable Reason" placeholder="e.g. I am an EU national currently based in Germany" required style="width:100%;padding:0.8rem 1rem;background:rgba(245,240,232,0.05);border:1px solid rgba(201,168,76,0.2);color:var(--cream);font-family:var(--ff-body);font-size:0.9rem;margin-bottom:0.8rem">
+              <label style="display:block;font-size:0.7rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(245,240,232,0.5);margin-bottom:0.4rem;font-weight:500">Upload Your Country's Criminal Record Clearance <span style="color:#C9A84C">*</span></label>
+              <p style="font-size:0.75rem;color:rgba(245,240,232,0.75);margin:0.2rem 0 0.6rem">Please upload the equivalent criminal record clearance issued by your country of residence (PDF, JPG or PNG · max 10 MB). This document must be dated within the last 12 months.</p>
+              <input type="file" id="partner-dbs-na-file" name="Overseas Criminal Clearance" accept=".pdf,.jpg,.jpeg,.png" style="width:100%;color:var(--cream);font-size:0.8rem">
+              <p style="font-size:0.72rem;color:rgba(245,240,232,0.6);margin-top:0.5rem;font-style:italic">BHH will review your clearance document as part of the onboarding process.</p>
             </div>
           </div>
           <div class="form-group"><label>Website or Portfolio</label><input type="url" name="Website" placeholder="https://yourwebsite.com"></div>
@@ -2333,65 +2871,6 @@ document.addEventListener('DOMContentLoaded', function() {
 // ═══════════════════════════════════════════════════════════════════════════
 // GLOBAL: Enquire tab switching function (MUST be global for onclick handlers)
 // ═══════════════════════════════════════════════════════════════════════════
-function switchTab(tab) {
-  console.log('=== switchTab START ===');
-  console.log('Switching to tab:', tab);
-  
-  // Hide all panels first
-  var allPanels = document.querySelectorAll('.enquire-panel');
-  console.log('Total panels found:', allPanels.length);
-  
-  allPanels.forEach(function(panel) {
-    panel.style.opacity = '0';
-    panel.style.display = 'none';
-  });
-  
-  // Deactivate all tabs
-  var allTabs = document.querySelectorAll('.enquire-tab');
-  allTabs.forEach(function(tabBtn) {
-    tabBtn.style.borderBottomColor = 'transparent';
-    tabBtn.style.color = 'rgba(245,240,232,0.5)';
-    tabBtn.classList.remove('enquire-tab--active');
-  });
-  
-  // Show the target panel
-  var targetPanel = document.getElementById('tab-' + tab);
-  console.log('Looking for panel: tab-' + tab);
-  console.log('Panel found:', !!targetPanel);
-  
-  if (targetPanel) {
-    console.log('Setting panel display to block');
-    targetPanel.style.display = 'block';
-    // Force reflow
-    void targetPanel.offsetHeight;
-    console.log('Setting panel opacity to 1');
-    targetPanel.style.opacity = '1';
-  } else {
-    console.error('Panel not found: tab-' + tab);
-  }
-  
-  // Activate the target tab button
-  var targetTab = document.querySelector('.enquire-tab[data-tab="' + tab + '"]');
-  console.log('Looking for tab button with data-tab=' + tab);
-  console.log('Tab button found:', !!targetTab);
-  
-  if (targetTab) {
-    targetTab.style.borderBottomColor = 'var(--gold)';
-    targetTab.style.color = 'var(--gold)';
-    targetTab.classList.add('enquire-tab--active');
-  } else {
-    console.error('Tab button not found for:', tab);
-  }
-  
-  // Scroll to enquire section
-  var enquireSection = document.getElementById('enquire');
-  if (enquireSection) {
-    console.log('Scrolling to enquire section');
-    enquireSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
-  
-  console.log('=== switchTab END ===');
-}
 
 document.addEventListener('DOMContentLoaded', function() {
   // Service-specific enquiry — when a marketing carousel card is clicked,
@@ -2407,16 +2886,6 @@ document.addEventListener('DOMContentLoaded', function() {
       if (formCard && !formCard.classList.contains('selected')) {
         toggleService(formCard);
       }
-    });
-  });
-
-  document.querySelectorAll('.enquire-tab').forEach(function(t) {
-    var tabName = t.getAttribute('data-tab');
-    console.log('Attaching click listener to tab:', tabName);
-    t.addEventListener('click', function(e) { 
-      e.preventDefault();
-      console.log('Tab clicked:', tabName);
-      switchTab(tabName); 
     });
   });
 
@@ -2450,6 +2919,26 @@ document.addEventListener('DOMContentLoaded', function() {
     natSel.appendChild(otherN);
   }
 
+  // ── Hash-based tab activation (direct URL navigation) ──
+  var hash = window.location.hash;
+  if (hash === '#partner-application') {
+    setTimeout(function(){
+      switchTab('partner');
+      setTimeout(function(){
+        var el = document.getElementById('enquire');
+        if (el) el.scrollIntoView({behavior:'smooth'});
+      }, 200);
+    }, 800);
+  } else if (hash === '#host-application') {
+    setTimeout(function(){
+      switchTab('host');
+      setTimeout(function(){
+        var el2 = document.getElementById('enquire');
+        if (el2) el2.scrollIntoView({behavior:'smooth'});
+      }, 200);
+    }, 800);
+  }
+
 }); // end DOMContentLoaded
 
 // Date validation — Date To must be after Date From
@@ -2480,7 +2969,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // loadCities must be global — called from inline onchange attribute
-var worldData_global = null; function toggleOtherField(sel,wrapId){var w=document.getElementById(wrapId);if(!w){var parent=sel.parentElement;w=document.createElement('div');w.id=wrapId;w.style.marginTop='0.5rem';var fieldName=wrapId==='occasion-other-wrap'?'Occasion Detail':'Referral Detail';var input=document.createElement('input');input.type='text';input.name=fieldName;input.placeholder='e.g. Eid celebration, or describe in detail';var lbl=document.createElement('label');lbl.textContent='Please specify (required):';lbl.style.cssText='display:block;font-size:0.72rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:#C9A84C;margin-bottom:0.3rem';w.appendChild(lbl);input.style.cssText='width:100%;padding:0.5rem;background:rgba(255,255,255,0.05);border:1px solid rgba(201,168,76,0.3);color:#F5F0E8;border-radius:4px';w.appendChild(input);parent.appendChild(w);}var isOther=sel.value==='Other';w.style.display=isOther?'block':'none';var inp=w.querySelector('input');if(inp){inp.required=isOther;if(!isOther)inp.value='';}} function foldOtherDetails(gf){if(!gf)return;var parts=[];var occSel=gf.querySelector('select[name="Occasion"]');var occInp=gf.querySelector('input[name="Occasion Detail"]');if(occSel&&occSel.value==='Other'&&occInp&&occInp.value.trim()){parts.push('Occasion: '+occInp.value.trim());}var refSel=gf.querySelector('select[name="How Did You Hear"]');var refInp=gf.querySelector('input[name="Referral Detail"]');if(refSel&&refSel.value==='Other'&&refInp&&refInp.value.trim()){parts.push('Heard via: '+refInp.value.trim());}var dietSel=gf.querySelector('select[name="Dietary Requirements"]');if(dietSel&&dietSel.value==='Other'){parts.push('Dietary: Other');} var childSels=gf.querySelectorAll('[name^="Child Age "]');var infants=0,counted=0;childSels.forEach(function(s){if(s.value==='<2 years')infants++;else if(s.value)counted++;});if(infants+counted>0){var billable=Math.max(0,counted-2);var childLine=infants+' infant'+(infants===1?'':'s')+' free, '+counted+' child'+(counted===1?'':'ren')+' 3-11';if(billable>0)childLine+=' ('+billable+' billable at 25%)';parts.push(childLine);}if(parts.length){var sr=gf.querySelector('textarea[name="Special Requests"]');if(sr){var prefix='[AUTO] '+parts.join('. ')+'.';var existing=(sr.value||'').trim();sr.value=existing?prefix+' | '+existing:prefix;}}} document.addEventListener('DOMContentLoaded',function(){['guest-form','host-form','partner-form'].forEach(function(id){var f=document.getElementById(id);if(f)f.addEventListener('submit',function(){foldOtherDetails(f);});});});
+function toggleOtherField(sel,wrapId){var w=document.getElementById(wrapId);if(!w){var parent=sel.parentElement;w=document.createElement('div');w.id=wrapId;w.style.marginTop='0.5rem';var fieldName=wrapId==='occasion-other-wrap'?'Occasion Detail':'Referral Detail';var input=document.createElement('input');input.type='text';input.name=fieldName;input.placeholder='e.g. Eid celebration, or describe in detail';var lbl=document.createElement('label');lbl.textContent='Please specify (required):';lbl.style.cssText='display:block;font-size:0.72rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:#C9A84C;margin-bottom:0.3rem';w.appendChild(lbl);input.style.cssText='width:100%;padding:0.5rem;background:rgba(255,255,255,0.05);border:1px solid rgba(201,168,76,0.3);color:#F5F0E8;border-radius:4px';w.appendChild(input);parent.appendChild(w);}var isOther=sel.value==='Other';w.style.display=isOther?'block':'none';var inp=w.querySelector('input');if(inp){inp.required=isOther;if(!isOther)inp.value='';}} function foldOtherDetails(gf){if(!gf)return;var parts=[];var occSel=gf.querySelector('select[name="Occasion"]');var occInp=gf.querySelector('input[name="Occasion Detail"]');if(occSel&&occSel.value==='Other'&&occInp&&occInp.value.trim()){parts.push('Occasion: '+occInp.value.trim());}var refSel=gf.querySelector('select[name="How Did You Hear"]');var refInp=gf.querySelector('input[name="Referral Detail"]');if(refSel&&refSel.value==='Other'&&refInp&&refInp.value.trim()){parts.push('Heard via: '+refInp.value.trim());}var dietSel=gf.querySelector('select[name="Dietary Requirements"]');if(dietSel&&dietSel.value==='Other'){parts.push('Dietary: Other');} var childSels=gf.querySelectorAll('[name^="Child Age "]');var infants=0,counted=0;childSels.forEach(function(s){if(s.value==='<2 years')infants++;else if(s.value)counted++;});if(infants+counted>0){var billable=Math.max(0,counted-2);var childLine=infants+' infant'+(infants===1?'':'s')+' free, '+counted+' child'+(counted===1?'':'ren')+' 3-11';if(billable>0)childLine+=' ('+billable+' billable at 25%)';parts.push(childLine);}if(parts.length){var sr=gf.querySelector('textarea[name="Special Requests"]');if(sr){var prefix='[AUTO] '+parts.join('. ')+'.';var existing=(sr.value||'').trim();sr.value=existing?prefix+' | '+existing:prefix;}}} document.addEventListener('DOMContentLoaded',function(){['guest-form','host-form','partner-form'].forEach(function(id){var f=document.getElementById(id);if(f)f.addEventListener('submit',function(){foldOtherDetails(f);});});});
 
 // Child age dropdowns — global, called from inline onchange
 function updateChildAges() {
@@ -2530,7 +3019,7 @@ function updateChildAgesVisibility() {
   var container = document.getElementById('child-ages-container');
   if (!experienceSel || !container) return;
   var experience = experienceSel.value;
-  var childAgeApplies = (experience === 'Private Family Dinner' || experience === 'English Afternoon Tea');
+  var childAgeApplies = (experience === 'Dinner' || experience === 'English Tea');
   // Hide child age section if experience doesn't use child pricing
   if (!childAgeApplies) {
     container.style.display = 'none';
@@ -2546,7 +3035,7 @@ function updateChildAgesVisibility() {
 // Show them for Dinner, Tea, Multiple/Not sure, and empty.
 //
 // CONDITIONAL DIETARY BLOCK — show only for food services:
-// Private Family Dinner or English Afternoon Tea. Hide for
+// Dinner or English Tea. Hide for
 // Guide, Cruise, Transport, Multiple, and empty selection.
 // ============================================================
 function updateFamilyBlockVisibility() {
@@ -2555,7 +3044,7 @@ function updateFamilyBlockVisibility() {
 
   // v8.1: read the multi-selection
   var services = (typeof getSelectedServices === 'function') ? getSelectedServices() : [];
-  var hasFood = services.indexOf('Private Family Dinner') !== -1 || services.indexOf('English Afternoon Tea') !== -1;
+  var hasFood = services.indexOf('Dinner') !== -1 || services.indexOf('English Tea') !== -1;
   // Family block (Adults/Children) shows whenever ANY service is selected.
   // Rationale: headcount drives operational capacity (guides, vehicles, boats)
   // even when it doesn't affect per-family pricing.
@@ -2601,23 +3090,23 @@ function updateFamilyBlockVisibility() {
 
 // ═══════ v8 TIER COPY — full per-service tier descriptions ═══════
 var TIER_COPY = {
-  'Private Family Dinner': {
+  'Dinner': {
     standard: '2 courses, fine china, flowers, menu cards.',
     premium:  'Everything in Standard + 3 mains and a photographer.'
   },
-  'English Afternoon Tea': {
+  'English Tea': {
     standard: 'Rare tea, sommelier, fine china, flowers.',
     premium:  'Everything in Standard + a celebration cake.'
   },
-  'British Heritage Guide': {
+  'Heritage Guide': {
     standard: 'Female guide, driver-guide tier.',
     premium:  'Everything in Standard + VIP National Trust access and guide photos.'
   },
-  'Private Canal Cruise': {
+  'Canal Cruise': {
     standard: 'Premium bedding, private cruise.',
     premium:  'Everything in Standard + widebeam and halal catering included.'
   },
-  'Airport & Transport': {
+  'Transportation': {
     standard: 'Driver and porter.',
     premium:  'Everything in Standard + premium vehicle (up to 7 passengers), terminal greeter, amenity pack.'
   }
@@ -2924,8 +3413,8 @@ function updatePricingSummary() {
   // v7: experience value is now a comma-separated list from multi-select.
   // Check whether any food service is present instead of exact equality.
   var experience = experienceSel.value || '';
-  var hasFoodService = experience.indexOf('Private Family Dinner') !== -1
-                    || experience.indexOf('English Afternoon Tea') !== -1;
+  var hasFoodService = experience.indexOf('Dinner') !== -1
+                    || experience.indexOf('English Tea') !== -1;
   
   // Always refresh the adults composition line (no prices)
   updateAdultsBreakdown(adultsVal);
@@ -3271,12 +3760,29 @@ function closeThankyouModal(modalId) {
     var file = document.getElementById(prefix+'-dbs-file');
     var path = document.getElementById(prefix+'-dbs-path');
     var st = document.getElementById(prefix+'-dbs-status');
-    var isYes = (v === 'Yes'), isWilling = (v === 'No - Will Obtain');
+    var naBlock = document.getElementById(prefix+'-dbs-na');
+
+    var isYes = (v === 'Yes');
+    var isWilling = (v === 'No - Will Obtain');
+    var isNA = (v === 'Not Applicable');
+
     if(up) up.style.display = isYes ? 'block' : 'none';
     if(info) info.style.display = isWilling ? 'block' : 'none';
+    if(naBlock) naBlock.style.display = isNA ? 'block' : 'none';
+
     if(file){
       file.required = isYes;
       if(!isYes){ file.value=''; if(path) path.value=''; if(st) st.textContent=''; }
+    }
+
+    // Handle NA reason and overseas upload required fields
+    var naReason = document.getElementById(prefix+'-dbs-na-reason');
+    var naFile = document.getElementById(prefix+'-dbs-na-file');
+    if(naReason) naReason.required = isNA;
+    if(naFile) naFile.required = isNA;
+    if(!isNA){
+      if(naReason) naReason.value = '';
+      if(naFile) naFile.value = '';
     }
   };
 
@@ -3329,16 +3835,423 @@ function closeThankyouModal(modalId) {
     }, false);
   }
 
+
+  // ── County → City filtering ──────────────────────────────────────────────
+  var UK_COUNTY_CITIES = {
+    "Greater London": ["London","City of London","Westminster","Camden","Islington","Hackney","Tower Hamlets","Greenwich","Lewisham","Southwark","Lambeth","Wandsworth","Hammersmith","Kensington","Ealing","Hounslow","Richmond","Kingston","Merton","Sutton","Croydon","Bromley","Bexley","Havering","Barking","Redbridge","Newham","Waltham Forest","Haringey","Enfield","Barnet","Harrow","Hillingdon"],
+    "West Yorkshire": ["Leeds","Bradford","Wakefield","Huddersfield","Halifax","Dewsbury","Batley","Keighley"],
+    "West Midlands": ["Birmingham","Coventry","Wolverhampton","Dudley","Walsall","West Bromwich","Solihull","Sutton Coldfield"],
+    "Greater Manchester": ["Manchester","Salford","Bolton","Oldham","Rochdale","Stockport","Tameside","Trafford","Wigan","Bury"],
+    "Merseyside": ["Liverpool","Birkenhead","Southport","St Helens","Wallasey","Bootle"],
+    "South Yorkshire": ["Sheffield","Doncaster","Rotherham","Barnsley"],
+    "Tyne and Wear": ["Newcastle","Sunderland","Gateshead","South Shields","Jarrow"],
+    "Kent": ["Canterbury","Maidstone","Tunbridge Wells","Folkestone","Dover","Margate","Ramsgate","Ashford","Dartford","Gravesend"],
+    "Surrey": ["Guildford","Croydon","Woking","Epsom","Reigate","Farnham","Camberley","Kingston upon Thames"],
+    "Essex": ["Chelmsford","Southend-on-Sea","Colchester","Basildon","Harlow","Brentwood","Romford"],
+    "Hampshire": ["Southampton","Portsmouth","Winchester","Basingstoke","Eastleigh","Fareham","Gosport","Aldershot"],
+    "Hertfordshire": ["Watford","St Albans","Hemel Hempstead","Stevenage","Hatfield","Welwyn Garden City"],
+    "Oxfordshire": ["Oxford","Banbury","Abingdon","Witney","Bicester"],
+    "Cambridgeshire": ["Cambridge","Peterborough","Ely","Huntingdon","March"],
+    "Berkshire": ["Reading","Slough","Windsor","Maidenhead","Bracknell","Newbury","Wokingham"],
+    "Buckinghamshire": ["Aylesbury","Milton Keynes","High Wycombe","Amersham","Chesham"],
+    "Devon": ["Exeter","Plymouth","Torquay","Paignton","Barnstaple","Newton Abbot"],
+    "Cornwall": ["Truro","Penzance","Newquay","Falmouth","St Austell","Bodmin"],
+    "Somerset": ["Taunton","Bath","Weston-super-Mare","Yeovil","Bridgwater"],
+    "Bristol": ["Bristol","Clifton","Redland","Bedminster","Fishponds"],
+    "Gloucestershire": ["Gloucester","Cheltenham","Stroud","Cirencester","Tewkesbury"],
+    "Wiltshire": ["Salisbury","Swindon","Chippenham","Trowbridge","Marlborough"],
+    "Dorset": ["Bournemouth","Poole","Dorchester","Weymouth","Christchurch"],
+    "Suffolk": ["Ipswich","Bury St Edmunds","Lowestoft","Felixstowe","Newmarket"],
+    "Norfolk": ["Norwich","Great Yarmouth","Kings Lynn","Thetford","Dereham"],
+    "Lincolnshire": ["Lincoln","Boston","Grantham","Grimsby","Skegness","Spalding"],
+    "Nottinghamshire": ["Nottingham","Mansfield","Newark","Worksop","Retford"],
+    "Leicestershire": ["Leicester","Loughborough","Hinckley","Melton Mowbray","Coalville"],
+    "Derbyshire": ["Derby","Chesterfield","Matlock","Buxton","Ilkeston"],
+    "Staffordshire": ["Stoke-on-Trent","Stafford","Burton upon Trent","Lichfield","Tamworth"],
+    "Warwickshire": ["Coventry","Warwick","Leamington Spa","Nuneaton","Rugby","Stratford-upon-Avon"],
+    "Northamptonshire": ["Northampton","Kettering","Corby","Wellingborough","Daventry"],
+    "Lancashire": ["Preston","Blackpool","Burnley","Blackburn","Lancaster","Accrington"],
+    "Cheshire": ["Chester","Macclesfield","Warrington","Crewe","Ellesmere Port"],
+    "North Yorkshire": ["York","Harrogate","Scarborough","Middlesbrough","Northallerton"],
+    "East Riding of Yorkshire": ["Hull","Beverley","Bridlington","Goole","Driffield"],
+    "Northumberland": ["Newcastle","Alnwick","Berwick-upon-Tweed","Hexham","Morpeth"],
+    "Durham": ["Durham","Darlington","Hartlepool","Stockton-on-Tees","Bishop Auckland"],
+    "Cumbria": ["Carlisle","Kendal","Barrow-in-Furness","Penrith","Windermere"],
+    "Shropshire": ["Shrewsbury","Telford","Oswestry","Bridgnorth","Ludlow"],
+    "Herefordshire": ["Hereford","Ross-on-Wye","Ledbury","Leominster"],
+    "Worcestershire": ["Worcester","Kidderminster","Redditch","Bromsgrove","Malvern"],
+    "East Sussex": ["Brighton","Eastbourne","Hastings","Lewes","Bexhill"],
+    "West Sussex": ["Chichester","Crawley","Worthing","Horsham","Bognor Regis"],
+    "City of London": ["London"],
+    "Gwynedd": ["Bangor","Caernarfon","Porthmadog","Pwllheli"],
+    "Clwyd": ["Wrexham","Rhyl","Prestatyn","Flint"],
+    "Dyfed": ["Aberystwyth","Carmarthen","Haverfordwest","Llanelli"],
+    "South Glamorgan": ["Cardiff","Barry","Penarth"],
+    "West Glamorgan": ["Swansea","Neath","Port Talbot"],
+    "Mid Glamorgan": ["Merthyr Tydfil","Bridgend","Pontypridd","Rhondda"],
+    "Gwent": ["Newport","Abergavenny","Cwmbran","Ebbw Vale"],
+    "Powys": ["Welshpool","Newtown","Llandrindod Wells","Brecon"],
+    "City of Edinburgh": ["Edinburgh","Leith","Portobello"],
+    "Highland": ["Inverness","Fort William","Aviemore","Thurso","Wick"],
+    "Aberdeenshire": ["Aberdeen","Peterhead","Fraserburgh","Inverurie"],
+    "Lanarkshire": ["Glasgow","Motherwell","Hamilton","East Kilbride","Airdrie"],
+    "Ayrshire": ["Kilmarnock","Ayr","Irvine","Troon"],
+    "Fife": ["Dunfermline","Kirkcaldy","St Andrews","Glenrothes"],
+    "Perth and Kinross": ["Perth","Pitlochry","Crieff","Blairgowrie"],
+    "Argyll and Bute": ["Oban","Dunoon","Campbeltown","Lochgilphead"],
+    "County Antrim": ["Belfast","Antrim","Ballymena","Larne","Lisburn"],
+    "County Down": ["Newry","Bangor","Downpatrick","Newcastle"],
+    "County Londonderry": ["Londonderry","Coleraine","Limavady","Magherafelt"],
+    "County Tyrone": ["Omagh","Strabane","Dungannon","Cookstown"],
+    "County Armagh": ["Armagh","Portadown","Lurgan","Craigavon"],
+    "County Fermanagh": ["Enniskillen","Lisnaskea","Irvinestown"]
+  };
+
+  
+  // City → County reverse lookup
+  var CITY_TO_COUNTY = {};
+  Object.keys(UK_COUNTY_CITIES).forEach(function(county) {
+    UK_COUNTY_CITIES[county].forEach(function(city) {
+      if (!CITY_TO_COUNTY[city]) CITY_TO_COUNTY[city] = [];
+      CITY_TO_COUNTY[city].push(county);
+    });
+  });
+
+  function populateCitySelect(selId, onChangeHandler) {
+    var sel = document.getElementById(selId);
+    if (!sel) return;
+    var cities = ukCities().sort();
+    var html = '<option value="">Select…</option>';
+    cities.forEach(function(c) { html += '<option value="' + c + '">' + c + '</option>'; });
+    html += '<option value="Other">Other (type below)</option>';
+    sel.innerHTML = html;
+    sel.addEventListener('change', function() { onChangeHandler(this); });
+  }
+
+  function onCityChange(cityVal, countySelId) {
+    var countySel = document.getElementById(countySelId);
+    if (!countySel) return;
+    if (!cityVal || cityVal === 'Other') {
+      countySel.innerHTML = '<option value="">Select…</option>';
+      UK_COUNTIES.forEach(function(c) {
+        countySel.innerHTML += '<option value="' + c + '">' + c + '</option>';
+      });
+      countySel.innerHTML += '<option value="Other">Other (type below)</option>';
+      return;
+    }
+    var counties = CITY_TO_COUNTY[cityVal] || [];
+    if (counties.length === 1) {
+      // Auto-select if only one county matches
+      countySel.innerHTML = '<option value="' + counties[0] + '">' + counties[0] + '</option>';
+    } else if (counties.length > 1) {
+      countySel.innerHTML = '<option value="">Select…</option>';
+      counties.forEach(function(c) {
+        countySel.innerHTML += '<option value="' + c + '">' + c + '</option>';
+      });
+    } else {
+      // City not in lookup — show all counties
+      countySel.innerHTML = '<option value="">Select…</option>';
+      UK_COUNTIES.forEach(function(c) {
+        countySel.innerHTML += '<option value="' + c + '">' + c + '</option>';
+      });
+      countySel.innerHTML += '<option value="Other">Other (type below)</option>';
+    }
+  }
+
+  window.onHostCityChange = function(sel) {
+    onCityChange(sel.value, 'host-county');
+    toggleListOther(sel, 'City Other');
+  };
+
+  window.onPartnerCityChange = function(sel) {
+    onCityChange(sel.value, 'partner-county');
+    toggleListOther(sel, 'City Other');
+  };
+
+  function filterCitiesByCounty(countySelId, citySelId) {
+    var countySel = document.getElementById(countySelId);
+    var citySel = document.getElementById(citySelId);
+    if (!countySel || !citySel) return;
+
+    countySel.addEventListener('change', function() {
+      var county = this.value;
+      // Remove any existing free-text input
+      var existing = citySel.parentNode.querySelector('input[data-other]');
+      if (existing) existing.remove();
+      citySel.style.display = '';
+
+      if (!county || county === 'Other') {
+        // Show all UK cities
+        fillSelect(citySelId, ukCities());
+        return;
+      }
+
+      var cities = UK_COUNTY_CITIES[county];
+      if (cities && cities.length > 0) {
+        var html = '<option value="">Select…</option>';
+        cities.forEach(function(c) { html += '<option value="' + c + '">' + c + '</option>'; });
+        html += '<option value="Other">Other (type below)</option>';
+        citySel.innerHTML = html;
+      } else {
+        fillSelect(citySelId, ukCities());
+      }
+    });
+  }
+
   document.addEventListener('DOMContentLoaded', function(){
+    populateCitySelect('host-city', window.onHostCityChange);
+    populateCitySelect('partner-city', window.onPartnerCityChange);
     fillSelect('host-county', UK_COUNTIES);
     fillSelect('partner-county', UK_COUNTIES);
-    fillSelect('host-city', ukCities());
-    fillSelect('partner-city', ukCities());
     setupPhone(document.getElementById('host-form'));
     setupPhone(document.getElementById('partner-form'));
     setupDbsSubmit('host-form','host');
     setupDbsSubmit('partner-form','partner');
+
   });
+
+  
+  
+  
+  window.switchHostType = function(type) {
+    var homeFields = document.getElementById('host-home-fields');
+    var guideFields = document.getElementById('host-guide-fields');
+    var pillHome = document.getElementById('pill-home');
+    var pillGuide = document.getElementById('pill-guide');
+
+    var isHome = (type === 'home');
+
+    if (homeFields) homeFields.style.display = isHome ? 'block' : 'none';
+    if (guideFields) guideFields.style.display = isHome ? 'none' : 'block';
+
+    if (pillHome) pillHome.classList.toggle('selected', isHome);
+    if (pillGuide) pillGuide.classList.toggle('selected', !isHome);
+
+    // Update step numbers based on host type
+    var dbsHeading = document.getElementById('host-dbs-heading');
+    var aboutHeading = document.getElementById('host-about-heading');
+    if (dbsHeading) dbsHeading.textContent = isHome ? '6 · Identity & Background Check' : '4 · Identity & Background Check';
+    if (aboutHeading) aboutHeading.textContent = isHome ? '7 · About You' : '5 · About You';
+
+    // Toggle required fields for home vs guide
+    var homeRequired = ['host-property-type', 'host-max-guests', 'host-home-insurance'];
+    homeRequired.forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el) el.required = isHome;
+    });
+
+    var guideRequired = ['host-guiding-exp'];
+    guideRequired.forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el) el.required = !isHome;
+    });
+  };
+
+  
+  window.lookupPostcode = async function() {
+    var pc = document.getElementById('host-postcode').value.trim().replace(/\s+/g,'');
+    var st = document.getElementById('host-postcode-status');
+    var fields = document.getElementById('host-address-fields');
+    var sel = document.getElementById('host-address-select');
+
+    if (!pc) { st.textContent = 'Please enter a postcode first.'; return; }
+
+    st.style.color = 'rgba(245,240,232,0.6)';
+    st.textContent = 'Looking up postcode…';
+
+    try {
+      // Step 1: validate postcode
+      var res = await fetch('https://api.postcodes.io/postcodes/' + encodeURIComponent(pc));
+      var data = await res.json();
+
+      if (!data.result) {
+        st.style.color = '#E8A0A0';
+        st.textContent = 'Postcode not found. Please check and try again.';
+        fields.style.display = 'none';
+        return;
+      }
+
+      var result = data.result;
+
+      // Step 2: get addresses from postcodes.io
+      var addresses = [];
+      // Use the postcode data to build address options
+      var town = result.admin_district || result.parliamentary_constituency || '';
+      var county = result.admin_county || result.region || '';
+      var confirmedPC = result.postcode;
+
+      // Populate with what we know — user can type house number/name
+      sel.innerHTML = '<option value="">Enter your house number or name below…</option>';
+
+      // Show fields and let user complete house number manually
+      document.getElementById('host-town').value = town;
+      document.getElementById('host-county-auto').value = county;
+      document.getElementById('host-postcode-confirmed').value = confirmedPC;
+
+      // Allow manual house number input
+      var houseWrap = document.getElementById('host-house-wrap');
+      if (houseWrap) houseWrap.style.display = 'block';
+
+      fields.style.display = 'block';
+      sel.closest('.form-group').style.display = 'none';
+
+      st.style.color = 'rgba(201,168,76,0.9)';
+      st.textContent = '✓ Postcode confirmed — ' + confirmedPC + '. Please enter your house number or name below.';
+
+    } catch(e) {
+      st.style.color = '#E8A0A0';
+      st.textContent = 'Could not reach address lookup. Please enter your address manually.';
+      fields.style.display = 'block';
+    }
+  };
+
+  window.fillAddress = function(sel) {
+    var parts = sel.value.split('|');
+    if (parts.length >= 2) {
+      document.getElementById('host-street').value = parts[0] || '';
+      document.getElementById('host-town').value = parts[1] || '';
+    }
+  };
+
+  window.togglePartnerTypeOther = function(sel) {
+    var wrap = document.getElementById('partner-type-other-wrap');
+    var input = document.getElementById('partner-type-other-input');
+    var isOther = sel.value === 'Other';
+    if (wrap) wrap.style.display = isOther ? 'block' : 'none';
+    if (input) input.required = isOther;
+    if (!isOther && input) input.value = '';
+  };
+
+  window.onHostInsuranceChange = function(sel) {
+    var v = sel.value;
+    var upload   = document.getElementById('host-home-insurance-upload');
+    var infoWill = document.getElementById('host-home-info-willing');
+    var infoBhh  = document.getElementById('host-home-info-bhh');
+    var infoNot  = document.getElementById('host-home-info-notsure');
+    var hasCover = (v === 'Yes - Covers paying guests' || v === 'Yes - Will extend');
+    if (upload)   upload.style.display   = hasCover             ? 'block' : 'none';
+    if (infoWill) infoWill.style.display = (v === 'No - Will Obtain') ? 'block' : 'none';
+    if (infoBhh)  infoBhh.style.display  = (v === 'BHH Help')        ? 'block' : 'none';
+    if (infoNot)  infoNot.style.display  = (v === 'Not Sure')         ? 'block' : 'none';
+    var fileInput = document.getElementById('host-home-insurance-file');
+    if (fileInput) fileInput.required = hasCover;
+  };
+
+  window.onHostPLChange = function(sel) {
+    var v = sel.value;
+    var upload = document.getElementById('host-pl-upload');
+    var infoWilling = document.getElementById('host-pl-info-willing');
+    var infoBhh = document.getElementById('host-pl-info-bhh');
+    if (upload) upload.style.display = (v === 'Yes') ? 'block' : 'none';
+    if (infoWilling) infoWilling.style.display = (v === 'No - Will Obtain') ? 'block' : 'none';
+    if (infoBhh) infoBhh.style.display = (v === 'BHH Help') ? 'block' : 'none';
+  };
+
+  window.onGuidePLChange = function(sel) {
+    var v = sel.value;
+    var upload = document.getElementById('guide-pl-upload');
+    var infoWilling = document.getElementById('guide-pl-info-willing');
+    var infoBhh = document.getElementById('guide-pl-info-bhh');
+    if (upload) upload.style.display = (v === 'Yes') ? 'block' : 'none';
+    if (infoWilling) infoWilling.style.display = (v === 'No - Will Obtain') ? 'block' : 'none';
+    if (infoBhh) infoBhh.style.display = (v === 'BHH Help') ? 'block' : 'none';
+  };
+
+  window.onGuidePIChange = function(sel) {
+    var v = sel.value;
+    var upload = document.getElementById('guide-pi-upload');
+    var infoWilling = document.getElementById('guide-pi-info-willing');
+    var infoBhh = document.getElementById('guide-pi-info-bhh');
+    if (upload) upload.style.display = (v === 'Yes') ? 'block' : 'none';
+    if (infoWilling) infoWilling.style.display = (v === 'No - Will Obtain') ? 'block' : 'none';
+    if (infoBhh) infoBhh.style.display = (v === 'BHH Help') ? 'block' : 'none';
+  };
+
+  window.validateHostInsuranceFile = function(input) {
+    var st = document.getElementById('host-home-insurance-status');
+    if (!input.files || !input.files.length) { if (st) st.textContent = ''; return; }
+    var f = input.files[0];
+    if (!/\.(pdf|jpe?g|png)$/i.test(f.name)) {
+      input.value = '';
+      if (st) { st.style.color = '#E8A0A0'; st.textContent = 'Please upload a PDF, JPG or PNG file.'; }
+      return;
+    }
+    if (f.size > 10*1024*1024) {
+      input.value = '';
+      if (st) { st.style.color = '#E8A0A0'; st.textContent = 'File too large — maximum 10 MB.'; }
+      return;
+    }
+    if (st) { st.style.color = 'rgba(245,240,232,0.75)'; st.textContent = 'Ready to upload: ' + f.name; }
+  };
+
+  window.validateHostPLFile = function(input) {
+    var st = document.getElementById('host-pl-status');
+    if (!input.files || !input.files.length) { if (st) st.textContent = ''; return; }
+    var f = input.files[0];
+    if (!/\.(pdf|jpe?g|png)$/i.test(f.name)) {
+      input.value = '';
+      if (st) { st.style.color = '#E8A0A0'; st.textContent = 'Please upload a PDF, JPG or PNG file.'; }
+      return;
+    }
+    if (f.size > 10*1024*1024) {
+      input.value = '';
+      if (st) { st.style.color = '#E8A0A0'; st.textContent = 'File too large — maximum 10 MB.'; }
+      return;
+    }
+    if (st) { st.style.color = 'rgba(245,240,232,0.75)'; st.textContent = 'Ready to upload: ' + f.name; }
+  };
+
+  // Home Insurance (business use) — declaration only, no certificate upload.
+  window.onPartnerHomeInsuranceChange = function(sel) {
+    var v = sel.value;
+    var willing = document.getElementById('partner-home-info-willing');
+    var bhh = document.getElementById('partner-home-info-bhh');
+    var notsure = document.getElementById('partner-home-info-notsure');
+    if (willing) willing.style.display = (v === 'No - Will Obtain') ? 'block' : 'none';
+    if (bhh) bhh.style.display = (v === 'BHH Help') ? 'block' : 'none';
+    if (notsure) notsure.style.display = (v === 'Not Sure') ? 'block' : 'none';
+  };
+
+  // Shared helper: toggle a PL/PI insurance section's certificate block + guidance panels.
+  function partnerInsuranceToggle(v, prefix) {
+    var block = document.getElementById('partner-' + prefix + '-block');
+    var willing = document.getElementById('partner-' + prefix + '-info-willing');
+    var bhh = document.getElementById('partner-' + prefix + '-info-bhh');
+    var file = document.getElementById('partner-' + prefix + '-file');
+    var path = document.getElementById('partner-' + prefix + '-path');
+    var st = document.getElementById('partner-' + prefix + '-status');
+    var hasCover = (v === 'Yes');
+    if (block) block.style.display = hasCover ? 'block' : 'none';
+    if (willing) willing.style.display = (v === 'No - Will Obtain') ? 'block' : 'none';
+    if (bhh) bhh.style.display = (v === 'BHH Help') ? 'block' : 'none';
+    if (file) {
+      file.required = hasCover;
+      if (!hasCover) { file.value = ''; if (path) path.value = ''; if (st) st.textContent = ''; }
+    }
+  }
+
+  window.onPartnerPLChange = function(sel) { partnerInsuranceToggle(sel.value, 'pl'); };
+  window.onPartnerPIChange = function(sel) { partnerInsuranceToggle(sel.value, 'pi'); };
+
+  window.validateInsuranceFile = function(input, type) {
+    var st = document.getElementById('partner-' + type + '-status');
+    var path = document.getElementById('partner-' + type + '-path');
+    if (path) path.value = '';
+    if (!input.files || !input.files.length) { if (st) st.textContent = ''; return; }
+    var f = input.files[0];
+    if (!/\.(pdf|jpe?g|png)$/i.test(f.name)) {
+      input.value = '';
+      if (st) { st.style.color = '#E8A0A0'; st.textContent = 'Please upload a PDF, JPG or PNG file.'; }
+      return;
+    }
+    if (f.size > 10 * 1024 * 1024) {
+      input.value = '';
+      if (st) { st.style.color = '#E8A0A0'; st.textContent = 'File too large — maximum 10 MB.'; }
+      return;
+    }
+    if (st) { st.style.color = 'rgba(245,240,232,0.75)'; st.textContent = 'Ready to upload: ' + f.name; }
+  };
+
 })();
 
   function toggleNavJoin(e) {
