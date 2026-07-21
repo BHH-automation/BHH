@@ -4657,36 +4657,50 @@ function closeLegalModal(type) {
 })();
 </script>
 <script>
-/* ── Host form: bar display:none controls from validation & submission ──
+/* ── Host form: bar controls in COLLAPSED sections from validation & submission ──
    The Host form reveals conditional branches (Home Host vs Heritage Guide) and
    nested steps (address / house number, DBS, insurance). Any REQUIRED control
    left inside a display:none subtree is non-focusable, so the browser silently
    aborts submit ("An invalid form control … is not focusable") with no visible
    message — the Submit button appears dead even on a fully completed form.
    Mirroring the site's own inactive-field pattern (required=false; disabled=true,
-   see the guest-form handlers), we disable every control that is not currently
-   rendered and re-enable it when it becomes visible. Disabled controls are barred
-   from constraint validation AND from submission, so inactive-branch data is
-   correctly omitted while active-branch fields keep validating through their
-   visible controls. Left untouched: hidden <input>s (never validated, must post),
-   the Host Type pills (display:none radios that carry the branch choice), the
-   honeypot, and buttons. */
+   see the guest-form handlers), we disable every control that sits inside a
+   collapsed section and re-enable it when its section opens. Disabled controls
+   are barred from constraint validation AND submission, so inactive-branch data
+   is omitted while active-branch fields keep validating through their controls.
+
+   Visibility is judged by ANCESTORS, not the control's own display. Pill controls
+   (Services checkboxes, Host Type radios) hide the <input> itself with display:none
+   and are operated through a visible <label>; those must stay ENABLED. So the rule
+   is: hidden (⇒ disable) iff some ANCESTOR element is display:none; otherwise
+   visible (⇒ enable). Left untouched: hidden <input>s (never validated, must post),
+   the Host Type pills, the honeypot, and buttons. */
 (function(){
   var form = document.getElementById('host-form');
   if(!form) return;
   var KEEP = { 'Host Type': 1, 'bot-field': 1 };
+  // In a collapsed section iff an ANCESTOR (not the control itself) is display:none.
+  function inCollapsedSection(el){
+    for(var a = el.parentElement; a && a !== form.parentElement; a = a.parentElement){
+      if(getComputedStyle(a).display === 'none') return true;
+    }
+    return false;
+  }
   function syncHostFieldStates(){
     for(var i=0; i<form.elements.length; i++){
       var el = form.elements[i], t = el.type;
       if(t==='hidden' || t==='submit' || t==='button' || t==='reset') continue;
       if(KEEP[el.name]) continue;
-      var visible = !!el.offsetParent;            // false inside any display:none subtree
-      if(el.disabled === visible){ el.disabled = !visible; }
+      var shouldDisable = inCollapsedSection(el);   // hidden ⇒ disable, visible ⇒ enable
+      if(el.disabled !== shouldDisable){ el.disabled = shouldDisable; }
     }
   }
   // Re-sync on every field change and whenever a branch/step is shown or hidden.
   form.addEventListener('change', syncHostFieldStates, false);
   form.addEventListener('input',  syncHostFieldStates, false);
+  // Safety net: one synchronous pass at the very start of submit (capture phase,
+  // before the form's other submit handlers) so the posted state is always correct.
+  form.addEventListener('submit', syncHostFieldStates, true);
   var scope = document.getElementById('tab-host') || form;
   try {
     var mo = new MutationObserver(syncHostFieldStates);
