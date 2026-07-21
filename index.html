@@ -650,6 +650,8 @@ nav {
 .langml__chip-remove:focus-visible { outline: none; box-shadow: 0 0 0 2px rgba(201,168,76,0.75); }
 .langml__empty { margin: 0.1rem 0 0; font-size: 0.78rem; font-style: italic; color: rgba(245,240,232,0.4); }
 .langml__count { margin: 0.45rem 0 0; font-size: 0.68rem; letter-spacing: 0.09em; text-transform: uppercase; color: rgba(245,240,232,0.5); }
+.langml__error { grid-column: 1 / -1; margin: 0.1rem 0 0; font-size: 0.78rem; color: #E8A0A0; }
+.langml__error[hidden] { display: none; }
 @media (max-width: 640px) { .langml { grid-template-columns: 1fr; } }
 @media (prefers-reduced-motion: reduce) {
   .langml__select, .langml__other-input, .langml__other-add, .langml__chip-remove { transition: none; }
@@ -2473,6 +2475,7 @@ function closeMobileMenu(){
                 <p class="langml__count" id="langml-count" aria-live="polite" role="status"></p>
               </div>
             </div>
+            <p class="langml__error" id="langml-error" role="alert" hidden>Please add at least one language.</p>
             <input type="hidden" name="Languages Spoken" id="langml-hidden">
           </div>
           <div class="form-group"><label>Tell Us About Your Home and Family <span style="color:#C9A84C">*</span></label><textarea name="About" rows="4" placeholder="Describe your home, your family, your cooking skills, and why you would like to host international families." required></textarea></div>
@@ -4558,17 +4561,19 @@ function closeLegalModal(type) {
   var empty     = root.querySelector('.langml__empty');
   var count     = root.querySelector('.langml__count');
   var hidden    = document.getElementById('langml-hidden');
+  var errorEl   = document.getElementById('langml-error');
   var selected  = [];
+
+  // The nameless <select> is only an input control — it must NOT take part in
+  // native constraint validation (that could silently block the multi-step
+  // form's submit). "At least one language" is enforced by the JS check below.
+  if(select.setCustomValidity){ select.setCustomValidity(''); }
 
   function exists(name){
     var n = name.toLowerCase();
     return selected.some(function(l){ return l.toLowerCase() === n; });
   }
-  function updateValidity(){
-    if(select.setCustomValidity){
-      select.setCustomValidity(selected.length ? '' : 'Please add at least one language.');
-    }
-  }
+  function clearError(){ if(errorEl){ errorEl.hidden = true; } }
   function render(){
     while(chips.firstChild){ chips.removeChild(chips.firstChild); }
     selected.forEach(function(lang){
@@ -4597,7 +4602,7 @@ function closeLegalModal(type) {
       count.textContent = '';
     }
     hidden.value = selected.join(', ');
-    updateValidity();
+    if(selected.length){ clearError(); }
   }
   function addLang(name){
     name = (name || '').trim().replace(/\s+/g,' ');
@@ -4632,7 +4637,66 @@ function closeLegalModal(type) {
     if(e.key === 'Enter'){ e.preventDefault(); commitOther(); }
     else if(e.key === 'Escape'){ otherInput.value = ''; otherWrap.hidden = true; select.focus(); }
   });
+
+  // Require at least one language via a JS check on submit (capture phase, so it
+  // runs before the form's other submit handlers). No native validation is used.
+  var hostForm = root.closest('form');
+  if(hostForm){
+    hostForm.addEventListener('submit', function(e){
+      if(selected.length === 0){
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        if(errorEl){ errorEl.hidden = false; }
+        try { select.focus({ preventScroll: false }); } catch(err) { select.focus(); }
+        select.scrollIntoView({ block: 'center' });
+      }
+    }, true);
+  }
+
   render();
+})();
+</script>
+<script>
+/* ── Host form: bar display:none controls from validation & submission ──
+   The Host form reveals conditional branches (Home Host vs Heritage Guide) and
+   nested steps (address / house number, DBS, insurance). Any REQUIRED control
+   left inside a display:none subtree is non-focusable, so the browser silently
+   aborts submit ("An invalid form control … is not focusable") with no visible
+   message — the Submit button appears dead even on a fully completed form.
+   Mirroring the site's own inactive-field pattern (required=false; disabled=true,
+   see the guest-form handlers), we disable every control that is not currently
+   rendered and re-enable it when it becomes visible. Disabled controls are barred
+   from constraint validation AND from submission, so inactive-branch data is
+   correctly omitted while active-branch fields keep validating through their
+   visible controls. Left untouched: hidden <input>s (never validated, must post),
+   the Host Type pills (display:none radios that carry the branch choice), the
+   honeypot, and buttons. */
+(function(){
+  var form = document.getElementById('host-form');
+  if(!form) return;
+  var KEEP = { 'Host Type': 1, 'bot-field': 1 };
+  function syncHostFieldStates(){
+    for(var i=0; i<form.elements.length; i++){
+      var el = form.elements[i], t = el.type;
+      if(t==='hidden' || t==='submit' || t==='button' || t==='reset') continue;
+      if(KEEP[el.name]) continue;
+      var visible = !!el.offsetParent;            // false inside any display:none subtree
+      if(el.disabled === visible){ el.disabled = !visible; }
+    }
+  }
+  // Re-sync on every field change and whenever a branch/step is shown or hidden.
+  form.addEventListener('change', syncHostFieldStates, false);
+  form.addEventListener('input',  syncHostFieldStates, false);
+  var scope = document.getElementById('tab-host') || form;
+  try {
+    var mo = new MutationObserver(syncHostFieldStates);
+    mo.observe(scope, { attributes:true, attributeFilter:['style','class','hidden'], subtree:true });
+  } catch(e){}
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', syncHostFieldStates);
+  } else {
+    syncHostFieldStates();
+  }
 })();
 </script>
 </body>
