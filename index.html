@@ -585,6 +585,76 @@ nav {
   color: var(--text);
 }
 
+/* ── Languages multi-select (scoped: .langml) ── */
+.langml { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; align-items: start; }
+.langml__control { display: flex; flex-direction: column; gap: 0.5rem; min-width: 0; }
+.langml__select {
+  width: 100%; padding: 0.8rem 1rem;
+  background: rgba(245,240,232,0.05);
+  border: 1px solid rgba(201,168,76,0.2);
+  color: var(--cream); font-family: var(--ff-body);
+  font-size: 0.9rem; font-weight: 300;
+  transition: border-color 0.2s, background-color 0.2s;
+  outline: none; border-radius: 0; -webkit-appearance: none; appearance: none;
+}
+.langml__select:focus-visible {
+  border-color: var(--gold); background: rgba(201,168,76,0.05);
+  box-shadow: 0 0 0 2px rgba(201,168,76,0.55);
+}
+.langml__select option { background: var(--navy); color: var(--cream); }
+.langml__other { display: flex; gap: 0.4rem; }
+.langml__other[hidden] { display: none; }
+.langml__other-input {
+  flex: 1; min-width: 0; padding: 0.65rem 0.8rem;
+  background: rgba(245,240,232,0.05);
+  border: 1px solid rgba(201,168,76,0.2);
+  color: var(--cream); font-family: var(--ff-body);
+  font-size: 0.85rem; font-weight: 300; outline: none;
+  border-radius: 0; -webkit-appearance: none; transition: border-color 0.2s;
+}
+.langml__other-input:focus-visible {
+  border-color: var(--gold); box-shadow: 0 0 0 2px rgba(201,168,76,0.55);
+}
+.langml__other-add {
+  flex-shrink: 0; padding: 0 0.9rem;
+  background: transparent; border: 1px solid var(--gold);
+  color: var(--gold); font-family: var(--ff-body);
+  font-size: 0.75rem; letter-spacing: 0.04em; cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+.langml__other-add:hover { background: var(--gold); color: var(--navy); }
+.langml__other-add:focus-visible { outline: none; box-shadow: 0 0 0 2px rgba(201,168,76,0.7); }
+.langml__side {
+  min-width: 0; padding: 0.55rem 0.65rem;
+  background: rgba(245,240,232,0.03);
+  border: 1px solid rgba(201,168,76,0.15);
+}
+.langml__chips { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0; }
+.langml__chip {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  padding: 0.3rem 0.35rem 0.3rem 0.7rem;
+  background: rgba(201,168,76,0.12);
+  border: 1px solid rgba(201,168,76,0.45);
+  color: var(--cream); font-size: 0.8rem; line-height: 1.2;
+  border-radius: 999px; max-width: 100%;
+}
+.langml__chip-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.langml__chip-remove {
+  flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center;
+  width: 1.15rem; height: 1.15rem; border-radius: 50%; border: none;
+  background: rgba(201,168,76,0.25); color: var(--cream);
+  font-size: 0.9rem; line-height: 1; cursor: pointer; padding: 0;
+  transition: background-color 0.2s, color 0.2s;
+}
+.langml__chip-remove:hover { background: var(--gold); color: var(--navy); }
+.langml__chip-remove:focus-visible { outline: none; box-shadow: 0 0 0 2px rgba(201,168,76,0.75); }
+.langml__empty { margin: 0.1rem 0 0; font-size: 0.78rem; font-style: italic; color: rgba(245,240,232,0.4); }
+.langml__count { margin: 0.45rem 0 0; font-size: 0.68rem; letter-spacing: 0.09em; text-transform: uppercase; color: rgba(245,240,232,0.5); }
+@media (max-width: 640px) { .langml { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: reduce) {
+  .langml__select, .langml__other-input, .langml__other-add, .langml__chip-remove { transition: none; }
+}
+
 /* ── FOOTER ── */
 footer {
   background: #080F17;
@@ -2353,7 +2423,58 @@ function closeMobileMenu(){
           <!-- STEP 7: ABOUT YOU (EVERYONE) -->
           <p id="host-about-heading" style="font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin:1.5rem 0 0.8rem;font-weight:500">7 · About You</p>
 
-          <div class="form-group"><label>Languages Spoken <span style="color:#C9A84C">*</span></label><input type="text" name="Languages Spoken" required placeholder="e.g. English, French"></div>
+          <div class="form-group">
+            <label id="langml-label">Languages Spoken in the Home <span style="color:#C9A84C">*</span></label>
+            <div class="langml" data-langml>
+              <div class="langml__control">
+                <select class="langml__select" id="langml-select" aria-labelledby="langml-label" aria-describedby="langml-count">
+                  <option value="">Add a language…</option>
+                  <option>Arabic</option>
+                  <option>Bengali</option>
+                  <option>Cantonese</option>
+                  <option>Dutch</option>
+                  <option>English</option>
+                  <option>Farsi (Persian)</option>
+                  <option>French</option>
+                  <option>German</option>
+                  <option>Greek</option>
+                  <option>Gujarati</option>
+                  <option>Hindi</option>
+                  <option>Italian</option>
+                  <option>Japanese</option>
+                  <option>Korean</option>
+                  <option>Kurdish</option>
+                  <option>Malay</option>
+                  <option>Mandarin Chinese</option>
+                  <option>Pashto</option>
+                  <option>Polish</option>
+                  <option>Portuguese</option>
+                  <option>Punjabi</option>
+                  <option>Romanian</option>
+                  <option>Russian</option>
+                  <option>Somali</option>
+                  <option>Spanish</option>
+                  <option>Swahili</option>
+                  <option>Tagalog</option>
+                  <option>Tamil</option>
+                  <option>Turkish</option>
+                  <option>Urdu</option>
+                  <option>Welsh</option>
+                  <option value="__other__">Other…</option>
+                </select>
+                <div class="langml__other" id="langml-other" hidden>
+                  <input type="text" class="langml__other-input" id="langml-other-input" placeholder="Type a language, then press Enter" aria-label="Other language not listed">
+                  <button type="button" class="langml__other-add" id="langml-other-add">Add</button>
+                </div>
+              </div>
+              <div class="langml__side">
+                <div class="langml__chips" id="langml-chips" role="list" aria-label="Selected languages"></div>
+                <p class="langml__empty" id="langml-empty">No languages added yet</p>
+                <p class="langml__count" id="langml-count" aria-live="polite" role="status"></p>
+              </div>
+            </div>
+            <input type="hidden" name="Languages Spoken" id="langml-hidden">
+          </div>
           <div class="form-group"><label>Tell Us About Your Home and Family <span style="color:#C9A84C">*</span></label><textarea name="About" rows="4" placeholder="Describe your home, your family, your cooking skills, and why you would like to host international families." required></textarea></div>
           <div class="form-group"><label>How Did You Hear About BHH? <span style="color:#C9A84C">*</span></label>
             <select name="How Did You Hear" required onchange="toggleOtherField(this,'referral-other-wrap')">
@@ -4423,6 +4544,96 @@ function closeLegalModal(type) {
   document.getElementById('modal-' + type).classList.remove('open');
   document.body.style.overflow = '';
 }
+</script>
+<script>
+/* ── Languages Spoken multi-select (host-application · About You) ── */
+(function(){
+  var root = document.querySelector('[data-langml]');
+  if(!root) return;
+  var select    = root.querySelector('.langml__select');
+  var otherWrap = root.querySelector('.langml__other');
+  var otherInput= root.querySelector('.langml__other-input');
+  var otherAdd  = root.querySelector('.langml__other-add');
+  var chips     = root.querySelector('.langml__chips');
+  var empty     = root.querySelector('.langml__empty');
+  var count     = root.querySelector('.langml__count');
+  var hidden    = document.getElementById('langml-hidden');
+  var selected  = [];
+
+  function exists(name){
+    var n = name.toLowerCase();
+    return selected.some(function(l){ return l.toLowerCase() === n; });
+  }
+  function updateValidity(){
+    if(select.setCustomValidity){
+      select.setCustomValidity(selected.length ? '' : 'Please add at least one language.');
+    }
+  }
+  function render(){
+    while(chips.firstChild){ chips.removeChild(chips.firstChild); }
+    selected.forEach(function(lang){
+      var chip = document.createElement('span');
+      chip.className = 'langml__chip';
+      chip.setAttribute('role','listitem');
+      var lbl = document.createElement('span');
+      lbl.className = 'langml__chip-label';
+      lbl.textContent = lang;
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'langml__chip-remove';
+      btn.setAttribute('aria-label','Remove ' + lang);
+      btn.innerHTML = '&times;';
+      btn.addEventListener('click', function(){ removeLang(lang); select.focus(); });
+      chip.appendChild(lbl);
+      chip.appendChild(btn);
+      chips.appendChild(chip);
+    });
+    empty.style.display = selected.length ? 'none' : 'block';
+    if(selected.length){
+      count.style.display = 'block';
+      count.textContent = selected.length + ' language' + (selected.length === 1 ? '' : 's') + ' added';
+    } else {
+      count.style.display = 'none';
+      count.textContent = '';
+    }
+    hidden.value = selected.join(', ');
+    updateValidity();
+  }
+  function addLang(name){
+    name = (name || '').trim().replace(/\s+/g,' ');
+    if(!name || exists(name)) return false;
+    selected.push(name);
+    render();
+    return true;
+  }
+  function removeLang(name){
+    var n = name.toLowerCase();
+    selected = selected.filter(function(l){ return l.toLowerCase() !== n; });
+    render();
+  }
+  select.addEventListener('change', function(){
+    var v = select.value;
+    if(v === '__other__'){
+      otherWrap.hidden = false;
+      select.value = '';
+      otherInput.focus();
+      return;
+    }
+    if(v){ addLang(v); }
+    select.value = '';
+    otherWrap.hidden = true;
+  });
+  function commitOther(){
+    if(addLang(otherInput.value)){ otherInput.value = ''; otherInput.focus(); }
+    else { otherInput.select(); }
+  }
+  otherAdd.addEventListener('click', commitOther);
+  otherInput.addEventListener('keydown', function(e){
+    if(e.key === 'Enter'){ e.preventDefault(); commitOther(); }
+    else if(e.key === 'Escape'){ otherInput.value = ''; otherWrap.hidden = true; select.focus(); }
+  });
+  render();
+})();
 </script>
 </body>
 </html>
