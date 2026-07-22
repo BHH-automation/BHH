@@ -1,0 +1,26 @@
+name: Supabase keep-alive
+
+# Prevents the Supabase project from auto-pausing by making a real EXTERNAL
+# request to the Supabase REST API on a schedule. This runs from GitHub's
+# runners (outside the database), so it counts as external activity — unlike
+# pg_cron, which runs inside Postgres and does not reset the inactivity timer.
+
+on:
+  schedule:
+    # Monday and Thursday at 06:00 UTC
+    - cron: '0 6 * * 1,4'
+  workflow_dispatch: {}
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Supabase REST API
+        run: |
+          echo "Pinging Supabase REST API…"
+          status=$(curl --fail --silent --show-error \
+            -o /dev/null -w "%{http_code}" \
+            "https://pwqdzitsezblncmewxsf.supabase.co/rest/v1/enquiries?select=id&limit=1" \
+            -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}")
+          echo "HTTP status: $status"
