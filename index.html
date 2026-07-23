@@ -1264,7 +1264,6 @@ function switchTab(tab) {
   <input name="city"><input name="County">
   <input name="Partner Type"><input name="Partner Type Detail">
   <input name="Years of Experience"><input name="Number of Staff">
-  <input name="Partner Home Insurance">
   <input name="Partner Public Liability"><input name="PL Insurer Name"><input name="PL Policy Number"><input name="PL Certificate">
   <input name="Partner Professional Indemnity"><input name="PI Insurer Name"><input name="PI Policy Number"><input name="PI Certificate">
   <input name="DBS Checked"><input name="DBS Certificate"><input name="DBS Not Applicable Reason">
@@ -2613,38 +2612,8 @@ function closeMobileMenu(){
             <div class="form-group"><label>Years of Experience <span style="color:#C9A84C">*</span></label><input type="number" name="Years of Experience" min="0" max="50" placeholder="5" pattern="[0-9]*" inputmode="numeric" onkeypress="return /[0-9]/.test(event.key)" required></div>
             <div class="form-group"><label>Number of Staff <span style="color:#C9A84C">*</span></label><input type="number" name="Number of Staff" min="1" max="100" placeholder="3" pattern="[0-9]*" inputmode="numeric" onkeypress="return /[0-9]/.test(event.key)" required></div>
           </div>
-          <!-- ── PARTNER HOME INSURANCE ── -->
-          <p style="font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin:1.5rem 0 0.8rem;font-weight:500">3 · Home Insurance — Business Use</p>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;align-items:start;margin-bottom:1rem">
-            <div class="form-group" style="margin-bottom:0">
-              <label>Home Insurance — Business Use <span style="color:#C9A84C">*</span></label>
-              <select name="Partner Home Insurance" id="partner-home-insurance" required onchange="onPartnerHomeInsuranceChange(this)">
-                <option value="">Select…</option>
-                <option value="Yes - Covers paying guests">Yes — my policy covers paying guests</option>
-                <option value="Yes - Will extend">Yes — I will extend my policy</option>
-                <option value="No - Will Obtain">No — but willing to obtain</option>
-                <option value="Not Sure">Not sure — I will check with my insurer</option>
-                <option value="BHH Help">I do not have one — help me get insurance</option>
-              </select>
-            </div>
-            <div id="partner-home-info-willing" style="display:none;padding:1rem 1.1rem;background:rgba(201,168,76,0.05);border:1px solid rgba(201,168,76,0.25);border-radius:4px">
-              <p style="font-size:0.82rem;line-height:1.6;color:rgba(245,240,232,0.85);margin:0 0 0.5rem">Most standard home policies exclude commercial activity. Please contact your insurer to add a business use extension before your first booking.</p>
-              <p style="font-size:0.78rem;color:var(--gold);margin:0 0 0.5rem">You may still apply — confirmation required before activation.</p>
-              <a href="https://www.abi.org.uk/products-and-issues/choosing-the-right-insurance/home-insurance/" target="_blank" rel="noopener noreferrer" style="font-size:0.78rem;color:var(--gold);text-decoration:underline">Learn more (ABI) →</a>
-            </div>
-            <div id="partner-home-info-bhh" style="display:none;padding:1rem 1.1rem;background:rgba(201,168,76,0.05);border:1px solid rgba(201,168,76,0.25);border-radius:4px">
-              <p style="font-size:0.82rem;line-height:1.6;color:rgba(245,240,232,0.85);margin:0 0 0.5rem">No problem — BHH can help you find suitable home insurance. A representative will contact you after your application.</p>
-              <p style="font-size:0.78rem;color:var(--gold);margin:0 0 0.5rem">You may still apply — confirmation required before activation.</p>
-              <a href="https://www.abi.org.uk/products-and-issues/choosing-the-right-insurance/home-insurance/" target="_blank" rel="noopener noreferrer" style="font-size:0.78rem;color:var(--gold);text-decoration:underline">Browse options →</a>
-            </div>
-            <div id="partner-home-info-notsure" style="display:none;padding:1rem 1.1rem;background:rgba(201,168,76,0.05);border:1px solid rgba(201,168,76,0.25);border-radius:4px">
-              <p style="font-size:0.82rem;line-height:1.6;color:rgba(245,240,232,0.85);margin:0 0 0.5rem">Please check with your insurer whether your current policy covers paying guests or commercial use.</p>
-              <p style="font-size:0.78rem;color:var(--gold);margin:0 0 0.5rem">You may still apply — confirmation required before activation.</p>
-            </div>
-          </div>
-
-          <!-- ── PARTNER PUBLIC LIABILITY ── -->
-          <p style="font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin:1.5rem 0 0.8rem;font-weight:500">4 · Public Liability (PL) Insurance</p>
+          <!-- ── PARTNER PUBLIC LIABILITY (shown for all partner types) ── -->
+          <p class="partner-step" data-step-label="Public Liability (PL) Insurance" style="font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin:1.5rem 0 0.8rem;font-weight:500">Public Liability (PL) Insurance</p>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;align-items:start;margin-bottom:1rem">
             <div class="form-group" style="margin-bottom:0">
               <label>Public Liability Insurance <span style="color:#C9A84C">*</span></label>
@@ -2679,8 +2648,9 @@ function closeMobileMenu(){
             <p id="partner-pl-status" style="font-size:0.72rem;margin:0.5rem 0 0;color:rgba(245,240,232,0.75)"></p>
           </div>
 
-          <!-- ── PARTNER PROFESSIONAL INDEMNITY ── -->
-          <p style="font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin:1.5rem 0 0.8rem;font-weight:500">5 · Professional Indemnity (PI) Insurance</p>
+          <!-- ── PARTNER PROFESSIONAL INDEMNITY (shown only for advisory partner types) ── -->
+          <div id="partner-pi-section" style="display:none">
+          <p class="partner-step" data-step-label="Professional Indemnity (PI) Insurance" style="font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin:1.5rem 0 0.8rem;font-weight:500">Professional Indemnity (PI) Insurance</p>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;align-items:start;margin-bottom:1rem">
             <div class="form-group" style="margin-bottom:0">
               <label>Professional Indemnity Insurance <span style="color:#C9A84C">*</span></label>
@@ -2714,7 +2684,9 @@ function closeMobileMenu(){
             <input type="hidden" name="PI Certificate" id="partner-pi-path">
             <p id="partner-pi-status" style="font-size:0.72rem;margin:0.5rem 0 0;color:rgba(245,240,232,0.75)"></p>
           </div>
+          </div><!-- /#partner-pi-section -->
 
+          <p class="partner-step" data-step-label="Identity &amp; Background Check" style="font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin:1.5rem 0 0.8rem;font-weight:500">Identity &amp; Background Check</p>
           <div class="form-group"><label>DBS Checked <span style="color:#C9A84C">*</span></label>
             <select name="DBS Checked" required onchange="onDbsChange(this,'partner')">
               <option value="">Select…</option>
@@ -4251,6 +4223,16 @@ function closeThankyouModal(modalId) {
     if (wrap) wrap.style.display = isOther ? 'block' : 'none';
     if (input) input.required = isOther;
     if (!isOther && input) input.value = '';
+
+    // Professional Indemnity applies only to advisory partner types; hide it (and,
+    // via the section-sync, disable its required control) for the others.
+    var PI_TYPES = ['Interpreter', 'Host Trainer / Etiquette Coach',
+                    'Cultural Immersion Programme (CIP) - School Partner', 'Other'];
+    var piSection = document.getElementById('partner-pi-section');
+    if (piSection) piSection.style.display = (PI_TYPES.indexOf(sel.value) !== -1) ? 'block' : 'none';
+
+    // Re-run disable/enable sync + renumber the visible step headings.
+    if (window.refreshPartnerForm) window.refreshPartnerForm();
   };
 
   window.onHostInsuranceChange = function(sel) {
@@ -4333,16 +4315,6 @@ function closeThankyouModal(modalId) {
   };
 
   // Home Insurance (business use) — declaration only, no certificate upload.
-  window.onPartnerHomeInsuranceChange = function(sel) {
-    var v = sel.value;
-    var willing = document.getElementById('partner-home-info-willing');
-    var bhh = document.getElementById('partner-home-info-bhh');
-    var notsure = document.getElementById('partner-home-info-notsure');
-    if (willing) willing.style.display = (v === 'No - Will Obtain') ? 'block' : 'none';
-    if (bhh) bhh.style.display = (v === 'BHH Help') ? 'block' : 'none';
-    if (notsure) notsure.style.display = (v === 'Not Sure') ? 'block' : 'none';
-  };
-
   // Shared helper: toggle a PL/PI insurance section's certificate block + guidance panels.
   function partnerInsuranceToggle(v, prefix) {
     var block = document.getElementById('partner-' + prefix + '-block');
@@ -4676,41 +4648,74 @@ function closeLegalModal(type) {
    visible (⇒ enable). Left untouched: hidden <input>s (never validated, must post),
    the Host Type pills, the honeypot, and buttons. */
 (function(){
-  var form = document.getElementById('host-form');
-  if(!form) return;
-  var KEEP = { 'Host Type': 1, 'bot-field': 1 };
-  // In a collapsed section iff an ANCESTOR (not the control itself) is display:none.
-  function inCollapsedSection(el){
-    for(var a = el.parentElement; a && a !== form.parentElement; a = a.parentElement){
-      if(getComputedStyle(a).display === 'none') return true;
+  // Names never disabled by the sync: hidden <input>s are handled by type; these
+  // named controls (branch/type selectors, honeypot) must always stay enabled.
+  var KEEP = { 'Host Type': 1, 'Partner Type': 1, 'bot-field': 1 };
+
+  // Wire the ancestor-based disable/enable sync onto one form + its tab panel.
+  // `after` runs after every sync pass (used by the Partner form to renumber steps).
+  function setupSectionSync(formId, panelId, after){
+    var form = document.getElementById(formId);
+    if(!form) return null;
+    // In a collapsed section iff an ANCESTOR (not the control itself) is display:none.
+    // Judging by ancestors keeps pill controls (checkbox/radio <input> hidden with
+    // display:none but operated via a visible <label>) ENABLED.
+    function inCollapsedSection(el){
+      for(var a = el.parentElement; a && a !== form.parentElement; a = a.parentElement){
+        if(getComputedStyle(a).display === 'none') return true;
+      }
+      return false;
     }
-    return false;
+    function sync(){
+      for(var i=0; i<form.elements.length; i++){
+        var el = form.elements[i], t = el.type;
+        if(t==='hidden' || t==='submit' || t==='button' || t==='reset') continue;
+        if(KEEP[el.name]) continue;
+        var shouldDisable = inCollapsedSection(el);   // hidden ⇒ disable, visible ⇒ enable
+        if(el.disabled !== shouldDisable){ el.disabled = shouldDisable; }
+      }
+    }
+    function run(){ sync(); if(after) after(); }
+    // Re-run on every field change and whenever a branch/step is shown or hidden.
+    form.addEventListener('change', run, false);
+    form.addEventListener('input',  run, false);
+    // Safety net: one synchronous pass at the very start of submit (capture phase,
+    // before the form's other submit handlers) so the posted state is always correct.
+    form.addEventListener('submit', run, true);
+    var scope = document.getElementById(panelId) || form;
+    try {
+      var mo = new MutationObserver(run);
+      mo.observe(scope, { attributes:true, attributeFilter:['style','class','hidden'], subtree:true });
+    } catch(e){}
+    if(document.readyState === 'loading'){
+      document.addEventListener('DOMContentLoaded', run);
+    } else {
+      run();
+    }
+    return run;
   }
-  function syncHostFieldStates(){
-    for(var i=0; i<form.elements.length; i++){
-      var el = form.elements[i], t = el.type;
-      if(t==='hidden' || t==='submit' || t==='button' || t==='reset') continue;
-      if(KEEP[el.name]) continue;
-      var shouldDisable = inCollapsedSection(el);   // hidden ⇒ disable, visible ⇒ enable
-      if(el.disabled !== shouldDisable){ el.disabled = shouldDisable; }
+
+  // Host form — silent-abort protection (Home vs Heritage Guide branches, etc.).
+  setupSectionSync('host-form', 'tab-host');
+
+  // Partner form — same protection, plus dynamic step numbering. The Professional
+  // Indemnity section is hidden for some Partner Types; number only visible steps
+  // so headings always read 1, 2, 3… with no gaps whichever type is selected.
+  function renumberPartnerSteps(){
+    var pform = document.getElementById('partner-form');
+    if(!pform) return;
+    var steps = pform.querySelectorAll('.partner-step');
+    var n = 0;
+    for(var i=0; i<steps.length; i++){
+      var el = steps[i];
+      if(el.offsetParent === null) continue;   // section collapsed → skip
+      n++;
+      el.textContent = n + ' · ' + (el.getAttribute('data-step-label') || '');
     }
   }
-  // Re-sync on every field change and whenever a branch/step is shown or hidden.
-  form.addEventListener('change', syncHostFieldStates, false);
-  form.addEventListener('input',  syncHostFieldStates, false);
-  // Safety net: one synchronous pass at the very start of submit (capture phase,
-  // before the form's other submit handlers) so the posted state is always correct.
-  form.addEventListener('submit', syncHostFieldStates, true);
-  var scope = document.getElementById('tab-host') || form;
-  try {
-    var mo = new MutationObserver(syncHostFieldStates);
-    mo.observe(scope, { attributes:true, attributeFilter:['style','class','hidden'], subtree:true });
-  } catch(e){}
-  if(document.readyState === 'loading'){
-    document.addEventListener('DOMContentLoaded', syncHostFieldStates);
-  } else {
-    syncHostFieldStates();
-  }
+  var partnerRun = setupSectionSync('partner-form', 'tab-partner', renumberPartnerSteps);
+  // Called by togglePartnerTypeOther after it shows/hides the PI section.
+  window.refreshPartnerForm = partnerRun || function(){ renumberPartnerSteps(); };
 })();
 </script>
 </body>
