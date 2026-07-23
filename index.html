@@ -1263,7 +1263,7 @@ function switchTab(tab) {
   <select name="Country Code"><option value="+44">+44</option></select><input name="Phone Number">
   <input name="city"><input name="County">
   <input name="Partner Type"><input name="Partner Type Detail">
-  <input name="Years of Experience"><input name="Number of Staff">
+  <input name="Years of Experience">
   <input name="Partner Public Liability"><input name="PL Insurer Name"><input name="PL Policy Number"><input name="PL Certificate">
   <input name="Partner Professional Indemnity"><input name="PI Insurer Name"><input name="PI Policy Number"><input name="PI Certificate">
   <input name="DBS Checked"><input name="DBS Certificate"><input name="DBS Not Applicable Reason">
@@ -2608,10 +2608,7 @@ function closeMobileMenu(){
               <p style="font-size:0.72rem;color:rgba(245,240,232,0.6);margin-top:0.3rem;font-style:italic">Be specific — this helps us assess whether your service fits the BHH network.</p>
             </div>
           </div>
-          <div class="form-row">
-            <div class="form-group"><label>Years of Experience <span style="color:#C9A84C">*</span></label><input type="number" name="Years of Experience" min="0" max="50" placeholder="5" pattern="[0-9]*" inputmode="numeric" onkeypress="return /[0-9]/.test(event.key)" required></div>
-            <div class="form-group"><label>Number of Staff <span style="color:#C9A84C">*</span></label><input type="number" name="Number of Staff" min="1" max="100" placeholder="3" pattern="[0-9]*" inputmode="numeric" onkeypress="return /[0-9]/.test(event.key)" required></div>
-          </div>
+          <div class="form-group"><label>Years of Experience <span style="color:#C9A84C">*</span></label><input type="number" name="Years of Experience" min="0" max="50" placeholder="5" pattern="[0-9]*" inputmode="numeric" onkeypress="return /[0-9]/.test(event.key)" required></div>
           <!-- ── PARTNER PUBLIC LIABILITY (shown for all partner types) ── -->
           <p class="partner-step" data-step-label="Public Liability (PL) Insurance" style="font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin:1.5rem 0 0.8rem;font-weight:500">Public Liability (PL) Insurance</p>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;align-items:start;margin-bottom:1rem">
