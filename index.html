@@ -74,6 +74,17 @@ h3 { font-size: clamp(1.4rem, 2.5vw, 2rem); }
 }
 .lead { font-size: 1.1rem; font-weight: 300; line-height: 1.8; color: var(--muted); max-width: 640px; }
 .enquire-panel .lead { color: rgba(245,240,232,0.85); }
+/* ── Get-in-touch tab icons ──
+   Each icon carries its own INACTIVE colour via a single-class selector.
+   The ACTIVE tab's icon is overridden to gold by a higher-specificity rule
+   (.enquire-tab--active .tab-icon = two classes) so active always wins,
+   regardless of source order. Label colours are unaffected (set inline). */
+.tab-icon { display: block; flex-shrink: 0; }
+.tab-icon--guest   { stroke: #7FA8C9; } /* soft blue */
+.tab-icon--host    { stroke: #C4826A; } /* terracotta */
+.tab-icon--partner { stroke: #9BB08A; } /* sage green */
+.tab-icon--scout   { stroke: #7FB3AE; } /* muted teal */
+.enquire-tab--active .tab-icon { stroke: var(--gold); } /* active → gold, matches label exactly, wins on specificity */
 
 /* ── LAYOUT ── */
 .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
@@ -1198,10 +1209,12 @@ footer {
         { "@type": "ListItem", "position": 1, "name": "Heritage Guide" },
         { "@type": "ListItem", "position": 2, "name": "English Tea" },
         { "@type": "ListItem", "position": 3, "name": "Dinner" },
-        { "@type": "ListItem", "position": 4, "name": "Transportation" },
-        { "@type": "ListItem", "position": 5, "name": "Canal Cruise" },
-        { "@type": "ListItem", "position": 6, "name": "Cultural Immersion Program" },
-        { "@type": "ListItem", "position": 7, "name": "Personal Interpreter Service" }
+        { "@type": "ListItem", "position": 4, "name": "Airport Transfer" },
+        { "@type": "ListItem", "position": 5, "name": "Chauffeured Hire" },
+        { "@type": "ListItem", "position": 6, "name": "Canal Day Cruise" },
+        { "@type": "ListItem", "position": 7, "name": "Narrowboat Holiday" },
+        { "@type": "ListItem", "position": 8, "name": "Cultural Immersion Program" },
+        { "@type": "ListItem", "position": 9, "name": "Personal Interpreter Service" }
       ]
     }
     </script>
@@ -1234,6 +1247,13 @@ function switchTab(tab) {
   if (enquireSection) {
     enquireSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
+}
+// Tier-2 (introduce-only) cards & hero pills route here: open the Guest tab, then
+// scroll to the "Transport and narrowboat" sub-form that now lives inside it.
+function goToGuestTransport() {
+  switchTab('guest');
+  var el = document.getElementById('guest-transport');
+  if (el) { setTimeout(function() { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 80); }
 }
 </script>
 <body>
@@ -1283,6 +1303,32 @@ function switchTab(tab) {
   <input name="DBS Checked"><input name="County Other"><input name="City Other"><input name="DBS Certificate">
   <input name="Guide Professional Indemnity"><input name="Guide PI Insurer Name"><input name="Guide PI Policy Number">
   <textarea name="about"></textarea><input name="referral">
+</form>
+<form method='post' name='transport-introduction' style='display:none'>
+  <input name="form-name" type="hidden" value="transport-introduction">
+  <input name="subject" type="hidden" value="BHH Introduction Request">
+  <input name="bot-field">
+  <input name="Partner Service">
+  <input name="Full Name"><input name="email">
+  <select name="Country Code"><option value="+44">+44</option></select><input name="Phone Number">
+  <input name="Date From"><input name="Date To">
+  <input name="Party Size">
+  <textarea name="Notes"></textarea>
+  <input name="GDPR Consent">
+</form>
+<form method='post' name='heritage-scout-application' style='display:none'>
+  <input name="form-name" type="hidden" value="heritage-scout-application">
+  <input name="subject" type="hidden" value="BHH Heritage Scout Application">
+  <input name="bot-field">
+  <input name="Full Name"><input name="email">
+  <select name="Country Code"><option value="+44">+44</option></select><input name="Phone Number">
+  <input name="Town"><input name="County">
+  <input name="Self-Employed Status">
+  <input name="Basic DBS Consent">
+  <input name="Public Liability Insurance">
+  <textarea name="Towns or Communities"></textarea>
+  <textarea name="Relevant Experience"></textarea>
+  <input name="How Did You Hear"><input name="GDPR Consent">
 </form>
 
 <nav>
@@ -1384,9 +1430,11 @@ function closeMobileMenu(){
       <span class="hero-svc-dot">·</span>
       <a href="#services" class="hero-svc-pill">Dinner</a>
       <span class="hero-svc-dot">·</span>
-      <a href="#services" class="hero-svc-pill">Transportation</a>
+      <a href="#enquire" onclick="goToGuestTransport();return false;" class="hero-svc-pill">Airport Transfer</a>
+      <a href="#enquire" onclick="goToGuestTransport();return false;" class="hero-svc-pill">Chauffeured Hire</a>
       <span class="hero-svc-dot">·</span>
-      <a href="#services" class="hero-svc-pill">Canal Cruise</a>
+      <a href="#services" class="hero-svc-pill">Canal Day Cruise</a>
+      <a href="#enquire" onclick="goToGuestTransport();return false;" class="hero-svc-pill">Narrowboat Holiday</a>
       <span class="hero-svc-dot">·</span>
       <a href="#services" class="hero-svc-pill">Cultural Immersion Program</a>
       <span class="hero-svc-dot">·</span>
@@ -1422,7 +1470,7 @@ function closeMobileMenu(){
 <section class="section section--white" id="services" style="min-height:100vh;display:flex;align-items:flex-start;padding-top:6rem;">
   <div class="container">
     <div class="services-intro fade-up">
-      <span class="eyebrow">Seven Signature Experiences</span>
+      <span class="eyebrow">Nine Signature Experiences</span>
       <h2>Everything England has to offer — privately</h2>
       <div class="gold-line gold-line--center"></div>
       <p class="lead" style="margin:0 auto;text-align:center">Each experience is arranged exclusively for your family. No other guests. No shared itineraries. No compromise.</p>
@@ -1436,7 +1484,7 @@ function closeMobileMenu(){
     </div>
         <div class="service-card-overlay"></div>
         <div class="service-card-content">
-          <div class="service-card-num">01 / 07</div>
+          <div class="service-card-num">01 / 09</div>
           <h3>Heritage Guide</h3>
           <p class="service-card-desc">A personal female British Heritage Guide takes your family through England's most storied landscapes and history.</p>
           <span class="service-card-arrow">Discover more →</span>
@@ -1451,7 +1499,7 @@ function closeMobileMenu(){
     </div>
         <div class="service-card-overlay"></div>
         <div class="service-card-content">
-          <div class="service-card-num">02 / 07</div>
+          <div class="service-card-num">02 / 09</div>
           <h3>English Tea</h3>
           <p class="service-card-desc">Fine china, three-tiered stands, homemade scones and cakes — the quintessential English tradition in a private home.</p>
           <span class="service-card-arrow">Discover more →</span>
@@ -1465,40 +1513,68 @@ function closeMobileMenu(){
     </div>
         <div class="service-card-overlay"></div>
         <div class="service-card-content">
-          <div class="service-card-num">03 / 07</div>
+          <div class="service-card-num">03 / 09</div>
           <h3>Dinner</h3>
           <p class="service-card-desc">A complete traditional Sunday roast in a real English dining room — your host family at the table, your family only.</p>
           <span class="service-card-arrow">Discover more →</span>
         </div>
       </a>
 
-      <a href="#enquire" data-service="Transportation" class="service-card">
+<!-- PROVISIONALLY TIER 2 (introduce-only) pending legal advice.
+     Airport Transfer may move to TIER 1 (BHH sells & invoices) if counsel confirms
+     it can be provided directly. If so: give it a #service-card-grid card + TIER_COPY
+     entry and switch this CTA back to #enquire with data-service. -->
+      <a href="#enquire" onclick="goToGuestTransport();return false;" class="service-card service-card--introduce">
     <div class="service-card-img service-card-carousel">
-      <img src="images/airport-private-transportation-airport-p.jpg" alt="Airport & Private Transportation — airport pickup" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
-      <img src="images/airport-private-transportation-luxury-lo.jpg" alt="Airport & Private Transportation — luxury London transfer" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
+      <img src="images/airport-private-transportation-airport-p.jpg" alt="Airport Transfer — airport pickup" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
     </div>
         <div class="service-card-overlay"></div>
         <div class="service-card-content">
-          <div class="service-card-num">04 / 07</div>
-          <h3>Transportation</h3>
-          <p class="service-card-desc">Private airport transfers and chauffeured hire throughout your stay — meet-and-greet, flight-tracked, professionally driven.</p>
+          <div class="service-card-num">04 / 09</div>
+          <h3>Airport Transfer</h3>
+          <p class="service-card-desc">Airport to hotel and return — single journeys, meet-and-greet, flight-tracked, professionally driven. Arranged through a trusted partner — booked and paid directly with them, not through BHH.</p>
+          <span class="service-card-arrow">Request an introduction →</span>
+        </div>
+      </a>
+
+      <a href="#enquire" onclick="goToGuestTransport();return false;" class="service-card service-card--introduce">
+    <div class="service-card-img service-card-carousel">
+      <img src="images/airport-private-transportation-luxury-lo.jpg" alt="Chauffeured Hire — luxury London transfer" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
+    </div>
+        <div class="service-card-overlay"></div>
+        <div class="service-card-content">
+          <div class="service-card-num">05 / 09</div>
+          <h3>Chauffeured Hire</h3>
+          <p class="service-card-desc">A car and driver for a day or longer — chauffeured throughout your stay, at your pace and itinerary. Arranged through a trusted partner — booked and paid directly with them, not through BHH.</p>
+          <span class="service-card-arrow">Request an introduction →</span>
+        </div>
+      </a>
+
+      <a href="#enquire" data-service="Canal Day Cruise" class="service-card">
+    <div class="service-card-img service-card-carousel">
+      <img src="images/private-canal-cruise-family-dining-on-bo.jpg" alt="Canal Day Cruise — family dining on board" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
+      <img src="images/private-canal-cruise-cosy-interior.jpg" alt="Canal Day Cruise — cosy interior" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
+    </div>
+        <div class="service-card-overlay"></div>
+        <div class="service-card-content">
+          <div class="service-card-num">06 / 09</div>
+          <h3>Canal Day Cruise</h3>
+          <p class="service-card-desc">A private daytime cruise along England's historic waterways — a relaxed day on the water, arranged and priced by BHH.</p>
           <span class="service-card-arrow">Discover more →</span>
         </div>
       </a>
 
-      <a href="#enquire" data-service="Canal Cruise" class="service-card">
+      <a href="#enquire" onclick="goToGuestTransport();return false;" class="service-card service-card--introduce">
     <div class="service-card-img service-card-carousel">
-      <img src="images/private-canal-cruise-narrowboat-on-engli.jpg" alt="Private Canal Cruise — narrowboat on English canal" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
-      <img src="images/private-canal-cruise-family-dining-on-bo.jpg" alt="Private Canal Cruise — family dining on board" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
-      <img src="images/private-canal-cruise-cabin.jpg" alt="Private Canal Cruise — cabin" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
-      <img src="images/private-canal-cruise-cosy-interior.jpg" alt="Private Canal Cruise — cosy interior" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
+      <img src="images/private-canal-cruise-narrowboat-on-engli.jpg" alt="Narrowboat Holiday — narrowboat on English canal" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
+      <img src="images/private-canal-cruise-cabin.jpg" alt="Narrowboat Holiday — cabin" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
     </div>
         <div class="service-card-overlay"></div>
         <div class="service-card-content">
-          <div class="service-card-num">05 / 07</div>
-          <h3>Canal Cruise</h3>
-          <p class="service-card-desc">England's historic waterways — from a London day cruise to a full narrowboat holiday across the countryside.</p>
-          <span class="service-card-arrow">Discover more →</span>
+          <div class="service-card-num">07 / 09</div>
+          <h3>Narrowboat Holiday</h3>
+          <p class="service-card-desc">A multi-day narrowboat holiday across the English countryside — a full canal-boat break. Arranged through a trusted partner — booked and paid directly with them, not through BHH.</p>
+          <span class="service-card-arrow">Request an introduction →</span>
         </div>
       </a>
 
@@ -1509,7 +1585,7 @@ function closeMobileMenu(){
           <img src="images/cip-3.jpg" alt="English lesson for children">
         </div>
         <div class="service-card-content">
-          <div class="service-card-num">06 / 07</div>
+          <div class="service-card-num">08 / 09</div>
           <h3>Cultural Immersion Program</h3>
           <p class="service-card-desc">Learn or improve English during your stay. Flexible courses with accredited London institutes — grouped by age, from a few sessions to a full programme — woven around tours, museums and cultural activities.</p>
           <span class="service-card-arrow">Discover more →</span>
@@ -1524,7 +1600,7 @@ function closeMobileMenu(){
         </div>
         <div class="service-card-overlay"></div>
         <div class="service-card-content">
-          <div class="service-card-num">07 / 07</div>
+          <div class="service-card-num">09 / 09</div>
           <h3>Personal Interpreter Service</h3>
           <p class="service-card-desc">A trusted interpreter by your side throughout your visit — for appointments, healthcare, schools, shopping and official matters. Available in Arabic, Russian and many other languages.</p>
           <span class="service-card-arrow">Discover more →</span>
@@ -1646,14 +1722,18 @@ function closeMobileMenu(){
       <div class="gold-line gold-line--center"></div>
 
       <!-- TABS -->
-      <div style="display:flex;justify-content:center;gap:0;margin:2rem auto 2.5rem;max-width:660px;border-bottom:1px solid rgba(201,168,76,0.3)">
-        <button type="button" class="enquire-tab" data-tab="guest" onclick="switchTab('guest'); return false;" style="flex:1;padding:0.9rem 1rem;background:transparent;border:none;border-bottom:2px solid transparent;color:rgba(245,240,232,0.5);font-family:var(--ff-body);font-size:0.72rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:all 0.3s">Become a Guest</button>
-        <button type="button" class="enquire-tab" data-tab="host" onclick="switchTab('host'); return false;" style="flex:1;padding:0.9rem 1rem;background:transparent;border:none;border-bottom:2px solid transparent;color:rgba(245,240,232,0.5);font-family:var(--ff-body);font-size:0.72rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:all 0.3s">Become a Host</button>
-        <button type="button" class="enquire-tab enquire-tab--active" data-tab="partner" onclick="switchTab('partner'); return false;" style="flex:1;padding:0.9rem 1rem;background:transparent;border:none;border-bottom:2px solid var(--gold);color:var(--gold);font-family:var(--ff-body);font-size:0.72rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:all 0.3s">Become a Partner</button>
+      <!-- 4 tabs: flex:1 fills the row on wide screens; on a narrow phone the tabs keep
+           their full text width (white-space:nowrap) and the strip scrolls horizontally
+           instead of shrinking the text. -->
+      <div style="display:flex;flex-wrap:nowrap;justify-content:flex-start;gap:0;margin:2rem auto 2.5rem;max-width:720px;overflow-x:auto;-webkit-overflow-scrolling:touch;border-bottom:1px solid rgba(201,168,76,0.3)">
+        <button type="button" class="enquire-tab enquire-tab--active" data-tab="guest" onclick="switchTab('guest'); return false;" style="flex:1 0 auto;white-space:nowrap;display:flex;flex-direction:column;align-items:center;gap:8px;padding:0.9rem 1rem;background:transparent;border:none;border-bottom:2px solid var(--gold);color:var(--gold);font-family:var(--ff-body);font-size:0.72rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:all 0.3s"><svg class="tab-icon tab-icon--guest" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7.5" width="18" height="12.5" rx="2"/><path d="M8.5 7.5V5.5a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v2"/><path d="M3 12h18"/></svg>Become a Guest</button>
+        <button type="button" class="enquire-tab" data-tab="host" onclick="switchTab('host'); return false;" style="flex:1 0 auto;white-space:nowrap;display:flex;flex-direction:column;align-items:center;gap:8px;padding:0.9rem 1rem;background:transparent;border:none;border-bottom:2px solid transparent;color:rgba(245,240,232,0.5);font-family:var(--ff-body);font-size:0.72rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:all 0.3s"><svg class="tab-icon tab-icon--host" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.7L12 3.5l9 7.2"/><path d="M5.2 9.6V19a1.5 1.5 0 0 0 1.5 1.5h10.6a1.5 1.5 0 0 0 1.5-1.5V9.6"/><path d="M9.8 20.5v-5.3h4.4v5.3"/></svg>Become a Host</button>
+        <button type="button" class="enquire-tab" data-tab="partner" onclick="switchTab('partner'); return false;" style="flex:1 0 auto;white-space:nowrap;display:flex;flex-direction:column;align-items:center;gap:8px;padding:0.9rem 1rem;background:transparent;border:none;border-bottom:2px solid transparent;color:rgba(245,240,232,0.5);font-family:var(--ff-body);font-size:0.72rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:all 0.3s"><svg class="tab-icon tab-icon--partner" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M2.5 20v-1.2a4.3 4.3 0 0 1 4.3-4.3h4.4a4.3 4.3 0 0 1 4.3 4.3V20"/><path d="M16.5 5.2a3.2 3.2 0 0 1 0 5.6"/><path d="M18.2 14.7a4.3 4.3 0 0 1 3.3 4.1V20"/></svg>Become a Partner</button>
+        <button type="button" class="enquire-tab" data-tab="scout" onclick="switchTab('scout'); return false;" style="flex:1 0 auto;white-space:nowrap;display:flex;flex-direction:column;align-items:center;gap:8px;padding:0.9rem 1rem;background:transparent;border:none;border-bottom:2px solid transparent;color:rgba(245,240,232,0.5);font-family:var(--ff-body);font-size:0.72rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:all 0.3s"><svg class="tab-icon tab-icon--scout" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M15.6 8.4l-2.1 5.1-5.1 2.1 2.1-5.1z"/></svg>Become a Heritage Scout</button>
       </div>
 
       <!-- ═══════ GUEST FORM ═══════ -->
-      <div id="tab-guest" class="enquire-panel" style="max-width:560px;margin:0 auto;transition:opacity 0.3s ease-in-out;opacity:1;display:none">
+      <div id="tab-guest" class="enquire-panel" style="max-width:560px;margin:0 auto;transition:opacity 0.3s ease-in-out;opacity:1">
         <p class="lead" style="margin:0 auto 2rem;text-align:center">Tell us about your family and your visit. We will arrange the rest.</p>
         <form action='/?success=guest' id='guest-form' method='POST' name='guest-enquiry-v2' style='text-align:left'>
           <input type="hidden" name="form-name" value="guest-enquiry-v2">
@@ -1779,7 +1859,7 @@ function closeMobileMenu(){
                Experience Tier = "Service1: Tier; Service2: Tier" pairs. -->
           <div class="form-group">
             <label>Experiences of Interest <span style="color:#C9A84C">*</span></label>
-            <p style="font-size:0.72rem;color:rgba(245,240,232,0.75);margin:-0.2rem 0 0.8rem;font-style:italic">Select one or more — combine services for a richer visit.</p>
+            <p style="font-size:0.72rem;color:rgba(245,240,232,0.75);margin:-0.2rem 0 0.8rem;font-style:italic">Select one or more of the experiences above — we arrange and price them together as a single visit.</p>
             <div id="service-card-grid">
               <div class="service-card-v8" data-service="Dinner" onclick="toggleService(this)">
                 <span class="svc-label">Dinner</span>
@@ -1793,12 +1873,8 @@ function closeMobileMenu(){
                 <span class="svc-label">Heritage Guide</span>
                 <span class="service-card-check"></span>
               </div>
-              <div class="service-card-v8" data-service="Canal Cruise" onclick="toggleService(this)">
-                <span class="svc-label">Canal Cruise</span>
-                <span class="service-card-check"></span>
-              </div>
-              <div class="service-card-v8" data-service="Transportation" onclick="toggleService(this)">
-                <span class="svc-label">Transportation</span>
+              <div class="service-card-v8" data-service="Canal Day Cruise" onclick="toggleService(this)">
+                <span class="svc-label">Canal Day Cruise</span>
                 <span class="service-card-check"></span>
               </div>
               <div class="service-card-v8" data-service="Cultural Immersion Program" onclick="toggleService(this)">
@@ -1928,6 +2004,111 @@ function closeMobileMenu(){
           </div>
           <div style="text-align:center;margin-top:1.5rem"><button type="submit" class="btn btn-gold" style="font-size:0.78rem;padding:1.1rem 3rem;cursor:pointer">Send Enquiry</button></div>
         </form>
+
+          <!-- ── TIER 2: introduce-only partner services, moved inside the Guest panel ── -->
+          <div id="guest-transport" style="margin:3rem 0 0;padding-top:2.5rem;border-top:1px solid rgba(201,168,76,0.35)">
+            <h3 style="font-family:'Cormorant Garamond',serif;font-weight:300;font-size:1.6rem;color:var(--cream);margin-bottom:0.6rem">Transport and narrowboat — arranged with our partners</h3>
+            <p style="font-size:0.85rem;line-height:1.7;color:rgba(245,240,232,0.75);margin-bottom:1.8rem">Airport transfers, chauffeured hire and multi-day narrowboat holidays are delivered by trusted independent partners. BHH introduces you; you book and pay the partner directly — there is no price or tier here. Request an introduction below.</p>
+            <form action='/?success=introduction' id='introduce-form' method='POST' name='transport-introduction' style='text-align:left'>
+                      <input type="hidden" name="form-name" value="transport-introduction">
+                      <input type="hidden" name="subject" value="BHH Introduction Request">
+                      <p style="display:none"><label>Don't fill this out if you're human: <input name="bot-field"></label></p>
+                      <p style="font-size:0.75rem;color:var(--muted);margin-bottom:1.2rem;margin-top:0.5rem">Fields marked <span style='color:#C9A84C'>*</span> are required. &nbsp;|&nbsp; Enter phone number without leading zero (e.g. 7911 123456 not 07911 123456).</p>
+            
+                      <div class="form-group"><label>Which partner service <span style="color:#C9A84C">*</span></label>
+                        <select name="Partner Service" required>
+                          <option value="">Select…</option>
+                          <option value="Airport Transfer">Airport Transfer (airport to hotel and return)</option>
+                          <option value="Chauffeured Hire">Chauffeured Hire (car and driver for a day or longer)</option>
+                          <option value="Narrowboat Holiday">Narrowboat Holiday (multi-day canal boat break)</option>
+                        </select>
+                      </div>
+            
+                      <div class="form-group"><label>Full Name <span style="color:#C9A84C">*</span></label><input type="text" name="Full Name" placeholder="Sarah Bisci" required></div>
+                      <div class="form-group"><label>Email <span style="color:#C9A84C">*</span></label><input type="email" name="email" placeholder="sarah@example.com" required></div>
+            
+                      <div class="form-group"><label>Phone <span style="color:#C9A84C">*</span></label>
+                        <div style="display:flex;gap:0.5rem">
+                          <select name="Country Code" required style="width:130px;flex-shrink:0;text-align:center">
+                            <option value="">Code…</option>
+                            <option value="+44">🇬🇧 +44</option>
+                            <option value="+966">🇸🇦 +966</option>
+                            <option value="+971">🇦🇪 +971</option>
+                            <option value="+974">🇶🇦 +974</option>
+                            <option value="+965">🇰🇼 +965</option>
+                            <option value="+968">🇴🇲 +968</option>
+                            <option value="+973">🇧🇭 +973</option>
+                            <option value="+1">🇺🇸 +1</option>
+                            <option value="+33">🇫🇷 +33</option>
+                            <option value="+49">🇩🇪 +49</option>
+                            <option value="+39">🇮🇹 +39</option>
+                            <option value="+34">🇪🇸 +34</option>
+                            <option value="+31">🇳🇱 +31</option>
+                            <option value="+32">🇧🇪 +32</option>
+                            <option value="+41">🇨🇭 +41</option>
+                            <option value="+43">🇦🇹 +43</option>
+                            <option value="+46">🇸🇪 +46</option>
+                            <option value="+47">🇳🇴 +47</option>
+                            <option value="+45">🇩🇰 +45</option>
+                            <option value="+358">🇫🇮 +358</option>
+                            <option value="+48">🇵🇱 +48</option>
+                            <option value="+7">🇷🇺 +7</option>
+                            <option value="+90">🇹🇷 +90</option>
+                            <option value="+91">🇮🇳 +91</option>
+                            <option value="+86">🇨🇳 +86</option>
+                            <option value="+81">🇯🇵 +81</option>
+                            <option value="+82">🇰🇷 +82</option>
+                            <option value="+65">🇸🇬 +65</option>
+                            <option value="+60">🇲🇾 +60</option>
+                            <option value="+62">🇮🇩 +62</option>
+                            <option value="+63">🇵🇭 +63</option>
+                            <option value="+66">🇹🇭 +66</option>
+                            <option value="+92">🇵🇰 +92</option>
+                            <option value="+880">🇧🇩 +880</option>
+                            <option value="+20">🇪🇬 +20</option>
+                            <option value="+212">🇲🇦 +212</option>
+                            <option value="+213">🇩🇿 +213</option>
+                            <option value="+27">🇿🇦 +27</option>
+                            <option value="+234">🇳🇬 +234</option>
+                            <option value="+254">🇰🇪 +254</option>
+                            <option value="+55">🇧🇷 +55</option>
+                            <option value="+52">🇲🇽 +52</option>
+                            <option value="+54">🇦🇷 +54</option>
+                            <option value="+61">🇦🇺 +61</option>
+                            <option value="+64">🇳🇿 +64</option>
+                            <option value="+353">🇮🇪 +353</option>
+                            <option value="+351">🇵🇹 +351</option>
+                            <option value="+30">🇬🇷 +30</option>
+                            <option value="+36">🇭🇺 +36</option>
+                            <option value="+420">🇨🇿 +420</option>
+                          </select>
+                          <input type="tel" name="Phone Number" placeholder="7911 123456" style="flex:1" required pattern="[1-9][0-9]{6,13}" title="Enter your number without leading zero (e.g. 7911 123456)">
+                        </div>
+                      </div>
+            
+                      <div class="form-group"><label>Preferred Dates <span style="color:#C9A84C">*</span></label>
+                        <div style="display:flex;gap:0.5rem;align-items:center">
+                          <input type="date" name="Date From" style="flex:1" required>
+                          <span style="color:var(--muted);font-size:0.8rem">to</span>
+                          <input type="date" name="Date To" style="flex:1" required>
+                        </div>
+                      </div>
+            
+                      <div class="form-group"><label>Party Size <span style="color:#C9A84C">*</span></label><input type="number" name="Party Size" min="1" max="60" placeholder="4" inputmode="numeric" required></div>
+            
+                      <div class="form-group"><label>Notes</label><textarea name="Notes" rows="4" placeholder="Tell us anything useful for the introduction — pickup/drop-off, route, number of nights, accessibility needs, etc."></textarea></div>
+            
+                      <!-- ═══ GDPR CONSENT ═══ -->
+                      <div style="margin-top:1.5rem;padding:1rem 1.1rem;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.3);border-radius:4px">
+                        <label style="display:flex;align-items:flex-start;gap:0.7rem;cursor:pointer;font-size:0.82rem;line-height:1.6;color:var(--muted)">
+                          <input type="checkbox" name="GDPR Consent" value="Yes" required style="margin-top:0.25rem;flex-shrink:0;accent-color:#C9A84C;cursor:pointer">
+                          <span>I consent to British Heritage Hosts Ltd processing the personal data I have provided in order to introduce me to a relevant partner service, in accordance with the <a href="#" onclick="openLegalModal('privacy');return false;" style="color:var(--gold);text-decoration:underline">Privacy Policy</a>. I understand that any booking or payment is made directly with the partner, not with BHH, and that I can withdraw consent at any time by contacting <a href="mailto:info@britishheritagehosts.com" style="color:var(--gold);text-decoration:underline">info@britishheritagehosts.com</a>.</span>
+                        </label>
+                      </div>
+            
+                      <div style="text-align:center;margin-top:1.5rem"><button type="submit" class="btn btn-outline-gold" style="font-size:0.78rem;padding:1.1rem 3rem;cursor:pointer">Request an introduction</button></div>
+                    </form>
+          </div>
       </div>
 
       <!-- ═══════ HOST FORM ═══════ -->
@@ -2508,7 +2689,7 @@ function closeMobileMenu(){
       </div>
 
       <!-- ═══════ PARTNER FORM ═══════ -->
-      <div id="tab-partner" class="enquire-panel" style="max-width:760px;margin:0 auto;opacity:1">
+      <div id="tab-partner" class="enquire-panel" style="max-width:760px;margin:0 auto;opacity:1;display:none">
         <p class="lead" style="margin:0 auto 2rem;text-align:center">Join our network of trusted service providers. We vet every partner professionally.</p>
         <form action='/?success=partner' id='partner-form' method='POST' name='partner-application' style='text-align:left'>
           <input type="hidden" name="form-name" value="partner-application">
@@ -2745,6 +2926,146 @@ function closeMobileMenu(){
         </form>
       </div>
 
+      <!-- ═══════ HERITAGE SCOUT FORM (4th tab) ═══════ -->
+      <!-- Moved from the former standalone #heritage-scout section into a tab panel.
+           A Heritage Scout is a self-employed, commission-only introducer — NOT a partner,
+           provider, or employee. Keeps its own Netlify form name + thank-you modal. -->
+      <div id="tab-scout" class="enquire-panel" style="max-width:560px;margin:0 auto;opacity:1;display:none">
+        <p class="lead" style="margin:0 auto 2rem;text-align:center">Heritage Scouts find the Britain we show our guests.</p>
+        <div style="max-width:480px;margin:0 auto 2.5rem;text-align:left">
+          <p class="lead" style="font-size:1rem;margin-bottom:1.2rem">You know your area — the family whose Sunday table is worth travelling for, the guide who makes a cathedral come alive, the interpreter everyone recommends. You introduce them to us. We handle the vetting, the bookings and the guests.</p>
+          <p class="lead" style="font-size:1rem;margin-bottom:1.2rem">You keep your own diary and work alongside whatever else you do. There is no salary and no targets. You earn a share of the revenue each time someone you introduced delivers a booking and is paid for it — so one exceptional host can earn for you long after you found them.</p>
+          <p class="lead" style="font-size:1rem;margin-bottom:0">Heritage Scouts work with British Heritage Hosts on a self-employed, commission basis. Before you start you will need to be registered as self-employed, hold public liability insurance, and consent to a basic criminal record check. We will walk you through all three.</p>
+        </div>
+        <form action='/?success=scout' id='scout-form' method='POST' name='heritage-scout-application' style='text-align:left'>
+                  <input type="hidden" name="form-name" value="heritage-scout-application">
+                  <input type="hidden" name="subject" value="BHH Heritage Scout Application">
+                  <p style="display:none"><label>Don't fill this out if you're human: <input name="bot-field"></label></p>
+                  <p style="font-size:0.75rem;color:var(--muted);margin-bottom:1.2rem;margin-top:0.5rem">Fields marked <span style='color:#C9A84C'>*</span> are required. &nbsp;|&nbsp; Enter phone number without leading zero (e.g. 7911 123456 not 07911 123456).</p>
+        
+                  <div class="form-group"><label>Full Name <span style="color:#C9A84C">*</span></label><input type="text" name="Full Name" placeholder="James Williams" required></div>
+                  <div class="form-group"><label>Email <span style="color:#C9A84C">*</span></label><input type="email" name="email" placeholder="james@example.com" required></div>
+        
+                  <div class="form-group"><label>Phone <span style="color:#C9A84C">*</span></label>
+                    <div style="display:flex;gap:0.5rem">
+                      <select name="Country Code" required style="width:130px;flex-shrink:0;text-align:center">
+                        <option value="">Code…</option>
+                        <option value="+44">🇬🇧 +44</option>
+                        <option value="+966">🇸🇦 +966</option>
+                        <option value="+971">🇦🇪 +971</option>
+                        <option value="+974">🇶🇦 +974</option>
+                        <option value="+965">🇰🇼 +965</option>
+                        <option value="+968">🇴🇲 +968</option>
+                        <option value="+973">🇧🇭 +973</option>
+                        <option value="+1">🇺🇸 +1</option>
+                        <option value="+33">🇫🇷 +33</option>
+                        <option value="+49">🇩🇪 +49</option>
+                        <option value="+39">🇮🇹 +39</option>
+                        <option value="+34">🇪🇸 +34</option>
+                        <option value="+31">🇳🇱 +31</option>
+                        <option value="+32">🇧🇪 +32</option>
+                        <option value="+41">🇨🇭 +41</option>
+                        <option value="+43">🇦🇹 +43</option>
+                        <option value="+46">🇸🇪 +46</option>
+                        <option value="+47">🇳🇴 +47</option>
+                        <option value="+45">🇩🇰 +45</option>
+                        <option value="+358">🇫🇮 +358</option>
+                        <option value="+48">🇵🇱 +48</option>
+                        <option value="+7">🇷🇺 +7</option>
+                        <option value="+90">🇹🇷 +90</option>
+                        <option value="+91">🇮🇳 +91</option>
+                        <option value="+86">🇨🇳 +86</option>
+                        <option value="+81">🇯🇵 +81</option>
+                        <option value="+82">🇰🇷 +82</option>
+                        <option value="+65">🇸🇬 +65</option>
+                        <option value="+60">🇲🇾 +60</option>
+                        <option value="+62">🇮🇩 +62</option>
+                        <option value="+63">🇵🇭 +63</option>
+                        <option value="+66">🇹🇭 +66</option>
+                        <option value="+92">🇵🇰 +92</option>
+                        <option value="+880">🇧🇩 +880</option>
+                        <option value="+20">🇪🇬 +20</option>
+                        <option value="+212">🇲🇦 +212</option>
+                        <option value="+213">🇩🇿 +213</option>
+                        <option value="+27">🇿🇦 +27</option>
+                        <option value="+234">🇳🇬 +234</option>
+                        <option value="+254">🇰🇪 +254</option>
+                        <option value="+55">🇧🇷 +55</option>
+                        <option value="+52">🇲🇽 +52</option>
+                        <option value="+54">🇦🇷 +54</option>
+                        <option value="+61">🇦🇺 +61</option>
+                        <option value="+64">🇳🇿 +64</option>
+                        <option value="+353">🇮🇪 +353</option>
+                        <option value="+351">🇵🇹 +351</option>
+                        <option value="+30">🇬🇷 +30</option>
+                        <option value="+36">🇭🇺 +36</option>
+                        <option value="+420">🇨🇿 +420</option>
+                      </select>
+                      <input type="tel" name="Phone Number" placeholder="7911 123456" style="flex:1" required pattern="[1-9][0-9]{6,13}" title="Enter your number without leading zero (e.g. 7911 123456)">
+                    </div>
+                  </div>
+        
+                  <div class="form-row">
+                    <div class="form-group"><label>Town <span style="color:#C9A84C">*</span></label><input type="text" name="Town" placeholder="e.g. Stratford-upon-Avon" required></div>
+                    <div class="form-group"><label>County <span style="color:#C9A84C">*</span></label><input type="text" name="County" placeholder="e.g. Warwickshire" required></div>
+                  </div>
+        
+                  <div class="form-group"><label>Are you self-employed, or willing to register as self-employed? <span style="color:#C9A84C">*</span></label>
+                    <select name="Self-Employed Status" required>
+                      <option value="">Select…</option>
+                      <option value="Yes, already self-employed">Yes, already self-employed</option>
+                      <option value="No, but willing to register">No, but willing to register</option>
+                    </select>
+                  </div>
+        
+                  <div class="form-group"><label>Do you consent to a Basic DBS check? <span style="color:#C9A84C">*</span></label>
+                    <select name="Basic DBS Consent" required>
+                      <option value="">Select…</option>
+                      <option value="Yes">Yes</option>
+                      <option value="No">No</option>
+                    </select>
+                  </div>
+        
+                  <div class="form-group"><label>Do you hold public liability insurance? <span style="color:#C9A84C">*</span></label>
+                    <select name="Public Liability Insurance" required>
+                      <option value="">Select…</option>
+                      <option value="Yes, currently in place">Yes, currently in place</option>
+                      <option value="No, I will arrange it">No, I will arrange it</option>
+                    </select>
+                  </div>
+        
+                  <div class="form-group"><label>Which towns or communities can you reach, and do you already know host families, guides or interpreters there? <span style="color:#C9A84C">*</span></label><textarea name="Towns or Communities" rows="3" placeholder="List the towns, regions, or communities where you have local reach and contacts." required></textarea></div>
+        
+                  <div class="form-group"><label>Relevant experience <span style="color:#C9A84C">*</span></label><textarea name="Relevant Experience" rows="4" placeholder="Tell us about any relevant background — hospitality, tourism, sales, community networks, languages, etc." required></textarea></div>
+        
+                  <div class="form-group"><label>How Did You Hear About BHH? <span style="color:#C9A84C">*</span></label>
+                    <select name="How Did You Hear" required>
+                      <option value="">Select…</option>
+                      <option value="Instagram">Instagram</option>
+                      <option value="Facebook">Facebook</option>
+                      <option value="LinkedIn">LinkedIn</option>
+                      <option value="TikTok">TikTok</option>
+                      <option value="Google Search">Google Search</option>
+                      <option value="Google Maps">Google Maps</option>
+                      <option value="Industry Event">Industry Event</option>
+                      <option value="Friend or Colleague Referral">Friend or Colleague Referral</option>
+                      <option value="Press / Media">Press / Media</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+        
+                  <!-- ═══ GDPR CONSENT ═══ -->
+                  <div style="margin-top:1.5rem;padding:1rem 1.1rem;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.3);border-radius:4px">
+                    <label style="display:flex;align-items:flex-start;gap:0.7rem;cursor:pointer;font-size:0.82rem;line-height:1.6;color:var(--muted)">
+                      <input type="checkbox" name="GDPR Consent" value="Yes" required style="margin-top:0.25rem;flex-shrink:0;accent-color:#C9A84C;cursor:pointer">
+                      <span>I consent to British Heritage Hosts Ltd processing the personal data I have provided for the purpose of assessing my application to become a Heritage Scout, in accordance with the <a href="#" onclick="openLegalModal('privacy');return false;" style="color:var(--gold);text-decoration:underline">Privacy Policy</a>. I understand I can withdraw consent at any time by contacting <a href="mailto:info@britishheritagehosts.com" style="color:var(--gold);text-decoration:underline">info@britishheritagehosts.com</a>.</span>
+                    </label>
+                  </div>
+        
+                  <div style="text-align:center;margin-top:1.5rem"><button type="submit" class="btn btn-outline-gold" style="font-size:0.78rem;padding:1.1rem 3rem;cursor:pointer">Submit Heritage Scout Application</button></div>
+                </form>
+      </div>
+
     </div>
   </div>
 </section>
@@ -2839,7 +3160,7 @@ function closeMobileMenu(){
     <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">These terms (&ldquo;Terms&rdquo;) govern your use of the services provided by British Heritage Hosts Ltd (&ldquo;BHH&rdquo;), Company No. 17103555, Monomark House, 27 Old Gloucester Street, London WC1N 3AX. By submitting an enquiry, making a booking, or applying to become a host or partner, you agree to be bound by these Terms.</p>
 
     <h3>1. Our Services</h3>
-    <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">BHH provides premium, enquiry-based hospitality experiences connecting international families with approved hosts across England. Services include Private Family Dinners, English Afternoon Teas, British Heritage Guide tours, Private Canal Cruises, and Airport &amp; Private Transportation. All services are bespoke, subject to availability, with prices provided individually upon enquiry.</p>
+    <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">BHH provides premium, enquiry-based hospitality experiences connecting international families with approved hosts across England. <strong>Services BHH provides, arranges, and invoices</strong> include Private Family Dinners, English Afternoon Teas, British Heritage Guide tours, and Private Canal Day Cruises. All such services are bespoke, subject to availability, with prices provided individually upon enquiry. <em>[DRAFT FOR LEGAL REVIEW]</em> <strong>Introduce-only services.</strong> Certain services are not provided, sold, or invoiced by BHH — currently Airport Transfer, Chauffeured Hire, and Narrowboat Holidays. For these, BHH acts solely as an introducer to an independent partner, with whom booking and payment are made directly (see clause 12).</p>
 
     <h3>2. Bookings and Payment</h3>
     <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">All bookings are confirmed only upon receipt of full payment, processed securely through Airwallex. A booking reference will be issued upon confirmation. BHH reserves the right to decline any booking at its discretion.</p>
@@ -2871,7 +3192,10 @@ function closeMobileMenu(){
     <h3>11. Changes to These Terms</h3>
     <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">We may update these Terms from time to time. Continued use of our services constitutes acceptance of the revised Terms.</p>
 
-    <h3>12. Contact Us</h3>
+    <h3>12. Services We Provide vs. Partners We Introduce &nbsp;<span style="display:inline-block;font-family:var(--ff-body);font-size:0.6rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#8a5a00;background:rgba(201,168,76,0.22);border:1px solid rgba(201,168,76,0.5);border-radius:3px;padding:0.15rem 0.5rem;vertical-align:middle">Draft for legal review</span></h3>
+    <p style="color:var(--muted);line-height:1.9;font-size:0.95rem"><em>[DRAFT FOR LEGAL REVIEW — placeholder wording, not final legal text.]</em> BHH offers two distinct categories of service. <strong>(a) Services we provide.</strong> Private Family Dinners, English Afternoon Teas, British Heritage Guide tours, Canal Day Cruises, the Cultural Immersion Program, and the Personal Interpreter Service are arranged, sold, and invoiced by BHH, and these Terms govern them in full. <strong>(b) Partners we introduce.</strong> For certain services — currently Airport Transfer, Chauffeured Hire, and multi-day Narrowboat Holidays — BHH acts solely as an introducer. We connect you with an independent third-party partner, and any contract, booking, and payment for those services are made directly between you and that partner. BHH does not sell, supply, invoice, or take payment for introduced services, is not a party to any resulting agreement, and accepts no liability for their provision. The partner's own terms, pricing, insurance, and cancellation policy apply.</p>
+
+    <h3>13. Contact Us</h3>
     <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">British Heritage Hosts Ltd, Monomark House, 27 Old Gloucester Street, London WC1N 3AX. Email: <a href="/cdn-cgi/l/email-protection#a1c8cfc7cee1c3d3c8d5c8d2c9c9c4d3c8d5c0c6c4c9ced2d5d28fc2cecc" style="color:var(--gold)"><span class="__cf_email__" data-cfemail="0960676f66496b7b607d607a61616c7b607d686e6c61667a7d7a276a6664">[email&#160;protected]</span></a></p>
   </div>
 </section>
@@ -2894,8 +3218,10 @@ function closeMobileMenu(){
           <li><a href="#enquire">Private Family Dinner</a></li>
           <li><a href="#enquire">English Tea</a></li>
           <li><a href="#enquire">Heritage Guide</a></li>
-          <li><a href="#enquire">Canal Cruise</a></li>
-          <li><a href="#enquire">Private Transportation</a></li>
+          <li><a href="#enquire">Canal Day Cruise</a></li>
+          <li><a href="#enquire" onclick="goToGuestTransport();return false;">Airport Transfer</a></li>
+          <li><a href="#enquire" onclick="goToGuestTransport();return false;">Chauffeured Hire</a></li>
+          <li><a href="#enquire" onclick="goToGuestTransport();return false;">Narrowboat Holiday</a></li>
         </ul>
       </div>
       <div class="footer-col">
@@ -2903,6 +3229,7 @@ function closeMobileMenu(){
         <ul>
           <li><a href="#about">About BHH</a></li>
           <li><a href="#enquire" onclick="switchTab('host')">Become a Host</a></li>
+          <li><a href="#enquire" onclick="switchTab('scout');return false;">Become a Heritage Scout</a></li>
           <li><a href="#enquire">Enquire</a></li>
           <li><a href="#contact">Contact</a></li>
         </ul>
@@ -3202,15 +3529,14 @@ var TIER_COPY = {
     standard: 'Female guide, driver-guide tier.',
     premium:  'Everything in Standard + VIP National Trust access and guide photos.'
   },
-  'Canal Cruise': {
-    standard: 'Premium bedding, private cruise.',
-    premium:  'Everything in Standard + widebeam and halal catering included.'
-  },
-  'Transportation': {
-    standard: 'Driver and porter.',
-    premium:  'Everything in Standard + premium vehicle (up to 7 passengers), terminal greeter, amenity pack.'
+  'Canal Day Cruise': {
+    standard: 'Private day cruise on a traditional narrowboat.',
+    premium:  'Everything in Standard + widebeam boat, onboard afternoon tea, and halal catering.'
   }
 };
+// TIER 2 note: Airport Transfer, Chauffeured Hire, and Narrowboat Holiday are introduce-only services.
+// They are deliberately NOT keyed here and NOT present in #service-card-grid,
+// so they can never be selected, priced, or reach updatePricingSummary().
 
 // Returns the current selected services as an array
 function getSelectedServices() {
@@ -4409,6 +4735,26 @@ function closeThankyouModal(modalId) {
   </div>
 </div>
 
+<div id="thank-you-introduction" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);align-items:center;justify-content:center;z-index:9999">
+  <div style="background:#0D1B2A;color:#F5F0E8;max-width:560px;padding:3rem 2rem;text-align:center;border-radius:8px">
+    <span style="font-size:1rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:#C9A84C;display:block;margin-bottom:1.2rem">Thank You</span>
+    <h1 style="font-family:'Cormorant Garamond',serif;font-weight:300;font-size:2.4rem;line-height:1.2;margin-bottom:1.5rem;color:#F5F0E8">We have received your request</h1>
+    <div style="width:60px;height:1px;background:#C9A84C;margin:0 auto 1.5rem"></div>
+    <p style="font-size:1rem;font-weight:300;line-height:1.8;color:rgba(245,240,232,0.7);margin-bottom:2.5rem">We will introduce you to the right partner shortly. Any booking and payment will be arranged directly with them, not through BHH.</p>
+    <button onclick="closeThankyouModal('thank-you-introduction')" style="display:inline-block;padding:1rem 2.5rem;font-family:'Jost',sans-serif;font-size:0.78rem;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;background:#C9A84C;color:#0D1B2A;border:none;cursor:pointer;border-radius:4px">Return to Form</button>
+  </div>
+</div>
+
+<div id="thank-you-scout" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);align-items:center;justify-content:center;z-index:9999">
+  <div style="background:#0D1B2A;color:#F5F0E8;max-width:560px;padding:3rem 2rem;text-align:center;border-radius:8px">
+    <span style="font-size:1rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:#C9A84C;display:block;margin-bottom:1.2rem">Thank You</span>
+    <h1 style="font-family:'Cormorant Garamond',serif;font-weight:300;font-size:2.4rem;line-height:1.2;margin-bottom:1.5rem;color:#F5F0E8">We have received your application</h1>
+    <div style="width:60px;height:1px;background:#C9A84C;margin:0 auto 1.5rem"></div>
+    <p style="font-size:1rem;font-weight:300;line-height:1.8;color:rgba(245,240,232,0.7);margin-bottom:2.5rem">Thank you for your interest in becoming a Heritage Scout. We will review your application and be in touch to arrange an interview. Evidence such as DBS and insurance is collected later, after interview.</p>
+    <button onclick="closeThankyouModal('thank-you-scout')" style="display:inline-block;padding:1rem 2.5rem;font-family:'Jost',sans-serif;font-size:0.78rem;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;background:#C9A84C;color:#0D1B2A;border:none;cursor:pointer;border-radius:4px">Return to Form</button>
+  </div>
+</div>
+
 
 <!-- ── LEGAL MODALS ── -->
 <div id="modal-privacy" class="legal-modal" onclick="if(event.target===this)closeLegalModal('privacy')">
@@ -4468,7 +4814,7 @@ function closeThankyouModal(modalId) {
     <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">These terms (&ldquo;Terms&rdquo;) govern your use of the services provided by British Heritage Hosts Ltd (&ldquo;BHH&rdquo;), Company No. 17103555, Monomark House, 27 Old Gloucester Street, London WC1N 3AX. By submitting an enquiry, making a booking, or applying to become a host or partner, you agree to be bound by these Terms.</p>
 
     <h3>1. Our Services</h3>
-    <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">BHH provides premium, enquiry-based hospitality experiences connecting international families with approved hosts across England. Services include Private Family Dinners, English Afternoon Teas, British Heritage Guide tours, Private Canal Cruises, and Airport &amp; Private Transportation. All services are bespoke, subject to availability, with prices provided individually upon enquiry.</p>
+    <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">BHH provides premium, enquiry-based hospitality experiences connecting international families with approved hosts across England. <strong>Services BHH provides, arranges, and invoices</strong> include Private Family Dinners, English Afternoon Teas, British Heritage Guide tours, and Private Canal Day Cruises. All such services are bespoke, subject to availability, with prices provided individually upon enquiry. <em>[DRAFT FOR LEGAL REVIEW]</em> <strong>Introduce-only services.</strong> Certain services are not provided, sold, or invoiced by BHH — currently Airport Transfer, Chauffeured Hire, and Narrowboat Holidays. For these, BHH acts solely as an introducer to an independent partner, with whom booking and payment are made directly (see clause 12).</p>
 
     <h3>2. Bookings and Payment</h3>
     <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">All bookings are confirmed only upon receipt of full payment, processed securely through Airwallex. A booking reference will be issued upon confirmation. BHH reserves the right to decline any booking at its discretion.</p>
@@ -4500,7 +4846,10 @@ function closeThankyouModal(modalId) {
     <h3>11. Changes to These Terms</h3>
     <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">We may update these Terms from time to time. Continued use of our services constitutes acceptance of the revised Terms.</p>
 
-    <h3>12. Contact Us</h3>
+    <h3>12. Services We Provide vs. Partners We Introduce &nbsp;<span style="display:inline-block;font-family:var(--ff-body);font-size:0.6rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#8a5a00;background:rgba(201,168,76,0.22);border:1px solid rgba(201,168,76,0.5);border-radius:3px;padding:0.15rem 0.5rem;vertical-align:middle">Draft for legal review</span></h3>
+    <p style="color:var(--muted);line-height:1.9;font-size:0.95rem"><em>[DRAFT FOR LEGAL REVIEW — placeholder wording, not final legal text.]</em> BHH offers two distinct categories of service. <strong>(a) Services we provide.</strong> Private Family Dinners, English Afternoon Teas, British Heritage Guide tours, Canal Day Cruises, the Cultural Immersion Program, and the Personal Interpreter Service are arranged, sold, and invoiced by BHH, and these Terms govern them in full. <strong>(b) Partners we introduce.</strong> For certain services — currently Airport Transfer, Chauffeured Hire, and multi-day Narrowboat Holidays — BHH acts solely as an introducer. We connect you with an independent third-party partner, and any contract, booking, and payment for those services are made directly between you and that partner. BHH does not sell, supply, invoice, or take payment for introduced services, is not a party to any resulting agreement, and accepts no liability for their provision. The partner's own terms, pricing, insurance, and cancellation policy apply.</p>
+
+    <h3>13. Contact Us</h3>
     <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">British Heritage Hosts Ltd, Monomark House, 27 Old Gloucester Street, London WC1N 3AX. Email: <a href="/cdn-cgi/l/email-protection#a1c8cfc7cee1c3d3c8d5c8d2c9c9c4d3c8d5c0c6c4c9ced2d5d28fc2cecc" style="color:var(--gold)"><span class="__cf_email__" data-cfemail="0960676f66496b7b607d607a61616c7b607d686e6c61667a7d7a276a6664">[email&#160;protected]</span></a></p>
   </div>
 
