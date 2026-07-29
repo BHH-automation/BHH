@@ -1324,6 +1324,7 @@ function goToGuestTransport() {
   <select name="Country Code"><option value="+44">+44</option></select><input name="Phone Number">
   <input name="Town"><input name="County">
   <input name="Self-Employed Status">
+  <input name="Right To Self Employment">
   <input name="Basic DBS Consent">
   <input name="Public Liability Insurance">
   <textarea name="Towns or Communities"></textarea>
@@ -2935,7 +2936,8 @@ function closeMobileMenu(){
         <div style="max-width:480px;margin:0 auto 2.5rem;text-align:left">
           <p class="lead" style="font-size:1rem;margin-bottom:1.2rem">You introduce the hosts, guides and interpreters worth knowing. We do the rest.</p>
           <p class="lead" style="font-size:1rem;margin-bottom:1.2rem">Self-employed. A fixed fee for every booking they deliver.</p>
-          <p class="lead" style="font-size:1rem;margin-bottom:0">You'll need to be self-employed, insured, and pass a basic check. We'll help.</p>
+          <p class="lead" style="font-size:1rem;margin-bottom:1.2rem">You'll need to be self-employed, insured, and pass a basic check. We'll help.</p>
+          <p class="lead" style="font-size:1rem;margin-bottom:0">Most Scouts do this alongside a job or their studies.</p>
         </div>
         <form action='/?success=scout' id='scout-form' method='POST' name='heritage-scout-application' style='text-align:left'>
                   <input type="hidden" name="form-name" value="heritage-scout-application">
@@ -3010,12 +3012,23 @@ function closeMobileMenu(){
                     <div class="form-group"><label>County <span style="color:#C9A84C">*</span></label><input type="text" name="County" placeholder="e.g. Warwickshire" required></div>
                   </div>
         
-                  <div class="form-group"><label>Are you self-employed, or willing to register as self-employed? <span style="color:#C9A84C">*</span></label>
+                  <div class="form-group"><label>Your self-employed status <span style="color:#C9A84C">*</span></label>
                     <select name="Self-Employed Status" required>
                       <option value="">Select…</option>
-                      <option value="Yes, already self-employed">Yes, already self-employed</option>
-                      <option value="No, but willing to register">No, but willing to register</option>
+                      <option value="Already registered as self-employed">Already registered as self-employed</option>
+                      <option value="Not registered - I expect to earn under £1,000 a year from this, so registration is not required">Not registered - I expect to earn under £1,000 a year from this, so registration is not required</option>
+                      <option value="Not registered - I will register if I go over £1,000 a year">Not registered - I will register if I go over £1,000 a year</option>
                     </select>
+                  </div>
+                  <div class="form-group"><label>Do you have the right to be self-employed in the UK? <span style="color:#C9A84C">*</span></label>
+                    <select name="Right To Self Employment" required>
+                      <option value="">Select…</option>
+                      <option value="Yes - British, Irish or settled status">Yes - British, Irish or settled status</option>
+                      <option value="Yes - I hold a visa that permits self-employment">Yes - I hold a visa that permits self-employment</option>
+                      <option value="No - I am on a Student visa">No - I am on a Student visa</option>
+                      <option value="I am not sure">I am not sure</option>
+                    </select>
+                    <p style="font-size:0.72rem;color:rgba(245,240,232,0.6);margin-top:0.4rem;font-style:italic">Student visa holders cannot be self-employed in the UK, so we are unable to take them on as Heritage Scouts. Graduate and Innovator Founder visas do allow it.</p>
                   </div>
         
                   <div class="form-group"><label>Do you consent to a Basic DBS check? <span style="color:#C9A84C">*</span></label>
