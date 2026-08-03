@@ -1332,7 +1332,7 @@ function goToGuestTransport() {
   <input name="bot-field">
   <input name="Full Name"><input name="email">
   <select name="Country Code"><option value="+44">+44</option></select><input name="Phone Number">
-  <input name="Town"><input name="County">
+  <input name="Postcode"><input name="Town"><input name="County">
   <input name="Self-Employed Status">
   <input name="Right To Self Employment">
   <input name="Basic DBS Consent">
@@ -3040,9 +3040,13 @@ function closeMobileMenu(){
                     </div>
                   </div>
         
+                  <div class="form-group"><label>Postcode <span style="color:#C9A84C">*</span></label>
+                    <input type="text" name="Postcode" id="scout-postcode" placeholder="e.g. CV37 6QW" maxlength="8" autocomplete="postal-code" style="text-transform:uppercase" oninput="this.value=this.value.toUpperCase()">
+                    <p class="langml__error" id="scout-postcode-error" role="alert" hidden>Please enter a valid UK postcode</p>
+                  </div>
                   <div class="form-row">
-                    <div class="form-group"><label>Town <span style="color:#C9A84C">*</span></label><input type="text" name="Town" placeholder="e.g. Stratford-upon-Avon" required></div>
-                    <div class="form-group"><label>County <span style="color:#C9A84C">*</span></label><input type="text" name="County" placeholder="e.g. Warwickshire" required></div>
+                    <div class="form-group"><label>Town <span style="color:#C9A84C">*</span></label><input type="text" name="Town" id="scout-town" placeholder="Filled from postcode" readonly aria-readonly="true" tabindex="-1" style="background:rgba(245,240,232,0.05);color:rgba(245,240,232,0.55);cursor:not-allowed"></div>
+                    <div class="form-group"><label>County <span style="color:#C9A84C">*</span></label><input type="text" name="County" id="scout-county" placeholder="Filled from postcode" readonly aria-readonly="true" tabindex="-1" style="background:rgba(245,240,232,0.05);color:rgba(245,240,232,0.55);cursor:not-allowed"></div>
                   </div>
         
                   <div class="form-group"><label>Your self-employed status <span style="color:#C9A84C">*</span></label>
@@ -5133,6 +5137,69 @@ function closeLegalModal(type) {
       if(errEl){ errEl.hidden = false; }
       try { box.focus({ preventScroll: true }); } catch(err){ box.focus(); }
       box.scrollIntoView({ block: 'center' });
+    }
+  }, true);
+})();
+</script>
+<script>
+/* ── Heritage Scout form: postcode → Town/County lookup (postcodes.io, no key) ──
+   Applicant types a UK postcode; on blur or after a short pause we validate it via
+   GET https://api.postcodes.io/postcodes/{postcode}. On success we auto-fill Town
+   (admin_district) and County (admin_county, or admin_district for London boroughs /
+   unitary authorities where admin_county is empty) and keep both READ-ONLY so they
+   can't be typed. On failure we show the site's inline error style and a capture-phase
+   JS submit gate (like the guest insurance check — no native `required` popup) blocks
+   submission until a valid postcode resolves. Town/County field names are unchanged. */
+(function(){
+  var form   = document.getElementById('scout-form');
+  if(!form) return;
+  var pc     = document.getElementById('scout-postcode');
+  var town   = document.getElementById('scout-town');
+  var county = document.getElementById('scout-county');
+  var err    = document.getElementById('scout-postcode-error');
+  if(!pc || !town || !county) return;
+
+  var confirmed = '';   // normalised postcode of the last SUCCESSFUL lookup
+  var timer = null;
+
+  function norm(s){ return (s || '').toUpperCase().replace(/\s+/g,''); }
+  function showErr(on){ if(err){ err.hidden = !on; } }
+  function clearFill(){ town.value = ''; county.value = ''; }
+
+  function lookup(){
+    var raw = norm(pc.value);
+    if(!raw){ confirmed = ''; clearFill(); showErr(false); return; }
+    fetch('https://api.postcodes.io/postcodes/' + encodeURIComponent(raw))
+      .then(function(r){ return r.json(); })
+      .then(function(j){
+        if(j && j.status === 200 && j.result){
+          var res = j.result;
+          town.value   = res.admin_district || '';
+          county.value = res.admin_county || res.admin_district || '';  // London/unitary → admin_district
+          confirmed = raw; showErr(false);
+        } else {
+          confirmed = ''; clearFill(); showErr(true);
+        }
+      })
+      .catch(function(){ confirmed = ''; clearFill(); showErr(true); });
+  }
+
+  pc.addEventListener('blur', lookup);
+  pc.addEventListener('input', function(){
+    confirmed = '';                 // any edit invalidates the confirmed lookup
+    showErr(false);                 // hide the error while the applicant is typing
+    if(timer){ clearTimeout(timer); }
+    timer = setTimeout(lookup, 600);
+  });
+
+  // Capture-phase gate so it runs before the form's other submit handlers. No native required.
+  form.addEventListener('submit', function(e){
+    if(!confirmed || norm(pc.value) !== confirmed){
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      showErr(true);
+      try { pc.focus({ preventScroll: true }); } catch(err2){ pc.focus(); }
+      pc.scrollIntoView({ block: 'center' });
     }
   }, true);
 })();
