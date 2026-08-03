@@ -205,6 +205,16 @@ nav {
   margin-top: 0.7rem; padding: 0.3rem 0.4rem;
   font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold);
 }
+/* Non-clickable group heading above the 4 "Become a …" links (mobile only).
+   Lighter/white and smaller than the links, with a thin gold top-border divider
+   matching the menu's own border; its items are indented to read as a group. */
+.mobile-menu-heading {
+  margin-top: 0.8rem; padding: 0.85rem 0.4rem 0.4rem;
+  border-top: 1px solid rgba(201,168,76,0.3);
+  font-size: 0.62rem; font-weight: 500; letter-spacing: 0.2em;
+  text-transform: uppercase; color: rgba(245,240,232,0.55);
+}
+.mobile-menu a.mobile-subitem { padding-left: 1.3rem; }
 .mobile-menu .mobile-door {
   display: flex; align-items: center; gap: 0.7rem;
   color: var(--cream); border-bottom: none;
@@ -1344,13 +1354,31 @@ function goToGuestTransport() {
     <li class="nav-join" id="navJoin">
       <a href="#partner" role="button" aria-haspopup="true" aria-expanded="false" id="navJoinBtn"
          onclick="toggleNavJoin(event)">
-        Partner With Us <span class="nav-join-caret">&#9660;</span>
+        Join Our Network <span class="nav-join-caret">&#9660;</span>
       </a>
       <ul class="nav-join-menu" id="navJoinMenu" role="menu">
         <li role="none">
-          <a href="#partner-application" role="menuitem" onclick="closeMobileMenu();switchTab('partner');document.getElementById('enquire').scrollIntoView({behavior:'smooth'});return false;">
+          <a href="#enquire" role="menuitem" onclick="closeMobileMenu();switchTab('guest');document.getElementById('enquire').scrollIntoView({behavior:'smooth'});return false;">
+            <svg width="18" height="18" aria-hidden="true"><use href="#ic-guest"/></svg>
+            Become a Guest
+          </a>
+        </li>
+        <li role="none">
+          <a href="#enquire" role="menuitem" onclick="closeMobileMenu();switchTab('host');document.getElementById('enquire').scrollIntoView({behavior:'smooth'});return false;">
+            <svg width="18" height="18" aria-hidden="true"><use href="#ic-host"/></svg>
+            Become a Host
+          </a>
+        </li>
+        <li role="none">
+          <a href="#enquire" role="menuitem" onclick="closeMobileMenu();switchTab('partner');document.getElementById('enquire').scrollIntoView({behavior:'smooth'});return false;">
             <svg width="18" height="18" aria-hidden="true"><use href="#ic-partner"/></svg>
             Become a Partner
+          </a>
+        </li>
+        <li role="none">
+          <a href="#enquire" role="menuitem" onclick="closeMobileMenu();switchTab('scout');document.getElementById('enquire').scrollIntoView({behavior:'smooth'});return false;">
+            <svg width="18" height="18" aria-hidden="true"><use href="#ic-guide"/></svg>
+            Become a Heritage Scout
           </a>
         </li>
       </ul>
@@ -1366,7 +1394,11 @@ function goToGuestTransport() {
   <a href="#services" onclick="closeMobileMenu()">Our Services</a>
   <a href="#about" onclick="closeMobileMenu()">About</a>
   <a href="#contact" onclick="closeMobileMenu()">Contact</a>
-  <a href="#enquire" onclick="closeMobileMenu();switchTab('partner');document.getElementById('enquire').scrollIntoView({behavior:'smooth'});return false;">Become a Partner</a>
+  <div class="mobile-menu-heading">Join Our Network</div>
+  <a class="mobile-subitem" href="#enquire" onclick="closeMobileMenu();switchTab('guest');document.getElementById('enquire').scrollIntoView({behavior:'smooth'});return false;">Become a Guest</a>
+  <a class="mobile-subitem" href="#enquire" onclick="closeMobileMenu();switchTab('host');document.getElementById('enquire').scrollIntoView({behavior:'smooth'});return false;">Become a Host</a>
+  <a class="mobile-subitem" href="#enquire" onclick="closeMobileMenu();switchTab('partner');document.getElementById('enquire').scrollIntoView({behavior:'smooth'});return false;">Become a Partner</a>
+  <a class="mobile-subitem" href="#enquire" onclick="closeMobileMenu();switchTab('scout');document.getElementById('enquire').scrollIntoView({behavior:'smooth'});return false;">Become a Heritage Scout</a>
 </div>
 <!-- Shared icon sprite for nav menus -->
 <svg width="0" height="0" style="position:absolute;overflow:hidden" aria-hidden="true">
@@ -1533,7 +1565,7 @@ function closeMobileMenu(){
         <div class="service-card-content">
           <div class="service-card-num">04 / 09</div>
           <h3>Airport Transfer</h3>
-          <p class="service-card-desc">Airport to hotel and return — single journeys, meet-and-greet, flight-tracked, professionally driven. Arranged through a trusted partner — booked and paid directly with them, not through BHH.</p>
+          <p class="service-card-desc">Airport to hotel and return — single journeys, meet-and-greet, flight-tracked, professionally driven. Arranged through a trusted provider — booked and paid directly with them, not through BHH.</p>
           <span class="service-card-arrow">Request an introduction →</span>
         </div>
       </a>
@@ -1546,7 +1578,7 @@ function closeMobileMenu(){
         <div class="service-card-content">
           <div class="service-card-num">05 / 09</div>
           <h3>Chauffeured Hire</h3>
-          <p class="service-card-desc">A car and driver for a day or longer — chauffeured throughout your stay, at your pace and itinerary. Arranged through a trusted partner — booked and paid directly with them, not through BHH.</p>
+          <p class="service-card-desc">A car and driver for a day or longer — chauffeured throughout your stay, at your pace and itinerary. Arranged through a trusted provider — booked and paid directly with them, not through BHH.</p>
           <span class="service-card-arrow">Request an introduction →</span>
         </div>
       </a>
@@ -1574,7 +1606,7 @@ function closeMobileMenu(){
         <div class="service-card-content">
           <div class="service-card-num">07 / 09</div>
           <h3>Narrowboat Holiday</h3>
-          <p class="service-card-desc">A multi-day narrowboat holiday across the English countryside — a full canal-boat break. Arranged through a trusted partner — booked and paid directly with them, not through BHH.</p>
+          <p class="service-card-desc">A multi-day narrowboat holiday across the English countryside — a full canal-boat break. Arranged through a trusted provider — booked and paid directly with them, not through BHH.</p>
           <span class="service-card-arrow">Request an introduction →</span>
         </div>
       </a>
@@ -1993,6 +2025,7 @@ function closeMobileMenu(){
                 <input type="checkbox" name="Travel Insurance Confirmed" value="Yes" style="margin-top:0.2rem;flex-shrink:0;accent-color:#C9A84C;cursor:pointer">
                 <span>I confirm I hold or will arrange travel insurance before my trip.</span>
               </label>
+              <p class="langml__error" id="insurance-error" role="alert" hidden>Please confirm you hold or will arrange travel insurance before your trip.</p>
             </div>
           </div>
 
@@ -2008,15 +2041,15 @@ function closeMobileMenu(){
 
           <!-- ── TIER 2: introduce-only partner services, moved inside the Guest panel ── -->
           <div id="guest-transport" style="margin:3rem 0 0;padding-top:2.5rem;border-top:1px solid rgba(201,168,76,0.35)">
-            <h3 style="font-family:'Cormorant Garamond',serif;font-weight:300;font-size:1.6rem;color:var(--cream);margin-bottom:0.6rem">Transport and narrowboat — arranged with our partners</h3>
-            <p style="font-size:0.85rem;line-height:1.7;color:rgba(245,240,232,0.75);margin-bottom:1.8rem">Airport transfers, chauffeured hire and multi-day narrowboat holidays are delivered by trusted independent partners. BHH introduces you; you book and pay the partner directly — there is no price or tier here. Request an introduction below.</p>
+            <h3 style="font-family:'Cormorant Garamond',serif;font-weight:300;font-size:1.6rem;color:var(--cream);margin-bottom:0.6rem">Transport and narrowboat — arranged with our providers</h3>
+            <p style="font-size:0.85rem;line-height:1.7;color:rgba(245,240,232,0.75);margin-bottom:1.8rem">Airport transfers, chauffeured hire and multi-day narrowboat holidays are delivered by trusted independent providers. BHH introduces you; you book and pay the provider directly — there is no price or tier here. Request an introduction below.</p>
             <form action='/?success=introduction' id='introduce-form' method='POST' name='transport-introduction' style='text-align:left'>
                       <input type="hidden" name="form-name" value="transport-introduction">
                       <input type="hidden" name="subject" value="BHH Introduction Request">
                       <p style="display:none"><label>Don't fill this out if you're human: <input name="bot-field"></label></p>
                       <p style="font-size:0.75rem;color:var(--muted);margin-bottom:1.2rem;margin-top:0.5rem">Fields marked <span style='color:#C9A84C'>*</span> are required. &nbsp;|&nbsp; Enter phone number without leading zero (e.g. 7911 123456 not 07911 123456).</p>
             
-                      <div class="form-group"><label>Which partner service <span style="color:#C9A84C">*</span></label>
+                      <div class="form-group"><label>Which service <span style="color:#C9A84C">*</span></label>
                         <select name="Partner Service" required>
                           <option value="">Select…</option>
                           <option value="Airport Transfer">Airport Transfer (airport to hotel and return)</option>
@@ -2103,7 +2136,7 @@ function closeMobileMenu(){
                       <div style="margin-top:1.5rem;padding:1rem 1.1rem;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.3);border-radius:4px">
                         <label style="display:flex;align-items:flex-start;gap:0.7rem;cursor:pointer;font-size:0.82rem;line-height:1.6;color:var(--muted)">
                           <input type="checkbox" name="GDPR Consent" value="Yes" required style="margin-top:0.25rem;flex-shrink:0;accent-color:#C9A84C;cursor:pointer">
-                          <span>I consent to British Heritage Hosts Ltd processing the personal data I have provided in order to introduce me to a relevant partner service, in accordance with the <a href="#" onclick="openLegalModal('privacy');return false;" style="color:var(--gold);text-decoration:underline">Privacy Policy</a>. I understand that any booking or payment is made directly with the partner, not with BHH, and that I can withdraw consent at any time by contacting <a href="mailto:info@britishheritagehosts.com" style="color:var(--gold);text-decoration:underline">info@britishheritagehosts.com</a>.</span>
+                          <span>I consent to British Heritage Hosts Ltd processing the personal data I have provided in order to introduce me to a relevant provider service, in accordance with the <a href="#" onclick="openLegalModal('privacy');return false;" style="color:var(--gold);text-decoration:underline">Privacy Policy</a>. I understand that any booking or payment is made directly with the provider, not with BHH, and that I can withdraw consent at any time by contacting <a href="mailto:info@britishheritagehosts.com" style="color:var(--gold);text-decoration:underline">info@britishheritagehosts.com</a>.</span>
                         </label>
                       </div>
             
@@ -5074,6 +5107,33 @@ function closeLegalModal(type) {
   var partnerRun = setupSectionSync('partner-form', 'tab-partner', renumberPartnerSteps);
   // Called by togglePartnerTypeOther after it shows/hides the PI section.
   window.refreshPartnerForm = partnerRun || function(){ renumberPartnerSteps(); };
+})();
+</script>
+<script>
+/* ── Guest form: Travel Insurance confirmation is COMPULSORY ──
+   Mirrors the host-form language check: a capture-phase JS gate on the GUEST FORM
+   ONLY, surfaced in the site's existing inline error style (.langml__error) rather
+   than the browser's native popup. No native `required` attribute is used, so there
+   is never a hidden required control that could silently abort this form — or, since
+   the listener is bound to #guest-form alone, any other tab's form. */
+(function(){
+  var form = document.getElementById('guest-form');
+  if(!form) return;
+  var box   = form.querySelector('input[name="Travel Insurance Confirmed"]');
+  var errEl = document.getElementById('insurance-error');
+  if(!box) return;
+  // Clear the error as soon as the guest ticks the box.
+  box.addEventListener('change', function(){ if(box.checked && errEl){ errEl.hidden = true; } });
+  // Capture phase so this runs before the form's other submit handlers and can halt them.
+  form.addEventListener('submit', function(e){
+    if(!box.checked){
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      if(errEl){ errEl.hidden = false; }
+      try { box.focus({ preventScroll: true }); } catch(err){ box.focus(); }
+      box.scrollIntoView({ block: 'center' });
+    }
+  }, true);
 })();
 </script>
 </body>
