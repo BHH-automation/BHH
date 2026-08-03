@@ -1314,7 +1314,7 @@ function goToGuestTransport() {
   <input name="Guide Professional Indemnity"><input name="Guide PI Insurer Name"><input name="Guide PI Policy Number">
   <textarea name="about"></textarea><input name="referral">
 </form>
-<form method='post' name='transport-introduction' style='display:none'>
+<form method='post' name='transport-introduction' data-netlify="true" style='display:none'>
   <input name="form-name" type="hidden" value="transport-introduction">
   <input name="subject" type="hidden" value="BHH Introduction Request">
   <input name="bot-field">
@@ -1326,7 +1326,7 @@ function goToGuestTransport() {
   <textarea name="Notes"></textarea>
   <input name="GDPR Consent">
 </form>
-<form method='post' name='heritage-scout-application' style='display:none'>
+<form method='post' name='heritage-scout-application' data-netlify="true" style='display:none'>
   <input name="form-name" type="hidden" value="heritage-scout-application">
   <input name="subject" type="hidden" value="BHH Heritage Scout Application">
   <input name="bot-field">
@@ -2043,7 +2043,7 @@ function closeMobileMenu(){
           <div id="guest-transport" style="margin:3rem 0 0;padding-top:2.5rem;border-top:1px solid rgba(201,168,76,0.35)">
             <h3 style="font-family:'Cormorant Garamond',serif;font-weight:300;font-size:1.6rem;color:var(--cream);margin-bottom:0.6rem">Transport and narrowboat — arranged with our providers</h3>
             <p style="font-size:0.85rem;line-height:1.7;color:rgba(245,240,232,0.75);margin-bottom:1.8rem">Airport transfers, chauffeured hire and multi-day narrowboat holidays are delivered by trusted independent providers. BHH introduces you; you book and pay the provider directly — there is no price or tier here. Request an introduction below.</p>
-            <form action='/?success=introduction' id='introduce-form' method='POST' name='transport-introduction' style='text-align:left'>
+            <form action='/?success=introduction' id='introduce-form' method='POST' name='transport-introduction' data-netlify="true" style='text-align:left'>
                       <input type="hidden" name="form-name" value="transport-introduction">
                       <input type="hidden" name="subject" value="BHH Introduction Request">
                       <p style="display:none"><label>Don't fill this out if you're human: <input name="bot-field"></label></p>
@@ -2972,7 +2972,7 @@ function closeMobileMenu(){
           <p class="lead" style="font-size:1rem;margin-bottom:1.2rem">A fixed fee every time one of your people delivers a booking, for two years.</p>
           <p class="lead" style="font-size:1rem;margin-bottom:0">Self-employed, your own hours, around whatever else you do. Insurance and a basic check needed - we'll help with both.</p>
         </div>
-        <form action='/?success=scout' id='scout-form' method='POST' name='heritage-scout-application' style='text-align:left'>
+        <form action='/?success=scout' id='scout-form' method='POST' name='heritage-scout-application' data-netlify="true" style='text-align:left'>
                   <input type="hidden" name="form-name" value="heritage-scout-application">
                   <input type="hidden" name="subject" value="BHH Heritage Scout Application">
                   <p style="display:none"><label>Don't fill this out if you're human: <input name="bot-field"></label></p>
