@@ -1079,6 +1079,58 @@ footer {
 }
 /* ── END HERO REBUILD ─────────────────────────────────────────────── */
 
+/* ═══ HERO NEWS-FLASH SERVICE SHOWCASE (additive; existing hero untouched) ═══ */
+.hero-newsflash{
+  position:absolute; bottom:24px; right:26px; width:280px; /* bottom is a fallback — JS (placeCard) sets it dynamically */
+  z-index:20; opacity:0; transform:translateY(6px);
+  transition:opacity 1s ease, transform 1s ease; pointer-events:none;
+}
+.hero-newsflash.is-visible{ opacity:1; transform:translateY(0); pointer-events:auto; }
+.hero-newsflash__card{
+  display:block; text-decoration:none; color:inherit;
+  background:rgba(10,29,61,.55);
+  -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px);
+  border:1px solid var(--gold); border-radius:140px 140px 14px 14px;
+  overflow:hidden; box-shadow:0 12px 40px rgba(0,0,0,.45);
+}
+.hero-newsflash__imgwrap{
+  position:relative; height:260px; margin:8px 8px 0; background:var(--navy);
+  border:1px solid rgba(201,168,76,.5); border-radius:132px 132px 8px 8px; overflow:hidden;
+}
+.hero-newsflash__img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:1; }
+.hero-newsflash__blur{
+  position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+  filter:blur(14px) brightness(.55); transform:scale(1.15); z-index:0; display:none;
+}
+.hero-newsflash.is-contain .hero-newsflash__img{ object-fit:contain; }
+.hero-newsflash.is-contain .hero-newsflash__blur{ display:block; }
+.hero-newsflash__cap{ text-align:center; padding:.7rem 1rem 1rem; }
+.hero-newsflash__eyebrow{
+  display:block; font-size:.62rem; letter-spacing:.2em; text-transform:uppercase;
+  color:var(--gold); font-weight:600; margin-bottom:.3rem;
+}
+.hero-newsflash__name{
+  display:block; font-family:'Cormorant Garamond',serif; font-weight:400;
+  font-size:17px; line-height:1.15; color:var(--white); margin-bottom:.35rem;
+}
+.hero-newsflash__cta{ display:block; font-size:.75rem; letter-spacing:.05em; color:var(--gold-light); }
+.hero-newsflash__close{
+  position:absolute; top:6px; right:10px; z-index:5; width:26px; height:26px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  background:rgba(10,20,35,.55); border:1px solid rgba(201,168,76,.4);
+  color:rgba(245,240,232,.8); font-size:1rem; line-height:1; cursor:pointer;
+  -webkit-backdrop-filter:blur(4px); backdrop-filter:blur(4px); transition:color .2s, background .2s;
+}
+.hero-newsflash__close:hover{ color:var(--gold); background:rgba(10,20,35,.8); }
+/* Mobile: shrink; hide entirely when too small to avoid covering the hero heading/buttons */
+@media (max-width:768px){
+  .hero-newsflash{ width:240px; bottom:16px; right:12px; }
+  .hero-newsflash__card{ border-radius:120px 120px 12px 12px; }
+  .hero-newsflash__imgwrap{ height:200px; border-radius:112px 112px 6px 6px; }
+  .hero-newsflash__name{ font-size:17px; }
+}
+@media (max-width:560px){ .hero-newsflash{ display:none !important; } }
+
 /* ── LEGAL MODAL ──────────────────────────────────────────────────── */
 .legal-modal {
   display: none;
@@ -1496,6 +1548,22 @@ function closeMobileMenu(){
     }
   }
   </script>
+
+    <!-- ═══ HERO NEWS-FLASH SERVICE SHOWCASE (additive; hero above is untouched) ═══ -->
+    <div id="hero-newsflash" class="hero-newsflash" aria-live="polite" hidden>
+      <button type="button" class="hero-newsflash__close" aria-label="Dismiss services showcase" onclick="dismissNewsflash()">&times;</button>
+      <a class="hero-newsflash__card" href="#enquire" onclick="return newsflashClick();">
+        <div class="hero-newsflash__imgwrap">
+          <img class="hero-newsflash__blur" src="" alt="" aria-hidden="true">
+          <img class="hero-newsflash__img" src="" alt="">
+        </div>
+        <div class="hero-newsflash__cap">
+          <span class="hero-newsflash__eyebrow">Our Services</span>
+          <span class="hero-newsflash__name"></span>
+          <span class="hero-newsflash__cta">Click to enquire &rarr;</span>
+        </div>
+      </a>
+    </div>
 
 </section>
 
@@ -5202,6 +5270,126 @@ function closeLegalModal(type) {
       pc.scrollIntoView({ block: 'center' });
     }
   }, true);
+})();
+</script>
+<script>
+/* ═══ Hero news-flash service showcase — cycles the 9 services; existing hero untouched ═══
+   Fades in ~1s, holds ~4.2s, fades out ~1s, ~2s gap, next; loops. Click routes to the
+   guest enquiry (with the experience pre-selected via the existing v8 card mechanism) or to
+   the transport-introduction form (pre-selecting its Partner Service). The × stops the cycle
+   and hides the card for the rest of the visit (sessionStorage). */
+(function(){
+  var card = document.getElementById('hero-newsflash');
+  if(!card) return;
+  var imgEl  = card.querySelector('.hero-newsflash__img');
+  var blurEl = card.querySelector('.hero-newsflash__blur');
+  var nameEl = card.querySelector('.hero-newsflash__name');
+
+  // Same images as each service's card. type: 'guest' (enquiry) | 'transport' (introduction).
+  var SERVICES = [
+    { name:'Heritage Guide',               img:'images/heritage-tour-family-tour-at-english-cas.jpg', type:'guest' },
+    { name:'English Tea',                   img:'images/english-tea-traditional-afternoon-tea.jpg',    type:'guest' },
+    { name:'Dinner',                        img:'images/private-family-dinner-host-and-guest-fam.jpg',  type:'guest' },
+    { name:'Airport Transfer',              img:'images/airport-private-transportation-airport-p.jpg',  type:'transport' },
+    { name:'Chauffeured Hire',              img:'images/airport-private-transportation-luxury-lo.jpg',  type:'transport' },
+    { name:'Canal Day Cruise',              img:'images/private-canal-cruise-family-dining-on-bo.jpg',  type:'guest' },
+    { name:'Narrowboat Holiday',            img:'images/private-canal-cruise-narrowboat-on-engli.jpg',  type:'transport' },
+    { name:'Cultural Immersion Program',    img:'images/cip-1.jpg',                                     type:'guest' },
+    { name:'Personal Interpreter Service',  img:'images/interpreter-saudi-men.png',                     type:'guest', contain:true }
+  ];
+
+  var idx = 0, dismissed = false, timers = [];
+  function clearTimers(){ timers.forEach(function(t){ clearTimeout(t); }); timers = []; }
+
+  function render(s){
+    imgEl.src = s.img; imgEl.alt = s.name;
+    card.classList.add('is-contain'); blurEl.src = s.img;   // all images: shown in full (contain) over a blurred, darkened fill of themselves
+    nameEl.textContent = s.name;
+    card.setAttribute('data-service', s.name);
+  }
+
+  function cycle(){
+    if(dismissed) return;
+    render(SERVICES[idx]);
+    card.hidden = false;
+    // double rAF so the opacity/transform transition actually runs from the hidden state
+    requestAnimationFrame(function(){ requestAnimationFrame(function(){ card.classList.add('is-visible'); }); });
+    timers.push(setTimeout(function(){          // after fade-in (1s) + hold (4.2s)
+      card.classList.remove('is-visible');      // fade out (1s via CSS)
+      timers.push(setTimeout(function(){        // + 2s gap
+        idx = (idx + 1) % SERVICES.length;
+        cycle();
+      }, 1000 + 2000));
+    }, 1000 + 4200));
+  }
+
+  window.newsflashClick = function(){
+    var name = card.getAttribute('data-service') || '', svc = null;
+    for(var i=0;i<SERVICES.length;i++){ if(SERVICES[i].name === name){ svc = SERVICES[i]; break; } }
+    if(svc && svc.type === 'transport'){
+      if(typeof goToGuestTransport === 'function'){ goToGuestTransport(); }
+      var ps = document.querySelector('#introduce-form select[name="Partner Service"]');
+      if(ps){ ps.value = name; }
+    } else {
+      if(typeof switchTab === 'function'){ switchTab('guest'); }
+      var v8 = document.querySelector('#service-card-grid .service-card-v8[data-service="' + name + '"]');
+      if(v8 && typeof toggleService === 'function' && !v8.classList.contains('selected')){ toggleService(v8); }
+    }
+    return false;   // the anchor's href="#enquire" is only a no-JS fallback
+  };
+
+  window.dismissNewsflash = function(){
+    dismissed = true; clearTimers();
+    card.classList.remove('is-visible');
+    setTimeout(function(){ card.hidden = true; }, 350);
+    try { sessionStorage.setItem('bhh_newsflash_dismissed', '1'); } catch(e){}
+  };
+
+  // ── Self-positioning (no fixed offsets). On load + resize, measure the real viewport
+  //    and (a) anchor the card's BOTTOM exactly 24px above the fold so its full height
+  //    always fits, and (b) shrink the card (width 280 → 220, image proportionally) on
+  //    short viewports so it never clips or dominates. Desktop widths only; ≤768 is left
+  //    to the mobile CSS (and the ≤560 hide). ──
+  var hero = document.querySelector('.hero');
+  var imgwrap = card.querySelector('.hero-newsflash__imgwrap');
+  var navEl = document.querySelector('nav');
+  var IMG_RATIO = 260 / 264;   // image height : image width, from the arch design
+  function placeCard(){
+    if(!hero || !imgwrap) return;
+    var vw = window.innerWidth, vh = window.innerHeight;
+    if(vw <= 768){ card.style.width = ''; card.style.bottom = ''; imgwrap.style.height = ''; return; }
+    var MARGIN = 24;
+    var navB = navEl ? Math.round(navEl.getBoundingClientRect().height) : 132;
+    // Width shrinks with viewport height: 220px @ vh600 … 280px @ vh940 (clamped).
+    var W = Math.round(220 + (vh - 600) * 60 / 340);
+    W = Math.max(220, Math.min(280, W));
+    W = Math.min(W, vw - 40);                      // never wider than the screen allows
+    var imgH = Math.round((W - 16) * IMG_RATIO);   // image height scales proportionally
+    card.style.width = W + 'px';
+    imgwrap.style.height = imgH + 'px';
+    // Measure the resulting card height (works even while the card is hidden between cycles).
+    var wasHidden = card.hidden, prevVis = card.style.visibility;
+    if(wasHidden){ card.style.visibility = 'hidden'; card.hidden = false; }
+    var cardH = card.offsetHeight;
+    var avail = (vh - MARGIN) - (navB + 12);        // space between the fixed header and the fold
+    if(cardH > avail){                              // extra safety on very short viewports
+      imgH = Math.max(120, imgH - (cardH - avail));
+      imgwrap.style.height = imgH + 'px';
+      cardH = card.offsetHeight;
+    }
+    if(wasHidden){ card.hidden = true; card.style.visibility = prevVis; }
+    // Anchor bottom MARGIN above the fold (card is position:absolute within .hero).
+    // Account for the hero's own document-space top (e.g. a body margin) so the margin is exact.
+    var heroTopDoc = hero.getBoundingClientRect().top + window.scrollY;
+    card.style.bottom = Math.round(heroTopDoc + hero.offsetHeight - vh + MARGIN) + 'px';
+  }
+  placeCard();
+  window.addEventListener('resize', placeCard);
+  window.addEventListener('load', placeCard);
+
+  var already = false;
+  try { already = sessionStorage.getItem('bhh_newsflash_dismissed') === '1'; } catch(e){}
+  if(!already){ timers.push(setTimeout(cycle, 1200)); }
 })();
 </script>
 </body>
