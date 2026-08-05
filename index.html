@@ -1081,7 +1081,7 @@ footer {
 
 /* ═══ HERO NEWS-FLASH SERVICE SHOWCASE (additive; existing hero untouched) ═══ */
 .hero-newsflash{
-  position:absolute; bottom:24px; right:26px; width:280px; /* bottom is a fallback — JS (placeCard) sets it dynamically */
+  position:fixed; bottom:24px; right:26px; width:280px; /* viewport-fixed — stays visible while scrolling; JS (placeCard) sizes it */
   z-index:20; opacity:0; transform:translateY(6px);
   transition:opacity 1s ease, transform 1s ease; pointer-events:none;
 }
@@ -5355,7 +5355,7 @@ function closeLegalModal(type) {
   var navEl = document.querySelector('nav');
   var IMG_RATIO = 260 / 264;   // image height : image width, from the arch design
   function placeCard(){
-    if(!hero || !imgwrap) return;
+    if(!imgwrap) return;
     var vw = window.innerWidth, vh = window.innerHeight;
     if(vw <= 768){ card.style.width = ''; card.style.bottom = ''; imgwrap.style.height = ''; return; }
     var MARGIN = 24;
@@ -5378,10 +5378,9 @@ function closeLegalModal(type) {
       cardH = card.offsetHeight;
     }
     if(wasHidden){ card.hidden = true; card.style.visibility = prevVis; }
-    // Anchor bottom MARGIN above the fold (card is position:absolute within .hero).
-    // Account for the hero's own document-space top (e.g. a body margin) so the margin is exact.
-    var heroTopDoc = hero.getBoundingClientRect().top + window.scrollY;
-    card.style.bottom = Math.round(heroTopDoc + hero.offsetHeight - vh + MARGIN) + 'px';
+    // Card is position:fixed → its bottom is measured from the viewport, so a constant
+    // margin keeps it MARGIN px above the fold on every screen and while scrolling.
+    card.style.bottom = MARGIN + 'px';
   }
   placeCard();
   window.addEventListener('resize', placeCard);
