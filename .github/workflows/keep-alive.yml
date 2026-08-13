@@ -1,14 +1,16 @@
 name: Supabase keep-alive
 
-# Prevents the Supabase project from auto-pausing by making a real EXTERNAL
-# request to the Supabase REST API on a schedule. This runs from GitHub's
-# runners (outside the database), so it counts as external activity — unlike
+# Prevents the Supabase project from auto-pausing by making real EXTERNAL
+# requests to the Supabase REST API on a schedule. Runs from GitHub's
+# runners (outside the database), so it counts as external activity, unlike
 # pg_cron, which runs inside Postgres and does not reset the inactivity timer.
+# Frequency raised to every 6 hours on 13 Aug 2026 after Supabase flagged
+# the project despite daily green pings, once per day was not enough.
 
 on:
   schedule:
-    # Every day at 06:00 UTC
-    - cron: '0 6 * * *'
+    # Every 6 hours: 00:00, 06:00, 12:00, 18:00 UTC
+    - cron: '0 0,6,12,18 * * *'
   workflow_dispatch: {}
 
 jobs:
