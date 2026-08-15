@@ -84,7 +84,20 @@ h3 { font-size: clamp(1.4rem, 2.5vw, 2rem); }
 .tab-icon--host    { stroke: #C4826A; } /* terracotta */
 .tab-icon--partner { stroke: #9BB08A; } /* sage green */
 .tab-icon--scout   { stroke: #7FB3AE; } /* muted teal */
-.enquire-tab--active .tab-icon { stroke: var(--gold); } /* active → gold, matches label exactly, wins on specificity */
+.tab-icon--transport { stroke: #A991C0; } /* muted violet */
+.enquire-tab--active .tab-icon { stroke: var(--gold); }
+/* ── Transport & Narrowboat choice cards (interstitial before the shared form) ── */
+.transport-choice{ display:flex; gap:1rem; margin:0 0 1.5rem; }
+.tchoice{ flex:1; display:flex; flex-direction:column; text-align:left; padding:0; background:rgba(201,168,76,0.05); border:1px solid rgba(201,168,76,0.35); border-radius:6px; overflow:hidden; cursor:pointer; color:var(--cream); font-family:var(--ff-body); transition:border-color .2s, background .2s, transform .2s; }
+.tchoice:hover{ border-color:var(--gold); background:rgba(201,168,76,0.12); transform:translateY(-2px); }
+.tchoice-media{ display:block; height:120px; overflow:hidden; }
+.tchoice-media img{ width:100%; height:100%; object-fit:cover; display:block; }
+.tchoice-body{ display:block; padding:0.9rem 1rem 1.1rem; }
+.tchoice-title{ display:block; font-family:'Cormorant Garamond',serif; font-weight:400; font-size:1.25rem; color:var(--cream); margin-bottom:0.25rem; }
+.tchoice-sub{ display:block; font-size:0.78rem; line-height:1.4; color:rgba(245,240,232,0.6); }
+.transport-back{ display:inline-block; margin:0 0 1rem; padding:0; background:none; border:none; color:var(--gold); font-family:var(--ff-body); font-size:0.72rem; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer; }
+.transport-back:hover{ text-decoration:underline; }
+@media (max-width:600px){ .transport-choice{ flex-direction:column; } } /* active → gold, matches label exactly, wins on specificity */
 
 /* ── LAYOUT ── */
 .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
@@ -1097,7 +1110,7 @@ footer {
   position:relative; height:260px; margin:8px 8px 0; background:var(--navy);
   border:1px solid rgba(201,168,76,.5); border-radius:132px 132px 8px 8px; overflow:hidden;
 }
-.hero-newsflash__img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:1; }
+.hero-newsflash__img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:1; transition:opacity .3s ease; }
 .hero-newsflash__blur{
   position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
   filter:blur(14px) brightness(.55); transform:scale(1.15); z-index:0; display:none;
@@ -1312,10 +1325,30 @@ function switchTab(tab) {
 }
 // Tier-2 (introduce-only) cards & hero pills route here: open the Guest tab, then
 // scroll to the "Transport and narrowboat" sub-form that now lives inside it.
-function goToGuestTransport() {
-  switchTab('guest');
-  var el = document.getElementById('guest-transport');
-  if (el) { setTimeout(function() { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 80); }
+function goToTransportTab(mode, service) {   // opens the Transport & Narrowboat tab; optional deep-link mode
+  switchTab('transport');
+  if(mode === 'transport' || mode === 'narrowboat'){ openTransportMode(mode, service); }
+  else { showTransportChoice(); }
+}
+function showTransportChoice(){
+  var c = document.getElementById('transport-choice'), w = document.getElementById('transport-form-wrap');
+  if(c){ c.style.display = ''; } if(w){ w.style.display = 'none'; }
+}
+function openTransportMode(mode, service){
+  var c = document.getElementById('transport-choice'), w = document.getElementById('transport-form-wrap');
+  if(c){ c.style.display = 'none'; } if(w){ w.style.display = ''; }
+  var sel = document.querySelector('#introduce-form select[name="Partner Service"]');
+  if(!sel) return;
+  function opt(v){ return sel.querySelector('option[value="' + v + '"]'); }
+  function show(o, on){ if(o){ o.hidden = !on; o.disabled = !on; } }   // hidden+disabled = out of the dropdown AND unselectable
+  var ph = opt(''), at = opt('Airport Transfer'), ch = opt('Chauffeured Hire'), nb = opt('Narrowboat Holiday');
+  if(mode === 'narrowboat'){                        // locked to Narrowboat (only selectable option) — still submitted
+    show(ph,false); show(at,false); show(ch,false); show(nb,true);
+    sel.value = 'Narrowboat Holiday';
+  } else {                                          // transport: Airport Transfer + Chauffeured Hire only
+    show(ph,true); show(at,true); show(ch,true); show(nb,false);
+    sel.value = (service === 'Airport Transfer' || service === 'Chauffeured Hire') ? service : '';
+  }
 }
 </script>
 <body>
@@ -1513,13 +1546,12 @@ function closeMobileMenu(){
       <span class="hero-svc-dot">·</span>
       <a href="#services" class="hero-svc-pill">English Tea</a>
       <span class="hero-svc-dot">·</span>
-      <a href="#services" class="hero-svc-pill">Dinner</a>
+      <a href="#services" class="hero-svc-pill">British Dinner</a>
       <span class="hero-svc-dot">·</span>
-      <a href="#enquire" onclick="goToGuestTransport();return false;" class="hero-svc-pill">Airport Transfer</a>
-      <a href="#enquire" onclick="goToGuestTransport();return false;" class="hero-svc-pill">Chauffeured Hire</a>
+      <a href="#enquire" onclick="goToTransportTab('transport');return false;" class="hero-svc-pill">Transportation</a>
       <span class="hero-svc-dot">·</span>
       <a href="#services" class="hero-svc-pill">Canal Day Cruise</a>
-      <a href="#enquire" onclick="goToGuestTransport();return false;" class="hero-svc-pill">Narrowboat Holiday</a>
+      <a href="#enquire" onclick="goToTransportTab('narrowboat');return false;" class="hero-svc-pill">Narrowboat Holiday</a>
       <span class="hero-svc-dot">·</span>
       <a href="#services" class="hero-svc-pill">Cultural Immersion Program</a>
       <span class="hero-svc-dot">·</span>
@@ -1582,6 +1614,7 @@ function closeMobileMenu(){
     <div class="service-card-img service-card-carousel">
       <img src="images/heritage-tour-family-tour-at-english-cas.jpg" alt="Heritage Tour — family tour at English castle" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
       <img src="images/heritage-tour-british-heritage-guide.jpg" alt="Heritage Tour — British Heritage Guide" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
+      <img src="images/heritage guide thames.png" alt="Heritage Guide — riverside walk along the Thames" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
     </div>
         <div class="service-card-overlay"></div>
         <div class="service-card-content">
@@ -1595,8 +1628,8 @@ function closeMobileMenu(){
       <a href="#enquire" data-service="English Tea" class="service-card">
     <div class="service-card-img service-card-carousel">
       <img src="images/english-tea-traditional-afternoon-tea.jpg" alt="English Tea — traditional afternoon tea" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
-      <img src="images/english-tea-families-enjoying-tea.jpg" alt="English Tea — families enjoying tea" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
-      <img src="images/english-tea-english-village.jpg" alt="English Tea — English village" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
+      <img src="images/english-tea-english-village.png" alt="English Tea — host family serving tea" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
+      <img src="images/english tea serving.png" alt="English Tea — pouring a cup of tea" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
     </div>
         <div class="service-card-overlay"></div>
         <div class="service-card-content">
@@ -1609,70 +1642,61 @@ function closeMobileMenu(){
 
       <a href="#enquire" data-service="Dinner" class="service-card">
     <div class="service-card-img service-card-carousel">
-      <img src="images/private-family-dinner-host-and-guest-fam.jpg" alt="Private Family Dinner — host and guest families" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
-      <img src="images/private-family-dinner-traditional-englis.jpg" alt="Private Family Dinner — traditional English table" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
+      <img src="images/private-family-dinner-host-and-guest-fam.jpg" alt="British Dinner — host and guest families" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
+      <img src="images/private-family-dinner-traditional-englis.jpg" alt="British Dinner — traditional English table" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
+      <img src="images/dinner roast carving.png" alt="British Dinner — carving the Sunday roast" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
     </div>
         <div class="service-card-overlay"></div>
         <div class="service-card-content">
           <div class="service-card-num">03 / 09</div>
-          <h3>Dinner</h3>
+          <h3>British Dinner</h3>
           <p class="service-card-desc">A complete traditional Sunday roast in a real English dining room — your host family at the table, your family only.</p>
           <span class="service-card-arrow">Discover more →</span>
         </div>
       </a>
 
-<!-- PROVISIONALLY TIER 2 (introduce-only) pending legal advice.
-     Airport Transfer may move to TIER 1 (BHH sells & invoices) if counsel confirms
-     it can be provided directly. If so: give it a #service-card-grid card + TIER_COPY
-     entry and switch this CTA back to #enquire with data-service. -->
-      <a href="#enquire" onclick="goToGuestTransport();return false;" class="service-card service-card--introduce">
+<!-- TIER 2 (introduce-only): Transportation — merged Airport Transfer + Chauffeured Hire.
+     CTA opens the Transport introduction form, where Airport transfer and Chauffeured hire
+     remain separately selectable. No price shown; guest books and pays the provider directly. -->
+      <a href="#enquire" onclick="goToTransportTab('transport');return false;" class="service-card service-card--introduce">
     <div class="service-card-img service-card-carousel">
-      <img src="images/airport-private-transportation-airport-p.jpg" alt="Airport Transfer — airport pickup" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
+      <img src="images/airport-private-transportation-airport-p.jpg" alt="Transportation — airport arrival" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
+      <img src="images/chauffeured hire hotel door.png" alt="Transportation — chauffeur opening the saloon at the hotel" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
+      <img src="images/transportation van westminster.png" alt="Transportation — private van by Westminster" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
     </div>
         <div class="service-card-overlay"></div>
         <div class="service-card-content">
           <div class="service-card-num">04 / 09</div>
-          <h3>Airport Transfer</h3>
-          <p class="service-card-desc">Airport to hotel and return — single journeys, meet-and-greet, flight-tracked, professionally driven. Arranged through a trusted provider — booked and paid directly with them, not through BHH.</p>
-          <span class="service-card-arrow">Request an introduction →</span>
-        </div>
-      </a>
-
-      <a href="#enquire" onclick="goToGuestTransport();return false;" class="service-card service-card--introduce">
-    <div class="service-card-img service-card-carousel">
-      <img src="images/airport-private-transportation-luxury-lo.jpg" alt="Chauffeured Hire — luxury London transfer" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
-    </div>
-        <div class="service-card-overlay"></div>
-        <div class="service-card-content">
-          <div class="service-card-num">05 / 09</div>
-          <h3>Chauffeured Hire</h3>
-          <p class="service-card-desc">A car and driver for a day or longer — chauffeured throughout your stay, at your pace and itinerary. Arranged through a trusted provider — booked and paid directly with them, not through BHH.</p>
+          <h3>Transportation</h3>
+          <p class="service-card-desc">A car with a professional driver for your whole stay, airport arrivals and day or multi day hire. Arranged through our trusted transport partner. You book and pay directly with them, not through BHH.</p>
           <span class="service-card-arrow">Request an introduction →</span>
         </div>
       </a>
 
       <a href="#enquire" data-service="Canal Day Cruise" class="service-card">
     <div class="service-card-img service-card-carousel">
-      <img src="images/private-canal-cruise-family-dining-on-bo.jpg" alt="Canal Day Cruise — family dining on board" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
-      <img src="images/private-canal-cruise-cosy-interior.jpg" alt="Canal Day Cruise — cosy interior" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
+      <img src="images/narrowboat cabin tea.png" alt="Canal Day Cruise — tea in the cabin at Little Venice" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
+      <img src="images/private-canal-cruise-cosy-interior.png" alt="Canal Day Cruise — cosy interior" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
+      <img src="images/canal cruise deck.png" alt="Canal Day Cruise — on deck" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
     </div>
         <div class="service-card-overlay"></div>
         <div class="service-card-content">
-          <div class="service-card-num">06 / 09</div>
+          <div class="service-card-num">05 / 09</div>
           <h3>Canal Day Cruise</h3>
           <p class="service-card-desc">A private daytime cruise along England's historic waterways — a relaxed day on the water, arranged and priced by BHH.</p>
           <span class="service-card-arrow">Discover more →</span>
         </div>
       </a>
 
-      <a href="#enquire" onclick="goToGuestTransport();return false;" class="service-card service-card--introduce">
+      <a href="#enquire" onclick="goToTransportTab('narrowboat');return false;" class="service-card service-card--introduce">
     <div class="service-card-img service-card-carousel">
       <img src="images/private-canal-cruise-narrowboat-on-engli.jpg" alt="Narrowboat Holiday — narrowboat on English canal" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
-      <img src="images/private-canal-cruise-cabin.jpg" alt="Narrowboat Holiday — cabin" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
+      <img src="images/private-canal-cruise-cabin.png" alt="Narrowboat Holiday — cabin" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
+      <img src="images/narrowboat dusk.png" alt="Narrowboat Holiday — moored at dusk, cabin windows glowing" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
     </div>
         <div class="service-card-overlay"></div>
         <div class="service-card-content">
-          <div class="service-card-num">07 / 09</div>
+          <div class="service-card-num">06 / 09</div>
           <h3>Narrowboat Holiday</h3>
           <p class="service-card-desc">A multi-day narrowboat holiday across the English countryside — a full canal-boat break. Arranged through a trusted provider — booked and paid directly with them, not through BHH.</p>
           <span class="service-card-arrow">Request an introduction →</span>
@@ -1686,7 +1710,7 @@ function closeMobileMenu(){
           <img src="images/cip-3.jpg" alt="English lesson for children">
         </div>
         <div class="service-card-content">
-          <div class="service-card-num">08 / 09</div>
+          <div class="service-card-num">07 / 09</div>
           <h3>Cultural Immersion Program</h3>
           <p class="service-card-desc">Learn or improve English during your stay. Flexible courses with accredited London institutes — grouped by age, from a few sessions to a full programme — woven around tours, museums and cultural activities.</p>
           <span class="service-card-arrow">Discover more →</span>
@@ -1701,9 +1725,24 @@ function closeMobileMenu(){
         </div>
         <div class="service-card-overlay"></div>
         <div class="service-card-content">
-          <div class="service-card-num">09 / 09</div>
+          <div class="service-card-num">08 / 09</div>
           <h3>Personal Interpreter Service</h3>
           <p class="service-card-desc">A trusted interpreter by your side throughout your visit — for appointments, healthcare, schools, shopping and official matters. Available in Arabic, Russian and many other languages.</p>
+          <span class="service-card-arrow">Discover more →</span>
+        </div>
+      </a>
+
+      <a href="#enquire" data-service="Riverside Grill" class="service-card">
+    <div class="service-card-img service-card-carousel">
+      <img src="images/riverside grill family.png" alt="Riverside Grill — a family day by the river" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
+      <img src="images/riverside grill men.png" alt="Riverside Grill — a gathering beside the river" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
+      <img src="images/riverside grill women.png" alt="Riverside Grill — a gathering beside the river" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
+    </div>
+        <div class="service-card-overlay"></div>
+        <div class="service-card-content">
+          <div class="service-card-num">09 / 09</div>
+          <h3>Riverside Grill</h3>
+          <p class="service-card-desc">A private day at a riverside cottage from 10 am to 8 pm. A traditional Turkish mangal over real charcoal beside a clear flowing river, your family only, halal available. Also available for private groups.</p>
           <span class="service-card-arrow">Discover more →</span>
         </div>
       </a>
@@ -1826,11 +1865,12 @@ function closeMobileMenu(){
       <!-- 4 tabs: flex:1 fills the row on wide screens; on a narrow phone the tabs keep
            their full text width (white-space:nowrap) and the strip scrolls horizontally
            instead of shrinking the text. -->
-      <div style="display:flex;flex-wrap:nowrap;justify-content:flex-start;gap:0;margin:2rem auto 2.5rem;max-width:720px;overflow-x:auto;-webkit-overflow-scrolling:touch;border-bottom:1px solid rgba(201,168,76,0.3)">
+      <div style="display:flex;flex-wrap:nowrap;justify-content:flex-start;gap:0;margin:2rem auto 2.5rem;max-width:880px;overflow-x:auto;-webkit-overflow-scrolling:touch;border-bottom:1px solid rgba(201,168,76,0.3)">
         <button type="button" class="enquire-tab enquire-tab--active" data-tab="guest" onclick="switchTab('guest'); return false;" style="flex:1 0 auto;white-space:nowrap;display:flex;flex-direction:column;align-items:center;gap:8px;padding:0.9rem 1rem;background:transparent;border:none;border-bottom:2px solid var(--gold);color:var(--gold);font-family:var(--ff-body);font-size:0.72rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:all 0.3s"><svg class="tab-icon tab-icon--guest" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7.5" width="18" height="12.5" rx="2"/><path d="M8.5 7.5V5.5a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v2"/><path d="M3 12h18"/></svg>Become a Guest</button>
         <button type="button" class="enquire-tab" data-tab="host" onclick="switchTab('host'); return false;" style="flex:1 0 auto;white-space:nowrap;display:flex;flex-direction:column;align-items:center;gap:8px;padding:0.9rem 1rem;background:transparent;border:none;border-bottom:2px solid transparent;color:rgba(245,240,232,0.5);font-family:var(--ff-body);font-size:0.72rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:all 0.3s"><svg class="tab-icon tab-icon--host" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.7L12 3.5l9 7.2"/><path d="M5.2 9.6V19a1.5 1.5 0 0 0 1.5 1.5h10.6a1.5 1.5 0 0 0 1.5-1.5V9.6"/><path d="M9.8 20.5v-5.3h4.4v5.3"/></svg>Become a Host</button>
         <button type="button" class="enquire-tab" data-tab="partner" onclick="switchTab('partner'); return false;" style="flex:1 0 auto;white-space:nowrap;display:flex;flex-direction:column;align-items:center;gap:8px;padding:0.9rem 1rem;background:transparent;border:none;border-bottom:2px solid transparent;color:rgba(245,240,232,0.5);font-family:var(--ff-body);font-size:0.72rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:all 0.3s"><svg class="tab-icon tab-icon--partner" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M2.5 20v-1.2a4.3 4.3 0 0 1 4.3-4.3h4.4a4.3 4.3 0 0 1 4.3 4.3V20"/><path d="M16.5 5.2a3.2 3.2 0 0 1 0 5.6"/><path d="M18.2 14.7a4.3 4.3 0 0 1 3.3 4.1V20"/></svg>Become a Partner</button>
         <button type="button" class="enquire-tab" data-tab="scout" onclick="switchTab('scout'); return false;" style="flex:1 0 auto;white-space:nowrap;display:flex;flex-direction:column;align-items:center;gap:8px;padding:0.9rem 1rem;background:transparent;border:none;border-bottom:2px solid transparent;color:rgba(245,240,232,0.5);font-family:var(--ff-body);font-size:0.72rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:all 0.3s"><svg class="tab-icon tab-icon--scout" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M15.6 8.4l-2.1 5.1-5.1 2.1 2.1-5.1z"/></svg>Become a Heritage Scout</button>
+        <button type="button" class="enquire-tab" data-tab="transport" onclick="goToTransportTab(); return false;" style="flex:1 0 auto;white-space:nowrap;display:flex;flex-direction:column;align-items:center;gap:8px;padding:0.9rem 1rem;background:transparent;border:none;border-bottom:2px solid transparent;color:rgba(245,240,232,0.5);font-family:var(--ff-body);font-size:0.72rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:all 0.3s"><svg class="tab-icon tab-icon--transport" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></svg>Transport &amp; Narrowboat</button>
       </div>
 
       <!-- ═══════ GUEST FORM ═══════ -->
@@ -1963,7 +2003,7 @@ function closeMobileMenu(){
             <p style="font-size:0.72rem;color:rgba(245,240,232,0.75);margin:-0.2rem 0 0.8rem;font-style:italic">Select one or more of the experiences above — we arrange and price them together as a single visit.</p>
             <div id="service-card-grid">
               <div class="service-card-v8" data-service="Dinner" onclick="toggleService(this)">
-                <span class="svc-label">Dinner</span>
+                <span class="svc-label">British Dinner</span>
                 <span class="service-card-check"></span>
               </div>
               <div class="service-card-v8" data-service="English Tea" onclick="toggleService(this)">
@@ -1984,6 +2024,10 @@ function closeMobileMenu(){
               </div>
               <div class="service-card-v8" data-service="Personal Interpreter Service" onclick="toggleService(this)">
                 <span class="svc-label">Personal Interpreter Service</span>
+                <span class="service-card-check"></span>
+              </div>
+              <div class="service-card-v8" data-service="Riverside Grill" onclick="toggleService(this)">
+                <span class="svc-label">Riverside Grill</span>
                 <span class="service-card-check"></span>
               </div>
             </div>
@@ -2107,110 +2151,7 @@ function closeMobileMenu(){
           <div style="text-align:center;margin-top:1.5rem"><button type="submit" class="btn btn-gold" style="font-size:0.78rem;padding:1.1rem 3rem;cursor:pointer">Send Enquiry</button></div>
         </form>
 
-          <!-- ── TIER 2: introduce-only partner services, moved inside the Guest panel ── -->
-          <div id="guest-transport" style="margin:3rem 0 0;padding-top:2.5rem;border-top:1px solid rgba(201,168,76,0.35)">
-            <h3 style="font-family:'Cormorant Garamond',serif;font-weight:300;font-size:1.6rem;color:var(--cream);margin-bottom:0.6rem">Transport and narrowboat — arranged with our providers</h3>
-            <p style="font-size:0.85rem;line-height:1.7;color:rgba(245,240,232,0.75);margin-bottom:1.8rem">Airport transfers, chauffeured hire and multi-day narrowboat holidays are delivered by trusted independent providers. BHH introduces you; you book and pay the provider directly — there is no price or tier here. Request an introduction below.</p>
-            <form action='/?success=introduction' id='introduce-form' method='POST' name='transport-introduction' data-netlify="true" style='text-align:left'>
-                      <input type="hidden" name="form-name" value="transport-introduction">
-                      <input type="hidden" name="subject" value="BHH Introduction Request">
-                      <p style="display:none"><label>Don't fill this out if you're human: <input name="bot-field"></label></p>
-                      <p style="font-size:0.75rem;color:var(--muted);margin-bottom:1.2rem;margin-top:0.5rem">Fields marked <span style='color:#C9A84C'>*</span> are required. &nbsp;|&nbsp; Enter phone number without leading zero (e.g. 7911 123456 not 07911 123456).</p>
-            
-                      <div class="form-group"><label>Which service <span style="color:#C9A84C">*</span></label>
-                        <select name="Partner Service" required>
-                          <option value="">Select…</option>
-                          <option value="Airport Transfer">Airport Transfer (airport to hotel and return)</option>
-                          <option value="Chauffeured Hire">Chauffeured Hire (car and driver for a day or longer)</option>
-                          <option value="Narrowboat Holiday">Narrowboat Holiday (multi-day canal boat break)</option>
-                        </select>
-                      </div>
-            
-                      <div class="form-group"><label>Full Name <span style="color:#C9A84C">*</span></label><input type="text" name="Full Name" placeholder="Sarah Bisci" required></div>
-                      <div class="form-group"><label>Email <span style="color:#C9A84C">*</span></label><input type="email" name="email" placeholder="sarah@example.com" required></div>
-            
-                      <div class="form-group"><label>Phone <span style="color:#C9A84C">*</span></label>
-                        <div style="display:flex;gap:0.5rem">
-                          <select name="Country Code" required style="width:130px;flex-shrink:0;text-align:center">
-                            <option value="">Code…</option>
-                            <option value="+44">🇬🇧 +44</option>
-                            <option value="+966">🇸🇦 +966</option>
-                            <option value="+971">🇦🇪 +971</option>
-                            <option value="+974">🇶🇦 +974</option>
-                            <option value="+965">🇰🇼 +965</option>
-                            <option value="+968">🇴🇲 +968</option>
-                            <option value="+973">🇧🇭 +973</option>
-                            <option value="+1">🇺🇸 +1</option>
-                            <option value="+33">🇫🇷 +33</option>
-                            <option value="+49">🇩🇪 +49</option>
-                            <option value="+39">🇮🇹 +39</option>
-                            <option value="+34">🇪🇸 +34</option>
-                            <option value="+31">🇳🇱 +31</option>
-                            <option value="+32">🇧🇪 +32</option>
-                            <option value="+41">🇨🇭 +41</option>
-                            <option value="+43">🇦🇹 +43</option>
-                            <option value="+46">🇸🇪 +46</option>
-                            <option value="+47">🇳🇴 +47</option>
-                            <option value="+45">🇩🇰 +45</option>
-                            <option value="+358">🇫🇮 +358</option>
-                            <option value="+48">🇵🇱 +48</option>
-                            <option value="+7">🇷🇺 +7</option>
-                            <option value="+90">🇹🇷 +90</option>
-                            <option value="+91">🇮🇳 +91</option>
-                            <option value="+86">🇨🇳 +86</option>
-                            <option value="+81">🇯🇵 +81</option>
-                            <option value="+82">🇰🇷 +82</option>
-                            <option value="+65">🇸🇬 +65</option>
-                            <option value="+60">🇲🇾 +60</option>
-                            <option value="+62">🇮🇩 +62</option>
-                            <option value="+63">🇵🇭 +63</option>
-                            <option value="+66">🇹🇭 +66</option>
-                            <option value="+92">🇵🇰 +92</option>
-                            <option value="+880">🇧🇩 +880</option>
-                            <option value="+20">🇪🇬 +20</option>
-                            <option value="+212">🇲🇦 +212</option>
-                            <option value="+213">🇩🇿 +213</option>
-                            <option value="+27">🇿🇦 +27</option>
-                            <option value="+234">🇳🇬 +234</option>
-                            <option value="+254">🇰🇪 +254</option>
-                            <option value="+55">🇧🇷 +55</option>
-                            <option value="+52">🇲🇽 +52</option>
-                            <option value="+54">🇦🇷 +54</option>
-                            <option value="+61">🇦🇺 +61</option>
-                            <option value="+64">🇳🇿 +64</option>
-                            <option value="+353">🇮🇪 +353</option>
-                            <option value="+351">🇵🇹 +351</option>
-                            <option value="+30">🇬🇷 +30</option>
-                            <option value="+36">🇭🇺 +36</option>
-                            <option value="+420">🇨🇿 +420</option>
-                          </select>
-                          <input type="tel" name="Phone Number" placeholder="7911 123456" style="flex:1" required pattern="[1-9][0-9]{6,13}" title="Enter your number without leading zero (e.g. 7911 123456)">
-                        </div>
-                      </div>
-            
-                      <div class="form-group"><label>Preferred Dates <span style="color:#C9A84C">*</span></label>
-                        <div style="display:flex;gap:0.5rem;align-items:center">
-                          <input type="date" name="Date From" style="flex:1" required>
-                          <span style="color:var(--muted);font-size:0.8rem">to</span>
-                          <input type="date" name="Date To" style="flex:1" required>
-                        </div>
-                      </div>
-            
-                      <div class="form-group"><label>Party Size <span style="color:#C9A84C">*</span></label><input type="number" name="Party Size" min="1" max="60" placeholder="4" inputmode="numeric" required></div>
-            
-                      <div class="form-group"><label>Notes</label><textarea name="Notes" rows="4" placeholder="Tell us anything useful for the introduction — pickup/drop-off, route, number of nights, accessibility needs, etc."></textarea></div>
-            
-                      <!-- ═══ GDPR CONSENT ═══ -->
-                      <div style="margin-top:1.5rem;padding:1rem 1.1rem;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.3);border-radius:4px">
-                        <label style="display:flex;align-items:flex-start;gap:0.7rem;cursor:pointer;font-size:0.82rem;line-height:1.6;color:var(--muted)">
-                          <input type="checkbox" name="GDPR Consent" value="Yes" required style="margin-top:0.25rem;flex-shrink:0;accent-color:#C9A84C;cursor:pointer">
-                          <span>I consent to British Heritage Hosts Ltd processing the personal data I have provided in order to introduce me to a relevant provider service, in accordance with the <a href="#" onclick="openLegalModal('privacy');return false;" style="color:var(--gold);text-decoration:underline">Privacy Policy</a>. I understand that any booking or payment is made directly with the provider, not with BHH, and that I can withdraw consent at any time by contacting <a href="mailto:info@britishheritagehosts.com" style="color:var(--gold);text-decoration:underline">info@britishheritagehosts.com</a>.</span>
-                        </label>
-                      </div>
-            
-                      <div style="text-align:center;margin-top:1.5rem"><button type="submit" class="btn btn-outline-gold" style="font-size:0.78rem;padding:1.1rem 3rem;cursor:pointer">Request an introduction</button></div>
-                    </form>
-          </div>
+
       </div>
 
       <!-- ═══════ HOST FORM ═══════ -->
@@ -2878,10 +2819,12 @@ function closeMobileMenu(){
             <select name="Partner Type" required onchange="togglePartnerTypeOther(this)">
               <option value="">Select…</option>
               <option value="Canal Boat Operator">Canal Boat Operator</option>
-              <option value="Transportation Provider">Transportation Provider (airport transfers &amp; chauffeured hire)</option>
+              <option value="Transportation Provider">Transportation Provider</option>
               <option value="Cultural Immersion Programme (CIP) - School Partner">Cultural Immersion Programme (CIP) — School Partner</option>
               <option value="Host Trainer / Etiquette Coach">Host Trainer / Etiquette Coach</option>
               <option value="Interpreter">Interpreter</option>
+              <option value="Grill Chef">Grill Chef (riverside day experiences)</option>
+              <option value="Host Family">Host Family</option>
               <option value="Other">Other</option>
             </select>
           </div>
@@ -3184,6 +3127,145 @@ function closeMobileMenu(){
                 </form>
       </div>
 
+      <!-- ═══════ TRANSPORT INTRODUCTION (5th tab) — moved from the Guest panel; form unchanged ═══════ -->
+      <div id="tab-transport" class="enquire-panel" style="max-width:560px;margin:0 auto;opacity:1;display:none">
+        <h3 style="font-family:'Cormorant Garamond',serif;font-weight:300;font-size:1.6rem;color:var(--cream);margin-bottom:0.6rem;text-align:center">Transport and narrowboat — arranged with our providers</h3>
+        <p class="lead" style="font-size:0.85rem;line-height:1.7;color:rgba(245,240,232,0.75);margin:0 auto 1.8rem;text-align:center">Airport transfers, chauffeured hire and multi-day narrowboat holidays are delivered by trusted independent providers. BHH introduces you; you book and pay the provider directly — there is no price or tier here. Choose an option below to begin.</p>
+        <div id="transport-choice" class="transport-choice">
+          <button type="button" class="tchoice" onclick="openTransportMode('transport','Airport Transfer')">
+            <span class="tchoice-media service-card-carousel" style="height:120px">
+              <img src="images/airport-private-transportation-luxury-lo.png" alt="Airport Transfer — family interior with driver" loading="lazy">
+              <img src="images/transportation van westminster.png" alt="Airport Transfer — van passing Westminster" loading="lazy">
+              <img src="images/airport-private-transportation-airport-p.jpg" alt="Airport Transfer — driver at the van door at the airport" loading="lazy">
+            </span>
+            <span class="tchoice-body">
+              <span class="tchoice-title">Arrange My Airport Transfer</span>
+              <span class="tchoice-sub">Airport to hotel and return</span>
+            </span>
+          </button>
+          <button type="button" class="tchoice" onclick="openTransportMode('transport','Chauffeured Hire')">
+            <span class="tchoice-media service-card-carousel" style="height:120px">
+              <img src="images/chauffeured hire hotel door.png" alt="Chauffeured Hire — chauffeur at the hotel door" loading="lazy">
+              <img src="images/chauffeured hire countryside.png" alt="Chauffeured Hire — countryside day drive" loading="lazy">
+              <img src="images/chauffeured hire night city.png" alt="Chauffeured Hire — night drive past Westminster" loading="lazy">
+            </span>
+            <span class="tchoice-body">
+              <span class="tchoice-title">Arrange My Chauffeured Hire</span>
+              <span class="tchoice-sub">Car and driver for a day or longer</span>
+            </span>
+          </button>
+          <button type="button" class="tchoice" onclick="openTransportMode('narrowboat')">
+            <span class="tchoice-media"><img src="images/private-canal-cruise-narrowboat-on-engli.jpg" alt="" loading="lazy"></span>
+            <span class="tchoice-body">
+              <span class="tchoice-title">Arrange My Narrowboat</span>
+              <span class="tchoice-sub">Multi-day narrowboat holidays</span>
+            </span>
+          </button>
+        </div>
+        <div id="transport-form-wrap" style="display:none">
+          <button type="button" class="transport-back" onclick="showTransportChoice()">&larr; Choose a different service</button>
+        <form action='/?success=introduction' id='introduce-form' method='POST' name='transport-introduction' data-netlify="true" style='text-align:left'>
+                      <input type="hidden" name="form-name" value="transport-introduction">
+                      <input type="hidden" name="subject" value="BHH Introduction Request">
+                      <p style="display:none"><label>Don't fill this out if you're human: <input name="bot-field"></label></p>
+                      <p style="font-size:0.75rem;color:var(--muted);margin-bottom:1.2rem;margin-top:0.5rem">Fields marked <span style='color:#C9A84C'>*</span> are required. &nbsp;|&nbsp; Enter phone number without leading zero (e.g. 7911 123456 not 07911 123456).</p>
+            
+                      <div class="form-group"><label>Which service <span style="color:#C9A84C">*</span></label>
+                        <select name="Partner Service" required>
+                          <option value="">Select…</option>
+                          <option value="Airport Transfer">Airport Transfer (airport to hotel and return)</option>
+                          <option value="Chauffeured Hire">Chauffeured Hire (car and driver for a day or longer)</option>
+                          <option value="Narrowboat Holiday">Narrowboat Holiday (multi-day canal boat break)</option>
+                        </select>
+                      </div>
+            
+                      <div class="form-group"><label>Full Name <span style="color:#C9A84C">*</span></label><input type="text" name="Full Name" placeholder="Sarah Bisci" required></div>
+                      <div class="form-group"><label>Email <span style="color:#C9A84C">*</span></label><input type="email" name="email" placeholder="sarah@example.com" required></div>
+            
+                      <div class="form-group"><label>Phone <span style="color:#C9A84C">*</span></label>
+                        <div style="display:flex;gap:0.5rem">
+                          <select name="Country Code" required style="width:130px;flex-shrink:0;text-align:center">
+                            <option value="">Code…</option>
+                            <option value="+44">🇬🇧 +44</option>
+                            <option value="+966">🇸🇦 +966</option>
+                            <option value="+971">🇦🇪 +971</option>
+                            <option value="+974">🇶🇦 +974</option>
+                            <option value="+965">🇰🇼 +965</option>
+                            <option value="+968">🇴🇲 +968</option>
+                            <option value="+973">🇧🇭 +973</option>
+                            <option value="+1">🇺🇸 +1</option>
+                            <option value="+33">🇫🇷 +33</option>
+                            <option value="+49">🇩🇪 +49</option>
+                            <option value="+39">🇮🇹 +39</option>
+                            <option value="+34">🇪🇸 +34</option>
+                            <option value="+31">🇳🇱 +31</option>
+                            <option value="+32">🇧🇪 +32</option>
+                            <option value="+41">🇨🇭 +41</option>
+                            <option value="+43">🇦🇹 +43</option>
+                            <option value="+46">🇸🇪 +46</option>
+                            <option value="+47">🇳🇴 +47</option>
+                            <option value="+45">🇩🇰 +45</option>
+                            <option value="+358">🇫🇮 +358</option>
+                            <option value="+48">🇵🇱 +48</option>
+                            <option value="+7">🇷🇺 +7</option>
+                            <option value="+90">🇹🇷 +90</option>
+                            <option value="+91">🇮🇳 +91</option>
+                            <option value="+86">🇨🇳 +86</option>
+                            <option value="+81">🇯🇵 +81</option>
+                            <option value="+82">🇰🇷 +82</option>
+                            <option value="+65">🇸🇬 +65</option>
+                            <option value="+60">🇲🇾 +60</option>
+                            <option value="+62">🇮🇩 +62</option>
+                            <option value="+63">🇵🇭 +63</option>
+                            <option value="+66">🇹🇭 +66</option>
+                            <option value="+92">🇵🇰 +92</option>
+                            <option value="+880">🇧🇩 +880</option>
+                            <option value="+20">🇪🇬 +20</option>
+                            <option value="+212">🇲🇦 +212</option>
+                            <option value="+213">🇩🇿 +213</option>
+                            <option value="+27">🇿🇦 +27</option>
+                            <option value="+234">🇳🇬 +234</option>
+                            <option value="+254">🇰🇪 +254</option>
+                            <option value="+55">🇧🇷 +55</option>
+                            <option value="+52">🇲🇽 +52</option>
+                            <option value="+54">🇦🇷 +54</option>
+                            <option value="+61">🇦🇺 +61</option>
+                            <option value="+64">🇳🇿 +64</option>
+                            <option value="+353">🇮🇪 +353</option>
+                            <option value="+351">🇵🇹 +351</option>
+                            <option value="+30">🇬🇷 +30</option>
+                            <option value="+36">🇭🇺 +36</option>
+                            <option value="+420">🇨🇿 +420</option>
+                          </select>
+                          <input type="tel" name="Phone Number" placeholder="7911 123456" style="flex:1" required pattern="[1-9][0-9]{6,13}" title="Enter your number without leading zero (e.g. 7911 123456)">
+                        </div>
+                      </div>
+            
+                      <div class="form-group"><label>Preferred Dates <span style="color:#C9A84C">*</span></label>
+                        <div style="display:flex;gap:0.5rem;align-items:center">
+                          <input type="date" name="Date From" style="flex:1" required>
+                          <span style="color:var(--muted);font-size:0.8rem">to</span>
+                          <input type="date" name="Date To" style="flex:1" required>
+                        </div>
+                      </div>
+            
+                      <div class="form-group"><label>Party Size <span style="color:#C9A84C">*</span></label><input type="number" name="Party Size" min="1" max="60" placeholder="4" inputmode="numeric" required></div>
+            
+                      <div class="form-group"><label>Notes</label><textarea name="Notes" rows="4" placeholder="Tell us anything useful for the introduction — pickup/drop-off, route, number of nights, accessibility needs, etc."></textarea></div>
+            
+                      <!-- ═══ GDPR CONSENT ═══ -->
+                      <div style="margin-top:1.5rem;padding:1rem 1.1rem;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.3);border-radius:4px">
+                        <label style="display:flex;align-items:flex-start;gap:0.7rem;cursor:pointer;font-size:0.82rem;line-height:1.6;color:var(--muted)">
+                          <input type="checkbox" name="GDPR Consent" value="Yes" required style="margin-top:0.25rem;flex-shrink:0;accent-color:#C9A84C;cursor:pointer">
+                          <span>I consent to British Heritage Hosts Ltd processing the personal data I have provided in order to introduce me to a relevant provider service, in accordance with the <a href="#" onclick="openLegalModal('privacy');return false;" style="color:var(--gold);text-decoration:underline">Privacy Policy</a>. I understand that any booking or payment is made directly with the provider, not with BHH, and that I can withdraw consent at any time by contacting <a href="mailto:info@britishheritagehosts.com" style="color:var(--gold);text-decoration:underline">info@britishheritagehosts.com</a>.</span>
+                        </label>
+                      </div>
+            
+                      <div style="text-align:center;margin-top:1.5rem"><button type="submit" class="btn btn-outline-gold" style="font-size:0.78rem;padding:1.1rem 3rem;cursor:pointer">Request an introduction</button></div>
+                    </form>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
@@ -3333,13 +3415,12 @@ function closeMobileMenu(){
       <div class="footer-col">
         <h5>Experiences</h5>
         <ul>
-          <li><a href="#enquire">Private Family Dinner</a></li>
+          <li><a href="#enquire">British Dinner</a></li>
           <li><a href="#enquire">English Tea</a></li>
           <li><a href="#enquire">Heritage Guide</a></li>
           <li><a href="#enquire">Canal Day Cruise</a></li>
-          <li><a href="#enquire" onclick="goToGuestTransport();return false;">Airport Transfer</a></li>
-          <li><a href="#enquire" onclick="goToGuestTransport();return false;">Chauffeured Hire</a></li>
-          <li><a href="#enquire" onclick="goToGuestTransport();return false;">Narrowboat Holiday</a></li>
+          <li><a href="#enquire" onclick="goToTransportTab('transport');return false;">Transportation</a></li>
+          <li><a href="#enquire" onclick="goToTransportTab('narrowboat');return false;">Narrowboat Holiday</a></li>
         </ul>
       </div>
       <div class="footer-col">
@@ -3652,6 +3733,9 @@ var TIER_COPY = {
     premium:  'Everything in Standard + widebeam boat, onboard afternoon tea, and halal catering.'
   }
 };
+// Visible display-name overrides for tier block headings only.
+// Internal identifiers (data-service values, TIER_COPY keys) are intentionally left unchanged.
+var SERVICE_DISPLAY_NAMES = { 'Dinner': 'British Dinner' };
 // TIER 2 note: Airport Transfer, Chauffeured Hire, and Narrowboat Holiday are introduce-only services.
 // They are deliberately NOT keyed here and NOT present in #service-card-grid,
 // so they can never be selected, priced, or reach updatePricingSummary().
@@ -3809,7 +3893,7 @@ function renderTierSlots() {
     }
 
     html += '<div class="tier-slot" data-svc-key="' + escSvc + '">'
-          +   '<div class="tier-slot-header">' + escSvc + '</div>'
+          +   '<div class="tier-slot-header">' + (SERVICE_DISPLAY_NAMES[svc] || escSvc) + '</div>'
           +   cardsHtml
           + (capacityNote ? '<div class="tier-slot-capacity">' + capacityNote + '</div>' : '')
           + '</div>';
@@ -5285,51 +5369,73 @@ function closeLegalModal(type) {
   var blurEl = card.querySelector('.hero-newsflash__blur');
   var nameEl = card.querySelector('.hero-newsflash__name');
 
-  // Same images as each service's card. type: 'guest' (enquiry) | 'transport' (introduction).
+  // One entry per grid card; imgs = that card's full photo set (same order as the grid),
+  // rotated at the grid's cadence. type: 'guest' (enquiry) | 'transport' (introduction).
   var SERVICES = [
-    { name:'Heritage Guide',               img:'images/heritage-tour-family-tour-at-english-cas.jpg', type:'guest' },
-    { name:'English Tea',                   img:'images/english-tea-traditional-afternoon-tea.jpg',    type:'guest' },
-    { name:'Dinner',                        img:'images/private-family-dinner-host-and-guest-fam.jpg',  type:'guest' },
-    { name:'Airport Transfer',              img:'images/airport-private-transportation-airport-p.jpg',  type:'transport' },
-    { name:'Chauffeured Hire',              img:'images/airport-private-transportation-luxury-lo.jpg',  type:'transport' },
-    { name:'Canal Day Cruise',              img:'images/private-canal-cruise-family-dining-on-bo.jpg',  type:'guest' },
-    { name:'Narrowboat Holiday',            img:'images/private-canal-cruise-narrowboat-on-engli.jpg',  type:'transport' },
-    { name:'Cultural Immersion Program',    img:'images/cip-1.jpg',                                     type:'guest' },
-    { name:'Personal Interpreter Service',  img:'images/interpreter-saudi-men.png',                     type:'guest', contain:true }
+    { name:'Heritage Guide',               type:'guest',     imgs:['images/heritage-tour-family-tour-at-english-cas.jpg','images/heritage-tour-british-heritage-guide.jpg','images/heritage guide thames.png'] },
+    { name:'English Tea',                   type:'guest',     imgs:['images/english-tea-traditional-afternoon-tea.jpg','images/english-tea-english-village.png','images/english tea serving.png'] },
+    { name:'Dinner',                        type:'guest',     imgs:['images/private-family-dinner-host-and-guest-fam.jpg','images/private-family-dinner-traditional-englis.jpg','images/dinner roast carving.png'] },
+    { name:'Transportation',                type:'transport', imgs:['images/airport-private-transportation-airport-p.jpg','images/chauffeured hire hotel door.png','images/transportation van westminster.png'] },
+    { name:'Canal Day Cruise',              type:'guest',     imgs:['images/narrowboat cabin tea.png','images/private-canal-cruise-cosy-interior.png','images/canal cruise deck.png'] },
+    { name:'Narrowboat Holiday',            type:'transport', imgs:['images/private-canal-cruise-narrowboat-on-engli.jpg','images/private-canal-cruise-cabin.png','images/narrowboat dusk.png'] },
+    { name:'Cultural Immersion Program',    type:'guest',     imgs:['images/cip-1.jpg','images/cip-2.jpg','images/cip-3.jpg'] },
+    { name:'Personal Interpreter Service',  type:'guest',     imgs:['images/interpreter-saudi-men.png','images/interpreter-saudi-woman.png','images/interpreter-russian-man.png'] },
+    { name:'Riverside Grill',               type:'guest',     imgs:['images/riverside grill family.png','images/riverside grill men.png','images/riverside grill women.png'] }
   ];
 
-  var idx = 0, dismissed = false, timers = [];
-  function clearTimers(){ timers.forEach(function(t){ clearTimeout(t); }); timers = []; }
+  var ROTATE_MS = 3500;   // same cadence as the grid carousel
+  var idx = 0, imgIdx = 0, dismissed = false, timers = [], imgTimer = null;
+  function clearTimers(){ timers.forEach(function(t){ clearTimeout(t); }); timers = []; if(imgTimer){ clearInterval(imgTimer); imgTimer = null; } }
+
+  // Visible label only; internal identifier (s.name / data-service) is left unchanged.
+  function displayName(s){ return (typeof SERVICE_DISPLAY_NAMES !== 'undefined' && SERVICE_DISPLAY_NAMES[s.name]) || s.name; }
+
+  function paint(s, i){
+    var src = s.imgs[i];
+    imgEl.src = src; blurEl.src = src; imgEl.alt = displayName(s);
+  }
 
   function render(s){
-    imgEl.src = s.img; imgEl.alt = s.name;
-    card.classList.add('is-contain'); blurEl.src = s.img;   // all images: shown in full (contain) over a blurred, darkened fill of themselves
-    nameEl.textContent = s.name;
-    card.setAttribute('data-service', s.name);
+    imgIdx = 0;
+    card.classList.add('is-contain');            // full image over a blurred, darkened fill of itself
+    nameEl.textContent = displayName(s);
+    card.setAttribute('data-service', s.name);   // internal identifier — unchanged
+    imgEl.style.opacity = '1';
+    paint(s, 0);
+    if(imgTimer){ clearInterval(imgTimer); imgTimer = null; }
+    if(s.imgs.length > 1){                        // rotate through ALL of this card's photos, grid cadence
+      imgTimer = setInterval(function(){
+        imgIdx = (imgIdx + 1) % s.imgs.length;
+        imgEl.style.opacity = '0';                // brief cross-fade, then swap
+        timers.push(setTimeout(function(){ paint(s, imgIdx); imgEl.style.opacity = '1'; }, 300));
+      }, ROTATE_MS);
+    }
   }
 
   function cycle(){
     if(dismissed) return;
-    render(SERVICES[idx]);
+    var s = SERVICES[idx];
+    render(s);
     card.hidden = false;
     // double rAF so the opacity/transform transition actually runs from the hidden state
     requestAnimationFrame(function(){ requestAnimationFrame(function(){ card.classList.add('is-visible'); }); });
-    timers.push(setTimeout(function(){          // after fade-in (1s) + hold (4.2s)
-      card.classList.remove('is-visible');      // fade out (1s via CSS)
-      timers.push(setTimeout(function(){        // + 2s gap
+    var hold = s.imgs.length * ROTATE_MS;         // stay long enough to show every photo at grid cadence
+    timers.push(setTimeout(function(){            // after fade-in (1s) + hold
+      card.classList.remove('is-visible');        // fade out (1s via CSS)
+      if(imgTimer){ clearInterval(imgTimer); imgTimer = null; }
+      timers.push(setTimeout(function(){          // + 2s gap
         idx = (idx + 1) % SERVICES.length;
         cycle();
       }, 1000 + 2000));
-    }, 1000 + 4200));
+    }, 1000 + hold));
   }
 
   window.newsflashClick = function(){
     var name = card.getAttribute('data-service') || '', svc = null;
     for(var i=0;i<SERVICES.length;i++){ if(SERVICES[i].name === name){ svc = SERVICES[i]; break; } }
     if(svc && svc.type === 'transport'){
-      if(typeof goToGuestTransport === 'function'){ goToGuestTransport(); }
-      var ps = document.querySelector('#introduce-form select[name="Partner Service"]');
-      if(ps){ ps.value = name; }
+      var mode = (name === 'Narrowboat Holiday') ? 'narrowboat' : 'transport';
+      if(typeof goToTransportTab === 'function'){ goToTransportTab(mode, name); }
     } else {
       if(typeof switchTab === 'function'){ switchTab('guest'); }
       var v8 = document.querySelector('#service-card-grid .service-card-v8[data-service="' + name + '"]');
