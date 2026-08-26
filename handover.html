@@ -1,0 +1,939 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0D1B2A">
+<title>Venue handover · British Heritage Hosts</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0D1B2A;
+    --gold:#C9A84C;
+    --goldsoft:#EFE3C4;
+    --paper:#F6F4EF;
+    --card:#FFFFFF;
+    --ink:#1B2733;
+    --muted:#6A7480;
+    --line:#E3DFD6;
+    --good:#2F6B4F;
+    --fair:#A8761C;
+    --bad:#9B2C2C;
+    --radius:14px;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Jost',system-ui,-apple-system,'Segoe UI',sans-serif;
+    font-size:16px;line-height:1.5;
+    padding-bottom:env(safe-area-inset-bottom);
+  }
+  h1,h2,h3,.serif{font-family:'Cormorant Garamond',Georgia,serif;font-weight:600;letter-spacing:.01em}
+  .wrap{max-width:560px;margin:0 auto;padding:0 16px 56px}
+
+  /* header */
+  header.brand{
+    background:var(--navy);color:#fff;
+    padding:calc(18px + env(safe-area-inset-top)) 16px 18px;
+    text-align:center;border-bottom:3px solid var(--gold);
+  }
+  header.brand .crest{
+    font-family:'Cormorant Garamond',Georgia,serif;
+    font-size:11px;letter-spacing:.42em;text-transform:uppercase;
+    color:var(--gold);margin-bottom:6px;
+  }
+  header.brand h1{font-size:27px;margin:0;line-height:1.15;color:#fff}
+  header.brand .sub{font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:#B9C2CC;margin-top:8px}
+
+  /* generic blocks */
+  .card{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    padding:18px;margin-top:16px;box-shadow:0 1px 2px rgba(13,27,42,.05);
+  }
+  .card.locked{border-top:3px solid var(--gold)}
+  .sectionhead{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:4px}
+  .sectionhead h2{font-size:24px;margin:0;color:var(--navy)}
+  .eyebrow{font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);font-weight:500}
+  .rule{height:1px;background:var(--line);margin:14px 0}
+
+  dl.details{margin:0;display:grid;grid-template-columns:1fr;gap:0}
+  dl.details>div{display:flex;justify-content:space-between;gap:14px;padding:10px 0;border-bottom:1px dashed var(--line)}
+  dl.details>div:last-child{border-bottom:0}
+  dl.details dt{font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);flex:0 0 34%;padding-top:2px}
+  dl.details dd{margin:0;text-align:right;font-weight:500;color:var(--navy);font-size:15px;flex:1}
+  .lockedhint{display:flex;align-items:center;gap:7px;margin-top:12px;font-size:12px;color:var(--muted)}
+  .lockedhint svg{flex:0 0 auto}
+
+  /* checklist */
+  .check{padding:14px 0;border-bottom:1px solid var(--line)}
+  .check:last-of-type{border-bottom:0}
+  .check .label{font-weight:500;color:var(--navy);margin-bottom:9px;font-size:15px}
+  .seg{display:flex;gap:8px}
+  .seg button{
+    flex:1;padding:11px 8px;border:1px solid var(--line);background:#fff;color:var(--muted);
+    border-radius:10px;font-family:inherit;font-size:14px;font-weight:500;cursor:pointer;
+    transition:.15s;
+  }
+  .seg button[aria-pressed="true"][data-rate="Good"]{background:var(--good);border-color:var(--good);color:#fff}
+  .seg button[aria-pressed="true"][data-rate="Fair"]{background:var(--fair);border-color:var(--fair);color:#fff}
+  .check input.note{
+    width:100%;margin-top:9px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;
+    font-family:inherit;font-size:14px;background:#FCFBF8;color:var(--ink);
+  }
+  .check input.note::placeholder{color:#A9B1B9}
+
+  label.field{display:block;margin-top:16px}
+  label.field span.name{display:block;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:7px}
+  input[type=text],input[type=tel],textarea{
+    width:100%;padding:12px 13px;border:1px solid var(--line);border-radius:10px;
+    font-family:inherit;font-size:16px;background:#FCFBF8;color:var(--ink);
+  }
+  textarea{min-height:96px;resize:vertical}
+  input:focus,textarea:focus{outline:2px solid var(--goldsoft);border-color:var(--gold)}
+
+  /* buttons */
+  .btn{
+    display:block;width:100%;padding:15px 16px;border-radius:11px;border:1px solid transparent;
+    font-family:'Jost',sans-serif;font-size:15px;font-weight:500;letter-spacing:.06em;
+    text-transform:uppercase;cursor:pointer;transition:.15s;margin-top:14px;
+  }
+  .btn.primary{background:var(--navy);color:#fff}
+  .btn.primary:active{background:#16283b}
+  .btn.gold{background:var(--gold);color:var(--navy);font-weight:600}
+  .btn.gold:active{filter:brightness(.95)}
+  .btn.ghost{background:#fff;border-color:var(--navy);color:var(--navy)}
+  .btn:disabled{opacity:.45;cursor:not-allowed}
+  .btn.small{width:auto;padding:9px 14px;font-size:12px;margin-top:0;text-transform:none;letter-spacing:.02em}
+
+  /* photos */
+  .photobar{display:flex;gap:10px;align-items:center;margin-top:10px;flex-wrap:wrap}
+  .thumbs{display:grid;grid-template-columns:repeat(auto-fill,minmax(78px,1fr));gap:8px;margin-top:12px}
+  .thumb{position:relative;aspect-ratio:1;border-radius:9px;overflow:hidden;border:1px solid var(--line);background:#eee}
+  .thumb img{width:100%;height:100%;object-fit:cover;display:block}
+  .thumb button{
+    position:absolute;top:3px;right:3px;width:23px;height:23px;border-radius:50%;
+    border:0;background:rgba(13,27,42,.82);color:#fff;font-size:14px;line-height:1;cursor:pointer;
+  }
+  .count{font-size:12px;color:var(--muted)}
+
+  /* signature */
+  .sigwrap{margin-top:9px;border:1px solid var(--line);border-radius:11px;background:#FCFBF8;overflow:hidden}
+  canvas.sig{display:block;width:100%;height:170px;touch-action:none;background:
+    linear-gradient(#FCFBF8,#FCFBF8) padding-box}
+  .sigfoot{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border-top:1px dashed var(--line)}
+  .sigfoot span{font-size:11.5px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase}
+
+  /* code row */
+  .coderow{display:flex;gap:10px;margin-top:9px}
+  .coderow input{
+    flex:1;letter-spacing:.5em;text-align:center;font-size:22px;font-weight:500;padding:12px 8px;
+    font-family:'Jost',sans-serif;
+  }
+
+  /* messages */
+  .msg{padding:12px 14px;border-radius:10px;font-size:14px;margin-top:14px;display:none}
+  .msg.show{display:block}
+  .msg.error{background:#FCEDED;border:1px solid #F0C9C9;color:var(--bad)}
+  .msg.info{background:#EFF4F1;border:1px solid #CFE0D6;color:var(--good)}
+  .msg.warn{background:#FBF3E2;border:1px solid #EBD9AE;color:var(--fair)}
+
+  .badge{
+    display:inline-flex;align-items:center;gap:6px;font-size:11px;letter-spacing:.14em;
+    text-transform:uppercase;padding:5px 10px;border-radius:999px;font-weight:500;
+  }
+  .badge.done{background:#EAF1EC;color:var(--good)}
+  .badge.wait{background:#F2F0EA;color:var(--muted)}
+  .badge.now{background:var(--goldsoft);color:#7A5E12}
+
+  .locked-section{opacity:.55}
+  .locked-section .btn,.locked-section input,.locked-section textarea,.locked-section .seg button{pointer-events:none}
+
+  /* loading */
+  .center{text-align:center;padding:60px 20px}
+  .spinner{
+    width:34px;height:34px;border:2px solid var(--line);border-top-color:var(--gold);
+    border-radius:50%;margin:0 auto 18px;animation:spin 1s linear infinite;
+  }
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  .sealed{text-align:center;padding:34px 20px}
+  .sealed .mark{
+    width:74px;height:74px;border-radius:50%;background:var(--navy);color:var(--gold);
+    display:flex;align-items:center;justify-content:center;margin:0 auto 18px;font-size:34px;
+    border:2px solid var(--gold);
+  }
+  .sealed h2{font-size:29px;margin:0 0 8px;color:var(--navy)}
+  .sealed p{color:var(--muted);font-size:14.5px;margin:0 auto;max-width:38ch}
+
+  .preview{
+    background:#2A3442;color:#F0E4C4;text-align:center;font-size:12px;
+    padding:8px 14px;letter-spacing:.08em;
+  }
+  footer.legal{text-align:center;font-size:11.5px;color:var(--muted);margin-top:26px;line-height:1.7}
+  .hidden{display:none !important}
+</style>
+</head>
+<body>
+
+<div id="previewBanner" class="preview hidden">Preview mode — sample data, nothing will be saved</div>
+
+<header class="brand">
+  <div class="crest">Est. Britain</div>
+  <h1>British Heritage Hosts</h1>
+  <div class="sub">Venue handover</div>
+</header>
+
+<div class="wrap">
+
+  <!-- loading -->
+  <section id="screenLoading" class="center">
+    <div class="spinner"></div>
+    <p class="serif" style="font-size:19px;color:var(--navy);margin:0">Opening your handover</p>
+    <p style="color:var(--muted);font-size:13.5px">One moment please</p>
+  </section>
+
+  <!-- fatal error -->
+  <section id="screenError" class="card hidden">
+    <div class="eyebrow">Unable to continue</div>
+    <h2 class="serif" style="font-size:23px;margin:6px 0 10px;color:var(--navy)" id="errorTitle">Something went wrong</h2>
+    <p id="errorText" style="color:var(--muted);margin:0;font-size:14.5px"></p>
+    <p style="color:var(--muted);margin:16px 0 0;font-size:13px">
+      Please call the office on the number in your booking email and quote your booking reference.
+    </p>
+  </section>
+
+  <!-- main -->
+  <section id="screenMain" class="hidden">
+
+    <!-- locked details -->
+    <div class="card locked">
+      <div class="sectionhead">
+        <div>
+          <div class="eyebrow">Booking</div>
+          <h2 id="bookingRef">—</h2>
+        </div>
+      </div>
+      <div class="rule"></div>
+      <dl class="details">
+        <div><dt>Date</dt><dd id="dDate">—</dd></div>
+        <div><dt>Venue</dt><dd id="dVenue">—</dd></div>
+        <div><dt>Representative</dt><dd id="dRep">—</dd></div>
+        <div><dt>Cook</dt><dd id="dCook">—</dd></div>
+        <div><dt>Guests</dt><dd id="dGuests">—</dd></div>
+      </dl>
+      <div class="lockedhint">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/>
+        </svg>
+        These details are fixed. Contact the office if anything is wrong.
+      </div>
+    </div>
+
+    <!-- arrival -->
+    <div class="card" id="cardArrival">
+      <div class="sectionhead">
+        <div>
+          <div class="eyebrow">Step one</div>
+          <h2>Arrival</h2>
+        </div>
+        <span class="badge now" id="arrivalBadge">To do</span>
+      </div>
+      <p style="color:var(--muted);font-size:13.5px;margin:8px 0 0">
+        Walk the site with the venue representative and record the condition you found it in.
+      </p>
+      <div class="rule"></div>
+      <div id="arrivalChecks"></div>
+
+      <div class="rule"></div>
+      <div class="eyebrow">Photographs</div>
+      <div class="photobar">
+        <button class="btn gold small" type="button" id="arrivalPhotoBtn">Take a photo</button>
+        <span class="count" id="arrivalPhotoCount">No photos yet</span>
+      </div>
+      <input type="file" accept="image/*" capture="environment" multiple id="arrivalPhotoInput" class="hidden">
+      <div class="thumbs" id="arrivalThumbs"></div>
+
+      <div class="rule"></div>
+      <div class="eyebrow">Verification</div>
+      <p style="color:var(--muted);font-size:13.5px;margin:8px 0 0">
+        We will text a 6 digit code to the venue representative's mobile.
+      </p>
+      <button class="btn ghost" type="button" id="arrivalSendBtn">Send code by text</button>
+      <div class="coderow">
+        <input type="tel" inputmode="numeric" maxlength="6" placeholder="––––––" id="arrivalCode" autocomplete="one-time-code">
+      </div>
+
+      <label class="field">
+        <span class="name">Name of person signing</span>
+        <input type="text" id="arrivalName" placeholder="Full name" autocomplete="name">
+      </label>
+
+      <label class="field" style="margin-bottom:0">
+        <span class="name">Signature</span>
+      </label>
+      <div class="sigwrap">
+        <canvas class="sig" id="arrivalSig"></canvas>
+        <div class="sigfoot">
+          <span>Sign with your finger</span>
+          <button class="btn ghost small" type="button" data-clear="arrivalSig">Clear</button>
+        </div>
+      </div>
+
+      <div class="msg error" id="arrivalError"></div>
+      <div class="msg info" id="arrivalInfo"></div>
+      <button class="btn primary" type="button" id="arrivalSignBtn">Sign arrival</button>
+    </div>
+
+    <!-- departure -->
+    <div class="card locked-section" id="cardDeparture">
+      <div class="sectionhead">
+        <div>
+          <div class="eyebrow">Step two</div>
+          <h2>Departure</h2>
+        </div>
+        <span class="badge wait" id="departureBadge">Locked</span>
+      </div>
+      <p style="color:var(--muted);font-size:13.5px;margin:8px 0 0" id="departureIntro">
+        Available once the arrival handover has been signed.
+      </p>
+      <div class="rule"></div>
+      <div id="departureChecks"></div>
+
+      <div class="rule"></div>
+      <div class="eyebrow">Photographs</div>
+      <div class="photobar">
+        <button class="btn gold small" type="button" id="departurePhotoBtn">Take a photo</button>
+        <span class="count" id="departurePhotoCount">No photos yet</span>
+      </div>
+      <input type="file" accept="image/*" capture="environment" multiple id="departurePhotoInput" class="hidden">
+      <div class="thumbs" id="departureThumbs"></div>
+
+      <label class="field">
+        <span class="name">Comments</span>
+        <textarea id="departureComments" placeholder="Anything either party wishes to record"></textarea>
+      </label>
+
+      <div class="rule"></div>
+      <div class="eyebrow">Verification</div>
+      <p style="color:var(--muted);font-size:13.5px;margin:8px 0 0">
+        A fresh 6 digit code will be texted to the venue representative's mobile.
+      </p>
+      <button class="btn ghost" type="button" id="departureSendBtn">Send code by text</button>
+      <div class="coderow">
+        <input type="tel" inputmode="numeric" maxlength="6" placeholder="––––––" id="departureCode" autocomplete="one-time-code">
+      </div>
+
+      <label class="field">
+        <span class="name">Name of person signing</span>
+        <input type="text" id="departureName" placeholder="Full name" autocomplete="name">
+      </label>
+
+      <label class="field" style="margin-bottom:0">
+        <span class="name">Signature</span>
+      </label>
+      <div class="sigwrap">
+        <canvas class="sig" id="departureSig"></canvas>
+        <div class="sigfoot">
+          <span>Sign with your finger</span>
+          <button class="btn ghost small" type="button" data-clear="departureSig">Clear</button>
+        </div>
+      </div>
+
+      <div class="msg error" id="departureError"></div>
+      <div class="msg info" id="departureInfo"></div>
+      <button class="btn primary" type="button" id="departureSignBtn">Sign departure</button>
+    </div>
+  </section>
+
+  <!-- sealed -->
+  <section id="screenSealed" class="card hidden">
+    <div class="sealed">
+      <div class="mark">&#10003;</div>
+      <h2>Sealed and emailed</h2>
+      <p>
+        The handover record has been signed by both parties, saved, and emailed to the venue
+        representative, the cook and the British Heritage Hosts office.
+      </p>
+      <p style="margin-top:14px;font-size:13px;color:var(--muted)" id="sealedRef"></p>
+    </div>
+  </section>
+
+  <footer class="legal">
+    British Heritage Hosts &middot; enquiries@britishheritagehosts.com<br>
+    This record is retained as evidence of the condition of the venue.
+  </footer>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  var ENDPOINT = 'https://pwqdzitsezblncmewxsf.supabase.co/functions/v1/handover';
+  var MAX_EDGE = 1200;
+  var JPEG_QUALITY = 0.72;
+
+  var ARRIVAL_ITEMS = [
+    { key: 'grassAndGround',    label: 'Grass and ground' },
+    { key: 'fencesAndFixtures', label: 'Fences and fixtures' },
+    { key: 'toilets',           label: 'Toilets' },
+    { key: 'bins',              label: 'Bins' },
+    { key: 'existingDamage',    label: 'Existing damage note' }
+  ];
+
+  var DEPARTURE_ITEMS = [
+    { key: 'grillRemoved',  label: 'Grill extinguished and removed' },
+    { key: 'ashRemoved',    label: 'Ash removed' },
+    { key: 'tablesRemoved', label: 'Tables and tableware removed' },
+    { key: 'wasteRemoved',  label: 'Waste removed' },
+    { key: 'areaSwept',     label: 'Area swept' },
+    { key: 'noBurnMarks',   label: 'No burn marks or grease' },
+    { key: 'toiletsClean',  label: 'Toilets clean' },
+    { key: 'gatesAndDoors', label: 'Gates and doors as found' }
+  ];
+
+  // in memory only, never localStorage
+  var state = {
+    token: null,
+    preview: false,
+    status: 'issued',
+    bookingRef: '',
+    photos: { arrival: [], departure: [] },
+    checks: { arrival: {}, departure: {} }
+  };
+
+  var $ = function (id) { return document.getElementById(id); };
+
+  function show(id) { $(id).classList.remove('hidden'); }
+  function hide(id) { $(id).classList.add('hidden'); }
+
+  function setMsg(id, text, kind) {
+    var el = $(id);
+    el.className = 'msg ' + (kind || 'error') + (text ? ' show' : '');
+    el.textContent = text || '';
+  }
+
+  function fatal(title, text) {
+    hide('screenLoading'); hide('screenMain'); hide('screenSealed');
+    $('errorTitle').textContent = title;
+    $('errorText').textContent = text;
+    show('screenError');
+  }
+
+  function escapeText(v) { return v == null || v === '' ? '—' : String(v); }
+
+  function prettyDate(value) {
+    if (!value) return '—';
+    var d = new Date(String(value).slice(0, 10) + 'T00:00:00');
+    if (isNaN(d.getTime())) return String(value);
+    return d.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+  }
+
+  // ------------------------------------------------------------ checklists
+
+  function buildChecklist(containerId, items, stage) {
+    var host = $(containerId);
+    host.innerHTML = '';
+    items.forEach(function (item) {
+      state.checks[stage][item.key] = { rating: '', note: '' };
+
+      var row = document.createElement('div');
+      row.className = 'check';
+
+      var label = document.createElement('div');
+      label.className = 'label';
+      label.textContent = item.label;
+      row.appendChild(label);
+
+      var seg = document.createElement('div');
+      seg.className = 'seg';
+      ['Good', 'Fair'].forEach(function (rate) {
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.dataset.rate = rate;
+        b.setAttribute('aria-pressed', 'false');
+        b.textContent = rate;
+        b.addEventListener('click', function () {
+          Array.prototype.forEach.call(seg.children, function (c) {
+            c.setAttribute('aria-pressed', String(c === b));
+          });
+          state.checks[stage][item.key].rating = rate;
+        });
+        seg.appendChild(b);
+      });
+      row.appendChild(seg);
+
+      var note = document.createElement('input');
+      note.type = 'text';
+      note.className = 'note';
+      note.placeholder = 'Note, optional';
+      note.addEventListener('input', function () {
+        state.checks[stage][item.key].note = note.value;
+      });
+      row.appendChild(note);
+
+      host.appendChild(row);
+    });
+  }
+
+  function missingRatings(stage, items) {
+    return items.filter(function (i) { return !state.checks[stage][i.key].rating; })
+                .map(function (i) { return i.label; });
+  }
+
+  // ------------------------------------------------------------ photos
+
+  function compress(file) {
+    return new Promise(function (resolve, reject) {
+      var reader = new FileReader();
+      reader.onerror = function () { reject(new Error('That image could not be read.')); };
+      reader.onload = function () {
+        var img = new Image();
+        img.onerror = function () { reject(new Error('That image could not be opened.')); };
+        img.onload = function () {
+          var w = img.naturalWidth || img.width;
+          var h = img.naturalHeight || img.height;
+          var scale = Math.min(1, MAX_EDGE / Math.max(w, h));
+          var cw = Math.max(1, Math.round(w * scale));
+          var ch = Math.max(1, Math.round(h * scale));
+          var c = document.createElement('canvas');
+          c.width = cw; c.height = ch;
+          var ctx = c.getContext('2d');
+          ctx.fillStyle = '#fff';
+          ctx.fillRect(0, 0, cw, ch);
+          ctx.drawImage(img, 0, 0, cw, ch);
+          resolve(c.toDataURL('image/jpeg', JPEG_QUALITY));
+        };
+        img.src = reader.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function renderThumbs(stage) {
+    var host = $(stage + 'Thumbs');
+    host.innerHTML = '';
+    state.photos[stage].forEach(function (dataUrl, index) {
+      var box = document.createElement('div');
+      box.className = 'thumb';
+      var img = document.createElement('img');
+      img.src = dataUrl;
+      img.alt = 'Photo ' + (index + 1);
+      box.appendChild(img);
+      var rm = document.createElement('button');
+      rm.type = 'button';
+      rm.setAttribute('aria-label', 'Remove photo ' + (index + 1));
+      rm.textContent = '×';
+      rm.addEventListener('click', function () {
+        state.photos[stage].splice(index, 1);
+        renderThumbs(stage);
+      });
+      box.appendChild(rm);
+      host.appendChild(box);
+    });
+    var n = state.photos[stage].length;
+    $(stage + 'PhotoCount').textContent =
+      n === 0 ? 'No photos yet' : n + (n === 1 ? ' photo attached' : ' photos attached');
+  }
+
+  function wirePhotos(stage) {
+    var input = $(stage + 'PhotoInput');
+    $(stage + 'PhotoBtn').addEventListener('click', function () { input.click(); });
+    input.addEventListener('change', function () {
+      var files = Array.prototype.slice.call(input.files || []);
+      if (!files.length) return;
+      setMsg(stage + 'Error', '', 'error');
+      Promise.all(files.map(compress)).then(function (list) {
+        list.forEach(function (d) { state.photos[stage].push(d); });
+        renderThumbs(stage);
+      }).catch(function (e) {
+        setMsg(stage + 'Error', e.message || 'A photo could not be processed.', 'error');
+      }).then(function () { input.value = ''; });
+    });
+  }
+
+  // ------------------------------------------------------------ signature pads
+
+  function signaturePad(canvasId) {
+    var canvas = $(canvasId);
+    var ctx = canvas.getContext('2d');
+    var drawing = false;
+    var dirty = false;
+    var last = null;
+
+    function size() {
+      var ratio = window.devicePixelRatio || 1;
+      var rect = canvas.getBoundingClientRect();
+      var data = dirty ? canvas.toDataURL('image/png') : null;
+      canvas.width = Math.round(rect.width * ratio);
+      canvas.height = Math.round(rect.height * ratio);
+      ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+      ctx.lineWidth = 2.2;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.strokeStyle = '#0D1B2A';
+      if (data) {
+        var img = new Image();
+        img.onload = function () { ctx.drawImage(img, 0, 0, rect.width, rect.height); };
+        img.src = data;
+      }
+    }
+
+    function point(e) {
+      var rect = canvas.getBoundingClientRect();
+      return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+    }
+
+    canvas.addEventListener('pointerdown', function (e) {
+      e.preventDefault();
+      canvas.setPointerCapture(e.pointerId);
+      drawing = true; dirty = true;
+      last = point(e);
+      ctx.beginPath();
+      ctx.arc(last.x, last.y, 1.1, 0, Math.PI * 2);
+      ctx.fillStyle = '#0D1B2A';
+      ctx.fill();
+    });
+    canvas.addEventListener('pointermove', function (e) {
+      if (!drawing) return;
+      e.preventDefault();
+      var p = point(e);
+      ctx.beginPath();
+      ctx.moveTo(last.x, last.y);
+      ctx.lineTo(p.x, p.y);
+      ctx.stroke();
+      last = p;
+    });
+    ['pointerup', 'pointercancel', 'pointerleave'].forEach(function (ev) {
+      canvas.addEventListener(ev, function () { drawing = false; });
+    });
+
+    window.addEventListener('resize', size);
+    size();
+
+    return {
+      clear: function () {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        dirty = false;
+      },
+      isEmpty: function () { return !dirty; },
+      toBase64: function () { return canvas.toDataURL('image/png'); }
+    };
+  }
+
+  var pads = {};
+
+  // ------------------------------------------------------------ geolocation
+
+  function getPosition() {
+    return new Promise(function (resolve) {
+      if (!navigator.geolocation) return resolve({ lat: null, lng: null });
+      var done = false;
+      var timer = setTimeout(function () {
+        if (!done) { done = true; resolve({ lat: null, lng: null }); }
+      }, 9000);
+      navigator.geolocation.getCurrentPosition(
+        function (pos) {
+          if (done) return;
+          done = true; clearTimeout(timer);
+          resolve({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+        },
+        function () {
+          if (done) return;
+          done = true; clearTimeout(timer);
+          resolve({ lat: null, lng: null });
+        },
+        { enableHighAccuracy: true, timeout: 8000, maximumAge: 0 }
+      );
+    });
+  }
+
+  // ------------------------------------------------------------ api
+
+  function call(body) {
+    return fetch(ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    }).then(function (res) {
+      return res.json().catch(function () { return {}; }).then(function (data) {
+        return { httpStatus: res.status, ok: res.ok && data.ok !== false, data: data };
+      });
+    }, function () {
+      throw new Error('No connection. Check your signal and try again.');
+    });
+  }
+
+  // ------------------------------------------------------------ rendering
+
+  function paintDetails(d) {
+    state.bookingRef = d.booking && d.booking.booking_id ? String(d.booking.booking_id) : '';
+    $('bookingRef').textContent = state.bookingRef ? 'Ref ' + state.bookingRef : 'Handover';
+    $('dDate').textContent = prettyDate(d.booking && d.booking.booking_date) +
+      (d.booking && d.booking.booking_time ? ', ' + String(d.booking.booking_time).slice(0, 5) : '');
+    $('dVenue').textContent = escapeText(d.venue && d.venue.name);
+    $('dRep').textContent = escapeText(d.venue && d.venue.rep_name);
+    $('dCook').textContent = escapeText(d.cook && d.cook.name);
+    var a = (d.booking && d.booking.guest_count_adults) || 0;
+    var c = (d.booking && d.booking.guest_count_children) || 0;
+    $('dGuests').textContent = a + ' adults, ' + c + ' children';
+  }
+
+  function applyStatus(status) {
+    state.status = status;
+    var arrivalDone = status === 'arrival_signed' || status === 'departure_signed';
+
+    $('arrivalBadge').textContent = arrivalDone ? 'Signed' : 'To do';
+    $('arrivalBadge').className = 'badge ' + (arrivalDone ? 'done' : 'now');
+    $('cardArrival').classList.toggle('locked-section', arrivalDone);
+    $('arrivalSignBtn').disabled = arrivalDone;
+    $('arrivalSendBtn').disabled = arrivalDone;
+
+    $('departureBadge').textContent = arrivalDone ? 'To do' : 'Locked';
+    $('departureBadge').className = 'badge ' + (arrivalDone ? 'now' : 'wait');
+    $('cardDeparture').classList.toggle('locked-section', !arrivalDone);
+    $('departureIntro').textContent = arrivalDone
+      ? 'Walk the site again with the venue representative before the team leaves.'
+      : 'Available once the arrival handover has been signed.';
+  }
+
+  function sealed() {
+    hide('screenLoading'); hide('screenMain'); hide('screenError');
+    $('sealedRef').textContent = state.bookingRef ? 'Booking reference ' + state.bookingRef : '';
+    show('screenSealed');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ------------------------------------------------------------ actions
+
+  function sendCode(stage) {
+    var btn = $(stage + 'SendBtn');
+    setMsg(stage + 'Error', '', 'error');
+    setMsg(stage + 'Info', '', 'info');
+    btn.disabled = true;
+    var original = btn.textContent;
+    btn.textContent = 'Sending…';
+
+    if (state.preview) {
+      setTimeout(function () {
+        btn.disabled = false; btn.textContent = original;
+        setMsg(stage + 'Info', 'Preview mode: no text was sent. Any 6 digits will do here.', 'info');
+      }, 500);
+      return;
+    }
+
+    call({ action: 'send_code', token: state.token, stage: stage })
+      .then(function (r) {
+        btn.disabled = false; btn.textContent = original;
+        if (!r.ok) {
+          setMsg(stage + 'Error', r.data.message || 'The code could not be sent.', 'error');
+          return;
+        }
+        setMsg(stage + 'Info', 'Code sent to the representative on ' + (r.data.sent_to || 'their mobile') +
+          '. It is valid for 10 minutes.', 'info');
+        $(stage + 'Code').focus();
+      })
+      .catch(function (e) {
+        btn.disabled = false; btn.textContent = original;
+        setMsg(stage + 'Error', e.message, 'error');
+      });
+  }
+
+  function sign(stage, items) {
+    var btn = $(stage + 'SignBtn');
+    setMsg(stage + 'Error', '', 'error');
+    setMsg(stage + 'Info', '', 'info');
+
+    var missing = missingRatings(stage, items);
+    if (missing.length) {
+      setMsg(stage + 'Error', 'Please mark Good or Fair for: ' + missing.join(', ') + '.', 'error');
+      return;
+    }
+    var code = ($(stage + 'Code').value || '').replace(/\D/g, '');
+    if (code.length !== 6) {
+      setMsg(stage + 'Error', 'Enter the 6 digit code that was texted to the venue representative.', 'error');
+      return;
+    }
+    var name = ($(stage + 'Name').value || '').trim();
+    if (name.length < 2) {
+      setMsg(stage + 'Error', 'Please type the name of the person signing.', 'error');
+      return;
+    }
+    if (pads[stage].isEmpty()) {
+      setMsg(stage + 'Error', 'Please sign in the box above.', 'error');
+      return;
+    }
+
+    btn.disabled = true;
+    var original = btn.textContent;
+    btn.textContent = 'Capturing location…';
+
+    getPosition().then(function (pos) {
+      btn.textContent = 'Signing…';
+
+      var checks = {};
+      items.forEach(function (item) {
+        checks[item.key] = {
+          rating: state.checks[stage][item.key].rating,
+          note: state.checks[stage][item.key].note || ''
+        };
+      });
+      checks.signedBy = { rating: name, note: '' };
+
+      var payload = {
+        action: 'sign',
+        token: state.token,
+        stage: stage,
+        code: code,
+        checks: checks,
+        photos: state.photos[stage].slice(),
+        signature: pads[stage].toBase64(),
+        lat: pos.lat,
+        lng: pos.lng
+      };
+      if (stage === 'departure') {
+        payload.comments = ($('departureComments').value || '').trim();
+      }
+
+      if (state.preview) {
+        setTimeout(function () {
+          btn.disabled = false; btn.textContent = original;
+          if (stage === 'arrival') {
+            applyStatus('arrival_signed');
+            setMsg('arrivalInfo', 'Preview mode: arrival marked as signed locally.', 'info');
+            $('cardDeparture').scrollIntoView({ behavior: 'smooth', block: 'start' });
+          } else {
+            sealed();
+          }
+        }, 600);
+        return;
+      }
+
+      return call(payload).then(function (r) {
+        btn.disabled = false; btn.textContent = original;
+        if (!r.ok) {
+          if (r.data.error === 'completed') { sealed(); return; }
+          setMsg(stage + 'Error', r.data.message || 'The handover could not be signed.', 'error');
+          return;
+        }
+        if (stage === 'arrival') {
+          applyStatus('arrival_signed');
+          setMsg('arrivalInfo', 'Arrival signed and saved.', 'info');
+          $('cardDeparture').scrollIntoView({ behavior: 'smooth', block: 'start' });
+          return;
+        }
+        if (r.data.email_error || r.data.pdf_error) {
+          sealed();
+          return;
+        }
+        sealed();
+      });
+    }).catch(function (e) {
+      btn.disabled = false; btn.textContent = original;
+      setMsg(stage + 'Error', e.message || 'The handover could not be signed.', 'error');
+    });
+  }
+
+  // ------------------------------------------------------------ preview data
+
+  var PREVIEW = {
+    ok: true,
+    status: 'issued',
+    booking: {
+      booking_id: 'BHH 20841',
+      guest_name: 'Mrs Eleanor Whitcombe',
+      booking_date: '2026-08-29',
+      booking_time: '13:00',
+      guest_count_adults: 48,
+      guest_count_children: 11
+    },
+    venue: { name: 'Cotswold Tithe Barn', rep_name: 'James Peverell', rep_mobile: '••••••7741' },
+    cook: { name: 'Daniel Osei' }
+  };
+
+  // ------------------------------------------------------------ boot
+
+  function boot() {
+    buildChecklist('arrivalChecks', ARRIVAL_ITEMS, 'arrival');
+    buildChecklist('departureChecks', DEPARTURE_ITEMS, 'departure');
+    wirePhotos('arrival');
+    wirePhotos('departure');
+
+    Array.prototype.forEach.call(document.querySelectorAll('[data-clear]'), function (b) {
+      b.addEventListener('click', function () { pads[b.dataset.clear === 'arrivalSig' ? 'arrival' : 'departure'].clear(); });
+    });
+
+    $('arrivalSendBtn').addEventListener('click', function () { sendCode('arrival'); });
+    $('departureSendBtn').addEventListener('click', function () { sendCode('departure'); });
+    $('arrivalSignBtn').addEventListener('click', function () { sign('arrival', ARRIVAL_ITEMS); });
+    $('departureSignBtn').addEventListener('click', function () { sign('departure', DEPARTURE_ITEMS); });
+
+    ['arrivalCode', 'departureCode'].forEach(function (id) {
+      $(id).addEventListener('input', function () {
+        $(id).value = $(id).value.replace(/\D/g, '').slice(0, 6);
+      });
+    });
+
+    var token = new URLSearchParams(window.location.search).get('t');
+    state.token = token;
+
+    var looksReal = typeof token === 'string' && token.length === 48;
+
+    if (!token) {
+      fatal('Link incomplete',
+        'This page needs the handover link from your booking email. Please open the full link again.');
+      return;
+    }
+
+    if (!looksReal) {
+      // layout preview, nothing is sent anywhere
+      state.preview = true;
+      $('previewBanner').classList.remove('hidden');
+      hide('screenLoading');
+      paintDetails(PREVIEW);
+      applyStatus('issued');
+      show('screenMain');
+      pads.arrival = signaturePad('arrivalSig');
+      pads.departure = signaturePad('departureSig');
+      return;
+    }
+
+    call({ action: 'load', token: token })
+      .then(function (r) {
+        hide('screenLoading');
+        if (!r.ok) {
+          if (r.data.error === 'completed') { sealed(); return; }
+          if (r.data.error === 'expired') {
+            fatal('Link expired', r.data.message ||
+              'This handover link has expired because the event date has passed.');
+            return;
+          }
+          fatal('Link not recognised', r.data.message ||
+            'We could not find a handover for this link.');
+          return;
+        }
+        paintDetails(r.data);
+        applyStatus(r.data.status || 'issued');
+        show('screenMain');
+        pads.arrival = signaturePad('arrivalSig');
+        pads.departure = signaturePad('departureSig');
+      })
+      .catch(function (e) {
+        hide('screenLoading');
+        fatal('No connection', e.message ||
+          'We could not reach the handover service. Check your signal and reload the page.');
+      });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot);
+  } else {
+    boot();
+  }
+})();
+</script>
+</body>
+</html>
