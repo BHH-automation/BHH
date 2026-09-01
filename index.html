@@ -349,6 +349,17 @@ nav {
   cursor: pointer;
   text-decoration: none;
 }
+/* CAUSE OF THE PHONE BUG, FIXED AT SOURCE: .services-grid above caps itself at
+   calc(100vh - 220px) with overflow:hidden. That cap was written for the 3 by 3 desktop
+   grid. At 768px and below the grid becomes ONE column of nine rows, so the same cap had
+   to divide one screen between nine cards and squashed each to a thin slice, hiding the
+   number and the name. Phones (767px and narrower) opt out of the cap and out of the row
+   stretch, so each card falls back to its own 4/3 aspect ratio at full column width.
+   768px and wider is untouched, so desktop and tablet are exactly as they are today. */
+@media (max-width:767px){
+  .services-grid{ max-height:none; overflow:visible; align-items:start; }
+  .services-grid .service-card{ aspect-ratio:4/3; height:auto; }
+}
 .service-card-img {
   width: 100%; height: 100%;
   object-fit: cover;
@@ -1135,14 +1146,130 @@ footer {
   -webkit-backdrop-filter:blur(4px); backdrop-filter:blur(4px); transition:color .2s, background .2s;
 }
 .hero-newsflash__close:hover{ color:var(--gold); background:rgba(10,20,35,.8); }
-/* Mobile: shrink; hide entirely when too small to avoid covering the hero heading/buttons */
-@media (max-width:768px){
+/* Mobile: shrink. Phone cut-off is 767px, so a 768px iPad portrait keeps desktop behaviour. */
+@media (max-width:767px){
   .hero-newsflash{ width:240px; bottom:16px; right:12px; }
   .hero-newsflash__card{ border-radius:120px 120px 12px 12px; }
   .hero-newsflash__imgwrap{ height:200px; border-radius:112px 112px 6px 6px; }
   .hero-newsflash__name{ font-size:17px; }
 }
-@media (max-width:560px){ .hero-newsflash{ display:none !important; } }
+/* ═══ PHONE ONLY (≤767px): persistent card + experience overlay ═══
+   Everything below is scoped to ≤767px or to elements that are display:none
+   outside that width, so desktop and tablet (768px and wider) are unchanged. */
+.hero-newsflash__next,
+.hero-newsflash__all,
+.hero-newsflash__cta--phone{ display:none; }
+.nf-ov{ display:none; }
+
+@media (max-width:560px){
+  /* Card used to be hidden below 560px. It now stays (no timed fade-out), so it is
+     made smaller here to leave the hero heading and buttons readable. */
+  .hero-newsflash{ width:186px; right:10px; }
+  .hero-newsflash__imgwrap{ height:150px; }
+  .hero-newsflash__name{ font-size:16px; }
+}
+
+@media (max-width:767px){
+  /* ── card label: "Tap to view" replaces "Click to enquire" on phones ── */
+  .hero-newsflash__cta--desktop{ display:none; }
+  .hero-newsflash__cta--phone{ display:block; }
+
+  /* ── card controls (44×44 tap targets) ── */
+  .hero-newsflash__close{ width:44px; height:44px; top:2px; right:2px; font-size:1.3rem; }
+  .hero-newsflash__next{
+    display:flex; position:absolute; right:2px; bottom:52px; z-index:5;
+    width:44px; height:44px; border-radius:50%;
+    align-items:center; justify-content:center;
+    background:rgba(10,20,35,.55); border:1px solid rgba(201,168,76,.4);
+    color:var(--gold-light); font-size:1.6rem; line-height:1; cursor:pointer;
+    -webkit-backdrop-filter:blur(4px); backdrop-filter:blur(4px);
+  }
+  .hero-newsflash__all{
+    display:flex; align-items:center; justify-content:center;
+    width:100%; height:44px; margin-top:8px; padding:0;
+    background:transparent; border:0; cursor:pointer; white-space:nowrap;
+    font-family:var(--ff-body); font-size:12px; letter-spacing:.05em;
+    color:var(--gold-light); text-decoration:underline;
+  }
+
+  /* ── full-screen overlay (above nav z-index 100 / mobile menu 95, below the
+        thank-you modals at 9999) ── */
+  .nf-ov{
+    position:fixed; inset:0; z-index:9500;
+    flex-direction:column; overflow-y:auto; -webkit-overflow-scrolling:touch;
+    background:rgba(13,27,42,.97);
+    -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px);
+    font-family:var(--ff-body); color:var(--cream); overscroll-behavior:contain;
+  }
+  .nf-ov.is-open{ display:flex; }
+  .nf-ov__close{
+    position:fixed; top:10px; right:10px; z-index:3; width:44px; height:44px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    background:rgba(10,20,35,.8); border:1px solid var(--gold);
+    color:var(--gold-light); font-size:1.5rem; line-height:1; cursor:pointer;
+  }
+  .nf-ov__view{ display:none; }
+  .nf-ov__view.is-active{ display:block; }
+
+  /* single experience */
+  .nf-ov__media{
+    position:relative; width:100%; aspect-ratio:4/3; margin-top:64px;
+    background:var(--navy); overflow:hidden;
+  }
+  .nf-ov__blur{
+    position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+    filter:blur(14px) brightness(.55); transform:scale(1.15); z-index:0;
+  }
+  .nf-ov__img{ position:absolute; inset:0; width:100%; height:100%; object-fit:contain; z-index:1; }
+  .nf-ov__arrow{
+    position:absolute; top:50%; transform:translateY(-50%); z-index:2;
+    width:44px; height:44px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    background:rgba(10,20,35,.6); border:1px solid rgba(201,168,76,.5);
+    color:var(--gold-light); font-size:1.7rem; line-height:1; cursor:pointer;
+  }
+  .nf-ov__arrow--prev{ left:8px; }
+  .nf-ov__arrow--next{ right:8px; }
+  .nf-ov__body{ padding:1.1rem 1.2rem 2.2rem; text-align:center; }
+  .nf-ov__eyebrow{
+    display:block; font-size:.62rem; letter-spacing:.2em; text-transform:uppercase;
+    color:var(--gold); font-weight:600; margin-bottom:.35rem;
+  }
+  .nf-ov__name{
+    font-family:var(--ff-display); font-weight:400; font-size:26px; line-height:1.15;
+    color:var(--white); margin:0 0 .55rem;
+  }
+  .nf-ov__desc{ font-size:14px; line-height:1.5; color:rgba(245,240,232,.85); margin:0 0 1.3rem; }
+  .nf-ov__cta{
+    display:block; width:100%; min-height:48px; padding:.85rem 1rem;
+    background:var(--gold); color:var(--navy); border:1px solid var(--gold); border-radius:4px;
+    font-family:var(--ff-body); font-size:14px; font-weight:600; letter-spacing:.08em;
+    text-transform:uppercase; cursor:pointer;
+  }
+
+  /* all nine, 2-column grid */
+  .nf-ov__gridwrap{ padding:64px 12px 2.2rem; }
+  .nf-ov__gridtitle{
+    font-family:var(--ff-display); font-weight:400; font-size:24px; color:var(--white);
+    text-align:center; margin:0 0 1rem;
+  }
+  .nf-ov__grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:12px; }
+  .nf-ov__tile{
+    display:block; width:100%; padding:0; background:transparent; border:0; cursor:pointer;
+    text-align:center; font-family:var(--ff-body); color:var(--cream);
+  }
+  .nf-ov__tilemedia{
+    display:block; position:relative; width:100%; aspect-ratio:1/1; overflow:hidden;
+    background:var(--navy); border:1px solid rgba(201,168,76,.45); border-radius:6px;
+  }
+  .nf-ov__tilemedia img{ position:absolute; inset:0; width:100%; height:100%; }
+  .nf-ov__tilemedia img.nf-b{ object-fit:cover; filter:blur(10px) brightness(.55); transform:scale(1.15); }
+  .nf-ov__tilemedia img.nf-f{ object-fit:contain; }
+  .nf-ov__tilename{
+    display:flex; align-items:center; justify-content:center; text-align:center;
+    min-height:44px; padding:.35rem 2px; font-size:12.5px; line-height:1.25; color:var(--cream);
+  }
+}
 
 /* ── LEGAL MODAL ──────────────────────────────────────────────────── */
 .legal-modal {
@@ -1592,9 +1719,13 @@ function closeMobileMenu(){
         <div class="hero-newsflash__cap">
           <span class="hero-newsflash__eyebrow">Our Services</span>
           <span class="hero-newsflash__name"></span>
-          <span class="hero-newsflash__cta">Click to enquire &rarr;</span>
+          <span class="hero-newsflash__cta hero-newsflash__cta--desktop">Click to enquire &rarr;</span>
+          <span class="hero-newsflash__cta hero-newsflash__cta--phone">Tap to view</span>
         </div>
       </a>
+      <!-- phone only (CSS-hidden at 768px and wider) -->
+      <button type="button" class="hero-newsflash__next" aria-label="Next experience">&rsaquo;</button>
+      <button type="button" class="hero-newsflash__all">See all nine experiences</button>
     </div>
 
 </section>
@@ -5356,6 +5487,33 @@ function closeLegalModal(type) {
   }, true);
 })();
 </script>
+<!-- ═══ PHONE-ONLY experience overlay (≤767px; CSS keeps it display:none at 768px and wider) ═══ -->
+<div id="nf-overlay" class="nf-ov" role="dialog" aria-modal="true" aria-label="Experiences" aria-hidden="true">
+  <button type="button" class="nf-ov__close" id="nf-ov-close" aria-label="Close">&times;</button>
+
+  <div class="nf-ov__view" id="nf-ov-single">
+    <div class="nf-ov__media">
+      <img class="nf-ov__blur" id="nf-ov-blur" src="" alt="" aria-hidden="true">
+      <img class="nf-ov__img"  id="nf-ov-img"  src="" alt="">
+      <button type="button" class="nf-ov__arrow nf-ov__arrow--prev" id="nf-ov-prev" aria-label="Previous experience">&lsaquo;</button>
+      <button type="button" class="nf-ov__arrow nf-ov__arrow--next" id="nf-ov-next" aria-label="Next experience">&rsaquo;</button>
+    </div>
+    <div class="nf-ov__body">
+      <span class="nf-ov__eyebrow">Our Services</span>
+      <h3 class="nf-ov__name" id="nf-ov-name"></h3>
+      <p class="nf-ov__desc" id="nf-ov-desc"></p>
+      <button type="button" class="nf-ov__cta" id="nf-ov-cta">Enquire about this</button>
+    </div>
+  </div>
+
+  <div class="nf-ov__view" id="nf-ov-gridview">
+    <div class="nf-ov__gridwrap">
+      <h3 class="nf-ov__gridtitle">Nine Signature Experiences</h3>
+      <div class="nf-ov__grid" id="nf-ov-grid"></div>
+    </div>
+  </div>
+</div>
+
 <script>
 /* ═══ Hero news-flash service showcase — cycles the 9 services; existing hero untouched ═══
    Fades in ~1s, holds ~4.2s, fades out ~1s, ~2s gap, next; loops. Click routes to the
@@ -5403,6 +5561,7 @@ function closeLegalModal(type) {
     imgEl.style.opacity = '1';
     paint(s, 0);
     if(imgTimer){ clearInterval(imgTimer); imgTimer = null; }
+    if(isPhone()) return;                         // PHONES: first photo only; the › moves to the next experience
     if(s.imgs.length > 1){                        // rotate through ALL of this card's photos, grid cadence
       imgTimer = setInterval(function(){
         imgIdx = (imgIdx + 1) % s.imgs.length;
@@ -5419,6 +5578,7 @@ function closeLegalModal(type) {
     card.hidden = false;
     // double rAF so the opacity/transform transition actually runs from the hidden state
     requestAnimationFrame(function(){ requestAnimationFrame(function(){ card.classList.add('is-visible'); }); });
+    if(isPhone()) return;                        // PHONES: fade in once, then stay (no timed fade-out, no auto-advance)
     var hold = s.imgs.length * ROTATE_MS;         // stay long enough to show every photo at grid cadence
     timers.push(setTimeout(function(){            // after fade-in (1s) + hold
       card.classList.remove('is-visible');        // fade out (1s via CSS)
@@ -5430,17 +5590,32 @@ function closeLegalModal(type) {
     }, 1000 + hold));
   }
 
-  window.newsflashClick = function(){
-    var name = card.getAttribute('data-service') || '', svc = null;
-    for(var i=0;i<SERVICES.length;i++){ if(SERVICES[i].name === name){ svc = SERVICES[i]; break; } }
-    if(svc && svc.type === 'transport'){
-      var mode = (name === 'Narrowboat Holiday') ? 'narrowboat' : 'transport';
-      if(typeof goToTransportTab === 'function'){ goToTransportTab(mode, name); }
+  // Phone test — every phone-only branch below is gated on this, so desktop/tablet is untouched.
+  function isPhone(){ return window.matchMedia('(max-width:767px)').matches; }
+
+  // Unchanged routing: guest enquiry with the experience pre-selected, or the
+  // introduction form for the introduce-only services.
+  function routeToForm(svc){
+    if(!svc) return;
+    if(svc.type === 'transport'){
+      var mode = (svc.name === 'Narrowboat Holiday') ? 'narrowboat' : 'transport';
+      if(typeof goToTransportTab === 'function'){ goToTransportTab(mode, svc.name); }
     } else {
       if(typeof switchTab === 'function'){ switchTab('guest'); }
-      var v8 = document.querySelector('#service-card-grid .service-card-v8[data-service="' + name + '"]');
+      var v8 = document.querySelector('#service-card-grid .service-card-v8[data-service="' + svc.name + '"]');
       if(v8 && typeof toggleService === 'function' && !v8.classList.contains('selected')){ toggleService(v8); }
     }
+  }
+  function indexOfName(name){
+    for(var i=0;i<SERVICES.length;i++){ if(SERVICES[i].name === name) return i; }
+    return -1;
+  }
+
+  window.newsflashClick = function(){
+    var i = indexOfName(card.getAttribute('data-service') || '');
+    if(i < 0) i = idx;
+    if(isPhone()){ openOverlay(i, 'single'); return false; }   // PHONES: show the picture first
+    routeToForm(SERVICES[i]);
     return false;   // the anchor's href="#enquire" is only a no-JS fallback
   };
 
@@ -5451,11 +5626,132 @@ function closeLegalModal(type) {
     try { sessionStorage.setItem('bhh_newsflash_dismissed', '1'); } catch(e){}
   };
 
+  /* ═══════════════ PHONE-ONLY (≤767px) additions ═══════════════
+     1. no timed fade-out (handled in cycle()) — a small › advances instead
+     2. tapping the photo opens a full-screen overlay instead of jumping to a form
+     3. a "See all nine experiences" link opens the same overlay in 2-column grid mode
+     None of this runs at 768px or wider, and the elements are display:none there. */
+
+  // One-line descriptions are READ FROM the nine marketing cards already on the page
+  // (matched on their heading), so no new copy is introduced anywhere.
+  var descMap = null;
+  function descFor(svc){
+    if(!descMap){
+      descMap = {};
+      var cards = document.querySelectorAll('.services-grid .service-card');
+      for(var c=0;c<cards.length;c++){
+        var h = cards[c].querySelector('h3'), d = cards[c].querySelector('.service-card-desc');
+        if(h && d){ descMap[h.textContent.trim()] = d.textContent.trim(); }
+      }
+    }
+    return descMap[displayName(svc)] || '';
+  }
+
+  var ov        = document.getElementById('nf-overlay');
+  var ovSingle  = document.getElementById('nf-ov-single');
+  var ovGridV   = document.getElementById('nf-ov-gridview');
+  var ovImg     = document.getElementById('nf-ov-img');
+  var ovBlur    = document.getElementById('nf-ov-blur');
+  var ovName    = document.getElementById('nf-ov-name');
+  var ovDesc    = document.getElementById('nf-ov-desc');
+  var ovGrid    = document.getElementById('nf-ov-grid');
+  var ovIdx = 0, gridBuilt = false, prevBodyOverflow = '', ovOpen = false;
+
+  function paintSingle(){
+    var s2 = SERVICES[ovIdx];
+    var src = s2.imgs[0];
+    ovImg.src = src; ovBlur.src = src; ovImg.alt = displayName(s2);
+    ovName.textContent = displayName(s2);
+    ovDesc.textContent = descFor(s2);
+  }
+
+  function buildGrid(){
+    if(gridBuilt || !ovGrid) return;
+    for(var i=0;i<SERVICES.length;i++){
+      (function(i){
+        var s2 = SERVICES[i];
+        var b = document.createElement('button');
+        b.type = 'button'; b.className = 'nf-ov__tile';
+        b.setAttribute('aria-label', displayName(s2));
+        var m = document.createElement('span'); m.className = 'nf-ov__tilemedia';
+        var i1 = document.createElement('img'); i1.className = 'nf-b'; i1.src = s2.imgs[0]; i1.alt = ''; i1.setAttribute('aria-hidden','true');
+        var i2 = document.createElement('img'); i2.className = 'nf-f'; i2.src = s2.imgs[0]; i2.alt = displayName(s2);
+        m.appendChild(i1); m.appendChild(i2);
+        var n = document.createElement('span'); n.className = 'nf-ov__tilename'; n.textContent = displayName(s2);
+        b.appendChild(m); b.appendChild(n);
+        b.addEventListener('click', function(){ ovIdx = i; paintSingle(); showView('single'); if(ov) ov.scrollTop = 0; });
+        ovGrid.appendChild(b);
+      })(i);
+    }
+    gridBuilt = true;
+  }
+
+  function showView(which){
+    if(ovSingle) ovSingle.classList.toggle('is-active', which === 'single');
+    if(ovGridV)  ovGridV.classList.toggle('is-active', which === 'grid');
+  }
+
+  function ovKey(e){ if(e.key === 'Escape'){ closeOverlay(); } }
+
+  function openOverlay(i, mode){
+    if(!ov) return;
+    if(typeof i === 'number' && i >= 0 && i < SERVICES.length){ ovIdx = i; }
+    if(mode === 'grid'){ buildGrid(); showView('grid'); } else { paintSingle(); showView('single'); }
+    ov.classList.add('is-open');
+    ov.setAttribute('aria-hidden', 'false');
+    ov.scrollTop = 0;
+    if(!ovOpen){ prevBodyOverflow = document.body.style.overflow; }   // lock page scroll
+    document.body.style.overflow = 'hidden';
+    ovOpen = true;
+    document.addEventListener('keydown', ovKey);
+  }
+
+  function closeOverlay(){
+    if(!ov || !ovOpen) return;
+    ov.classList.remove('is-open');
+    ov.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = prevBodyOverflow || '';           // restore, page stays put
+    ovOpen = false;
+    document.removeEventListener('keydown', ovKey);
+  }
+
+  function ovStep(delta){
+    ovIdx = (ovIdx + delta + SERVICES.length) % SERVICES.length;
+    paintSingle();
+  }
+
+  if(ov){
+    document.getElementById('nf-ov-close').addEventListener('click', closeOverlay);
+    document.getElementById('nf-ov-prev').addEventListener('click', function(){ ovStep(-1); });
+    document.getElementById('nf-ov-next').addEventListener('click', function(){ ovStep(1); });
+    document.getElementById('nf-ov-cta').addEventListener('click', function(){
+      var svc = SERVICES[ovIdx];
+      closeOverlay();
+      routeToForm(svc);
+    });
+  }
+
+  var nextBtn = card.querySelector('.hero-newsflash__next');
+  if(nextBtn){
+    nextBtn.addEventListener('click', function(e){
+      e.preventDefault(); e.stopPropagation();
+      idx = (idx + 1) % SERVICES.length;
+      render(SERVICES[idx]);
+    });
+  }
+  var allBtn = card.querySelector('.hero-newsflash__all');
+  if(allBtn){
+    allBtn.addEventListener('click', function(e){
+      e.preventDefault(); e.stopPropagation();
+      openOverlay(idx, 'grid');
+    });
+  }
+
   // ── Self-positioning (no fixed offsets). On load + resize, measure the real viewport
   //    and (a) anchor the card's BOTTOM exactly 24px above the fold so its full height
   //    always fits, and (b) shrink the card (width 280 → 220, image proportionally) on
-  //    short viewports so it never clips or dominates. Desktop widths only; ≤768 is left
-  //    to the mobile CSS (and the ≤560 hide). ──
+  //    short viewports so it never clips or dominates. Desktop widths only; ≤767 is left
+  //    to the phone CSS. ──
   var hero = document.querySelector('.hero');
   var imgwrap = card.querySelector('.hero-newsflash__imgwrap');
   var navEl = document.querySelector('nav');
@@ -5463,7 +5759,7 @@ function closeLegalModal(type) {
   function placeCard(){
     if(!imgwrap) return;
     var vw = window.innerWidth, vh = window.innerHeight;
-    if(vw <= 768){ card.style.width = ''; card.style.bottom = ''; imgwrap.style.height = ''; return; }
+    if(vw <= 767){ card.style.width = ''; card.style.bottom = ''; imgwrap.style.height = ''; return; }
     var MARGIN = 24;
     var navB = navEl ? Math.round(navEl.getBoundingClientRect().height) : 132;
     // Width shrinks with viewport height: 220px @ vh600 … 280px @ vh940 (clamped).
@@ -5489,12 +5785,31 @@ function closeLegalModal(type) {
     card.style.bottom = MARGIN + 'px';
   }
   placeCard();
+  window.addEventListener('resize', function(){ if(!isPhone()) closeOverlay(); });
   window.addEventListener('resize', placeCard);
   window.addEventListener('load', placeCard);
 
   var already = false;
   try { already = sessionStorage.getItem('bhh_newsflash_dismissed') === '1'; } catch(e){}
-  if(!already){ timers.push(setTimeout(cycle, 1200)); }
+  if(!already){
+    if(isPhone()){
+      // PHONES: never over the hero. Wait until the hero's bottom edge has passed the top of
+      // the screen, then fade in once. Scrolling back up does NOT hide it again.
+      var armed = true;
+      var heroSection = hero || document.querySelector('.hero');
+      var revealCard = function(){
+        if(!armed || dismissed) return;
+        if(heroSection && heroSection.getBoundingClientRect().bottom > 0) return;
+        armed = false;
+        window.removeEventListener('scroll', revealCard);
+        cycle();
+      };
+      window.addEventListener('scroll', revealCard, { passive:true });
+      timers.push(setTimeout(revealCard, 1200));   // covers a page opened already scrolled down
+    } else {
+      timers.push(setTimeout(cycle, 1200));
+    }
+  }
 })();
 </script>
 </body>
