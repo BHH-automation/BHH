@@ -566,6 +566,9 @@ nav {
 .form-panel { display: none; }
 .form-panel.active { display: block; }
 .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+/* Preferred Dates row (was inline styles; moved here unchanged so the phone
+   block below can restack it without !important). */
+.date-range-row { display: flex; gap: 0.5rem; align-items: center; }
 .form-group { margin-bottom: 1rem; }
 .form-group label {
   display: block;
@@ -1269,6 +1272,61 @@ footer {
     display:flex; align-items:center; justify-content:center; text-align:center;
     min-height:44px; padding:.35rem 2px; font-size:12.5px; line-height:1.25; color:var(--cream);
   }
+}
+
+/* ══ PHONE ONLY (≤767px): stop the page scrolling sideways ═══════════
+   Every rule below is inside a ≤767px media query, so 768px and wider
+   (tablet and desktop) are untouched. No overflow:hidden on the page is
+   used here - each cause is fixed where it is created. */
+@media (max-width:767px){
+
+  /* 1. Preferred Dates: two native date inputs sat side by side with
+        flex:1. A flex item cannot shrink below its min-content width by
+        default, and a date field's min-content is about 175px, so the pair
+        forced the page to about 400px. Stacked on phones, so each field
+        keeps its full readable width instead of being squeezed. */
+  .date-range-row{ flex-direction:column; align-items:stretch; gap:0.45rem; }
+  .date-range-row > span{ text-align:center; }
+  .date-range-row > input{ min-width:0; width:100%; }
+
+  /* 2. Footer columns: the 2-column grid uses 1fr tracks, and a 1fr track
+        cannot shrink below its content's minimum width, so on narrow phones
+        the two columns together demanded about 330px and pushed the page
+        out. The tracks are allowed to shrink, the column gap is reduced,
+        long words and email addresses may wrap, and the footer logo row
+        wraps instead of forcing its own width. */
+  .footer-grid{ gap:2.5rem 1.5rem; }
+  .footer-grid > *{ min-width:0; }
+  .footer-brand > div{ flex-wrap:wrap; }
+  .footer-brand p,
+  .footer-col h5,
+  .footer-col li,
+  .footer-col a{ overflow-wrap:anywhere; }
+
+  /* 3. Top bar: the logo image, the brand wordmark and the menu button are
+        laid out in one row that cannot shrink, so it can be wider than the
+        screen. Allowing the brand block to shrink stops it forcing the
+        menu button off the edge. */
+  .nav-logo{ min-width:0; }
+  .nav-logo-text{ min-width:0; }
+}
+
+/* Very narrow phones only (≤360px, e.g. iPhone SE 1st generation and the
+   360px Android sizes). Even fully shrunk, the logo image plus the wordmark
+   plus the menu button need about 362px, so on these screens the gap and the
+   wordmark are made smaller. The logo image keeps its height, so the top bar
+   stays exactly as tall as it is now and the hero spacing is unaffected. */
+@media (max-width:360px){
+  .nav-logo{ gap:0.4rem; }
+  .nav-logo-text{ font-size:1rem; }
+
+  /* "How it works" steps: two columns each carrying 2rem of side padding,
+     which left too little room for the longest word and pushed the row
+     wider than the screen. Side padding is trimmed and long words may
+     wrap on these very narrow screens. */
+  .process-step{ padding:1.6rem 1rem; min-width:0; }
+  .process-step h4,
+  .process-step p{ overflow-wrap:anywhere; }
 }
 
 /* ── LEGAL MODAL ──────────────────────────────────────────────────── */
@@ -2117,7 +2175,7 @@ function closeMobileMenu(){
             </div>
           </div>
           <div class="form-group"><label>Preferred Dates <span style="color:#C9A84C">*</span></label>
-            <div style="display:flex;gap:0.5rem;align-items:center">
+            <div class="date-range-row">
               <input type="date" name="Date From" id="date-from" style="flex:1" required onchange="setMinDateTo()">
               <span style="color:rgba(245,240,232,0.4);font-size:0.8rem">to</span>
               <input type="date" name="Date To" id="date-to" style="flex:1" required>
