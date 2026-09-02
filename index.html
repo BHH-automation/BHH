@@ -1518,6 +1518,42 @@ footer {
   .hero .eyebrow{ font-size:0.72rem; }
   .enquire-tabs .enquire-tab{ font-size:0.55rem !important; padding:0.7rem 0.15rem !important; }
 }
+/* ═══ PHONE ONLY (≤767px): two column experiences grid, no showcase card ═══
+   Placed last in this stylesheet so it wins over the earlier phone rules. Every rule is
+   inside a max-width:767px query, so 768px and wider (tablet and desktop) is untouched. */
+@media (max-width:767px){
+  /* 1. The fixed news flash showcase card, its › arrow, its "See all nine experiences"
+        link and the full screen overlay never appear on phones. The script is also
+        gated so none of that code is initialised at this width. */
+  .hero-newsflash,
+  .nf-ov{ display:none !important; }
+
+  /* 2. "Nine Signature Experiences" — two columns instead of one. Same 2px gap,
+        same 4/3 card shape, photo/gradient/number/name kept, tap routing untouched. */
+  .services-grid{ grid-template-columns:repeat(2,1fr); gap:2px; }
+  .services-grid .service-card{ aspect-ratio:4/3; height:auto; }
+  .services-grid .service-card-content{ padding:0.5rem 0.55rem 0.6rem; }
+  .services-grid .service-card-num{ font-size:11px; letter-spacing:0.14em; margin-bottom:0.2rem; }
+  .services-grid .service-card h3{
+    font-size:16px; line-height:1.12; margin-bottom:0;
+    overflow-wrap:break-word; -webkit-hyphens:none; hyphens:none;
+  }
+  /* The hover reveal description and arrow cannot be used by touch and would push the
+     name out of the smaller card, so they stay collapsed on phones. */
+  .services-grid .service-card-desc,
+  .services-grid .service-card-arrow{ display:none; }
+  .services-grid .service-card:hover .service-card-desc{ max-height:0; opacity:0; }
+  /* Slightly stronger gradient so number and name stay readable over any photo. */
+  .services-grid .service-card-overlay{
+    background:linear-gradient(to top, rgba(13,27,42,0.95) 0%, rgba(13,27,42,0.55) 45%, rgba(13,27,42,0.05) 100%);
+  }
+}
+/* Narrowest phones: keep the three-line names inside the shorter card. */
+@media (max-width:360px){
+  .services-grid .service-card-content{ padding:0.3rem 0.4rem 0.4rem; }
+  .services-grid .service-card-num{ line-height:1.2; margin-bottom:0.1rem; }
+  .services-grid .service-card h3{ font-size:15px; line-height:1.05; }
+}
 </style>
 
     <!-- ═══ SEO & SOCIAL ═══════════════════════════════════════════════════ -->
@@ -5697,6 +5733,21 @@ function closeLegalModal(type) {
 (function(){
   var card = document.getElementById('hero-newsflash');
   if(!card) return;
+
+  /* ══ PHONES (≤767px): nothing below is initialised ══
+     The showcase card, its › arrow, its "See all nine experiences" link, the scroll
+     listener that reveals it and the full screen overlay are never set up, so none of
+     them can appear, fire or throw at this width. The markup is also hidden by CSS.
+     At 768px and wider this block is skipped entirely and behaviour is exactly as live. */
+  if(window.matchMedia('(max-width:767px)').matches){
+    card.hidden = true;
+    var ovPhone = document.getElementById('nf-overlay');
+    if(ovPhone){ ovPhone.classList.remove('is-open'); ovPhone.setAttribute('aria-hidden','true'); }
+    /* the inline onclick attributes in the markup still resolve — they just do nothing */
+    window.newsflashClick   = function(){ return false; };
+    window.dismissNewsflash = function(){};
+    return;
+  }
   var imgEl  = card.querySelector('.hero-newsflash__img');
   var blurEl = card.querySelector('.hero-newsflash__blur');
   var nameEl = card.querySelector('.hero-newsflash__name');
