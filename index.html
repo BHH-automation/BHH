@@ -1402,6 +1402,122 @@ footer {
   border-color:#C9A84C;background:rgba(201,168,76,0.15);
   color:#C9A84C;font-weight:500;
 }
+
+/* ══ PHONE HERO + TAB STRIP (phones only) ═══════════════════════════
+   Everything below is either inside a max-width:767px media query or is a
+   default rule for an element that only ever appears on phones, so 768px
+   and wider (tablet and desktop) render exactly as before.
+   Placed at the end of the stylesheet so it wins over the earlier phone
+   blocks without needing extra specificity. */
+
+/* Screen-size wording swaps: the phone wording is hidden by default and
+   the desktop wording is hidden inside the phone media query, the same
+   technique already used for the showcase card's "Tap to view" label. */
+.hero-eyebrow--phone,
+.hero-sub--phone,
+.hero-reply-line{ display:none; }
+
+@media (max-width:767px){
+
+  /* 1. Top bar: shorter. Smaller badge (aspect ratio kept, height only),
+        brand wordmark on one line at a smaller size, tighter bar padding.
+        The menu button keeps its look and is given a full 44x44 tap area. */
+  nav{ padding:0.5rem 1rem; }
+  .nav-logo{ gap:0.55rem; }
+  .nav-logo-img{ height:48px; }
+  .nav-logo-text{
+    font-size:0.86rem;
+    letter-spacing:0.05em;
+    white-space:nowrap;
+    line-height:1.1;
+  }
+  .nav-toggle{
+    min-width:44px; min-height:44px;
+    display:inline-flex; align-items:center; justify-content:center;
+    flex:0 0 auto;
+  }
+
+  /* Hero content sits clear of the shorter bar. */
+  .hero-inner{ padding-top:72px; }
+
+  /* 2. The five gold stars are removed on phones. */
+  .hero-stars{ display:none; }
+
+  /* 3 and 5. Phone wording on, desktop wording off. */
+  .hero-eyebrow--desktop{ display:none; }
+  .hero-eyebrow--phone{ display:inline; }
+  .hero-sub--desktop{ display:none; }
+  .hero-sub--phone{ display:inline; }
+
+  /* Tighter vertical rhythm so headline, sub line, both buttons and the
+     reply line all sit above the fold on a short phone. */
+  .hero .eyebrow{ font-size:0.82rem; margin-bottom:0.5rem; }
+  .hero-content h1{ margin:0.4rem 0 0.9rem; }
+  .hero-sub{ margin:0 auto 1.4rem; }
+
+  /* 6. One centred line directly under the second button, in the same
+        light text style as the sub line. */
+  .hero-reply-line{
+    display:block;
+    margin:0.9rem auto 0;
+    text-align:center;
+    font-family:var(--ff-body);
+    font-weight:300;
+    font-size:0.85rem;
+    line-height:1.5;
+    color:rgba(245,240,232,0.85);
+  }
+
+  /* 7. The strip of nine service names under the hero photo is hidden on
+        phones only; it is untouched on desktop. */
+  .hero-services-strip{ display:none; }
+
+  /* 9 (side effect). The Contact block's email address is now real text
+     rather than the Cloudflare placeholder text, and the real address
+     is wider. It is allowed to wrap on very narrow phones so it cannot
+     push the page sideways. */
+  #contact{ min-width:0; }
+  #contact > .container{ min-width:0; }
+  #contact a[href^="mailto:"]{ overflow-wrap:anywhere; }
+
+  /* 8. Enquiry form tabs: the strip used to scroll sideways inside its own
+        box, which cut off the last label. On phones the five tabs wrap onto
+        two rows (three then two, the second row centred) so all five are
+        fully visible with no sideways scrolling. Icons, full text, the gold
+        underline on the active tab and all tab behaviour are unchanged.
+        The strip and the buttons carry inline styles, so these overrides
+        are marked important; they are inside the phone media query only. */
+  .enquire-tabs{
+    flex-wrap:wrap !important;
+    justify-content:center !important;
+    overflow-x:visible !important;
+    margin:2rem auto 2.5rem !important;
+  }
+  .enquire-tabs .enquire-tab{
+    flex:0 0 33.333% !important;
+    max-width:33.333% !important;
+    white-space:normal !important;
+    padding:0.7rem 0.25rem !important;
+    min-height:44px !important;
+    font-size:0.6rem !important;
+    letter-spacing:0.04em !important;
+    line-height:1.25 !important;
+    gap:6px !important;
+    -webkit-hyphens:none; hyphens:none;
+    overflow-wrap:break-word;
+  }
+  .enquire-tabs .enquire-tab svg{ flex:0 0 auto; }
+}
+
+/* Very narrow phones: keep the brand wordmark on one line next to the badge
+   and the menu button. */
+@media (max-width:360px){
+  .nav-logo{ gap:0.4rem; }
+  .nav-logo-img{ height:44px; }
+  .nav-logo-text{ font-size:0.72rem; letter-spacing:0.03em; }
+  .hero .eyebrow{ font-size:0.72rem; }
+  .enquire-tabs .enquire-tab{ font-size:0.55rem !important; padding:0.7rem 0.15rem !important; }
+}
 </style>
 
     <!-- ═══ SEO & SOCIAL ═══════════════════════════════════════════════════ -->
@@ -1716,13 +1832,14 @@ function closeMobileMenu(){
         <span class="hero-star">★</span>
         <span class="hero-star">★</span>
       </div>
-      <span class="eyebrow" style="color:var(--gold-light);letter-spacing:0.2em;font-size:1rem;">British Heritage Hosts Ltd — Est. 2026</span>
+      <span class="eyebrow" style="color:var(--gold-light);letter-spacing:0.2em;font-size:1rem;"><span class="hero-eyebrow--desktop">British Heritage Hosts Ltd — Est. 2026</span><span class="hero-eyebrow--phone">LONDON AND THE ENGLISH COUNTRYSIDE</span></span>
       <h1>England, as it <em style="font-style:normal;color:var(--gold)">truly</em> lives</h1>
-      <p class="hero-sub">Private cultural experiences in real English homes —<br>curated exclusively for discerning international families visiting England.</p>
+      <p class="hero-sub"><span class="hero-sub--desktop">Private cultural experiences in real English homes —<br>curated exclusively for discerning international families visiting England.</span><span class="hero-sub--phone">Private experiences in real English homes, for international families</span></p>
       <div class="hero-btns">
         <a href="#services" class="btn btn-gold">Explore Our Services</a>
         <a href="#enquire" class="btn btn-outline-cream" onclick="joinAs('guest');return false;">Enquire for Your Family</a>
       </div>
+      <p class="hero-reply-line">We reply personally within 24 hours</p>
     </div>
 
     <!-- Service preview strip — 5 services visible without scrolling -->
@@ -2027,7 +2144,7 @@ function closeMobileMenu(){
       <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:3rem;max-width:700px;margin:0 auto">
         <div style="text-align:center;min-width:180px">
           <div style="font-size:0.68rem;font-weight:500;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin-bottom:0.6rem">Email</div>
-          <div style="font-size:0.92rem;color:var(--navy)"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="1970777f76597b6b706d706a71717c6b706d787e7c71766a6d6a377a7674">[email&#160;protected]</a></div>
+          <div style="font-size:0.92rem;color:var(--navy)"><a href="mailto:info@britishheritagehosts.com">info@britishheritagehosts.com</a></div>
         </div>
         <div style="text-align:center;min-width:180px">
           <div style="font-size:0.68rem;font-weight:500;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin-bottom:0.6rem">Phone</div>
@@ -2054,7 +2171,7 @@ function closeMobileMenu(){
       <!-- 4 tabs: flex:1 fills the row on wide screens; on a narrow phone the tabs keep
            their full text width (white-space:nowrap) and the strip scrolls horizontally
            instead of shrinking the text. -->
-      <div style="display:flex;flex-wrap:nowrap;justify-content:flex-start;gap:0;margin:2rem auto 2.5rem;max-width:880px;overflow-x:auto;-webkit-overflow-scrolling:touch;border-bottom:1px solid rgba(201,168,76,0.3)">
+      <div class="enquire-tabs" style="display:flex;flex-wrap:nowrap;justify-content:flex-start;gap:0;margin:2rem auto 2.5rem;max-width:880px;overflow-x:auto;-webkit-overflow-scrolling:touch;border-bottom:1px solid rgba(201,168,76,0.3)">
         <button type="button" class="enquire-tab enquire-tab--active" data-tab="guest" onclick="switchTab('guest'); return false;" style="flex:1 0 auto;white-space:nowrap;display:flex;flex-direction:column;align-items:center;gap:8px;padding:0.9rem 1rem;background:transparent;border:none;border-bottom:2px solid var(--gold);color:var(--gold);font-family:var(--ff-body);font-size:0.72rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:all 0.3s"><svg class="tab-icon tab-icon--guest" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7.5" width="18" height="12.5" rx="2"/><path d="M8.5 7.5V5.5a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v2"/><path d="M3 12h18"/></svg>Become a Guest</button>
         <button type="button" class="enquire-tab" data-tab="host" onclick="switchTab('host'); return false;" style="flex:1 0 auto;white-space:nowrap;display:flex;flex-direction:column;align-items:center;gap:8px;padding:0.9rem 1rem;background:transparent;border:none;border-bottom:2px solid transparent;color:rgba(245,240,232,0.5);font-family:var(--ff-body);font-size:0.72rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:all 0.3s"><svg class="tab-icon tab-icon--host" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.7L12 3.5l9 7.2"/><path d="M5.2 9.6V19a1.5 1.5 0 0 0 1.5 1.5h10.6a1.5 1.5 0 0 0 1.5-1.5V9.6"/><path d="M9.8 20.5v-5.3h4.4v5.3"/></svg>Become a Host</button>
         <button type="button" class="enquire-tab" data-tab="partner" onclick="switchTab('partner'); return false;" style="flex:1 0 auto;white-space:nowrap;display:flex;flex-direction:column;align-items:center;gap:8px;padding:0.9rem 1rem;background:transparent;border:none;border-bottom:2px solid transparent;color:rgba(245,240,232,0.5);font-family:var(--ff-body);font-size:0.72rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:all 0.3s"><svg class="tab-icon tab-icon--partner" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M2.5 20v-1.2a4.3 4.3 0 0 1 4.3-4.3h4.4a4.3 4.3 0 0 1 4.3 4.3V20"/><path d="M16.5 5.2a3.2 3.2 0 0 1 0 5.6"/><path d="M18.2 14.7a4.3 4.3 0 0 1 3.3 4.1V20"/></svg>Become a Partner</button>
@@ -3523,7 +3640,7 @@ function closeMobileMenu(){
     <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">Booking and transaction records: 7 years. Rating and feedback data: 36 months, then anonymised. Unsuccessful applications: 12 months, then deleted. Marketing preferences: until you withdraw consent.</p>
 
     <h3>6. Your Rights</h3>
-    <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">Under the UK GDPR, you have the right to access, correct, delete, restrict, or port your personal data, and to withdraw consent at any time. Contact us at <a href="/cdn-cgi/l/email-protection#7e171018113e1c0c170a170d16161b0c170a1f191b16110d0a0d501d1113" style="color:var(--gold)"><span class="__cf_email__" data-cfemail="157c7b737a5577677c617c667d7d70677c617472707d7a6661663b767a78">[email&#160;protected]</span></a>.</p>
+    <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">Under the UK GDPR, you have the right to access, correct, delete, restrict, or port your personal data, and to withdraw consent at any time. Contact us at <a href="mailto:info@britishheritagehosts.com" style="color:var(--gold)">info@britishheritagehosts.com</a>.</p>
 
     <h3>7. Data Security</h3>
     <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">We implement appropriate technical and organisational measures to protect your data. Payment data is handled by our PCI-compliant payment partner and is never stored on our systems.</p>
@@ -3535,7 +3652,7 @@ function closeMobileMenu(){
     <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">We may update this policy from time to time. Changes will be posted on this page with an updated date.</p>
 
     <h3>10. Contact Us</h3>
-    <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">British Heritage Hosts Ltd, Monomark House, 27 Old Gloucester Street, London WC1N 3AX. Email: <a href="/cdn-cgi/l/email-protection#4e272028210e2c3c273a273d26262b3c273a2f292b26213d3a3d602d2123" style="color:var(--gold)"><span class="__cf_email__" data-cfemail="127b7c747d5270607b667b617a7a77607b667375777a7d6166613c717d7f">[email&#160;protected]</span></a>. You also have the right to lodge a complaint with the ICO at <a href="https://ico.org.uk" style="color:var(--gold)" target="_blank" rel="noopener">ico.org.uk</a>.</p>
+    <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">British Heritage Hosts Ltd, Monomark House, 27 Old Gloucester Street, London WC1N 3AX. Email: <a href="mailto:info@britishheritagehosts.com" style="color:var(--gold)">info@britishheritagehosts.com</a>. You also have the right to lodge a complaint with the ICO at <a href="https://ico.org.uk" style="color:var(--gold)" target="_blank" rel="noopener">ico.org.uk</a>.</p>
   </div>
 </section>
 
@@ -3585,7 +3702,7 @@ function closeMobileMenu(){
     <p style="color:var(--muted);line-height:1.9;font-size:0.95rem"><em>[DRAFT FOR LEGAL REVIEW — placeholder wording, not final legal text.]</em> BHH offers two distinct categories of service. <strong>(a) Services we provide.</strong> Private Family Dinners, English Afternoon Teas, British Heritage Guide tours, Canal Day Cruises, the Cultural Immersion Program, and the Personal Interpreter Service are arranged, sold, and invoiced by BHH, and these Terms govern them in full. <strong>(b) Partners we introduce.</strong> For certain services — currently Airport Transfer, Chauffeured Hire, and multi-day Narrowboat Holidays — BHH acts solely as an introducer. We connect you with an independent third-party partner, and any contract, booking, and payment for those services are made directly between you and that partner. BHH does not sell, supply, invoice, or take payment for introduced services, is not a party to any resulting agreement, and accepts no liability for their provision. The partner's own terms, pricing, insurance, and cancellation policy apply.</p>
 
     <h3>13. Contact Us</h3>
-    <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">British Heritage Hosts Ltd, Monomark House, 27 Old Gloucester Street, London WC1N 3AX. Email: <a href="/cdn-cgi/l/email-protection#a1c8cfc7cee1c3d3c8d5c8d2c9c9c4d3c8d5c0c6c4c9ced2d5d28fc2cecc" style="color:var(--gold)"><span class="__cf_email__" data-cfemail="0960676f66496b7b607d607a61616c7b607d686e6c61667a7d7a276a6664">[email&#160;protected]</span></a></p>
+    <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">British Heritage Hosts Ltd, Monomark House, 27 Old Gloucester Street, London WC1N 3AX. Email: <a href="mailto:info@britishheritagehosts.com" style="color:var(--gold)">info@britishheritagehosts.com</a></p>
   </div>
 </section>
 
@@ -3625,8 +3742,8 @@ function closeMobileMenu(){
       <div class="footer-col">
         <h5>Contact</h5>
         <ul>
-          <li><a href="/cdn-cgi/l/email-protection#a4cdcac2cbe4c6d6cdd0cdd7ccccc1d6cdd0c5c3c1cccbd7d0d78ac7cbc9"><span class="__cf_email__" data-cfemail="fd94939b92bd9f8f9489948e9595988f94899c9a9895928e898ed39e9290">[email&#160;protected]</span></a></li>
-          <li><a href="/cdn-cgi/l/email-protection#d6b4b9b9bdbfb8b1a596b4a4bfa2bfa5bebeb3a4bfa2b7b1b3beb9a5a2a5f8b5b9bb"><span class="__cf_email__" data-cfemail="accec3c3c7c5c2cbdfeccedec5d8c5dfc4c4c9dec5d8cdcbc9c4c3dfd8df82cfc3c1">[email&#160;protected]</span></a></li>
+          <li><a href="mailto:info@britishheritagehosts.com">info@britishheritagehosts.com</a></li>
+          <li><a href="mailto:bookings@britishheritagehosts.com">bookings@britishheritagehosts.com</a></li>
           <li style="color:rgba(245,240,232,0.35);font-size:0.82rem;margin-top:0.5rem">Monomark House<br>27 Old Gloucester Street<br>London WC1N 3AX</li>
         </ul>
       </div>
@@ -3641,7 +3758,7 @@ function closeMobileMenu(){
   </div>
 </footer>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
 document.addEventListener('DOMContentLoaded', function() {
   // Check for form success parameter and show thank-you modal
   var params = new URLSearchParams(window.location.search);
@@ -5175,7 +5292,7 @@ function closeThankyouModal(modalId) {
     <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">Booking and transaction records: 7 years. Rating and feedback data: 36 months, then anonymised. Unsuccessful applications: 12 months, then deleted. Marketing preferences: until you withdraw consent.</p>
 
     <h3>6. Your Rights</h3>
-    <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">Under the UK GDPR, you have the right to access, correct, delete, restrict, or port your personal data, and to withdraw consent at any time. Contact us at <a href="/cdn-cgi/l/email-protection#7e171018113e1c0c170a170d16161b0c170a1f191b16110d0a0d501d1113" style="color:var(--gold)"><span class="__cf_email__" data-cfemail="157c7b737a5577677c617c667d7d70677c617472707d7a6661663b767a78">[email&#160;protected]</span></a>.</p>
+    <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">Under the UK GDPR, you have the right to access, correct, delete, restrict, or port your personal data, and to withdraw consent at any time. Contact us at <a href="mailto:info@britishheritagehosts.com" style="color:var(--gold)">info@britishheritagehosts.com</a>.</p>
 
     <h3>7. Data Security</h3>
     <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">We implement appropriate technical and organisational measures to protect your data. Payment data is handled by our PCI-compliant payment partner and is never stored on our systems.</p>
@@ -5187,7 +5304,7 @@ function closeThankyouModal(modalId) {
     <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">We may update this policy from time to time. Changes will be posted on this page with an updated date.</p>
 
     <h3>10. Contact Us</h3>
-    <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">British Heritage Hosts Ltd, Monomark House, 27 Old Gloucester Street, London WC1N 3AX. Email: <a href="/cdn-cgi/l/email-protection#4e272028210e2c3c273a273d26262b3c273a2f292b26213d3a3d602d2123" style="color:var(--gold)"><span class="__cf_email__" data-cfemail="127b7c747d5270607b667b617a7a77607b667375777a7d6166613c717d7f">[email&#160;protected]</span></a>. You also have the right to lodge a complaint with the ICO at <a href="https://ico.org.uk" style="color:var(--gold)" target="_blank" rel="noopener">ico.org.uk</a>.</p>
+    <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">British Heritage Hosts Ltd, Monomark House, 27 Old Gloucester Street, London WC1N 3AX. Email: <a href="mailto:info@britishheritagehosts.com" style="color:var(--gold)">info@britishheritagehosts.com</a>. You also have the right to lodge a complaint with the ICO at <a href="https://ico.org.uk" style="color:var(--gold)" target="_blank" rel="noopener">ico.org.uk</a>.</p>
   </div>
 
   </div>
@@ -5241,7 +5358,7 @@ function closeThankyouModal(modalId) {
     <p style="color:var(--muted);line-height:1.9;font-size:0.95rem"><em>[DRAFT FOR LEGAL REVIEW — placeholder wording, not final legal text.]</em> BHH offers two distinct categories of service. <strong>(a) Services we provide.</strong> Private Family Dinners, English Afternoon Teas, British Heritage Guide tours, Canal Day Cruises, the Cultural Immersion Program, and the Personal Interpreter Service are arranged, sold, and invoiced by BHH, and these Terms govern them in full. <strong>(b) Partners we introduce.</strong> For certain services — currently Airport Transfer, Chauffeured Hire, and multi-day Narrowboat Holidays — BHH acts solely as an introducer. We connect you with an independent third-party partner, and any contract, booking, and payment for those services are made directly between you and that partner. BHH does not sell, supply, invoice, or take payment for introduced services, is not a party to any resulting agreement, and accepts no liability for their provision. The partner's own terms, pricing, insurance, and cancellation policy apply.</p>
 
     <h3>13. Contact Us</h3>
-    <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">British Heritage Hosts Ltd, Monomark House, 27 Old Gloucester Street, London WC1N 3AX. Email: <a href="/cdn-cgi/l/email-protection#a1c8cfc7cee1c3d3c8d5c8d2c9c9c4d3c8d5c0c6c4c9ced2d5d28fc2cecc" style="color:var(--gold)"><span class="__cf_email__" data-cfemail="0960676f66496b7b607d607a61616c7b607d686e6c61667a7d7a276a6664">[email&#160;protected]</span></a></p>
+    <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">British Heritage Hosts Ltd, Monomark House, 27 Old Gloucester Street, London WC1N 3AX. Email: <a href="mailto:info@britishheritagehosts.com" style="color:var(--gold)">info@britishheritagehosts.com</a></p>
   </div>
 
   </div>
