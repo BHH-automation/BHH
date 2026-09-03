@@ -3871,17 +3871,33 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   var carousels = document.querySelectorAll('.service-card-carousel');
+  var phoneOrder = 0;                 // counts the phone cards so each can start slightly later
   carousels.forEach(function(c) {
     var imgs = c.querySelectorAll('img');
     if (imgs.length < 2) { if(imgs[0]) imgs[0].style.opacity='1'; return; }
-    // PHONES (max-width 767px): the nine experience cards show ONE still photo, the
-    // first of their three, with no rotation and no cross fade, so two pictures are
-    // never blended over each other. Scoped to the marketing grid, so the carousels
-    // inside the introduction form keep rotating, and skipped entirely at 768px and
-    // wider, where the rotation is exactly as live.
+    // PHONES (max-width 767px): the nine experience cards run the SAME 3.5 second cycle
+    // as desktop, but the switch is INSTANT. The phone CSS sets transition:none on these
+    // images, and the outgoing and incoming photo are swapped inside one synchronous
+    // block, so the browser paints a single frame in which exactly one photo is visible.
+    // There is no cross fade and no frame where two pictures are blended.
+    // Each card starts 260ms after the one before it, so the nine do not all switch on
+    // the same frame. Scoped to the marketing grid, so the carousels inside the
+    // introduction form are untouched, and skipped entirely at 768px and wider, where
+    // the one second cross fade below runs exactly as live.
     if (c.closest('.services-grid') && window.matchMedia('(max-width:767px)').matches) {
       imgs[0].classList.add('active');
       for (var k = 1; k < imgs.length; k++) { imgs[k].classList.add('inactive'); }
+      var pIdx = 0;
+      var swap = function() {
+        var from = imgs[pIdx];
+        pIdx = (pIdx + 1) % imgs.length;
+        var to = imgs[pIdx];
+        from.classList.remove('active'); from.classList.add('inactive');
+        to.classList.remove('inactive'); to.classList.add('active');
+      };
+      var startIn = 3500 + (phoneOrder * 260);
+      phoneOrder++;
+      setTimeout(function() { swap(); setInterval(swap, 3500); }, startIn);
       return;
     }
     imgs[0].classList.add('active');
