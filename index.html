@@ -5960,8 +5960,9 @@ function closeLegalModal(type) {
      whose src is swapped, and neither .nf-ov__img nor .nf-ov__blur carries a transition,
      so one picture is replaced by the next in one frame and two are never blended.
      The timer is started fresh every time the overlay opens, restarted from zero whenever
-     the guest presses an arrow or swipes, and cleared when the overlay closes. */
-  var OV_ROTATE_MS = 3500;
+     the guest presses an arrow or swipes, and cleared when the overlay closes.
+     The large view moves faster than the cards: 2.5 seconds here, 3.5 on the grid. */
+  var OV_ROTATE_MS = 2500;
   var ovTimer = null, preloaded = {};
 
   function ovStopTimer(){ if(ovTimer){ clearInterval(ovTimer); ovTimer = null; } }
