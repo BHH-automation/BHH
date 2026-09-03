@@ -1538,15 +1538,66 @@ footer {
     font-size:16px; line-height:1.12; margin-bottom:0;
     overflow-wrap:break-word; -webkit-hyphens:none; hyphens:none;
   }
-  /* The hover reveal description and arrow cannot be used by touch and would push the
-     name out of the smaller card, so they stay collapsed on phones. */
+  /* The hover reveal description and the "Discover more" arrow cannot be used by touch,
+     and a tap on iOS leaves the :hover state stuck on the card, so on phones they are
+     removed from the render tree in EVERY state: normal, hover, focus, focus within,
+     active and the state a finger leaves behind. display:none plus visibility, zero
+     opacity, zero size and no transition or animation, all with !important, so no
+     partial frame or opacity ramp can ever paint over the photo. Nothing but the
+     number and the name is left over the picture. */
   .services-grid .service-card-desc,
-  .services-grid .service-card-arrow{ display:none; }
-  .services-grid .service-card:hover .service-card-desc{ max-height:0; opacity:0; }
-  /* Slightly stronger gradient so number and name stay readable over any photo. */
-  .services-grid .service-card-overlay{
-    background:linear-gradient(to top, rgba(13,27,42,0.95) 0%, rgba(13,27,42,0.55) 45%, rgba(13,27,42,0.05) 100%);
+  .services-grid .service-card-arrow,
+  .services-grid .service-card:hover .service-card-desc,
+  .services-grid .service-card:hover .service-card-arrow,
+  .services-grid .service-card:focus .service-card-desc,
+  .services-grid .service-card:focus .service-card-arrow,
+  .services-grid .service-card:focus-within .service-card-desc,
+  .services-grid .service-card:focus-within .service-card-arrow,
+  .services-grid .service-card:active .service-card-desc,
+  .services-grid .service-card:active .service-card-arrow{
+    display:none !important;
+    visibility:hidden !important;
+    opacity:0 !important;
+    max-height:0 !important;
+    height:0 !important;
+    margin:0 !important;
+    padding:0 !important;
+    border:0 !important;
+    overflow:hidden !important;
+    transform:none !important;
+    transition:none !important;
+    animation:none !important;
+    pointer-events:none !important;
   }
+  /* A stronger dark band across the bottom of the card, held identical in every state
+     (a tap on iOS leaves :hover stuck, and the desktop hover gradient must not take over
+     on a phone). Cards 01 and 07 have bright bottom corners, sky behind the castle and a
+     bright window, and the old gradient was too weak there to carry the gold number. */
+  .services-grid .service-card-overlay,
+  .services-grid .service-card:hover .service-card-overlay,
+  .services-grid .service-card:focus .service-card-overlay,
+  .services-grid .service-card:focus-within .service-card-overlay,
+  .services-grid .service-card:active .service-card-overlay{
+    background:linear-gradient(to top,
+      rgba(13,27,42,0.97) 0%,
+      rgba(13,27,42,0.92) 42%,
+      rgba(13,27,42,0.62) 68%,
+      rgba(13,27,42,0.18) 88%,
+      rgba(13,27,42,0) 100%) !important;
+    transition:none !important;
+  }
+  /* Soft dark shadow behind the text as a second layer of contrast, so the number and
+     the name stay legible even where a photo is bright right up to the card edge. */
+  .services-grid .service-card-num,
+  .services-grid .service-card h3{
+    text-shadow:0 1px 2px rgba(9,18,30,0.95), 0 0 8px rgba(9,18,30,0.75);
+  }
+  /* The photo never moves or cross fades on a phone: no rotation (see the carousel
+     script), no zoom on a stuck :hover, no fade. One still picture per card. */
+  .services-grid .service-card-carousel img{ transition:none !important; }
+  .services-grid .service-card:hover .service-card-img,
+  .services-grid .service-card:focus .service-card-img,
+  .services-grid .service-card:active .service-card-img{ transform:none !important; }
 }
 /* Narrowest phones: keep the three-line names inside the shorter card. */
 @media (max-width:360px){
@@ -3822,6 +3873,16 @@ document.addEventListener('DOMContentLoaded', function() {
   carousels.forEach(function(c) {
     var imgs = c.querySelectorAll('img');
     if (imgs.length < 2) { if(imgs[0]) imgs[0].style.opacity='1'; return; }
+    // PHONES (max-width 767px): the nine experience cards show ONE still photo, the
+    // first of their three, with no rotation and no cross fade, so two pictures are
+    // never blended over each other. Scoped to the marketing grid, so the carousels
+    // inside the introduction form keep rotating, and skipped entirely at 768px and
+    // wider, where the rotation is exactly as live.
+    if (c.closest('.services-grid') && window.matchMedia('(max-width:767px)').matches) {
+      imgs[0].classList.add('active');
+      for (var k = 1; k < imgs.length; k++) { imgs[k].classList.add('inactive'); }
+      return;
+    }
     imgs[0].classList.add('active');
     for (var i = 1; i < imgs.length; i++) { imgs[i].classList.add('inactive'); }
     var idx = 0;
