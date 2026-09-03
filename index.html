@@ -5956,6 +5956,28 @@ function closeLegalModal(type) {
   var ovGrid    = document.getElementById('nf-ov-grid');
   var ovIdx = 0, ovPhoto = 0, gridBuilt = false, prevBodyOverflow = '', ovOpen = false, ovScrollY = 0;
 
+  /* The large view runs the same 3.5 second cycle as the cards. It is a SINGLE <img>
+     whose src is swapped, and neither .nf-ov__img nor .nf-ov__blur carries a transition,
+     so one picture is replaced by the next in one frame and two are never blended.
+     The timer is started fresh every time the overlay opens, restarted from zero whenever
+     the guest presses an arrow or swipes, and cleared when the overlay closes. */
+  var OV_ROTATE_MS = 3500;
+  var ovTimer = null, preloaded = {};
+
+  function ovStopTimer(){ if(ovTimer){ clearInterval(ovTimer); ovTimer = null; } }
+  function ovStartTimer(){
+    ovStopTimer();
+    if(SERVICES[ovIdx].imgs.length < 2) return;    // nothing to rotate through
+    ovTimer = setInterval(function(){ ovStep(1); }, OV_ROTATE_MS);
+  }
+  // hold the three photos in cache so the swap has nothing to fetch mid-cycle
+  function ovPreload(i){
+    if(preloaded[i]) return;
+    var shots = SERVICES[i].imgs;
+    for(var q=0;q<shots.length;q++){ var im = new Image(); im.src = shots[q]; }
+    preloaded[i] = true;
+  }
+
   function paintSingle(){
     var s2 = SERVICES[ovIdx];
     if(ovPhoto < 0 || ovPhoto >= s2.imgs.length){ ovPhoto = 0; }
@@ -5980,7 +6002,7 @@ function closeLegalModal(type) {
         m.appendChild(i1); m.appendChild(i2);
         var n = document.createElement('span'); n.className = 'nf-ov__tilename'; n.textContent = displayName(s2);
         b.appendChild(m); b.appendChild(n);
-        b.addEventListener('click', function(){ ovIdx = i; ovPhoto = 0; paintSingle(); showView('single'); if(ov) ov.scrollTop = 0; });
+        b.addEventListener('click', function(){ ovIdx = i; ovPhoto = 0; ovPreload(i); paintSingle(); showView('single'); ovStartTimer(); if(ov) ov.scrollTop = 0; });
         ovGrid.appendChild(b);
       })(i);
     }
@@ -5998,7 +6020,8 @@ function closeLegalModal(type) {
     if(!ov) return;
     if(typeof i === 'number' && i >= 0 && i < SERVICES.length){ ovIdx = i; }
     ovPhoto = 0;                                                     // always open on the first photo
-    if(mode === 'grid'){ buildGrid(); showView('grid'); } else { paintSingle(); showView('single'); }
+    if(mode === 'grid'){ buildGrid(); showView('grid'); ovStopTimer(); }
+    else { ovPreload(ovIdx); paintSingle(); showView('single'); ovStartTimer(); }
     ov.classList.add('is-open');
     ov.setAttribute('aria-hidden', 'false');
     ov.scrollTop = 0;
@@ -6014,6 +6037,7 @@ function closeLegalModal(type) {
   function closeOverlay(){
     if(!ov || !ovOpen) return;
     var backTo = ovScrollY;
+    ovStopTimer();                                                   // no timer is left running
     ov.classList.remove('is-open');
     ov.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = prevBodyOverflow || '';           // restore, page stays put
@@ -6032,8 +6056,8 @@ function closeLegalModal(type) {
 
   if(ov){
     document.getElementById('nf-ov-close').addEventListener('click', closeOverlay);
-    document.getElementById('nf-ov-prev').addEventListener('click', function(){ ovStep(-1); });
-    document.getElementById('nf-ov-next').addEventListener('click', function(){ ovStep(1); });
+    document.getElementById('nf-ov-prev').addEventListener('click', function(){ ovStep(-1); ovStartTimer(); });
+    document.getElementById('nf-ov-next').addEventListener('click', function(){ ovStep(1); ovStartTimer(); });
     document.getElementById('nf-ov-cta').addEventListener('click', function(){
       var svc = SERVICES[ovIdx];
       closeOverlay();
@@ -6052,7 +6076,7 @@ function closeLegalModal(type) {
         var dx = e2.changedTouches[0].clientX - sx;
         var dy = e2.changedTouches[0].clientY - sy;
         sx = null;
-        if(Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)){ ovStep(dx < 0 ? 1 : -1); }
+        if(Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)){ ovStep(dx < 0 ? 1 : -1); ovStartTimer(); }
       }, { passive:true });
     }
   }
