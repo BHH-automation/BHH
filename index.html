@@ -1409,7 +1409,7 @@ footer {
    technique already used for the showcase card's "Tap to view" label. */
 .hero-sub--phone{ display:none; }
 
-/* The reply line and the Arabic welcome now appear on every screen size. */
+/* The reply line now appears on every screen size. */
 .hero-reply-line{
   display:block;
   margin:0.9rem auto 0;
@@ -1420,26 +1420,11 @@ footer {
   line-height:1.5;
   color:rgba(245,240,232,0.85);
 }
-/* Arabic welcome: an explicit Arabic capable stack so the letters always join
-   correctly, whatever the body font does. Slightly smaller than the sub line,
-   same light colour, right to left. */
-.hero-arabic{
-  font-family:"Noto Naskh Arabic","Noto Sans Arabic","Geeza Pro","Al Bayan","Arabic Typesetting","Traditional Arabic","Segoe UI",Tahoma,"Arial Unicode MS",sans-serif;
-  font-size:1.05rem;
-  line-height:2;
-  color:rgba(245,240,232,0.85);
-  max-width:580px;
-  margin:0 auto 1.6rem;
-  text-align:center;
-}
-@media (max-width:767px){
-  .hero-arabic{ font-size:0.88rem; margin:0 auto 1.1rem; }
-}
-/* Desktop and tablet only. The hero gained two lines (the Arabic welcome and the
-   reply line) and lost the star row, so the block is taller than it was and the
-   eyebrow was sliding under the fixed top bar. The vertical rhythm is tightened
-   just enough that the eyebrow clears the bar and the reply line stays above the
-   fold at 1280 by 800. Phones are untouched: every rule here is min-width 768px. */
+/* Desktop and tablet only. The hero gained the reply line and lost the star row, so
+   the block is taller than it was and the eyebrow was sliding under the fixed top bar.
+   The vertical rhythm is tightened just enough that the eyebrow clears the bar and the
+   reply line stays above the fold at 1280 by 800. Phones are untouched: every rule
+   here is min-width 768px. */
 @media (min-width:768px){
   /* The star row used to sit at the very top of the hero content and absorbed the
      overlap with the fixed bar (the stars themselves were partly behind it). With the
@@ -1450,7 +1435,6 @@ footer {
   .hero-content .eyebrow{ margin-bottom:0.5rem; }
   .hero-content h1{ margin:0.3rem 0 0.8rem; }
   .hero-sub{ margin:0 auto 0.8rem; }
-  .hero-arabic{ margin:0 auto 0.8rem; }
 }
 
 @media (max-width:767px){
@@ -1924,7 +1908,6 @@ function closeMobileMenu(){
       <span class="eyebrow" style="color:var(--gold-light);letter-spacing:0.2em;font-size:1rem;">LONDON AND THE ENGLISH COUNTRYSIDE</span>
       <h1>England, as it <em style="font-style:normal;color:var(--gold)">truly</em> lives</h1>
       <p class="hero-sub"><span class="hero-sub--desktop">Private cultural experiences in real English homes,<br>curated exclusively for discerning international families visiting England.</span><span class="hero-sub--phone">Private experiences in real English homes, for international families</span></p>
-      <p class="hero-arabic" dir="rtl" lang="ar">أهلاً بعائلتكم في إنجلترا، كما تُعاش حقاً</p>
       <div class="hero-btns">
         <a href="#services" class="btn btn-gold">Explore Our Services</a>
         <a href="#enquire" class="btn btn-outline-cream" onclick="joinAs('guest');return false;">Enquire for Your Family</a>
