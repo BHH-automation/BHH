@@ -1522,20 +1522,35 @@ footer {
    Placed last in this stylesheet so it wins over the earlier phone rules. Every rule is
    inside a max-width:767px query, so 768px and wider (tablet and desktop) is untouched. */
 @media (max-width:767px){
-  /* 1. The fixed news flash showcase card, its › arrow, its "See all nine experiences"
-        link and the full screen overlay never appear on phones. The script is also
-        gated so none of that code is initialised at this width. */
-  .hero-newsflash,
-  .nf-ov{ display:none !important; }
+  /* 1. The fixed news flash showcase card itself never appears on phones. The full
+        screen overlay below it IS used on phones now: tapping an experience card opens
+        it, so it must NOT be hidden here. */
+  .hero-newsflash{ display:none !important; }
 
-  /* 2. "Nine Signature Experiences" — two columns instead of one. Same 2px gap,
-        same 4/3 card shape, photo/gradient/number/name kept, tap routing untouched. */
-  .services-grid{ grid-template-columns:repeat(2,1fr); gap:2px; }
-  .services-grid .service-card{ aspect-ratio:4/3; height:auto; }
-  .services-grid .service-card-content{ padding:0.5rem 0.55rem 0.6rem; }
-  .services-grid .service-card-num{ font-size:11px; letter-spacing:0.14em; margin-bottom:0.2rem; }
+  /* 2. "Nine Signature Experiences" — two columns, and each card is now two stacked
+        parts: the photo on top with NOTHING drawn over it, and a solid navy caption
+        strip directly under it carrying the number and the name. */
+  .services-grid{ grid-template-columns:repeat(2,1fr); gap:2px; align-items:stretch; }
+  .services-grid .service-card{
+    aspect-ratio:auto; height:auto;
+    display:flex; flex-direction:column;
+    background:var(--navy);
+  }
+  /* the photo: full width, roughly 4 by 3, nothing over it */
+  .services-grid .service-card-img{
+    position:relative; width:100%; height:auto; aspect-ratio:4/3; flex:0 0 auto;
+  }
+  /* the caption strip: solid navy, left aligned, under the photo */
+  .services-grid .service-card-content{
+    position:static; flex:1 1 auto;
+    background:var(--navy); padding:0.5rem 0.6rem 0.6rem; text-align:left;
+  }
+  .services-grid .service-card-num{
+    font-size:11px; letter-spacing:0.14em; line-height:1.2;
+    color:var(--gold); margin-bottom:0.22rem;
+  }
   .services-grid .service-card h3{
-    font-size:16px; line-height:1.12; margin-bottom:0;
+    font-size:16px; line-height:1.16; margin-bottom:0; color:var(--white);
     overflow-wrap:break-word; -webkit-hyphens:none; hyphens:none;
   }
   /* The hover reveal description and the "Discover more" arrow cannot be used by touch,
@@ -1569,29 +1584,9 @@ footer {
     animation:none !important;
     pointer-events:none !important;
   }
-  /* A stronger dark band across the bottom of the card, held identical in every state
-     (a tap on iOS leaves :hover stuck, and the desktop hover gradient must not take over
-     on a phone). Cards 01 and 07 have bright bottom corners, sky behind the castle and a
-     bright window, and the old gradient was too weak there to carry the gold number. */
-  .services-grid .service-card-overlay,
-  .services-grid .service-card:hover .service-card-overlay,
-  .services-grid .service-card:focus .service-card-overlay,
-  .services-grid .service-card:focus-within .service-card-overlay,
-  .services-grid .service-card:active .service-card-overlay{
-    background:linear-gradient(to top,
-      rgba(13,27,42,0.97) 0%,
-      rgba(13,27,42,0.92) 42%,
-      rgba(13,27,42,0.62) 68%,
-      rgba(13,27,42,0.18) 88%,
-      rgba(13,27,42,0) 100%) !important;
-    transition:none !important;
-  }
-  /* Soft dark shadow behind the text as a second layer of contrast, so the number and
-     the name stay legible even where a photo is bright right up to the card edge. */
-  .services-grid .service-card-num,
-  .services-grid .service-card h3{
-    text-shadow:0 1px 2px rgba(9,18,30,0.95), 0 0 8px rgba(9,18,30,0.75);
-  }
+  /* The gradient band that used to sit over the photo is gone: the text lives in its
+     own strip now, so nothing is drawn over the picture in any state. */
+  .services-grid .service-card-overlay{ display:none !important; }
   /* The photo never moves or cross fades on a phone: no rotation (see the carousel
      script), no zoom on a stuck :hover, no fade. One still picture per card. */
   .services-grid .service-card-carousel img{ transition:none !important; }
@@ -1601,9 +1596,9 @@ footer {
 }
 /* Narrowest phones: keep the three-line names inside the shorter card. */
 @media (max-width:360px){
-  .services-grid .service-card-content{ padding:0.3rem 0.4rem 0.4rem; }
-  .services-grid .service-card-num{ line-height:1.2; margin-bottom:0.1rem; }
-  .services-grid .service-card h3{ font-size:15px; line-height:1.05; }
+  .services-grid .service-card-content{ padding:0.4rem 0.45rem 0.5rem; }
+  .services-grid .service-card-num{ margin-bottom:0.15rem; }
+  .services-grid .service-card h3{ font-size:15px; line-height:1.14; }
 }
 </style>
 
@@ -5783,8 +5778,8 @@ function closeLegalModal(type) {
     <div class="nf-ov__media">
       <img class="nf-ov__blur" id="nf-ov-blur" src="" alt="" aria-hidden="true">
       <img class="nf-ov__img"  id="nf-ov-img"  src="" alt="">
-      <button type="button" class="nf-ov__arrow nf-ov__arrow--prev" id="nf-ov-prev" aria-label="Previous experience">&lsaquo;</button>
-      <button type="button" class="nf-ov__arrow nf-ov__arrow--next" id="nf-ov-next" aria-label="Next experience">&rsaquo;</button>
+      <button type="button" class="nf-ov__arrow nf-ov__arrow--prev" id="nf-ov-prev" aria-label="Previous photo">&lsaquo;</button>
+      <button type="button" class="nf-ov__arrow nf-ov__arrow--next" id="nf-ov-next" aria-label="Next photo">&rsaquo;</button>
     </div>
     <div class="nf-ov__body">
       <span class="nf-ov__eyebrow">Our Services</span>
@@ -5812,19 +5807,15 @@ function closeLegalModal(type) {
   var card = document.getElementById('hero-newsflash');
   if(!card) return;
 
-  /* ══ PHONES (≤767px): nothing below is initialised ══
-     The showcase card, its › arrow, its "See all nine experiences" link, the scroll
-     listener that reveals it and the full screen overlay are never set up, so none of
-     them can appear, fire or throw at this width. The markup is also hidden by CSS.
-     At 768px and wider this block is skipped entirely and behaviour is exactly as live. */
+  /* ══ PHONES (≤767px) ══
+     The showcase CARD stays off: it is hidden here and its fade cycle is never started
+     (see the bottom of this function), so it, its › arrow and its "See all nine
+     experiences" link can never appear. The OVERLAY below is a different matter — on
+     phones it is now opened by tapping one of the nine experience cards, so the rest of
+     this function still runs in order to wire it up. At 768px and wider nothing here
+     changes and the card behaves exactly as live. */
   if(window.matchMedia('(max-width:767px)').matches){
     card.hidden = true;
-    var ovPhone = document.getElementById('nf-overlay');
-    if(ovPhone){ ovPhone.classList.remove('is-open'); ovPhone.setAttribute('aria-hidden','true'); }
-    /* the inline onclick attributes in the markup still resolve — they just do nothing */
-    window.newsflashClick   = function(){ return false; };
-    window.dismissNewsflash = function(){};
-    return;
   }
   var imgEl  = card.querySelector('.hero-newsflash__img');
   var blurEl = card.querySelector('.hero-newsflash__blur');
@@ -5937,18 +5928,22 @@ function closeLegalModal(type) {
 
   // One-line descriptions are READ FROM the nine marketing cards already on the page
   // (matched on their heading), so no new copy is introduced anywhere.
-  var descMap = null;
-  function descFor(svc){
-    if(!descMap){
-      descMap = {};
-      var cards = document.querySelectorAll('.services-grid .service-card');
-      for(var c=0;c<cards.length;c++){
-        var h = cards[c].querySelector('h3'), d = cards[c].querySelector('.service-card-desc');
-        if(h && d){ descMap[h.textContent.trim()] = d.textContent.trim(); }
-      }
+  var descMap = null, numMap = null;
+  function readCards(){
+    if(descMap) return;
+    descMap = {}; numMap = {};
+    var cards = document.querySelectorAll('.services-grid .service-card');
+    for(var c=0;c<cards.length;c++){
+      var h = cards[c].querySelector('h3'),
+          d = cards[c].querySelector('.service-card-desc'),
+          nm = cards[c].querySelector('.service-card-num');
+      if(h && d){ descMap[h.textContent.trim()] = d.textContent.trim(); }
+      if(h && nm){ numMap[h.textContent.trim()] = nm.textContent.trim(); }
     }
-    return descMap[displayName(svc)] || '';
   }
+  function descFor(svc){ readCards(); return descMap[displayName(svc)] || ''; }
+  // The "01 / 09" number is read from the card itself, so it can never drift out of step.
+  function numFor(svc){ readCards(); return numMap[displayName(svc)] || 'Our Services'; }
 
   var ov        = document.getElementById('nf-overlay');
   var ovSingle  = document.getElementById('nf-ov-single');
@@ -5956,14 +5951,17 @@ function closeLegalModal(type) {
   var ovImg     = document.getElementById('nf-ov-img');
   var ovBlur    = document.getElementById('nf-ov-blur');
   var ovName    = document.getElementById('nf-ov-name');
+  var ovEyebrow = ov ? ov.querySelector('.nf-ov__eyebrow') : null;
   var ovDesc    = document.getElementById('nf-ov-desc');
   var ovGrid    = document.getElementById('nf-ov-grid');
-  var ovIdx = 0, gridBuilt = false, prevBodyOverflow = '', ovOpen = false;
+  var ovIdx = 0, ovPhoto = 0, gridBuilt = false, prevBodyOverflow = '', ovOpen = false, ovScrollY = 0;
 
   function paintSingle(){
     var s2 = SERVICES[ovIdx];
-    var src = s2.imgs[0];
+    if(ovPhoto < 0 || ovPhoto >= s2.imgs.length){ ovPhoto = 0; }
+    var src = s2.imgs[ovPhoto];
     ovImg.src = src; ovBlur.src = src; ovImg.alt = displayName(s2);
+    if(ovEyebrow){ ovEyebrow.textContent = numFor(s2); }
     ovName.textContent = displayName(s2);
     ovDesc.textContent = descFor(s2);
   }
@@ -5982,7 +5980,7 @@ function closeLegalModal(type) {
         m.appendChild(i1); m.appendChild(i2);
         var n = document.createElement('span'); n.className = 'nf-ov__tilename'; n.textContent = displayName(s2);
         b.appendChild(m); b.appendChild(n);
-        b.addEventListener('click', function(){ ovIdx = i; paintSingle(); showView('single'); if(ov) ov.scrollTop = 0; });
+        b.addEventListener('click', function(){ ovIdx = i; ovPhoto = 0; paintSingle(); showView('single'); if(ov) ov.scrollTop = 0; });
         ovGrid.appendChild(b);
       })(i);
     }
@@ -5999,11 +5997,15 @@ function closeLegalModal(type) {
   function openOverlay(i, mode){
     if(!ov) return;
     if(typeof i === 'number' && i >= 0 && i < SERVICES.length){ ovIdx = i; }
+    ovPhoto = 0;                                                     // always open on the first photo
     if(mode === 'grid'){ buildGrid(); showView('grid'); } else { paintSingle(); showView('single'); }
     ov.classList.add('is-open');
     ov.setAttribute('aria-hidden', 'false');
     ov.scrollTop = 0;
-    if(!ovOpen){ prevBodyOverflow = document.body.style.overflow; }   // lock page scroll
+    if(!ovOpen){
+      prevBodyOverflow = document.body.style.overflow;               // lock page scroll
+      ovScrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+    }
     document.body.style.overflow = 'hidden';
     ovOpen = true;
     document.addEventListener('keydown', ovKey);
@@ -6011,15 +6013,20 @@ function closeLegalModal(type) {
 
   function closeOverlay(){
     if(!ov || !ovOpen) return;
+    var backTo = ovScrollY;
     ov.classList.remove('is-open');
     ov.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = prevBodyOverflow || '';           // restore, page stays put
     ovOpen = false;
     document.removeEventListener('keydown', ovKey);
+    window.scrollTo(0, backTo);                                      // return to the same place in the page
   }
 
+  // The arrows (and a swipe) move through the THREE PHOTOS of the experience on screen,
+  // not between experiences.
   function ovStep(delta){
-    ovIdx = (ovIdx + delta + SERVICES.length) % SERVICES.length;
+    var shots = SERVICES[ovIdx].imgs;
+    ovPhoto = (ovPhoto + delta + shots.length) % shots.length;
     paintSingle();
   }
 
@@ -6032,6 +6039,45 @@ function closeLegalModal(type) {
       closeOverlay();
       routeToForm(svc);
     });
+    // swipe left/right across the picture does the same as the arrows
+    var media = ov.querySelector('.nf-ov__media');
+    if(media){
+      var sx = null, sy = null;
+      media.addEventListener('touchstart', function(e2){
+        if(e2.touches.length !== 1){ sx = null; return; }
+        sx = e2.touches[0].clientX; sy = e2.touches[0].clientY;
+      }, { passive:true });
+      media.addEventListener('touchend', function(e2){
+        if(sx === null || !e2.changedTouches || !e2.changedTouches.length) return;
+        var dx = e2.changedTouches[0].clientX - sx;
+        var dy = e2.changedTouches[0].clientY - sy;
+        sx = null;
+        if(Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)){ ovStep(dx < 0 ? 1 : -1); }
+      }, { passive:true });
+    }
+  }
+
+  /* ══ PHONES: tapping one of the nine experience cards opens the overlay ══
+     The listener sits on the grid in the CAPTURE phase, so it runs before the card's own
+     handlers and stopPropagation keeps the event from ever reaching them — that covers
+     both the data-service click handler and the inline goToTransportTab on the two
+     introduce-only cards. The card's position in the grid is its index in SERVICES, so
+     the overlay opens on the experience that was tapped and its "Enquire about this"
+     button runs the card's existing routing unchanged. At 768px and wider the listener
+     returns immediately and a click goes straight to the form exactly as live. */
+  var gridEl = document.querySelector('.services-grid');
+  if(gridEl && ov){
+    gridEl.addEventListener('click', function(e2){
+      if(!isPhone()) return;
+      var t = e2.target;
+      var a = (t && t.closest) ? t.closest('.service-card') : null;
+      if(!a || !gridEl.contains(a)) return;
+      var order = Array.prototype.indexOf.call(gridEl.querySelectorAll('.service-card'), a);
+      if(order < 0 || order >= SERVICES.length) return;
+      e2.preventDefault();
+      e2.stopPropagation();
+      openOverlay(order, 'single');
+    }, true);
   }
 
   var nextBtn = card.querySelector('.hero-newsflash__next');
@@ -6092,26 +6138,13 @@ function closeLegalModal(type) {
   window.addEventListener('resize', placeCard);
   window.addEventListener('load', placeCard);
 
+  // PHONES: the showcase card's fade cycle is never started and no scroll listener is
+  // registered, so the card stays off exactly as it is on the live site. Only the overlay
+  // wired above is live at this width. 768px and wider is unchanged.
   var already = false;
   try { already = sessionStorage.getItem('bhh_newsflash_dismissed') === '1'; } catch(e){}
-  if(!already){
-    if(isPhone()){
-      // PHONES: never over the hero. Wait until the hero's bottom edge has passed the top of
-      // the screen, then fade in once. Scrolling back up does NOT hide it again.
-      var armed = true;
-      var heroSection = hero || document.querySelector('.hero');
-      var revealCard = function(){
-        if(!armed || dismissed) return;
-        if(heroSection && heroSection.getBoundingClientRect().bottom > 0) return;
-        armed = false;
-        window.removeEventListener('scroll', revealCard);
-        cycle();
-      };
-      window.addEventListener('scroll', revealCard, { passive:true });
-      timers.push(setTimeout(revealCard, 1200));   // covers a page opened already scrolled down
-    } else {
-      timers.push(setTimeout(cycle, 1200));
-    }
+  if(!already && !isPhone()){
+    timers.push(setTimeout(cycle, 1200));
   }
 })();
 </script>
