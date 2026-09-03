@@ -306,12 +306,6 @@ nav {
 }
 .hero h1 em { font-style: normal; color: var(--gold); }
 .hero .lead { color: rgba(245,240,232,0.7); margin-bottom: 2.5rem; max-width: 560px; margin-left: auto; margin-right: auto; font-size: 1.4rem; }
-.hero-stars {
-  display: flex; gap: 0.4rem;
-  justify-content: center;
-  margin-bottom: 1.5rem;
-}
-.hero-star { color: var(--gold); font-size: 1.4rem; }
 .hero-tagline {
   font-family: var(--ff-display);
   font-size: 1.25rem;
@@ -1413,9 +1407,51 @@ footer {
 /* Screen-size wording swaps: the phone wording is hidden by default and
    the desktop wording is hidden inside the phone media query, the same
    technique already used for the showcase card's "Tap to view" label. */
-.hero-eyebrow--phone,
-.hero-sub--phone,
-.hero-reply-line{ display:none; }
+.hero-sub--phone{ display:none; }
+
+/* The reply line and the Arabic welcome now appear on every screen size. */
+.hero-reply-line{
+  display:block;
+  margin:0.9rem auto 0;
+  text-align:center;
+  font-family:var(--ff-body);
+  font-weight:300;
+  font-size:0.85rem;
+  line-height:1.5;
+  color:rgba(245,240,232,0.85);
+}
+/* Arabic welcome: an explicit Arabic capable stack so the letters always join
+   correctly, whatever the body font does. Slightly smaller than the sub line,
+   same light colour, right to left. */
+.hero-arabic{
+  font-family:"Noto Naskh Arabic","Noto Sans Arabic","Geeza Pro","Al Bayan","Arabic Typesetting","Traditional Arabic","Segoe UI",Tahoma,"Arial Unicode MS",sans-serif;
+  font-size:1.05rem;
+  line-height:2;
+  color:rgba(245,240,232,0.85);
+  max-width:580px;
+  margin:0 auto 1.6rem;
+  text-align:center;
+}
+@media (max-width:767px){
+  .hero-arabic{ font-size:0.88rem; margin:0 auto 1.1rem; }
+}
+/* Desktop and tablet only. The hero gained two lines (the Arabic welcome and the
+   reply line) and lost the star row, so the block is taller than it was and the
+   eyebrow was sliding under the fixed top bar. The vertical rhythm is tightened
+   just enough that the eyebrow clears the bar and the reply line stays above the
+   fold at 1280 by 800. Phones are untouched: every rule here is min-width 768px. */
+@media (min-width:768px){
+  /* The star row used to sit at the very top of the hero content and absorbed the
+     overlap with the fixed bar (the stars themselves were partly behind it). With the
+     stars gone the eyebrow became the first line, so the top padding is raised to clear
+     the 132px bar, and the spacing is tightened so the new reply line still lands above
+     the fold at 1280 by 800. */
+  .hero-inner{ padding-top:144px; }
+  .hero-content .eyebrow{ margin-bottom:0.5rem; }
+  .hero-content h1{ margin:0.3rem 0 0.8rem; }
+  .hero-sub{ margin:0 auto 0.8rem; }
+  .hero-arabic{ margin:0 auto 0.8rem; }
+}
 
 @media (max-width:767px){
 
@@ -1440,12 +1476,7 @@ footer {
   /* Hero content sits clear of the shorter bar. */
   .hero-inner{ padding-top:72px; }
 
-  /* 2. The five gold stars are removed on phones. */
-  .hero-stars{ display:none; }
-
   /* 3 and 5. Phone wording on, desktop wording off. */
-  .hero-eyebrow--desktop{ display:none; }
-  .hero-eyebrow--phone{ display:inline; }
   .hero-sub--desktop{ display:none; }
   .hero-sub--phone{ display:inline; }
 
@@ -1454,19 +1485,6 @@ footer {
   .hero .eyebrow{ font-size:0.82rem; margin-bottom:0.5rem; }
   .hero-content h1{ margin:0.4rem 0 0.9rem; }
   .hero-sub{ margin:0 auto 1.4rem; }
-
-  /* 6. One centred line directly under the second button, in the same
-        light text style as the sub line. */
-  .hero-reply-line{
-    display:block;
-    margin:0.9rem auto 0;
-    text-align:center;
-    font-family:var(--ff-body);
-    font-weight:300;
-    font-size:0.85rem;
-    line-height:1.5;
-    color:rgba(245,240,232,0.85);
-  }
 
   /* 7. The strip of nine service names under the hero photo is hidden on
         phones only; it is untouched on desktop. */
@@ -1818,20 +1836,15 @@ function openTransportMode(mode, service){
   </a>
   <ul class="nav-links">
     <li><a href="#services">Our Services</a></li>
-    <li><a href="#about">About</a></li>
+    <li><a href="#about-bhh">About</a></li>
+    <li><a href="#enquire" onclick="closeMobileMenu();switchTab('guest');document.getElementById('enquire').scrollIntoView({behavior:'smooth'});return false;">Enquire</a></li>
     <li><a href="#contact">Contact</a></li>
     <li class="nav-join" id="navJoin">
       <a href="#partner" role="button" aria-haspopup="true" aria-expanded="false" id="navJoinBtn"
          onclick="toggleNavJoin(event)">
-        Join Our Network <span class="nav-join-caret">&#9660;</span>
+        Work with us <span class="nav-join-caret">&#9660;</span>
       </a>
       <ul class="nav-join-menu" id="navJoinMenu" role="menu">
-        <li role="none">
-          <a href="#enquire" role="menuitem" onclick="closeMobileMenu();switchTab('guest');document.getElementById('enquire').scrollIntoView({behavior:'smooth'});return false;">
-            <svg width="18" height="18" aria-hidden="true"><use href="#ic-guest"/></svg>
-            Become a Guest
-          </a>
-        </li>
         <li role="none">
           <a href="#enquire" role="menuitem" onclick="closeMobileMenu();switchTab('host');document.getElementById('enquire').scrollIntoView({behavior:'smooth'});return false;">
             <svg width="18" height="18" aria-hidden="true"><use href="#ic-host"/></svg>
@@ -1861,10 +1874,10 @@ function openTransportMode(mode, service){
 <!-- Mobile menu -->
 <div class="mobile-menu" id="mobileMenu" role="dialog" aria-label="Menu">
   <a href="#services" onclick="closeMobileMenu()">Our Services</a>
-  <a href="#about" onclick="closeMobileMenu()">About</a>
+  <a href="#about-bhh" onclick="closeMobileMenu()">About</a>
+  <a href="#enquire" onclick="closeMobileMenu();switchTab('guest');document.getElementById('enquire').scrollIntoView({behavior:'smooth'});return false;">Enquire</a>
   <a href="#contact" onclick="closeMobileMenu()">Contact</a>
-  <div class="mobile-menu-heading">Join Our Network</div>
-  <a class="mobile-subitem" href="#enquire" onclick="closeMobileMenu();switchTab('guest');document.getElementById('enquire').scrollIntoView({behavior:'smooth'});return false;">Become a Guest</a>
+  <div class="mobile-menu-heading">Work with us</div>
   <a class="mobile-subitem" href="#enquire" onclick="closeMobileMenu();switchTab('host');document.getElementById('enquire').scrollIntoView({behavior:'smooth'});return false;">Become a Host</a>
   <a class="mobile-subitem" href="#enquire" onclick="closeMobileMenu();switchTab('partner');document.getElementById('enquire').scrollIntoView({behavior:'smooth'});return false;">Become a Partner</a>
   <a class="mobile-subitem" href="#enquire" onclick="closeMobileMenu();switchTab('scout');document.getElementById('enquire').scrollIntoView({behavior:'smooth'});return false;">Become a Heritage Scout</a>
@@ -1908,16 +1921,10 @@ function closeMobileMenu(){
 
     <!-- Foreground content — centred, large, immediately readable -->
     <div class="hero-content">
-      <div class="hero-stars">
-        <span class="hero-star">★</span>
-        <span class="hero-star">★</span>
-        <span class="hero-star">★</span>
-        <span class="hero-star">★</span>
-        <span class="hero-star">★</span>
-      </div>
-      <span class="eyebrow" style="color:var(--gold-light);letter-spacing:0.2em;font-size:1rem;"><span class="hero-eyebrow--desktop">British Heritage Hosts Ltd — Est. 2026</span><span class="hero-eyebrow--phone">LONDON AND THE ENGLISH COUNTRYSIDE</span></span>
+      <span class="eyebrow" style="color:var(--gold-light);letter-spacing:0.2em;font-size:1rem;">LONDON AND THE ENGLISH COUNTRYSIDE</span>
       <h1>England, as it <em style="font-style:normal;color:var(--gold)">truly</em> lives</h1>
-      <p class="hero-sub"><span class="hero-sub--desktop">Private cultural experiences in real English homes —<br>curated exclusively for discerning international families visiting England.</span><span class="hero-sub--phone">Private experiences in real English homes, for international families</span></p>
+      <p class="hero-sub"><span class="hero-sub--desktop">Private cultural experiences in real English homes,<br>curated exclusively for discerning international families visiting England.</span><span class="hero-sub--phone">Private experiences in real English homes, for international families</span></p>
+      <p class="hero-arabic" dir="rtl" lang="ar">أهلاً بعائلتكم في إنجلترا، كما تُعاش حقاً</p>
       <div class="hero-btns">
         <a href="#services" class="btn btn-gold">Explore Our Services</a>
         <a href="#enquire" class="btn btn-outline-cream" onclick="joinAs('guest');return false;">Enquire for Your Family</a>
@@ -1997,6 +2004,7 @@ function closeMobileMenu(){
       <h2>Everything England has to offer — privately</h2>
       <div class="gold-line gold-line--center"></div>
       <p class="lead" style="margin:0 auto;text-align:center">Each experience is arranged exclusively for your family. No other guests. No shared itineraries. No compromise.</p>
+      <p class="lead" style="margin:0.6rem auto 0;text-align:center">Priced per family, quoted personally shortly.</p>
     </div>
     <div class="services-grid fade-up">
 
@@ -2010,7 +2018,7 @@ function closeMobileMenu(){
         <div class="service-card-content">
           <div class="service-card-num">01 / 09</div>
           <h3>Heritage Guide</h3>
-          <p class="service-card-desc">A personal female British Heritage Guide takes your family through England's most storied landscapes and history.</p>
+          <p class="service-card-desc">A personal British Heritage Guide takes your family through England's most storied landscapes and history. Female guides available on request.</p>
           <span class="service-card-arrow">Discover more →</span>
         </div>
       </a>
@@ -2145,6 +2153,12 @@ function closeMobileMenu(){
 <!-- OUR PROMISE -->
 <section class="section section--white" id="about" style="min-height:100vh;display:flex;align-items:center;">
   <div class="container">
+    <div class="fade-up" id="about-bhh" style="text-align:center;margin-bottom:3rem;scroll-margin-top:140px">
+      <span class="eyebrow">About BHH</span>
+      <h2 style="color:var(--navy)">About British Heritage Hosts</h2>
+      <div class="gold-line gold-line--center"></div>
+      <p class="lead" style="margin:1rem auto 0;text-align:center;color:var(--muted)">British Heritage Hosts is a small team of hosts and organisers based in London and the English countryside. We open real English homes to international families for private teas, dinners, guided days and canal journeys, and we arrange every visit personally. British Heritage Hosts Ltd is registered in England and Wales, Company No. 17103555.</p>
+    </div>
     <div class="fade-up" style="text-align:center">
       <span class="eyebrow">The BHH Standard</span>
       <h2 style="color:var(--navy)">Why discerning families choose us</h2>
@@ -2219,6 +2233,22 @@ function closeMobileMenu(){
 </section>
 
 <!-- CONTACT INFO -->
+<!-- PROOF PLACEHOLDER: ready to be filled and unhidden later. display:none, so it
+     does not render and cannot affect layout. -->
+<section class="section section--white" id="testimonials" style="display:none">
+  <div class="container">
+    <div style="text-align:center">
+      <span class="eyebrow">In their words</span>
+      <h2 style="color:var(--navy)">What families say</h2>
+      <div class="gold-line gold-line--center"></div>
+    </div>
+    <blockquote class="testimonial" style="max-width:680px;margin:2rem auto 0;text-align:center">
+      <p class="testimonial-quote"></p>
+      <footer class="testimonial-source"></footer>
+    </blockquote>
+  </div>
+</section>
+
 <section class="section section--cream" id="contact" style="min-height:100vh;display:flex;align-items:center;" style="text-align:center">
   <div class="container">
     <div class="fade-up">
@@ -2257,7 +2287,7 @@ function closeMobileMenu(){
            their full text width (white-space:nowrap) and the strip scrolls horizontally
            instead of shrinking the text. -->
       <div class="enquire-tabs" style="display:flex;flex-wrap:nowrap;justify-content:flex-start;gap:0;margin:2rem auto 2.5rem;max-width:880px;overflow-x:auto;-webkit-overflow-scrolling:touch;border-bottom:1px solid rgba(201,168,76,0.3)">
-        <button type="button" class="enquire-tab enquire-tab--active" data-tab="guest" onclick="switchTab('guest'); return false;" style="flex:1 0 auto;white-space:nowrap;display:flex;flex-direction:column;align-items:center;gap:8px;padding:0.9rem 1rem;background:transparent;border:none;border-bottom:2px solid var(--gold);color:var(--gold);font-family:var(--ff-body);font-size:0.72rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:all 0.3s"><svg class="tab-icon tab-icon--guest" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7.5" width="18" height="12.5" rx="2"/><path d="M8.5 7.5V5.5a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v2"/><path d="M3 12h18"/></svg>Become a Guest</button>
+        <button type="button" class="enquire-tab enquire-tab--active" data-tab="guest" onclick="switchTab('guest'); return false;" style="flex:1 0 auto;white-space:nowrap;display:flex;flex-direction:column;align-items:center;gap:8px;padding:0.9rem 1rem;background:transparent;border:none;border-bottom:2px solid var(--gold);color:var(--gold);font-family:var(--ff-body);font-size:0.72rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:all 0.3s"><svg class="tab-icon tab-icon--guest" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7.5" width="18" height="12.5" rx="2"/><path d="M8.5 7.5V5.5a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v2"/><path d="M3 12h18"/></svg>Enquire as a Guest</button>
         <button type="button" class="enquire-tab" data-tab="host" onclick="switchTab('host'); return false;" style="flex:1 0 auto;white-space:nowrap;display:flex;flex-direction:column;align-items:center;gap:8px;padding:0.9rem 1rem;background:transparent;border:none;border-bottom:2px solid transparent;color:rgba(245,240,232,0.5);font-family:var(--ff-body);font-size:0.72rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:all 0.3s"><svg class="tab-icon tab-icon--host" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.7L12 3.5l9 7.2"/><path d="M5.2 9.6V19a1.5 1.5 0 0 0 1.5 1.5h10.6a1.5 1.5 0 0 0 1.5-1.5V9.6"/><path d="M9.8 20.5v-5.3h4.4v5.3"/></svg>Become a Host</button>
         <button type="button" class="enquire-tab" data-tab="partner" onclick="switchTab('partner'); return false;" style="flex:1 0 auto;white-space:nowrap;display:flex;flex-direction:column;align-items:center;gap:8px;padding:0.9rem 1rem;background:transparent;border:none;border-bottom:2px solid transparent;color:rgba(245,240,232,0.5);font-family:var(--ff-body);font-size:0.72rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:all 0.3s"><svg class="tab-icon tab-icon--partner" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M2.5 20v-1.2a4.3 4.3 0 0 1 4.3-4.3h4.4a4.3 4.3 0 0 1 4.3 4.3V20"/><path d="M16.5 5.2a3.2 3.2 0 0 1 0 5.6"/><path d="M18.2 14.7a4.3 4.3 0 0 1 3.3 4.1V20"/></svg>Become a Partner</button>
         <button type="button" class="enquire-tab" data-tab="scout" onclick="switchTab('scout'); return false;" style="flex:1 0 auto;white-space:nowrap;display:flex;flex-direction:column;align-items:center;gap:8px;padding:0.9rem 1rem;background:transparent;border:none;border-bottom:2px solid transparent;color:rgba(245,240,232,0.5);font-family:var(--ff-body);font-size:0.72rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:all 0.3s"><svg class="tab-icon tab-icon--scout" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M15.6 8.4l-2.1 5.1-5.1 2.1 2.1-5.1z"/></svg>Become a Heritage Scout</button>
@@ -2458,11 +2488,9 @@ function closeMobileMenu(){
             <label style="display:block;font-size:0.7rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:rgba(245,240,232,1);margin-bottom:0.3rem">Family Composition</label>
             <div id="adults-breakdown-text"></div>
           </div>
-          <p style="font-size:0.72rem;color:rgba(245,240,232,1);margin:-0.5rem 0 0.5rem;font-style:italic">Family unit = 2 adults + 2 children (age 3–11 only). Age 12+ = adult rate. Children age 2 and below = free and do not count toward family unit. <em>Larger groups subject to host acceptance. All pricing quoted upon enquiry.</em></p>
-          <p style="font-size:0.72rem;color:rgba(245,240,232,1);margin:0 0 1rem;font-style:italic">Children age 3–11 only (counted in family unit). Age 12+ = adult rate — include in Number of Adults above. Age 2 and below = complimentary. <em>Subject to host acceptance.</em></p>
+          <p style="font-size:0.72rem;color:rgba(245,240,232,1);margin:-0.5rem 0 1rem;font-style:italic">A family unit is 2 adults and 2 children aged 3 to 11. Children aged 12 and over count as adults. Children aged 2 and under are free. Larger groups are subject to host acceptance. All pricing is quoted on enquiry.</p>
           <div id="child-ages-container" style="display:none">
             <label style="display:block;font-size:0.72rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:rgba(245,240,232,1);margin-bottom:0.3rem">Age of Each Child</label>
-            <p style="font-size:0.7rem;color:rgba(245,240,232,1);margin-bottom:0.7rem;font-style:italic">Children 1 &amp; 2 (age 3–11) included in family unit &nbsp;·&nbsp; Age 2 and below: complimentary &nbsp;·&nbsp; <em>Acceptance subject to host availability. Pricing quoted upon enquiry.</em></p>
             <div id="child-ages-dropdowns" class="form-row" style="flex-wrap:wrap;gap:0.75rem"></div>
           </div>
           </div>
@@ -2516,13 +2544,7 @@ function closeMobileMenu(){
           <!-- ═══ TRAVEL INSURANCE ═══ -->
           <div style="margin-bottom:1.5rem;padding:1rem 1.1rem;background:rgba(201,168,76,0.05);border:1px solid rgba(201,168,76,0.25);border-radius:4px">
             <p style="font-size:0.7rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);margin:0 0 0.5rem;font-weight:500">Travel Insurance</p>
-            <p style="font-size:0.82rem;line-height:1.6;color:rgba(245,240,232,0.85);margin:0 0 0.8rem">BHH strongly recommends all guests hold travel insurance covering trip cancellation, medical expenses, and personal liability before travelling. The following providers accept international guests including Gulf nationals:</p>
-            <div style="display:flex;flex-direction:column;gap:0.4rem">
-              <a href="https://www.axa.co.uk/travel-insurance/" target="_blank" rel="noopener noreferrer" style="font-size:0.78rem;color:var(--gold);text-decoration:underline">AXA Travel Insurance — covers Gulf nationals visiting the UK →</a>
-              <a href="https://www.allianz-assistance.co.uk/travel-insurance/" target="_blank" rel="noopener noreferrer" style="font-size:0.78rem;color:var(--gold);text-decoration:underline">Allianz Travel Insurance — strong coverage for Middle East travellers →</a>
-              <a href="https://www.worldnomads.com/" target="_blank" rel="noopener noreferrer" style="font-size:0.78rem;color:var(--gold);text-decoration:underline">World Nomads — flexible plans for international travellers →</a>
-            </div>
-            <p style="font-size:0.72rem;color:rgba(245,240,232,0.55);margin:0.7rem 0 0;font-style:italic">BHH is not an insurance provider. Please verify eligibility with your chosen insurer before purchasing.</p>
+            <p style="font-size:0.82rem;line-height:1.6;color:rgba(245,240,232,0.85);margin:0">We strongly recommend travel insurance covering cancellation, medical expenses and personal liability for your visit.</p>
             <div style="margin-top:0.8rem">
               <label style="display:flex;align-items:flex-start;gap:0.6rem;cursor:pointer;font-size:0.82rem;line-height:1.5;color:var(--muted)">
                 <input type="checkbox" name="Travel Insurance Confirmed" value="Yes" style="margin-top:0.2rem;flex-shrink:0;accent-color:#C9A84C;cursor:pointer">
@@ -4144,7 +4166,7 @@ var TIER_COPY = {
     premium:  'Everything in Standard + a celebration cake.'
   },
   'Heritage Guide': {
-    standard: 'Female guide, driver-guide tier.',
+    standard: 'Driver guide tier, female guide on request.',
     premium:  'Everything in Standard + VIP National Trust access and guide photos.'
   },
   'Canal Day Cruise': {
