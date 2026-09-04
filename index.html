@@ -354,6 +354,23 @@ nav {
   .services-grid{ max-height:none; overflow:visible; align-items:start; }
   .services-grid .service-card{ aspect-ratio:4/3; height:auto; }
 }
+
+/* RESTING STATE OF THE EXPERIENCE CARDS ON DESKTOP AND TABLET, RESTORED.
+   The services section carries an inline display:flex, so its .container is a flex item
+   with flex grow 0 and is sized to fit its widest child rather than filling the row. That
+   widest child is the section heading. When the long dash came out of "Everything England
+   has to offer, privately" the heading measured about 38px narrower, so the container, the
+   grid and every card shrank with it: each card lost roughly 10px of height. The number and
+   the name sit a fixed distance above the bottom of the card, so on a shorter card they
+   rose into the middle of the photo, and on card 01 the name landed on the book. The width
+   is now pinned to the value the section had before that heading edit (739px of grid plus
+   the 32px padding on each side), so the cards keep their old size and the caption sits
+   back at the bottom left no matter what the heading text says. Phones are not affected:
+   this rule starts at 768px, and below that the container still shrinks with the viewport
+   exactly as it did before. */
+@media (min-width:768px){
+  #services > .container{ width:100%; max-width:803px; }
+}
 .service-card-img {
   width: 100%; height: 100%;
   object-fit: cover;
