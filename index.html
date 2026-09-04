@@ -332,8 +332,6 @@ nav {
 .services-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  max-height: calc(100vh - 220px);
-  overflow: hidden;
   gap: 2px;
 }
 .service-card {
@@ -343,15 +341,19 @@ nav {
   cursor: pointer;
   text-decoration: none;
 }
-/* CAUSE OF THE PHONE BUG, FIXED AT SOURCE: .services-grid above caps itself at
-   calc(100vh - 220px) with overflow:hidden. That cap was written for the 3 by 3 desktop
-   grid. At 768px and below the grid becomes ONE column of nine rows, so the same cap had
-   to divide one screen between nine cards and squashed each to a thin slice, hiding the
-   number and the name. Phones (767px and narrower) opt out of the cap and out of the row
-   stretch, so each card falls back to its own 4/3 aspect ratio at full column width.
-   768px and wider is untouched, so desktop and tablet are exactly as they are today. */
+/* THE HEIGHT CAP IS GONE FROM .services-grid ABOVE. It used to read
+   max-height:calc(100vh - 220px) with overflow:hidden, sized for the 3 by 3 desktop grid
+   on a tall window. On any window shorter than about 780px the three rows did not fit
+   inside that cap and overflow:hidden simply cut rows 2 and 3 off, so a visitor on a wide
+   short screen (a television used as a monitor, a laptop with a short viewport) saw three
+   cards and had no way to learn the other six existed. Nothing needs to be clipped here:
+   the grid is nine cards in normal flow, so it now takes its natural height and the page
+   scrolls, at every width and every window height. Phones carried max-height:none and
+   overflow:visible to undo the cap; with the cap deleted at source those two are dead and
+   have been removed, leaving only align-items:start, which is what actually stops the rows
+   stretching, and the per card 4/3 fallback. */
 @media (max-width:767px){
-  .services-grid{ max-height:none; overflow:visible; align-items:start; }
+  .services-grid{ align-items:start; }
   .services-grid .service-card{ aspect-ratio:4/3; height:auto; }
 }
 
