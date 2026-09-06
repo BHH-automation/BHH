@@ -5,9 +5,13 @@
 //   load       { token }
 //   send_code  { token, stage }
 //   sign       { token, stage, code, checks, photos[], signature, lat, lng, comments }
+//   issue      { handover_id }  server to server only, header x-bhh-secret must match
+//                               BHH_WEBHOOK_SECRET. Emails the cook the handover link
+//                               plus a QR code of it. Fired by the trigger on handovers.
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.4";
 import { PDFDocument, StandardFonts, rgb } from "https://esm.sh/pdf-lib@1.17.1";
+import qrcode from "https://esm.sh/qrcode-generator@1.4.4";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -15,11 +19,13 @@ const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
 const TWILIO_ACCOUNT_SID = Deno.env.get("TWILIO_ACCOUNT_SID") ?? "";
 const TWILIO_AUTH_TOKEN = Deno.env.get("TWILIO_AUTH_TOKEN") ?? "";
 const TWILIO_FROM_NUMBER = Deno.env.get("TWILIO_FROM_NUMBER") ?? "";
+const WEBHOOK_SECRET = Deno.env.get("BHH_WEBHOOK_SECRET") ?? "";
 
 const BUCKET = "handovers";
 const FROM_EMAIL = "enquiries@britishheritagehosts.com";
 const OFFICE_EMAIL = "info@britishheritagehosts.com";
 const OTP_MINUTES = 10;
+const SITE_BASE = "https://britishheritagehosts.com";
 
 const admin = createClient(SUPABASE_URL, SERVICE_ROLE_KEY, {
   auth: { persistSession: false, autoRefreshToken: false },
@@ -27,7 +33,7 @@ const admin = createClient(SUPABASE_URL, SERVICE_ROLE_KEY, {
 
 const CORS = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-bhh-secret",
   "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
 };
 
@@ -170,7 +176,7 @@ async function sendSms(to: string, body: string) {
   return text;
 }
 
-async function sendEmail(to: string[], subject: string, html: string, pdfBase64: string, filename: string) {
+async function resendSend(payload: Record<string, unknown>) {
   if (!RESEND_API_KEY) throw new Error("Resend is not configured");
   const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
@@ -178,17 +184,15 @@ async function sendEmail(to: string[], subject: string, html: string, pdfBase64:
       Authorization: `Bearer ${RESEND_API_KEY}`,
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({
-      from: `British Heritage Hosts <${FROM_EMAIL}>`,
-      to,
-      subject,
-      html,
-      attachments: [{ filename, content: pdfBase64 }],
-    }),
+    body: JSON.stringify({ from: `British Heritage Hosts <${FROM_EMAIL}>`, ...payload }),
   });
   const text = await res.text();
   if (!res.ok) throw new Error(`Resend ${res.status}: ${text}`);
   return text;
+}
+
+async function sendEmail(to: string[], subject: string, html: string, pdfBase64: string, filename: string) {
+  return await resendSend({ to, subject, html, attachments: [{ filename, content: pdfBase64 }] });
 }
 
 // ---------------------------------------------------------------- storage
@@ -302,7 +306,7 @@ async function buildPdf(ctx: {
   // header band
   page.drawRectangle({ x: 0, y: 782, width: 595.28, height: 60, color: NAVY });
   page.drawText("BRITISH HERITAGE HOSTS", { x: left, y: 812, size: 15, font: bold, color: GOLD });
-  page.drawText("Venue handover record", { x: left, y: 794, size: 10, font: regular, color: rgb(1, 1, 1) });
+  page.drawText("Venue Check-In and Out Form (VCIO Form)", { x: left, y: 794, size: 10, font: regular, color: rgb(1, 1, 1) });
   y = 762;
 
   heading("Booking");
@@ -327,12 +331,12 @@ async function buildPdf(ctx: {
   row("Representative mobile", `${handover.rep_verified_mobile ?? venue?.rep_mobile ?? "-"}`);
   row("Cook", `${cook?.name ?? "-"}`);
 
-  heading("Arrival");
+  heading("Check-In");
   row("Signed at", handover.arrival_time ? new Date(String(handover.arrival_time)).toUTCString() : "-");
   row("GPS", handover.arrival_lat != null ? `${handover.arrival_lat}, ${handover.arrival_lng}` : "not captured");
   checkBlock(handover.arrival_checks);
 
-  heading("Departure");
+  heading("Check-Out");
   row("Signed at", handover.departure_time ? new Date(String(handover.departure_time)).toUTCString() : "-");
   row("GPS", handover.departure_lat != null ? `${handover.departure_lat}, ${handover.departure_lng}` : "not captured");
   checkBlock(handover.departure_checks);
@@ -369,14 +373,14 @@ async function buildPdf(ctx: {
       });
     } catch (_) { /* signature not embeddable, leave the box empty */ }
   };
-  await embedSig(handover.arrival_signature, left, "Arrival signature");
-  await embedSig(handover.departure_signature, left + boxW + 20, "Departure signature");
+  await embedSig(handover.arrival_signature, left, "Check-In signature");
+  await embedSig(handover.departure_signature, left + boxW + 20, "Check-Out signature");
   y = sigTop - boxH - 28;
 
   // footer
   page.drawRectangle({ x: left, y: 52, width: right - left, height: 1, color: GOLD });
   page.drawText(
-    `Handover id ${handover.id ?? "-"}`,
+    `Form id ${handover.id ?? "-"}`,
     { x: left, y: 40, size: 7.5, font: regular, color: GREY },
   );
   page.drawText(
@@ -392,6 +396,263 @@ async function buildPdf(ctx: {
 }
 
 // ---------------------------------------------------------------- actions
+
+// ---------------------------------------------------------------- QR code
+
+// PNG writer. Deno has CompressionStream("deflate"), which produces exactly the zlib
+// stream a PNG IDAT chunk needs, so no image library is required.
+const CRC_TABLE = (() => {
+  const table = new Uint32Array(256);
+  for (let n = 0; n < 256; n++) {
+    let c = n;
+    for (let k = 0; k < 8; k++) c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1;
+    table[n] = c >>> 0;
+  }
+  return table;
+})();
+
+function crc32(bytes: Uint8Array): number {
+  let c = 0xffffffff;
+  for (let i = 0; i < bytes.length; i++) c = CRC_TABLE[(c ^ bytes[i]) & 0xff] ^ (c >>> 8);
+  return (c ^ 0xffffffff) >>> 0;
+}
+
+function be32(n: number): Uint8Array {
+  return new Uint8Array([(n >>> 24) & 255, (n >>> 16) & 255, (n >>> 8) & 255, n & 255]);
+}
+
+function pngChunk(type: string, data: Uint8Array): Uint8Array {
+  const tag = new TextEncoder().encode(type);
+  const body = new Uint8Array(tag.length + data.length);
+  body.set(tag, 0);
+  body.set(data, tag.length);
+  const out = new Uint8Array(4 + body.length + 4);
+  out.set(be32(data.length), 0);
+  out.set(body, 4);
+  out.set(be32(crc32(body)), 4 + body.length);
+  return out;
+}
+
+async function zlibDeflate(raw: Uint8Array): Promise<Uint8Array> {
+  const cs = new CompressionStream("deflate");
+  const writer = cs.writable.getWriter();
+  writer.write(raw as unknown as BufferSource);
+  writer.close();
+  return new Uint8Array(await new Response(cs.readable).arrayBuffer());
+}
+
+async function greyPng(pixels: Uint8Array, size: number): Promise<Uint8Array> {
+  const raw = new Uint8Array((size + 1) * size);
+  for (let y = 0; y < size; y++) {
+    raw[y * (size + 1)] = 0; // filter type none
+    raw.set(pixels.subarray(y * size, (y + 1) * size), y * (size + 1) + 1);
+  }
+  const idat = await zlibDeflate(raw);
+  const ihdr = new Uint8Array(13);
+  ihdr.set(be32(size), 0);
+  ihdr.set(be32(size), 4);
+  ihdr[8] = 8;  // bit depth
+  ihdr[9] = 0;  // colour type greyscale
+  const parts = [
+    new Uint8Array([137, 80, 78, 71, 13, 10, 26, 10]),
+    pngChunk("IHDR", ihdr),
+    pngChunk("IDAT", idat),
+    pngChunk("IEND", new Uint8Array(0)),
+  ];
+  const out = new Uint8Array(parts.reduce((n, part) => n + part.length, 0));
+  let offset = 0;
+  for (const part of parts) {
+    out.set(part, offset);
+    offset += part.length;
+  }
+  return out;
+}
+
+// Builds a QR code of the given text as a PNG. Nothing leaves the function.
+async function qrPng(text: string, scale = 8, quiet = 4): Promise<Uint8Array> {
+  const qr = (qrcode as any)(0, "M");
+  qr.addData(text);
+  qr.make();
+  const modules = qr.getModuleCount();
+  const size = (modules + quiet * 2) * scale;
+  const pixels = new Uint8Array(size * size).fill(255);
+  for (let r = 0; r < modules; r++) {
+    for (let c = 0; c < modules; c++) {
+      if (!qr.isDark(r, c)) continue;
+      const top = (r + quiet) * scale;
+      const leftPx = (c + quiet) * scale;
+      for (let y = top; y < top + scale; y++) {
+        pixels.fill(0, y * size + leftPx, y * size + leftPx + scale);
+      }
+    }
+  }
+  return await greyPng(pixels, size);
+}
+
+// ---------------------------------------------------------------- issue notice
+
+function escapeHtml(value: unknown): string {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+function issueEmailHtml(fields: {
+  link: string;
+  reference: string;
+  dateText: string;
+  timeText: string;
+  venueName: string;
+  repName: string;
+  guests: string;
+  cookName: string;
+}): string {
+  const line = (label: string, value: string) =>
+    `<tr>
+       <td style="padding:7px 14px 7px 0;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#6b6b6b;white-space:nowrap">${label}</td>
+       <td style="padding:7px 0;font-size:15px;color:#0D1B2A;font-weight:600">${value}</td>
+     </tr>`;
+  const greeting = fields.cookName ? `Hello ${escapeHtml(fields.cookName)},` : "Hello,";
+  return `<div style="font-family:Georgia,serif;color:#0D1B2A;max-width:560px">
+  <h2 style="color:#0D1B2A;margin:0 0 4px">British Heritage Hosts</h2>
+  <p style="margin:0 0 18px;font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:#C9A84C">VENUE CHECK-IN AND OUT FORM</p>
+
+  <p style="margin:0 0 14px">${greeting}</p>
+  <p style="margin:0 0 18px">
+    Your Venue Check-In and Out Form (VCIO Form) is ready. Please open it on your phone when you
+    arrive at the venue, complete the check-in with the venue representative, and complete the
+    check-out before you leave.
+  </p>
+
+  <table style="border-collapse:collapse;margin:0 0 22px">
+    ${line("Booking reference", escapeHtml(fields.reference))}
+    ${line("Date", escapeHtml(fields.dateText))}
+    ${line("Time", escapeHtml(fields.timeText))}
+    ${line("Venue", escapeHtml(fields.venueName))}
+    ${line("Representative", escapeHtml(fields.repName))}
+    ${line("Guests", escapeHtml(fields.guests))}
+  </table>
+
+  <p style="margin:0 0 16px">
+    <a href="${escapeHtml(fields.link)}"
+       style="display:inline-block;background:#0D1B2A;color:#ffffff;text-decoration:none;padding:13px 26px;border:1px solid #C9A84C;font-size:15px;letter-spacing:.04em">
+      Open the VCIO Form
+    </a>
+  </p>
+
+  <p style="margin:0 0 4px;font-size:12px;color:#6b6b6b">If the button does not work, copy this address into your browser:</p>
+  <p style="margin:0 0 24px;font-size:12px;color:#0D1B2A;word-break:break-all">${escapeHtml(fields.link)}</p>
+
+  <div style="border-top:1px solid #e6e2d8;padding-top:18px">
+    <img src="cid:handoverqr" alt="QR code for the VCIO Form link" width="200" height="200"
+         style="display:block;border:1px solid #e6e2d8" />
+    <p style="margin:10px 0 0;font-size:13px;color:#0D1B2A">Scan with your phone camera to open the VCIO Form</p>
+  </div>
+
+  <p style="margin:22px 0 0;font-size:13px;color:#6b6b6b">
+    This form works on the day of the booking only.
+  </p>
+  <p style="margin:14px 0 0;color:#6b6b6b;font-size:12px">
+    This message was sent automatically. Please do not reply.
+  </p>
+</div>`;
+}
+
+async function loadByHandoverId(handoverId: string) {
+  const { data: handover } = await admin
+    .from("handovers")
+    .select("*")
+    .eq("id", handoverId)
+    .maybeSingle();
+  if (!handover) return null;
+
+  const { data: booking } = await admin
+    .from("bookings")
+    .select("*")
+    .eq("booking_id", handover.booking_id)
+    .maybeSingle();
+  if (!booking) return null;
+
+  const { data: venue } = booking.venue_id
+    ? await admin.from("venues").select("*").eq("id", booking.venue_id).maybeSingle()
+    : { data: null };
+  const { data: cook } = booking.cook_id
+    ? await admin.from("cooks").select("*").eq("id", booking.cook_id).maybeSingle()
+    : { data: null };
+
+  return { handover, booking, venue, cook };
+}
+
+// Called server to server by the trigger on handovers. Never by the phone page.
+async function actionIssue(payload: Record<string, any>, req: Request): Promise<Response> {
+  const supplied = req.headers.get("x-bhh-secret") ?? String(payload.secret ?? "");
+  if (!WEBHOOK_SECRET || supplied !== WEBHOOK_SECRET) {
+    return fail("unauthorised", "This action is not available.", 401);
+  }
+
+  const handoverId = String(payload.handover_id ?? payload.record?.id ?? "");
+  if (!handoverId) return fail("bad_request", "handover_id is required.", 400);
+
+  const found = await loadByHandoverId(handoverId);
+  if (!found) return fail("not_found", "That handover was not found.", 404);
+  const { handover, booking, venue, cook } = found;
+
+  if (handover.issued_email_at) {
+    return json({ ok: true, skipped: "already_sent", sent_at: handover.issued_email_at });
+  }
+
+  const cookEmail = typeof cook?.email === "string" ? cook.email.trim() : "";
+  if (!cookEmail) {
+    return fail("no_cook_email", "This booking has no cook email on file.", 400);
+  }
+
+  const token = String(handover.token ?? "");
+  if (!isValidToken(token)) {
+    return fail("bad_token", "This handover has no usable token.", 500);
+  }
+
+  const link = `${SITE_BASE}/handover.html?t=${token}`;
+  const venueName = String(venue?.name ?? "the venue");
+  const dateText = humanDate(String(booking.booking_date ?? ""));
+  const timeText = String(booking.booking_time ?? "").slice(0, 5) || "to be confirmed";
+  const html = issueEmailHtml({
+    link,
+    reference: shortRef(booking.booking_id) || "-",
+    dateText,
+    timeText,
+    venueName,
+    repName: String(venue?.rep_name ?? "to be confirmed"),
+    guests: `${booking.guest_count_adults ?? 0} adults, ${booking.guest_count_children ?? 0} children`,
+    cookName: String(cook?.name ?? ""),
+  });
+
+  try {
+    const qrBytes = await qrPng(link);
+    await resendSend({
+      to: [cookEmail],
+      cc: [OFFICE_EMAIL],
+      subject: `Venue Check-In and Out Form (VCIO) for ${dateText} at ${venueName}`,
+      html,
+      attachments: [
+        {
+          filename: "VCIO Form QR.png",
+          content: bytesToBase64(qrBytes),
+          content_type: "image/png",
+          content_id: "handoverqr",
+        },
+      ],
+    });
+  } catch (e) {
+    return fail("email_error", String((e as Error).message), 502);
+  }
+
+  // Best effort stamp so a repeated trigger or webhook retry cannot send twice.
+  await admin.from("handovers").update({ issued_email_at: new Date().toISOString() }).eq("id", handover.id);
+
+  return json({ ok: true, emailed_to: cookEmail, cc: OFFICE_EMAIL, link });
+}
 
 async function actionLoad(token: string): Promise<Response> {
   const found = await loadByToken(token);
@@ -632,17 +893,17 @@ async function actionSign(payload: Record<string, any>): Promise<Response> {
     try {
       await sendEmail(
         unique,
-        `Venue handover record, ${venueName}, ${dateText}`,
+        `Venue Check-In and Out Form (VCIO Form), ${venueName}, ${dateText}`,
         `<div style="font-family:Georgia,serif;color:#0D1B2A">
            <h2 style="color:#0D1B2A;margin:0 0 8px">British Heritage Hosts</h2>
-           <p>The venue handover for <strong>${venueName}</strong> on <strong>${dateText}</strong> has been completed and signed.</p>
+           <p>The Venue Check-In and Out Form for <strong>${venueName}</strong> on <strong>${dateText}</strong> has been completed and signed.</p>
            <p style="margin:0 0 2px">Booking reference <strong>${bookingRef}</strong></p>
            <p style="margin:0 0 14px;font-size:11px;color:#6b6b6b;letter-spacing:.02em">${fullBookingId}</p>
            <p style="margin:0 0 14px">The signed record is attached as a PDF.</p>
            <p style="color:#6b6b6b;font-size:12px">This message was sent automatically. Please do not reply.</p>
          </div>`,
         bytesToBase64(pdfBytes),
-        "handover.pdf",
+        "Venue Check In and Out Form.pdf",
       );
       result.emailed_to = unique;
     } catch (e) {
@@ -670,6 +931,10 @@ Deno.serve(async (req: Request) => {
     }
 
     const action = String(payload.action ?? "load");
+    // A Supabase Database Webhook posts { type, table, record } with no action field,
+    // so the secret header alone is enough to route here. A wrong secret still gets 401.
+    if (action === "issue" || req.headers.has("x-bhh-secret")) return await actionIssue(payload, req);
+
     const token = payload.token;
     if (!isValidToken(token)) {
       return fail("bad_token", "This handover link is not recognised.", 404);
