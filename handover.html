@@ -214,7 +214,7 @@
       <div class="sectionhead">
         <div>
           <div class="eyebrow">Booking</div>
-          <h2 id="bookingRef">—</h2>
+          <h2 id="bookingRef" data-booking-id="">—</h2>
         </div>
       </div>
       <div class="rule"></div>
@@ -359,6 +359,7 @@
         representative, the cook and the British Heritage Hosts office.
       </p>
       <p style="margin-top:14px;font-size:13px;color:var(--muted)" id="sealedRef"></p>
+      <p style="margin-top:4px;font-size:11px;color:var(--muted);word-break:break-all" id="sealedRefFull"></p>
     </div>
   </section>
 
@@ -401,6 +402,7 @@
     preview: false,
     status: 'issued',
     bookingRef: '',
+    bookingRefFull: '',
     photos: { arrival: [], departure: [] },
     checks: { arrival: {}, departure: {} }
   };
@@ -669,9 +671,16 @@
 
   // ------------------------------------------------------------ rendering
 
+  // Short booking reference: first 8 alphanumeric characters of the booking id, capitals.
+  function shortRef(id) {
+    return String(id || '').replace(/[^A-Za-z0-9]/g, '').slice(0, 8).toUpperCase();
+  }
+
   function paintDetails(d) {
-    state.bookingRef = d.booking && d.booking.booking_id ? String(d.booking.booking_id) : '';
+    state.bookingRefFull = d.booking && d.booking.booking_id ? String(d.booking.booking_id) : '';
+    state.bookingRef = shortRef(state.bookingRefFull);
     $('bookingRef').textContent = state.bookingRef ? 'Ref ' + state.bookingRef : 'Handover';
+    $('bookingRef').setAttribute('data-booking-id', state.bookingRefFull);
     $('dDate').textContent = prettyDate(d.booking && d.booking.booking_date) +
       (d.booking && d.booking.booking_time ? ', ' + String(d.booking.booking_time).slice(0, 5) : '');
     $('dVenue').textContent = escapeText(d.venue && d.venue.name);
@@ -703,6 +712,7 @@
   function sealed() {
     hide('screenLoading'); hide('screenMain'); hide('screenError');
     $('sealedRef').textContent = state.bookingRef ? 'Booking reference ' + state.bookingRef : '';
+    $('sealedRefFull').textContent = state.bookingRefFull || '';
     show('screenSealed');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
