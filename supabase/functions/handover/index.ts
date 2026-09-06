@@ -115,6 +115,12 @@ function checkLabel(key: string): string {
   return spaced.charAt(0).toUpperCase() + spaced.slice(1);
 }
 
+// Short booking reference: first 8 alphanumeric characters of the booking id, capitals.
+function shortRef(id: unknown): string {
+  const clean = String(id ?? "").replace(/[^A-Za-z0-9]/g, "");
+  return clean.slice(0, 8).toUpperCase();
+}
+
 // ---------------------------------------------------------------- data access
 
 async function loadByToken(token: string) {
@@ -300,7 +306,12 @@ async function buildPdf(ctx: {
   y = 762;
 
   heading("Booking");
-  row("Booking reference", String(booking.booking_id ?? ""));
+  const fullBookingId = String(booking.booking_id ?? "");
+  row("Booking reference", shortRef(fullBookingId) || "-");
+  if (fullBookingId) {
+    page.drawText(fullBookingId, { x: left + 150, y: y + 3, size: 6.5, font: regular, color: GREY });
+    y -= 9;
+  }
   row("Event date", humanDate(String(booking.booking_date ?? "")));
   row("Event time", String(booking.booking_time ?? "-"));
   row("Guest name", String(booking.guest_name ?? "-"));
@@ -616,6 +627,8 @@ async function actionSign(payload: Record<string, any>): Promise<Response> {
     const unique = Array.from(new Set(recipients));
     const venueName = String(venue?.name ?? "venue");
     const dateText = humanDate(String(booking.booking_date ?? ""));
+    const fullBookingId = String(booking.booking_id ?? "");
+    const bookingRef = shortRef(fullBookingId) || "-";
     try {
       await sendEmail(
         unique,
@@ -623,7 +636,9 @@ async function actionSign(payload: Record<string, any>): Promise<Response> {
         `<div style="font-family:Georgia,serif;color:#0D1B2A">
            <h2 style="color:#0D1B2A;margin:0 0 8px">British Heritage Hosts</h2>
            <p>The venue handover for <strong>${venueName}</strong> on <strong>${dateText}</strong> has been completed and signed.</p>
-           <p>Booking reference ${booking.booking_id}. The signed record is attached as a PDF.</p>
+           <p style="margin:0 0 2px">Booking reference <strong>${bookingRef}</strong></p>
+           <p style="margin:0 0 14px;font-size:11px;color:#6b6b6b;letter-spacing:.02em">${fullBookingId}</p>
+           <p style="margin:0 0 14px">The signed record is attached as a PDF.</p>
            <p style="color:#6b6b6b;font-size:12px">This message was sent automatically. Please do not reply.</p>
          </div>`,
         bytesToBase64(pdfBytes),
