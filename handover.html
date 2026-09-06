@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0D1B2A">
-<title>Venue handover · British Heritage Hosts</title>
+<title>Venue Check-In and Out Form · British Heritage Hosts</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -184,7 +184,7 @@
 <header class="brand">
   <div class="crest">Est. Britain</div>
   <h1>British Heritage Hosts</h1>
-  <div class="sub">Venue handover</div>
+  <div class="sub">Venue Check-In and Out Form</div>
 </header>
 
 <div class="wrap">
@@ -192,7 +192,7 @@
   <!-- loading -->
   <section id="screenLoading" class="center">
     <div class="spinner"></div>
-    <p class="serif" style="font-size:19px;color:var(--navy);margin:0">Opening your handover</p>
+    <p class="serif" style="font-size:19px;color:var(--navy);margin:0">Opening your form</p>
     <p style="color:var(--muted);font-size:13.5px">One moment please</p>
   </section>
 
@@ -298,7 +298,7 @@
         <span class="badge wait" id="departureBadge">Locked</span>
       </div>
       <p style="color:var(--muted);font-size:13.5px;margin:8px 0 0" id="departureIntro">
-        Available once the arrival handover has been signed.
+        Available once the check-in has been signed.
       </p>
       <div class="rule"></div>
       <div id="departureChecks"></div>
@@ -353,9 +353,9 @@
   <section id="screenSealed" class="card hidden">
     <div class="sealed">
       <div class="mark">&#10003;</div>
-      <h2>Sealed and emailed</h2>
+      <h2>Venue Check-In and Out Form, sealed</h2>
       <p>
-        The handover record has been signed by both parties, saved, and emailed to the venue
+        The check-in and the check-out have both been signed, saved, and emailed to the venue
         representative, the cook and the British Heritage Hosts office.
       </p>
       <p style="margin-top:14px;font-size:13px;color:var(--muted)" id="sealedRef"></p>
@@ -679,7 +679,7 @@
   function paintDetails(d) {
     state.bookingRefFull = d.booking && d.booking.booking_id ? String(d.booking.booking_id) : '';
     state.bookingRef = shortRef(state.bookingRefFull);
-    $('bookingRef').textContent = state.bookingRef ? 'Ref ' + state.bookingRef : 'Handover';
+    $('bookingRef').textContent = state.bookingRef ? 'Ref ' + state.bookingRef : 'VCIO Form';
     $('bookingRef').setAttribute('data-booking-id', state.bookingRefFull);
     $('dDate').textContent = prettyDate(d.booking && d.booking.booking_date) +
       (d.booking && d.booking.booking_time ? ', ' + String(d.booking.booking_time).slice(0, 5) : '');
@@ -706,7 +706,7 @@
     $('cardDeparture').classList.toggle('locked-section', !arrivalDone);
     $('departureIntro').textContent = arrivalDone
       ? 'Walk the site again with the venue representative before the team leaves.'
-      : 'Available once the arrival handover has been signed.';
+      : 'Available once the check-in has been signed.';
   }
 
   function sealed() {
@@ -826,7 +826,7 @@
         btn.disabled = false; btn.textContent = original;
         if (!r.ok) {
           if (r.data.error === 'completed') { sealed(); return; }
-          setMsg(stage + 'Error', r.data.message || 'The handover could not be signed.', 'error');
+          setMsg(stage + 'Error', r.data.message || 'The form could not be signed.', 'error');
           return;
         }
         if (stage === 'arrival') {
@@ -843,7 +843,7 @@
       });
     }).catch(function (e) {
       btn.disabled = false; btn.textContent = original;
-      setMsg(stage + 'Error', e.message || 'The handover could not be signed.', 'error');
+      setMsg(stage + 'Error', e.message || 'The form could not be signed.', 'error');
     });
   }
 
@@ -894,7 +894,7 @@
 
     if (!token) {
       fatal('Link incomplete',
-        'This page needs the handover link from your booking email. Please open the full link again.');
+        'This page needs the form link from your booking email. Please open the full link again.');
       return;
     }
 
@@ -918,11 +918,11 @@
           if (r.data.error === 'completed') { sealed(); return; }
           if (r.data.error === 'expired') {
             fatal('Link expired', r.data.message ||
-              'This handover link has expired because the event date has passed.');
+              'This form link has expired because the event date has passed.');
             return;
           }
           fatal('Link not recognised', r.data.message ||
-            'We could not find a handover for this link.');
+            'We could not find a form for this link.');
           return;
         }
         paintDetails(r.data);
@@ -934,7 +934,7 @@
       .catch(function (e) {
         hide('screenLoading');
         fatal('No connection', e.message ||
-          'We could not reach the handover service. Check your signal and reload the page.');
+          'We could not reach the form service. Check your signal and reload the page.');
       });
   }
 
