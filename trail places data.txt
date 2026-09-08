@@ -1,0 +1,163 @@
+number|nation|subject|place|one line
+1|England|Country houses and gardens|Ham House and Garden|17th century riverside house at Richmond
+2|England|Country houses and gardens|Osterley Park and House|Robert Adam mansion with parkland
+3|England|Coast and countryside|Morden Hall Park|Riverside park with a historic snuff mill
+4|England|Country houses and gardens|Fenton House and Garden|Hampstead house with keyboard instruments and garden
+5|England|Country houses and gardens|Carlyle's House|Small Chelsea writer's house
+6|England|Country houses and gardens|Sutton House and Breaker's Yard|Tudor house in Hackney
+7|England|Country houses and gardens|Red House|William Morris home, Arts and Crafts
+8|England|Country houses and gardens|Rainham Hall|Georgian merchant's house, east London
+9|England|Coast and countryside|Runnymede and Ankerwycke|The Magna Carta meadows on the Thames
+10|England|Country houses and gardens|Cliveden|Grand Thames side gardens, house is a hotel
+11|England|Country houses and gardens|Chartwell|Churchill's family home, very popular
+12|England|Country houses and gardens|Knole|Vast house with deer park at Sevenoaks
+13|England|Country houses and gardens|Ightham Mote|Moated medieval manor
+14|England|Country houses and gardens|Emmetts Garden|Hillside garden near Chartwell
+15|England|Country houses and gardens|Quebec House|General Wolfe's childhood home, Westerham
+16|England|Country houses and gardens|Scotney Castle|Ruined castle in a lake, plus Victorian house
+17|England|Country houses and gardens|Sissinghurst Castle Garden|World famous garden
+18|England|Coast and countryside|White Cliffs of Dover|Cliff walks above the Channel
+19|England|Country houses and gardens|Bodiam Castle|Classic moated castle, best for children
+20|England|Country houses and gardens|Bateman's|Rudyard Kipling's home
+21|England|Country houses and gardens|Sheffield Park and Garden|Lakes and autumn colour, next to Bluebell Railway
+22|England|Country houses and gardens|Standen House and Garden|Arts and Crafts family house
+23|England|Country houses and gardens|Nymans|Garden and romantic ruined house
+24|England|Country houses and gardens|Petworth House and Park|Great art collection and deer park
+25|England|Country houses and gardens|Uppark House and Garden|Georgian house on the South Downs
+26|England|Country houses and gardens|Polesden Lacey|Edwardian house and gardens
+27|England|Country houses and gardens|Claremont Landscape Garden|18th century garden with lake and amphitheatre
+28|England|Country houses and gardens|Hatchlands Park|Georgian house with keyboard instrument collection
+29|England|Coast and countryside|Box Hill|Viewpoint and walks over the Surrey Hills
+30|England|Country houses and gardens|Winkworth Arboretum|Hillside arboretum with lake
+31|England|Coast and countryside|Hindhead Commons and the Devil's Punch Bowl|Natural amphitheatre and heathland walks
+32|England|Coast and countryside|Leith Hill|Highest point in south east England, with a tower to climb
+33|England|Country houses and gardens|Waddesdon Manor|Rothschild French chateau and gardens
+34|England|Country houses and gardens|Hughenden|Disraeli's home with wartime map room
+35|England|Country houses and gardens|West Wycombe Park|Palladian house, limited summer opening
+36|England|Country houses and gardens|Claydon|Rococo interiors, Florence Nightingale link
+37|England|Country houses and gardens|Stowe Gardens|Vast landscape garden with temples
+38|England|Coast and countryside|Ashridge Estate|Ancient woods and the Bridgewater monument
+39|England|Country houses and gardens|Greys Court|Tudor house and walled gardens near Henley
+40|England|Country houses and gardens|Basildon Park|Georgian mansion seen in film and television
+41|England|Country houses and gardens|Nuffield Place|Home of Lord Nuffield, Morris cars founder
+42|England|Country houses and gardens|The Vyne|Tudor house with lake and gardens
+43|England|Country houses and gardens|Mottisfont|Abbey house and famous rose garden
+44|England|Country houses and gardens|Hinton Ampner|Elegant house and gardens near Winchester
+45|England|Country houses and gardens|Avebury|Prehistoric stone circle with a village inside it, plus manor and museum
+46|England|Country houses and gardens|Anglesey Abbey, Gardens and Lode Mill|House, gardens and working mill near Cambridge
+47|England|Country houses and gardens|Wimpole Estate|Mansion, farm and parkland, good for children
+48|England|Country houses and gardens|Shaw's Corner|George Bernard Shaw's home
+49|England|Country houses and gardens|Ickworth Estate|Italianate rotunda house and park
+50|England|Castles, abbeys and ancient sites|1066 Battle of Hastings, Abbey and Battlefield|The battlefield of 1066 and the abbey William built on it
+51|England|Castles, abbeys and ancient sites|Dover Castle|Great medieval castle and wartime tunnels
+52|England|Castles, abbeys and ancient sites|Stonehenge|Prehistoric stone circle, timed entry
+53|England|Castles, abbeys and ancient sites|Old Sarum|Iron Age hill fort and the first Salisbury
+54|England|Castles, abbeys and ancient sites|Kenilworth Castle|Elizabethan castle and garden
+55|England|Castles, abbeys and ancient sites|Eltham Palace and Gardens|Art Deco mansion on a medieval palace
+56|England|Castles, abbeys and ancient sites|Down House, home of Charles Darwin|Darwin's family home and garden
+57|England|Castles, abbeys and ancient sites|Audley End House and Gardens|Jacobean mansion with Capability Brown park
+58|England|Castles, abbeys and ancient sites|Osborne, Isle of Wight|Queen Victoria's seaside home
+59|England|Royal palaces|Windsor Castle|The King's residence, State Apartments and St George's Chapel
+60|England|Royal palaces|Tower of London|Crown Jewels and the Yeoman Warders
+61|England|Royal palaces|Hampton Court Palace|Henry VIII's palace and the maze
+62|England|Royal palaces|Kensington Palace|Royal residence and royal dress collection
+63|England|Royal palaces|Buckingham Palace State Rooms|State Rooms open to visitors in summer
+64|England|Royal and historic landmarks|Canterbury Cathedral|Where Thomas Becket was killed in 1170, and the destination of Chaucer's pilgrims
+65|England|Royal and historic landmarks|Winchester Cathedral|Longest medieval nave in Europe, burial place of Saxon kings and Jane Austen
+66|England|Royal and historic landmarks|Salisbury Cathedral|Tallest spire in Britain and the best preserved original Magna Carta of 1215
+67|England|Royal and historic landmarks|Westminster Abbey|Coronation church of every English monarch since 1066, with the royal tombs
+68|England|Royal and historic landmarks|St Albans Cathedral|Built on Britain's oldest continuously used historic site, Roman Verulamium beside it
+69|England|Great family estates|Blenheim Palace|Churchill's birthplace, World Heritage Site
+70|England|Great family estates|Highclere Castle|The Downton Abbey house, opens some weeks only
+71|England|Great family estates|Leeds Castle|Castle on two islands, strong for children
+72|England|Great family estates|Hever Castle|Anne Boleyn's childhood home
+73|England|Great family estates|Arundel Castle|Seat of the Dukes of Norfolk
+74|England|Great family estates|Hatfield House|Elizabeth I's childhood home
+75|England|Great family estates|Penshurst Place|Medieval manor and gardens
+76|England|Historic towns and villages|Rye|Cobbled medieval hill town
+77|England|Historic towns and villages|Marlow and the Thames villages|Riverside Georgian town
+78|England|Historic towns and villages|Oxford|University city of colleges and spires
+79|England|Historic towns and villages|Cambridge|University city on the river Cam
+80|England|Historic towns and villages|Bath|Georgian World Heritage city, Roman Baths museum
+81|England|Historic towns and villages|Winchester|Ancient capital of England
+82|England|Historic towns and villages|Canterbury old town|Medieval walled city around the cathedral
+83|England|Historic towns and villages|Windsor and Eton|Royal town and Eton College across the bridge
+84|England|Historic towns and villages|Lewes|County town with castle and Anne of Cleves house
+85|England|Historic towns and villages|Sandwich|One of the best preserved medieval towns in England
+86|England|Coast and countryside|Seven Sisters and Beachy Head|White chalk cliffs on the Sussex coast
+87|England|Coast and countryside|White Cliffs of Dover walk|Cliff top walk to the South Foreland lighthouse
+88|England|Coast and countryside|Runnymede and the Magna Carta memorials|Meadow of the 1215 Magna Carta
+89|England|Coast and countryside|Box Hill and the Surrey Hills|Viewpoint over the Weald
+90|England|Coast and countryside|New Forest|Ancient royal hunting forest with wild ponies
+91|England|Heritage spas|Cliveden House Spa|Spa inside the Cliveden estate above the Thames
+92|England|Heritage spas|Thermae Bath Spa, Cross Bath|Natural hot spring, Cross Bath private hire for a family
+93|England|Heritage spas|The Gainsborough Bath Spa|Hotel spa fed by the thermal spring
+94|England|Heritage spas|Coworth Park, Ascot|Dorchester Collection estate near Windsor
+95|England|Heritage spas|Pennyhill Park|Large spa with many pools, Surrey
+96|England|Heritage spas|The Grove|Family friendly estate hotel close to London
+97|England|Heritage spas|Lucknam Park|Country house spa near Bath
+98|England|Heritage spas|Ockenden Manor|Small Tudor manor spa, West Sussex
+99|England|Heritage spas|South Lodge|Spa with outdoor natural pool, West Sussex
+100|England|Heritage spas|Champneys Tring|The original English health resort
+101|Wales|Country houses and gardens|Powis Castle and Garden|Medieval castle with terraced gardens
+102|Wales|Country houses and gardens|Bodnant Garden|One of the finest gardens in Britain
+103|Wales|Country houses and gardens|Penrhyn Castle and Garden|Vast neo Norman castle near Bangor
+104|Wales|Country houses and gardens|Plas Newydd House and Garden|Mansion on the Menai Strait, Anglesey
+105|Wales|Country houses and gardens|Chirk Castle|Marcher fortress still lived in until recently
+106|Wales|Country houses and gardens|Erddig|Country house famous for its servants' story
+107|Wales|Country houses and gardens|Tredegar House|Restoration mansion at Newport
+108|Wales|Country houses and gardens|Dyffryn Gardens|Edwardian garden rooms near Cardiff
+109|Wales|Coast and countryside|Rhossili and the Gower coast|Britain's first Area of Outstanding Natural Beauty
+110|Wales|Castles, abbeys and ancient sites|Caernarfon Castle|Edward I's greatest castle, World Heritage Site
+111|Wales|Castles, abbeys and ancient sites|Conwy Castle and town walls|Castle with complete medieval town walls
+112|Wales|Castles, abbeys and ancient sites|Harlech Castle|Clifftop castle over the sea
+113|Wales|Castles, abbeys and ancient sites|Beaumaris Castle|Perfect concentric castle, Anglesey
+114|Wales|Castles, abbeys and ancient sites|Caerphilly Castle|Second largest castle in Britain
+115|Wales|Castles, abbeys and ancient sites|Raglan Castle|Late medieval castle palace
+116|Wales|Castles, abbeys and ancient sites|Tintern Abbey|Ruined abbey in the Wye valley
+117|Wales|Historic towns and villages|Conwy walled town|Medieval town inside its walls
+118|Wales|Historic towns and villages|Portmeirion|Italianate village built by Clough Williams Ellis
+119|Wales|Historic towns and villages|Hay on Wye|Book town on the English border
+120|Wales|Coast and countryside|Snowdonia and the Snowdon Mountain Railway|Rack railway to the summit of Snowdon
+121|Wales|Historic towns and villages|Cardiff Bay and Cardiff Castle|Victorian fantasy castle in the city centre
+122|Wales|Heritage spas|Bodysgallen Hall, Llandudno|Historic hall hotel and spa above Llandudno
+123|Wales|Heritage spas|St Brides Spa Hotel, Pembrokeshire|Clifftop spa over the sea
+124|Wales|Heritage spas|Celtic Manor, Newport|Large resort with two spas
+125|Scotland|Coast and countryside|Culloden Battlefield|Site of the last battle on British soil, 1746
+126|Scotland|Coast and countryside|Glencoe|Dramatic glen and 1692 massacre story
+127|Scotland|Coast and countryside|Glenfinnan Monument|Jacobite monument and the viaduct seen in Harry Potter
+128|Scotland|Castles, abbeys and ancient sites|Culzean Castle and Country Park|Clifftop castle by Robert Adam
+129|Scotland|Castles, abbeys and ancient sites|Falkland Palace|Renaissance palace of the Stuart kings
+130|Scotland|Castles, abbeys and ancient sites|Crathes Castle|Tower house with painted ceilings
+131|Scotland|Castles, abbeys and ancient sites|Gladstone's Land|17th century tenement on the Royal Mile
+132|Scotland|Castles, abbeys and ancient sites|Newhailes|Enlightenment house near Edinburgh
+133|Scotland|Castles, abbeys and ancient sites|Edinburgh Castle|Crown of Scotland and the Stone of Destiny
+134|Scotland|Castles, abbeys and ancient sites|Stirling Castle|Royal palace of the Stuarts
+135|Scotland|Castles, abbeys and ancient sites|Urquhart Castle|Ruin on the shore of Loch Ness
+136|Scotland|Castles, abbeys and ancient sites|Linlithgow Palace|Birthplace of Mary Queen of Scots
+137|Scotland|Castles, abbeys and ancient sites|Doune Castle|Medieval castle seen in Outlander
+138|Scotland|Castles, abbeys and ancient sites|Melrose Abbey|Border abbey, heart of Robert the Bruce
+139|Scotland|Castles, abbeys and ancient sites|St Andrews Castle and Cathedral|Ruins in the home of golf
+140|Scotland|Royal palaces|Palace of Holyroodhouse|The King's residence in Scotland
+141|Scotland|Royal palaces|Balmoral Castle|Royal Deeside estate, opens spring to summer
+142|Scotland|Historic towns and villages|Edinburgh Old Town and Royal Mile|World Heritage medieval street
+143|Scotland|Historic towns and villages|St Andrews town|University town and Old Course
+144|Scotland|Coast and countryside|Loch Ness and Inverness|Highland capital and the famous loch
+145|Scotland|Coast and countryside|Isle of Skye|Highland island, long drive, overnight needed
+146|Scotland|Heritage spas|Gleneagles|Grand Perthshire resort and spa
+147|Scotland|Heritage spas|Cameron House, Loch Lomond|Baronial mansion on Loch Lomond
+148|Scotland|Heritage spas|Fairmont St Andrews|Clifftop resort near St Andrews
+149|Northern Ireland|Coast and countryside|Giant's Causeway|World Heritage basalt columns
+150|Northern Ireland|Coast and countryside|Carrick a Rede rope bridge|Rope bridge to a sea island
+151|Northern Ireland|Country houses and gardens|Mount Stewart|House and one of the great gardens of Ireland
+152|Northern Ireland|Country houses and gardens|Castle Ward|Half Gothic half classical house on Strangford Lough
+153|Northern Ireland|Country houses and gardens|Castle Coole|Neo classical mansion at Enniskillen
+154|Northern Ireland|Country houses and gardens|Florence Court|Georgian house under the Cuilcagh mountains
+155|Northern Ireland|Country houses and gardens|The Argory|Edwardian gentry house, County Armagh
+156|Northern Ireland|Country houses and gardens|Crom Estate|Lakeland estate on Upper Lough Erne
+157|Northern Ireland|Royal and historic landmarks|Titanic Belfast|Museum on the slipway where Titanic was built
+158|Northern Ireland|Castles, abbeys and ancient sites|Dunluce Castle|Clifftop ruin on the Causeway coast
+159|Northern Ireland|Historic towns and villages|Derry city walls|Complete 17th century walled city
+160|Northern Ireland|Historic towns and villages|Belfast city|City Hall, Cathedral Quarter, murals
+161|Northern Ireland|Heritage spas|Galgorm Resort, County Antrim|Riverside thermal village spa
+162|Northern Ireland|Heritage spas|Culloden Estate and Spa, Belfast|Former bishop's palace on Belfast Lough

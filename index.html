@@ -1634,6 +1634,280 @@ footer {
   .services-grid .service-card-num{ margin-bottom:0.15rem; }
   .services-grid .service-card h3{ font-size:15px; line-height:1.14; }
 }
+
+/* ═══ THE HERITAGE TRAIL ═══════════════════════════════════════════════════
+   Added below the nine card grid. Everything here reuses the existing tokens
+   (--navy, --gold, --cream, --white, --muted, --ff-display, --ff-body), the
+   existing .section padding, the existing .services-intro heading block and
+   the existing .btn / .btn-gold button, so the section matches the page. The
+   tiles carry no border radius, exactly like .service-card. */
+
+/* (a) The one gold line under the name on experience card 01. It sits inside
+       the caption block, above the hover description, so it is visible in the
+       resting state on desktop, tablet and phone and never collides with the
+       description when the card is hovered. */
+.service-card-trail{
+  display:block;
+  color:var(--gold);
+  font-family:var(--ff-body);
+  font-size:0.68rem;
+  font-weight:500;
+  letter-spacing:0.06em;
+  line-height:1.3;
+  margin-top:0.25rem;
+}
+@media (min-width:768px){
+  /* At rest this line must not push the card name upwards: the caption block is anchored
+     to the bottom of the card, so any height it added would raise the Heritage Guide name
+     above the names on the other eight cards. It is therefore given zero flow height and
+     no margin, and paints downwards into the space the hidden description and the hidden
+     "Discover more" arrow already occupy. The name then sits at exactly the same height on
+     all nine cards. white-space:nowrap plus the smaller size keep it on ONE line: the
+     services container is pinned at 803px from 768px upwards, so the card is 245px wide
+     and the caption is 181px wide at 1024, 1280 and 1440 alike. */
+  .service-card-trail{
+    height:0; margin:0; overflow:visible;
+    white-space:nowrap;
+    font-size:0.62rem; letter-spacing:0.02em;
+  }
+  /* On hover the whole caption block re-lays out and compacts, so the line returns to
+     normal flow and sits between the name and the description, with no overlap. */
+  .service-card:hover .service-card-trail{
+    height:auto; margin-top:0.12rem; font-size:0.62rem;
+  }
+}
+
+/* (b) The section itself. */
+#heritage-trail .services-intro{ margin-bottom:2.2rem; }
+.trail-intro{
+  max-width:560px; margin:0 auto; text-align:center;
+}
+.trail-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:2px;
+  max-width:1040px;
+  margin:0 auto;
+  align-items:stretch;
+}
+.trail-tile{
+  display:flex; flex-direction:column;
+  background:var(--navy);
+  overflow:hidden;
+  min-width:0;
+}
+/* photo block, about 4 by 3. Swap the src on the img to change a tile picture. */
+.trail-tile-img{
+  width:100%; aspect-ratio:4/3;
+  background:var(--navy);
+  overflow:hidden;
+}
+.trail-tile-img img{ width:100%; height:100%; object-fit:cover; display:block; }
+/* solid navy caption strip under the photo */
+.trail-tile-cap{
+  background:var(--navy);
+  padding:0.55rem 0.7rem 0.7rem;
+  text-align:left;
+  flex:1 1 auto;
+}
+.trail-tile-name{
+  font-family:var(--ff-display); font-weight:400;
+  font-size:1.05rem; line-height:1.2;
+  color:var(--white);
+  overflow-wrap:break-word;
+}
+.trail-tile-days{
+  font-family:var(--ff-body);
+  font-size:0.7rem; letter-spacing:0.08em; line-height:1.3;
+  color:rgba(245,240,232,0.55);
+  margin-top:0.2rem;
+}
+.trail-cta{
+  margin-top:2.5rem;
+  display:flex; flex-wrap:wrap;
+  align-items:center; justify-content:center;
+  gap:0.9rem 1.5rem;
+}
+.trail-cta-note{ font-size:0.82rem; color:var(--muted); }
+
+/* Phones: two tiles across, smaller caption type. Nothing here can widen the
+   page: the grid is two 1fr columns inside the existing .container padding. */
+@media (max-width:767px){
+  .trail-grid{ grid-template-columns:repeat(2,1fr); }
+  .trail-tile-name{ font-size:16px; line-height:1.16; }
+  .trail-tile-days{ font-size:11px; letter-spacing:0.05em; }
+  .trail-cta{ margin-top:2rem; }
+  .services-grid .service-card-trail{ font-size:11px; letter-spacing:0.04em; margin-top:0.22rem; }
+}
+@media (max-width:360px){
+  .trail-tile-cap{ padding:0.45rem 0.5rem 0.55rem; }
+  .trail-tile-name{ font-size:15px; }
+  .services-grid .service-card-trail{ font-size:10px; }
+}
+
+/* ═══ HERO HEADLINE AT THE WIDEST DESKTOP WIDTHS ══════════════════════════
+   .hero-content h1 is sized clamp(4rem, 9vw, 8rem), so it reaches its 8rem
+   (128px) ceiling from about 1422px upwards. "British heritage, as it truly
+   lives" is longer than the headline it replaced and takes three lines at that
+   ceiling, which pushed the hero 72px taller at 1440. Lowering only the upper
+   end of the clamp puts it back on two lines and returns the hero to its former
+   height. The query starts above 1280, so 1280, 1024 and every phone width keep
+   the size they have today, and below about 1244px the 9vw value is under 7rem
+   anyway, so nothing changes there either. */
+@media (min-width:1281px){
+  .hero-content h1{ font-size: clamp(4rem, 9vw, 7rem); }
+}
+
+/* ═══ THE HERITAGE TRAIL, THREE LEVEL BROWSER ═════════════════════════════
+   Level 1 is the four nation tiles on the page and reuses .trail-tile exactly.
+   Levels 2 and 3 are drawn into one overlay panel, built on the same pattern as
+   the phone photo overlay: fixed navy sheet, scrolls inside itself, close cross,
+   escape key. Every colour and font here is an existing token. */
+
+/* Level 1 tiles are buttons now, so the browser's own button styling is reset
+   and the tile look is inherited unchanged from .trail-tile. */
+.trail-tile--nation{
+  border:0; padding:0; margin:0; font:inherit; color:inherit;
+  text-align:left; cursor:pointer; appearance:none; width:100%;
+}
+.trail-tile--nation:hover .trail-tile-name{ color:var(--gold-light); }
+.trail-tile--nation:focus-visible{ outline:2px solid var(--gold); outline-offset:2px; }
+
+/* The overlay sheet. */
+.trail-ov{
+  position:fixed; inset:0; z-index:9600;
+  display:none; flex-direction:column;
+  overflow-y:auto; -webkit-overflow-scrolling:touch; overscroll-behavior:contain;
+  background:rgba(13,27,42,.97);
+  -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px);
+  font-family:var(--ff-body); color:var(--cream);
+}
+.trail-ov.is-open{ display:block; }
+.trail-ov__close{
+  position:fixed; top:10px; right:10px; z-index:3; width:44px; height:44px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  background:rgba(10,20,35,.8); border:1px solid var(--gold);
+  color:var(--gold-light); font-size:1.5rem; line-height:1; cursor:pointer;
+}
+.trail-ov__inner{
+  max-width:1040px; margin:0 auto; padding:72px 1.5rem 3rem; width:100%;
+}
+.trail-ov__back{
+  display:inline-block; margin:0 0 1rem; padding:0;
+  background:none; border:none; cursor:pointer;
+  color:var(--gold); font-family:var(--ff-body);
+  font-size:0.72rem; letter-spacing:0.08em; text-transform:uppercase;
+}
+.trail-ov__back:hover{ color:var(--gold-light); }
+.trail-ov__title{
+  font-family:var(--ff-display); font-weight:400; color:var(--cream);
+  font-size:clamp(1.6rem,3vw,2.4rem); line-height:1.15; margin:0;
+  overflow-wrap:break-word;
+}
+.trail-ov .gold-line{ margin:1rem 0 1.6rem; }
+
+/* Level 2, the subject tiles. Plain navy with gold text, no photo. */
+.trail-subjects{
+  display:grid; grid-template-columns:repeat(4,1fr); gap:2px;
+}
+.trail-subject{
+  display:flex; flex-direction:column; justify-content:flex-end; min-width:0;
+  background:var(--navy); border:1px solid rgba(201,168,76,0.25);
+  padding:1.1rem 1rem; min-height:132px;
+  font:inherit; text-align:left; cursor:pointer; appearance:none;
+}
+.trail-subject:hover{ border-color:var(--gold); background:rgba(201,168,76,0.08); }
+.trail-subject:focus-visible{ outline:2px solid var(--gold); outline-offset:2px; }
+.trail-subject-name{
+  font-family:var(--ff-display); font-size:1.05rem; line-height:1.2;
+  color:var(--gold); overflow-wrap:break-word;
+}
+.trail-subject-count{
+  font-family:var(--ff-body); font-size:0.7rem; letter-spacing:0.08em;
+  color:rgba(245,240,232,0.55); margin-top:0.3rem;
+}
+
+/* Level 3, the place cards. */
+.trail-places{
+  display:grid; grid-template-columns:repeat(4,1fr); gap:2px;
+}
+.trail-place{
+  display:flex; flex-direction:column; min-width:0;
+  background:var(--navy); border:1px solid rgba(201,168,76,0.18);
+}
+.trail-place-img{
+  position:relative; width:100%; aspect-ratio:4/3; overflow:hidden;
+  background:var(--navy);
+  display:flex; align-items:center; justify-content:center;
+  padding:0.6rem; text-align:center;
+}
+.trail-place-img img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+.trail-place-imgname{
+  font-family:var(--ff-display); font-size:0.95rem; line-height:1.2;
+  color:rgba(245,240,232,0.5); overflow-wrap:break-word;
+}
+.trail-place-cap{ padding:0.6rem 0.7rem 0.8rem; flex:1 1 auto; }
+.trail-place-name{
+  font-family:var(--ff-display); font-size:1rem; line-height:1.2;
+  color:var(--white); overflow-wrap:break-word;
+}
+.trail-place-line{
+  font-family:var(--ff-body); font-size:0.72rem; line-height:1.45;
+  color:rgba(245,240,232,0.6); margin-top:0.3rem;
+}
+.trail-ov__cta{
+  margin-top:2.5rem; display:flex; flex-wrap:wrap;
+  align-items:center; justify-content:center; gap:0.9rem 1.5rem;
+}
+.trail-ov__cta .trail-cta-note{ color:rgba(245,240,232,0.6); }
+
+/* Tablet and phone. Two columns from 767px down, so no row can ever be wider
+   than the panel and the page never scrolls sideways. */
+@media (max-width:1023px){
+  .trail-subjects, .trail-places{ grid-template-columns:repeat(3,1fr); }
+}
+@media (max-width:767px){
+  .trail-ov__inner{ padding:64px 12px 2.5rem; }
+  .trail-subjects, .trail-places{ grid-template-columns:repeat(2,1fr); }
+  .trail-subject{ min-height:112px; padding:0.85rem 0.7rem; }
+  .trail-subject-name{ font-size:15px; }
+  .trail-subject-count{ font-size:11px; }
+  .trail-place-name{ font-size:15px; }
+  .trail-place-line{ font-size:11.5px; }
+  .trail-place-imgname{ font-size:13px; }
+}
+@media (max-width:360px){
+  .trail-ov__inner{ padding:60px 8px 2.2rem; }
+  .trail-subject{ padding:0.7rem 0.55rem; }
+  .trail-place-cap{ padding:0.5rem 0.5rem 0.6rem; }
+}
+
+/* The small muted "Photo credits" link under the price line, and the list it
+   opens inside the same overlay panel. */
+.trail-credits-link{
+  background:none; border:none; padding:0; cursor:pointer;
+  font-family:var(--ff-body); font-size:0.78rem;
+  color:var(--muted); text-decoration:underline;
+}
+.trail-credits-link:hover{ color:var(--navy); }
+.trail-credits-intro{
+  max-width:640px; font-size:0.85rem; line-height:1.7;
+  color:rgba(245,240,232,0.65); margin:0 0 1.6rem;
+}
+.trail-credits{ list-style:none; margin:0; padding:0; max-width:760px; }
+.trail-credits li{
+  padding:0.7rem 0; border-bottom:1px solid rgba(201,168,76,0.18);
+  display:flex; flex-direction:column; gap:0.15rem;
+}
+.trail-credits-place{ font-family:var(--ff-display); font-size:1.02rem; color:var(--cream); }
+.trail-credits-meta{ font-size:0.76rem; color:rgba(245,240,232,0.6); }
+.trail-credits-file{ font-size:0.72rem; color:var(--gold); text-decoration:none; }
+.trail-credits-file:hover{ color:var(--gold-light); text-decoration:underline; }
+@media (max-width:767px){
+  .trail-credits-place{ font-size:15px; }
+  .trail-credits-meta{ font-size:11.5px; }
+  .trail-credits-file{ font-size:11px; }
+}
 </style>
 
     <!-- ═══ SEO & SOCIAL ═══════════════════════════════════════════════════ -->
@@ -1852,6 +2126,7 @@ function openTransportMode(mode, service){
   </a>
   <ul class="nav-links">
     <li><a href="#services">Our Services</a></li>
+    <li><a href="#heritage-trail">Heritage Trail</a></li>
     <li><a href="#about-bhh">About</a></li>
     <li><a href="#enquire" onclick="closeMobileMenu();switchTab('guest');document.getElementById('enquire').scrollIntoView({behavior:'smooth'});return false;">Enquire</a></li>
     <li><a href="#contact">Contact</a></li>
@@ -1890,6 +2165,7 @@ function openTransportMode(mode, service){
 <!-- Mobile menu -->
 <div class="mobile-menu" id="mobileMenu" role="dialog" aria-label="Menu">
   <a href="#services" onclick="closeMobileMenu()">Our Services</a>
+  <a href="#heritage-trail" onclick="closeMobileMenu()">Heritage Trail</a>
   <a href="#about-bhh" onclick="closeMobileMenu()">About</a>
   <a href="#enquire" onclick="closeMobileMenu();switchTab('guest');document.getElementById('enquire').scrollIntoView({behavior:'smooth'});return false;">Enquire</a>
   <a href="#contact" onclick="closeMobileMenu()">Contact</a>
@@ -1937,9 +2213,9 @@ function closeMobileMenu(){
 
     <!-- Foreground content — centred, large, immediately readable -->
     <div class="hero-content">
-      <span class="eyebrow" style="color:var(--gold-light);letter-spacing:0.2em;font-size:1rem;">LONDON AND THE ENGLISH COUNTRYSIDE</span>
-      <h1>England, as it <em style="font-style:normal;color:var(--gold)">truly</em> lives</h1>
-      <p class="hero-sub"><span class="hero-sub--desktop">Private cultural experiences in real English homes,<br>curated exclusively for discerning international families visiting England.</span><span class="hero-sub--phone">Private experiences in real English homes, for international families</span></p>
+      <span class="eyebrow" style="color:var(--gold-light);letter-spacing:0.2em;font-size:1rem;">LONDON AND THE BRITISH COUNTRYSIDE</span>
+      <h1>British heritage, as it <em style="font-style:normal;color:var(--gold)">truly</em> lives</h1>
+      <p class="hero-sub"><span class="hero-sub--desktop">Private cultural experiences in real English homes,<br>curated exclusively for discerning international families visiting the United Kingdom.</span><span class="hero-sub--phone">Private experiences in real English homes, for international families</span></p>
       <div class="hero-btns">
         <a href="#services" class="btn btn-gold">Explore Our Services</a>
         <a href="#enquire" class="btn btn-outline-cream" onclick="joinAs('guest');return false;">Enquire for Your Family</a>
@@ -2016,7 +2292,7 @@ function closeMobileMenu(){
   <div class="container">
     <div class="services-intro fade-up">
       <span class="eyebrow">Nine Signature Experiences</span>
-      <h2>Everything England has to offer, privately</h2>
+      <h2>Everything British heritage has to offer, privately</h2>
       <div class="gold-line gold-line--center"></div>
       <p class="lead" style="margin:0 auto;text-align:center">Each experience is arranged exclusively for your family. No other guests. No shared itineraries. No compromise.</p>
       <p class="lead" style="margin:0.6rem auto 0;text-align:center">Priced per family for the experiences BHH arranges, quoted personally on enquiry.</p>
@@ -2025,7 +2301,7 @@ function closeMobileMenu(){
 
       <a href="#enquire" data-service="Heritage Guide" class="service-card">
     <div class="service-card-img service-card-carousel">
-      <img src="images/heritage-tour-family-tour-at-english-cas.webp" alt="Heritage Tour — family tour at English castle" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
+      <img src="images/heritage-tour-family-tour-at-english-cas.webp" alt="Heritage Tour — family tour at a British castle" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
       <img src="images/heritage-tour-british-heritage-guide.webp" alt="Heritage Tour — British Heritage Guide" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
       <img src="images/heritage guide thames.webp" alt="Heritage Guide — riverside walk along the Thames" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
     </div>
@@ -2033,7 +2309,8 @@ function closeMobileMenu(){
         <div class="service-card-content">
           <div class="service-card-num">01 / 09</div>
           <h3>Heritage Guide</h3>
-          <p class="service-card-desc">A personal British Heritage Guide takes your family through England's most storied landscapes and history. Female guides available on request.</p>
+          <span class="service-card-trail">Multi day Heritage Trail available</span>
+          <p class="service-card-desc">A personal British Heritage Guide takes your family through the most storied landscapes and history of the United Kingdom, for a day or a multi day trail. Female guides available on request.</p>
           <span class="service-card-arrow">Discover more →</span>
         </div>
       </a>
@@ -2166,6 +2443,267 @@ function closeMobileMenu(){
 </section>
 
 <!-- OUR PROMISE -->
+<!-- ═══ THE HERITAGE TRAIL ═══════════════════════════════════════════════════
+     Sits directly below the nine card grid and above the About section. It is a
+     presentation section only: no new form, no new Netlify stub, no new field.
+     The single button reuses the existing guest enquiry route, selecting the
+     Heritage Guide card on the enquiry form exactly as clicking experience card
+     01 does. Tile pictures are placeholders taken from the repo images folder,
+     one src per tile, so each one can be swapped on its own line later. -->
+<section class="section section--cream" id="heritage-trail">
+  <div class="container">
+    <div class="services-intro fade-up">
+      <span class="eyebrow">THE HERITAGE TRAIL</span>
+      <h2>The Heritage Trail</h2>
+      <div class="gold-line gold-line--center"></div>
+      <p class="lead trail-intro">One family, one guide, several days across the United Kingdom. We plan the route, buy the entry passes for you and walk beside you from the first castle to the last garden. You book your own hotel and driver, we do the rest.</p>
+    </div>
+
+    <div class="trail-grid fade-up">
+      <button type="button" class="trail-tile trail-tile--nation" data-nation="England">
+        <div class="trail-tile-img"><img src="images/trail/nation england.webp" alt="Bodiam Castle and its moat in England" loading="lazy"></div>
+        <div class="trail-tile-cap">
+          <div class="trail-tile-name">England</div>
+          <div class="trail-tile-days">100 places</div>
+        </div>
+      </button>
+      <button type="button" class="trail-tile trail-tile--nation" data-nation="Wales">
+        <div class="trail-tile-img"><img src="images/trail/nation wales.webp" alt="Conwy Castle above the estuary in Wales" loading="lazy"></div>
+        <div class="trail-tile-cap">
+          <div class="trail-tile-name">Wales</div>
+          <div class="trail-tile-days">24 places</div>
+        </div>
+      </button>
+      <button type="button" class="trail-tile trail-tile--nation" data-nation="Scotland">
+        <div class="trail-tile-img"><img src="images/trail/nation scotland.webp" alt="Edinburgh Castle on Castle Rock in Scotland" loading="lazy"></div>
+        <div class="trail-tile-cap">
+          <div class="trail-tile-name">Scotland</div>
+          <div class="trail-tile-days">24 places</div>
+        </div>
+      </button>
+      <button type="button" class="trail-tile trail-tile--nation" data-nation="Northern Ireland">
+        <div class="trail-tile-img"><img src="images/trail/nation northern ireland.webp" alt="The basalt columns of the Giant's Causeway in Northern Ireland" loading="lazy"></div>
+        <div class="trail-tile-cap">
+          <div class="trail-tile-name">Northern Ireland</div>
+          <div class="trail-tile-days">14 places</div>
+        </div>
+      </button>
+    </div>
+
+    <div class="trail-cta fade-up">
+      <a href="#enquire" class="btn btn-gold" onclick="return bhhTrailEnquire(event)">Enquire about a Heritage Trail</a>
+      <span class="trail-cta-note">Priced per family for the guide and passes, on enquiry.</span>
+      <button type="button" class="trail-credits-link" id="trail-credits-link">Photo credits</button>
+    </div>
+
+    <!-- The three level browser. It is one overlay panel reused for every view,
+         exactly the pattern the phone photo overlay already uses: a fixed navy
+         sheet that scrolls inside itself, a close cross, and the escape key.
+         No new page, no new form, no new Netlify stub. -->
+    <div class="trail-ov" id="trail-ov" role="dialog" aria-modal="true" aria-labelledby="trail-ov-title" hidden>
+      <button type="button" class="trail-ov__close" id="trail-ov-close" aria-label="Close">&#10005;</button>
+      <div class="trail-ov__inner">
+        <button type="button" class="trail-ov__back" id="trail-ov-back"></button>
+        <h3 class="trail-ov__title" id="trail-ov-title"></h3>
+        <div class="gold-line"></div>
+        <div id="trail-ov-body"></div>
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+/* One button, one route. This mirrors the click behaviour already wired to the
+   experience cards: switch to the guest enquiry tab and select the Heritage
+   Guide card on that form, using the same #service-card-grid .service-card-v8
+   lookup and the same SERVICE_DISPLAY_NAMES map the rest of the page uses. It
+   then seeds the existing Special Requests box if that box is empty. No new
+   form, no new field, no new Netlify stub. */
+function bhhTrailEnquire(e){
+  if(e && e.preventDefault){ e.preventDefault(); }
+  var svc = 'Heritage Guide';
+  if(typeof switchTab === 'function'){ switchTab('guest'); }
+  var v8 = document.querySelector('#service-card-grid .service-card-v8[data-service="' + svc + '"]');
+  if(v8 && typeof toggleService === 'function' && !v8.classList.contains('selected')){ toggleService(v8); }
+  var box = document.querySelector('#guest-form textarea[name="Special Requests"]');
+  if(box && !(box.value || '').trim()){ box.value = 'I am interested in a multi day Heritage Trail.'; }
+  var target = document.getElementById('enquire');
+  if(target && target.scrollIntoView){ target.scrollIntoView({behavior:'smooth'}); }
+  return false;
+}
+</script>
+
+<script>
+/* ═══ THE HERITAGE TRAIL, THREE LEVEL BROWSER ═════════════════════════════
+   Data source: "trail places data.txt" in the repository root, 162 rows of
+   number|nation|subject|place|one line. The rows are embedded here so the page
+   needs no extra request and works from a local file as well as from the site.
+   If the text file is edited, regenerate TRAIL_PLACES below from it.
+   Each row is [nation, subject, place, one line, image path]. The image path is
+   carried on every card as data-img and NOTHING is fetched until a level 3 view
+   is opened, and not even then while TRAIL_PHOTOS is false: flip that one flag
+   to true once the pictures exist and the layout does not change. */
+(function(){
+  var TRAIL_PHOTOS = true;
+  var SUBJECT_ORDER = ["Country houses and gardens", "Castles, abbeys and ancient sites", "Royal palaces", "Royal and historic landmarks", "Great family estates", "Historic towns and villages", "Coast and countryside", "Heritage spas"];
+  var TRAIL_PLACES = [["England", "Country houses and gardens", "Ham House and Garden", "17th century riverside house at Richmond", "images/trail/ham house and garden.webp"], ["England", "Country houses and gardens", "Osterley Park and House", "Robert Adam mansion with parkland", "images/trail/osterley park and house.webp"], ["England", "Coast and countryside", "Morden Hall Park", "Riverside park with a historic snuff mill", "images/trail/morden hall park.webp"], ["England", "Country houses and gardens", "Fenton House and Garden", "Hampstead house with keyboard instruments and garden", "images/trail/fenton house and garden.webp"], ["England", "Country houses and gardens", "Carlyle's House", "Small Chelsea writer's house", ""], ["England", "Country houses and gardens", "Sutton House and Breaker's Yard", "Tudor house in Hackney", "images/trail/sutton house and breakers yard.webp"], ["England", "Country houses and gardens", "Red House", "William Morris home, Arts and Crafts", "images/trail/red house.webp"], ["England", "Country houses and gardens", "Rainham Hall", "Georgian merchant's house, east London", "images/trail/rainham hall.webp"], ["England", "Coast and countryside", "Runnymede and Ankerwycke", "The Magna Carta meadows on the Thames", ""], ["England", "Country houses and gardens", "Cliveden", "Grand Thames side gardens, house is a hotel", "images/trail/cliveden.webp"], ["England", "Country houses and gardens", "Chartwell", "Churchill's family home, very popular", "images/trail/chartwell.webp"], ["England", "Country houses and gardens", "Knole", "Vast house with deer park at Sevenoaks", "images/trail/knole.webp"], ["England", "Country houses and gardens", "Ightham Mote", "Moated medieval manor", "images/trail/ightham mote.webp"], ["England", "Country houses and gardens", "Emmetts Garden", "Hillside garden near Chartwell", "images/trail/emmetts garden.webp"], ["England", "Country houses and gardens", "Quebec House", "General Wolfe's childhood home, Westerham", "images/trail/quebec house.webp"], ["England", "Country houses and gardens", "Scotney Castle", "Ruined castle in a lake, plus Victorian house", ""], ["England", "Country houses and gardens", "Sissinghurst Castle Garden", "World famous garden", ""], ["England", "Coast and countryside", "White Cliffs of Dover", "Cliff walks above the Channel", "images/trail/white cliffs of dover.webp"], ["England", "Country houses and gardens", "Bodiam Castle", "Classic moated castle, best for children", "images/trail/bodiam castle.webp"], ["England", "Country houses and gardens", "Bateman's", "Rudyard Kipling's home", ""], ["England", "Country houses and gardens", "Sheffield Park and Garden", "Lakes and autumn colour, next to Bluebell Railway", "images/trail/sheffield park and garden.webp"], ["England", "Country houses and gardens", "Standen House and Garden", "Arts and Crafts family house", "images/trail/standen house and garden.webp"], ["England", "Country houses and gardens", "Nymans", "Garden and romantic ruined house", "images/trail/nymans.webp"], ["England", "Country houses and gardens", "Petworth House and Park", "Great art collection and deer park", "images/trail/petworth house and park.webp"], ["England", "Country houses and gardens", "Uppark House and Garden", "Georgian house on the South Downs", "images/trail/uppark house and garden.webp"], ["England", "Country houses and gardens", "Polesden Lacey", "Edwardian house and gardens", "images/trail/polesden lacey.webp"], ["England", "Country houses and gardens", "Claremont Landscape Garden", "18th century garden with lake and amphitheatre", ""], ["England", "Country houses and gardens", "Hatchlands Park", "Georgian house with keyboard instrument collection", "images/trail/hatchlands park.webp"], ["England", "Coast and countryside", "Box Hill", "Viewpoint and walks over the Surrey Hills", "images/trail/box hill.webp"], ["England", "Country houses and gardens", "Winkworth Arboretum", "Hillside arboretum with lake", "images/trail/winkworth arboretum.webp"], ["England", "Coast and countryside", "Hindhead Commons and the Devil's Punch Bowl", "Natural amphitheatre and heathland walks", "images/trail/hindhead commons and the devils punch bowl.webp"], ["England", "Coast and countryside", "Leith Hill", "Highest point in south east England, with a tower to climb", "images/trail/leith hill.webp"], ["England", "Country houses and gardens", "Waddesdon Manor", "Rothschild French chateau and gardens", "images/trail/waddesdon manor.webp"], ["England", "Country houses and gardens", "Hughenden", "Disraeli's home with wartime map room", "images/trail/hughenden.webp"], ["England", "Country houses and gardens", "West Wycombe Park", "Palladian house, limited summer opening", "images/trail/west wycombe park.webp"], ["England", "Country houses and gardens", "Claydon", "Rococo interiors, Florence Nightingale link", "images/trail/claydon.webp"], ["England", "Country houses and gardens", "Stowe Gardens", "Vast landscape garden with temples", "images/trail/stowe gardens.webp"], ["England", "Coast and countryside", "Ashridge Estate", "Ancient woods and the Bridgewater monument", "images/trail/ashridge estate.webp"], ["England", "Country houses and gardens", "Greys Court", "Tudor house and walled gardens near Henley", "images/trail/greys court.webp"], ["England", "Country houses and gardens", "Basildon Park", "Georgian mansion seen in film and television", "images/trail/basildon park.webp"], ["England", "Country houses and gardens", "Nuffield Place", "Home of Lord Nuffield, Morris cars founder", "images/trail/nuffield place.webp"], ["England", "Country houses and gardens", "The Vyne", "Tudor house with lake and gardens", ""], ["England", "Country houses and gardens", "Mottisfont", "Abbey house and famous rose garden", "images/trail/mottisfont.webp"], ["England", "Country houses and gardens", "Hinton Ampner", "Elegant house and gardens near Winchester", "images/trail/hinton ampner.webp"], ["England", "Country houses and gardens", "Avebury", "Prehistoric stone circle with a village inside it, plus manor and museum", "images/trail/avebury.webp"], ["England", "Country houses and gardens", "Anglesey Abbey, Gardens and Lode Mill", "House, gardens and working mill near Cambridge", "images/trail/anglesey abbey gardens and lode mill.webp"], ["England", "Country houses and gardens", "Wimpole Estate", "Mansion, farm and parkland, good for children", "images/trail/wimpole estate.webp"], ["England", "Country houses and gardens", "Shaw's Corner", "George Bernard Shaw's home", ""], ["England", "Country houses and gardens", "Ickworth Estate", "Italianate rotunda house and park", "images/trail/ickworth estate.webp"], ["England", "Castles, abbeys and ancient sites", "1066 Battle of Hastings, Abbey and Battlefield", "The battlefield of 1066 and the abbey William built on it", "images/trail/1066 battle of hastings abbey and battlefield.webp"], ["England", "Castles, abbeys and ancient sites", "Dover Castle", "Great medieval castle and wartime tunnels", "images/trail/dover castle.webp"], ["England", "Castles, abbeys and ancient sites", "Stonehenge", "Prehistoric stone circle, timed entry", "images/trail/stonehenge.webp"], ["England", "Castles, abbeys and ancient sites", "Old Sarum", "Iron Age hill fort and the first Salisbury", "images/trail/old sarum.webp"], ["England", "Castles, abbeys and ancient sites", "Kenilworth Castle", "Elizabethan castle and garden", "images/trail/kenilworth castle.webp"], ["England", "Castles, abbeys and ancient sites", "Eltham Palace and Gardens", "Art Deco mansion on a medieval palace", "images/trail/eltham palace and gardens.webp"], ["England", "Castles, abbeys and ancient sites", "Down House, home of Charles Darwin", "Darwin's family home and garden", "images/trail/down house home of charles darwin.webp"], ["England", "Castles, abbeys and ancient sites", "Audley End House and Gardens", "Jacobean mansion with Capability Brown park", "images/trail/audley end house and gardens.webp"], ["England", "Castles, abbeys and ancient sites", "Osborne, Isle of Wight", "Queen Victoria's seaside home", "images/trail/osborne isle of wight.webp"], ["England", "Royal palaces", "Windsor Castle", "The King's residence, State Apartments and St George's Chapel", "images/trail/windsor castle.webp"], ["England", "Royal palaces", "Tower of London", "Crown Jewels and the Yeoman Warders", "images/trail/tower of london.webp"], ["England", "Royal palaces", "Hampton Court Palace", "Henry VIII's palace and the maze", "images/trail/hampton court palace.webp"], ["England", "Royal palaces", "Kensington Palace", "Royal residence and royal dress collection", "images/trail/kensington palace.webp"], ["England", "Royal palaces", "Buckingham Palace State Rooms", "State Rooms open to visitors in summer", "images/trail/buckingham palace state rooms.webp"], ["England", "Royal and historic landmarks", "Canterbury Cathedral", "Where Thomas Becket was killed in 1170, and the destination of Chaucer's pilgrims", "images/trail/canterbury cathedral.webp"], ["England", "Royal and historic landmarks", "Winchester Cathedral", "Longest medieval nave in Europe, burial place of Saxon kings and Jane Austen", "images/trail/winchester cathedral.webp"], ["England", "Royal and historic landmarks", "Salisbury Cathedral", "Tallest spire in Britain and the best preserved original Magna Carta of 1215", "images/trail/salisbury cathedral.webp"], ["England", "Royal and historic landmarks", "Westminster Abbey", "Coronation church of every English monarch since 1066, with the royal tombs", "images/trail/westminster abbey.webp"], ["England", "Royal and historic landmarks", "St Albans Cathedral", "Built on Britain's oldest continuously used historic site, Roman Verulamium beside it", "images/trail/st albans cathedral.webp"], ["England", "Great family estates", "Blenheim Palace", "Churchill's birthplace, World Heritage Site", "images/trail/blenheim palace.webp"], ["England", "Great family estates", "Highclere Castle", "The Downton Abbey house, opens some weeks only", "images/trail/highclere castle.webp"], ["England", "Great family estates", "Leeds Castle", "Castle on two islands, strong for children", "images/trail/leeds castle.webp"], ["England", "Great family estates", "Hever Castle", "Anne Boleyn's childhood home", "images/trail/hever castle.webp"], ["England", "Great family estates", "Arundel Castle", "Seat of the Dukes of Norfolk", "images/trail/arundel castle.webp"], ["England", "Great family estates", "Hatfield House", "Elizabeth I's childhood home", "images/trail/hatfield house.webp"], ["England", "Great family estates", "Penshurst Place", "Medieval manor and gardens", "images/trail/penshurst place.webp"], ["England", "Historic towns and villages", "Rye", "Cobbled medieval hill town", "images/trail/rye.webp"], ["England", "Historic towns and villages", "Marlow and the Thames villages", "Riverside Georgian town", "images/trail/marlow and the thames villages.webp"], ["England", "Historic towns and villages", "Oxford", "University city of colleges and spires", "images/trail/oxford.webp"], ["England", "Historic towns and villages", "Cambridge", "University city on the river Cam", "images/trail/cambridge.webp"], ["England", "Historic towns and villages", "Bath", "Georgian World Heritage city, Roman Baths museum", "images/trail/bath.webp"], ["England", "Historic towns and villages", "Winchester", "Ancient capital of England", ""], ["England", "Historic towns and villages", "Canterbury old town", "Medieval walled city around the cathedral", "images/trail/canterbury old town.webp"], ["England", "Historic towns and villages", "Windsor and Eton", "Royal town and Eton College across the bridge", "images/trail/windsor and eton.webp"], ["England", "Historic towns and villages", "Lewes", "County town with castle and Anne of Cleves house", "images/trail/lewes.webp"], ["England", "Historic towns and villages", "Sandwich", "One of the best preserved medieval towns in England", "images/trail/sandwich.webp"], ["England", "Coast and countryside", "Seven Sisters and Beachy Head", "White chalk cliffs on the Sussex coast", "images/trail/seven sisters and beachy head.webp"], ["England", "Coast and countryside", "White Cliffs of Dover walk", "Cliff top walk to the South Foreland lighthouse", "images/trail/white cliffs of dover walk.webp"], ["England", "Coast and countryside", "Runnymede and the Magna Carta memorials", "Meadow of the 1215 Magna Carta", ""], ["England", "Coast and countryside", "Box Hill and the Surrey Hills", "Viewpoint over the Weald", "images/trail/box hill and the surrey hills.webp"], ["England", "Coast and countryside", "New Forest", "Ancient royal hunting forest with wild ponies", "images/trail/new forest.webp"], ["England", "Heritage spas", "Cliveden House Spa", "Spa inside the Cliveden estate above the Thames", ""], ["England", "Heritage spas", "Thermae Bath Spa, Cross Bath", "Natural hot spring, Cross Bath private hire for a family", ""], ["England", "Heritage spas", "The Gainsborough Bath Spa", "Hotel spa fed by the thermal spring", ""], ["England", "Heritage spas", "Coworth Park, Ascot", "Dorchester Collection estate near Windsor", ""], ["England", "Heritage spas", "Pennyhill Park", "Large spa with many pools, Surrey", ""], ["England", "Heritage spas", "The Grove", "Family friendly estate hotel close to London", ""], ["England", "Heritage spas", "Lucknam Park", "Country house spa near Bath", ""], ["England", "Heritage spas", "Ockenden Manor", "Small Tudor manor spa, West Sussex", ""], ["England", "Heritage spas", "South Lodge", "Spa with outdoor natural pool, West Sussex", ""], ["England", "Heritage spas", "Champneys Tring", "The original English health resort", ""], ["Wales", "Country houses and gardens", "Powis Castle and Garden", "Medieval castle with terraced gardens", "images/trail/powis castle and garden.webp"], ["Wales", "Country houses and gardens", "Bodnant Garden", "One of the finest gardens in Britain", "images/trail/bodnant garden.webp"], ["Wales", "Country houses and gardens", "Penrhyn Castle and Garden", "Vast neo Norman castle near Bangor", "images/trail/penrhyn castle and garden.webp"], ["Wales", "Country houses and gardens", "Plas Newydd House and Garden", "Mansion on the Menai Strait, Anglesey", "images/trail/plas newydd house and garden.webp"], ["Wales", "Country houses and gardens", "Chirk Castle", "Marcher fortress still lived in until recently", "images/trail/chirk castle.webp"], ["Wales", "Country houses and gardens", "Erddig", "Country house famous for its servants' story", "images/trail/erddig.webp"], ["Wales", "Country houses and gardens", "Tredegar House", "Restoration mansion at Newport", "images/trail/tredegar house.webp"], ["Wales", "Country houses and gardens", "Dyffryn Gardens", "Edwardian garden rooms near Cardiff", "images/trail/dyffryn gardens.webp"], ["Wales", "Coast and countryside", "Rhossili and the Gower coast", "Britain's first Area of Outstanding Natural Beauty", "images/trail/rhossili and the gower coast.webp"], ["Wales", "Castles, abbeys and ancient sites", "Caernarfon Castle", "Edward I's greatest castle, World Heritage Site", "images/trail/caernarfon castle.webp"], ["Wales", "Castles, abbeys and ancient sites", "Conwy Castle and town walls", "Castle with complete medieval town walls", "images/trail/conwy castle and town walls.webp"], ["Wales", "Castles, abbeys and ancient sites", "Harlech Castle", "Clifftop castle over the sea", "images/trail/harlech castle.webp"], ["Wales", "Castles, abbeys and ancient sites", "Beaumaris Castle", "Perfect concentric castle, Anglesey", "images/trail/beaumaris castle.webp"], ["Wales", "Castles, abbeys and ancient sites", "Caerphilly Castle", "Second largest castle in Britain", "images/trail/caerphilly castle.webp"], ["Wales", "Castles, abbeys and ancient sites", "Raglan Castle", "Late medieval castle palace", "images/trail/raglan castle.webp"], ["Wales", "Castles, abbeys and ancient sites", "Tintern Abbey", "Ruined abbey in the Wye valley", ""], ["Wales", "Historic towns and villages", "Conwy walled town", "Medieval town inside its walls", "images/trail/conwy walled town.webp"], ["Wales", "Historic towns and villages", "Portmeirion", "Italianate village built by Clough Williams Ellis", "images/trail/portmeirion.webp"], ["Wales", "Historic towns and villages", "Hay on Wye", "Book town on the English border", ""], ["Wales", "Coast and countryside", "Snowdonia and the Snowdon Mountain Railway", "Rack railway to the summit of Snowdon", "images/trail/snowdonia and the snowdon mountain railway.webp"], ["Wales", "Historic towns and villages", "Cardiff Bay and Cardiff Castle", "Victorian fantasy castle in the city centre", "images/trail/cardiff bay and cardiff castle.webp"], ["Wales", "Heritage spas", "Bodysgallen Hall, Llandudno", "Historic hall hotel and spa above Llandudno", "images/trail/bodysgallen hall llandudno.webp"], ["Wales", "Heritage spas", "St Brides Spa Hotel, Pembrokeshire", "Clifftop spa over the sea", ""], ["Wales", "Heritage spas", "Celtic Manor, Newport", "Large resort with two spas", "images/trail/celtic manor newport.webp"], ["Scotland", "Coast and countryside", "Culloden Battlefield", "Site of the last battle on British soil, 1746", ""], ["Scotland", "Coast and countryside", "Glencoe", "Dramatic glen and 1692 massacre story", "images/trail/glencoe.webp"], ["Scotland", "Coast and countryside", "Glenfinnan Monument", "Jacobite monument and the viaduct seen in Harry Potter", "images/trail/glenfinnan monument.webp"], ["Scotland", "Castles, abbeys and ancient sites", "Culzean Castle and Country Park", "Clifftop castle by Robert Adam", "images/trail/culzean castle and country park.webp"], ["Scotland", "Castles, abbeys and ancient sites", "Falkland Palace", "Renaissance palace of the Stuart kings", "images/trail/falkland palace.webp"], ["Scotland", "Castles, abbeys and ancient sites", "Crathes Castle", "Tower house with painted ceilings", "images/trail/crathes castle.webp"], ["Scotland", "Castles, abbeys and ancient sites", "Gladstone's Land", "17th century tenement on the Royal Mile", ""], ["Scotland", "Castles, abbeys and ancient sites", "Newhailes", "Enlightenment house near Edinburgh", "images/trail/newhailes.webp"], ["Scotland", "Castles, abbeys and ancient sites", "Edinburgh Castle", "Crown of Scotland and the Stone of Destiny", "images/trail/edinburgh castle.webp"], ["Scotland", "Castles, abbeys and ancient sites", "Stirling Castle", "Royal palace of the Stuarts", "images/trail/stirling castle.webp"], ["Scotland", "Castles, abbeys and ancient sites", "Urquhart Castle", "Ruin on the shore of Loch Ness", "images/trail/urquhart castle.webp"], ["Scotland", "Castles, abbeys and ancient sites", "Linlithgow Palace", "Birthplace of Mary Queen of Scots", "images/trail/linlithgow palace.webp"], ["Scotland", "Castles, abbeys and ancient sites", "Doune Castle", "Medieval castle seen in Outlander", "images/trail/doune castle.webp"], ["Scotland", "Castles, abbeys and ancient sites", "Melrose Abbey", "Border abbey, heart of Robert the Bruce", "images/trail/melrose abbey.webp"], ["Scotland", "Castles, abbeys and ancient sites", "St Andrews Castle and Cathedral", "Ruins in the home of golf", "images/trail/st andrews castle and cathedral.webp"], ["Scotland", "Royal palaces", "Palace of Holyroodhouse", "The King's residence in Scotland", "images/trail/palace of holyroodhouse.webp"], ["Scotland", "Royal palaces", "Balmoral Castle", "Royal Deeside estate, opens spring to summer", "images/trail/balmoral castle.webp"], ["Scotland", "Historic towns and villages", "Edinburgh Old Town and Royal Mile", "World Heritage medieval street", "images/trail/edinburgh old town and royal mile.webp"], ["Scotland", "Historic towns and villages", "St Andrews town", "University town and Old Course", "images/trail/st andrews town.webp"], ["Scotland", "Coast and countryside", "Loch Ness and Inverness", "Highland capital and the famous loch", "images/trail/loch ness and inverness.webp"], ["Scotland", "Coast and countryside", "Isle of Skye", "Highland island, long drive, overnight needed", "images/trail/isle of skye.webp"], ["Scotland", "Heritage spas", "Gleneagles", "Grand Perthshire resort and spa", ""], ["Scotland", "Heritage spas", "Cameron House, Loch Lomond", "Baronial mansion on Loch Lomond", ""], ["Scotland", "Heritage spas", "Fairmont St Andrews", "Clifftop resort near St Andrews", ""], ["Northern Ireland", "Coast and countryside", "Giant's Causeway", "World Heritage basalt columns", "images/trail/giants causeway.webp"], ["Northern Ireland", "Coast and countryside", "Carrick a Rede rope bridge", "Rope bridge to a sea island", "images/trail/carrick a rede rope bridge.webp"], ["Northern Ireland", "Country houses and gardens", "Mount Stewart", "House and one of the great gardens of Ireland", "images/trail/mount stewart.webp"], ["Northern Ireland", "Country houses and gardens", "Castle Ward", "Half Gothic half classical house on Strangford Lough", "images/trail/castle ward.webp"], ["Northern Ireland", "Country houses and gardens", "Castle Coole", "Neo classical mansion at Enniskillen", "images/trail/castle coole.webp"], ["Northern Ireland", "Country houses and gardens", "Florence Court", "Georgian house under the Cuilcagh mountains", "images/trail/florence court.webp"], ["Northern Ireland", "Country houses and gardens", "The Argory", "Edwardian gentry house, County Armagh", ""], ["Northern Ireland", "Country houses and gardens", "Crom Estate", "Lakeland estate on Upper Lough Erne", "images/trail/crom estate.webp"], ["Northern Ireland", "Royal and historic landmarks", "Titanic Belfast", "Museum on the slipway where Titanic was built", "images/trail/titanic belfast.webp"], ["Northern Ireland", "Castles, abbeys and ancient sites", "Dunluce Castle", "Clifftop ruin on the Causeway coast", "images/trail/dunluce castle.webp"], ["Northern Ireland", "Historic towns and villages", "Derry city walls", "Complete 17th century walled city", "images/trail/derry city walls.webp"], ["Northern Ireland", "Historic towns and villages", "Belfast city", "City Hall, Cathedral Quarter, murals", "images/trail/belfast city.webp"], ["Northern Ireland", "Heritage spas", "Galgorm Resort, County Antrim", "Riverside thermal village spa", ""], ["Northern Ireland", "Heritage spas", "Culloden Estate and Spa, Belfast", "Former bishop's palace on Belfast Lough", ""]];
+
+  var TRAIL_CREDITS = [["Beaumaris Castle", "Mike Peel", "Creative Commons Attribution ShareAlike 4.0", "https://commons.wikimedia.org/wiki/File:Beaumaris_Castle_2015_003.jpg"], ["Bodnant Garden", "Tom Parnell", "Creative Commons Attribution ShareAlike 4.0", "https://commons.wikimedia.org/wiki/File:Bodnant_-_view_from_SW.jpg"], ["Bodysgallen Hall, Llandudno", "Llywelyn2000", "Creative Commons Attribution ShareAlike 4.0", "https://commons.wikimedia.org/wiki/File:Bodysgallen_Hall,_Llandudno,_Gwynedd,_Wales_03.jpg"], ["Box Hill", "mendhak", "Creative Commons Attribution ShareAlike 4.0", "https://commons.wikimedia.org/wiki/File:Smoky_Morning_View_from_Salomon%27s_Memorial_at_Box_Hill_-_Flickr_-_mendhak.jpg"], ["Castle Coole", "Lucius Winslow", "Creative Commons Attribution ShareAlike 4.0", "https://commons.wikimedia.org/wiki/File:Castle_Coole_27_August_2022.jpg"], ["Celtic Manor, Newport", "Jonathan Hutchins", "Creative Commons Attribution ShareAlike 2.0", "https://commons.wikimedia.org/wiki/File:Celtic_Manor_Resort_Hotel_(geograph_7343881).jpg"], ["Chirk Castle", "Llywelyn2000", "Creative Commons Attribution ShareAlike 4.0", "https://commons.wikimedia.org/wiki/File:Castell_y_Waun_-_Chirk_Castle,_Wrexham_County_Borough,_Wales_07.jpg"], ["Claydon", "Paul Buckingham", "Creative Commons Attribution ShareAlike 2.0", "https://commons.wikimedia.org/wiki/File:Claydon_House_-_geograph.org.uk_-_3449315.jpg"], ["Crom Estate", "Andreas F. Borchert", "Creative Commons Attribution ShareAlike 4.0", "https://commons.wikimedia.org/wiki/File:Crom_Castle_Estate_Summer_House_2018_08_30.jpg"], ["Down House, home of Charles Darwin", "Tilman2007", "Creative Commons Attribution ShareAlike 4.0", "https://commons.wikimedia.org/wiki/File:1000358_II_Down_House_Park_and_Garden_Bromley_London_20250610_0003.jpg"], ["Dyffryn Gardens", "Colin Smith", "Creative Commons Attribution ShareAlike 2.0", "https://commons.wikimedia.org/wiki/File:Dyffryn_Gardens_-_geograph.org.uk_-_7015065.jpg"], ["Emmetts Garden", "Michael Garlick", "Creative Commons Attribution ShareAlike 2.0", "https://commons.wikimedia.org/wiki/File:Emmetts_Garden,_Information_hut_2_-_geograph.org.uk_-_5380690.jpg"], ["Erddig", "Glen Bowman", "Creative Commons Attribution 2.0", "https://commons.wikimedia.org/wiki/File:The_Mansion_House_across_the_pond_-_Erddig,_Wrexham,_North_Wales_(24540653874).jpg"], ["Falkland Palace", "Stephencdickson", "Creative Commons Attribution ShareAlike 4.0", "https://commons.wikimedia.org/wiki/File:Falkland_Palace,_north_wing_from_NW.jpg"], ["Florence Court", "Gfox228", "Creative Commons Attribution 3.0", "https://commons.wikimedia.org/wiki/File:Florence_Court_-_panoramio.jpg"], ["Greys Court", "Steve Daniels", "Creative Commons Attribution ShareAlike 2.0", "https://commons.wikimedia.org/wiki/File:Greys_Court_-_geograph.org.uk_-_7180557.jpg"], ["Harlech Castle", "Jeff Buck", "Creative Commons Attribution ShareAlike 2.0", "https://commons.wikimedia.org/wiki/File:Harlech_Castle_-_geograph.org.uk_-_6290073.jpg"], ["Hatchlands Park", "Colin Smith", "Creative Commons Attribution ShareAlike 2.0", "https://commons.wikimedia.org/wiki/File:Hatchlands_Park_-_Sheepwash_Pond_-_geograph.org.uk_-_6670898.jpg"], ["Hatfield House", "Acabashi", "Creative Commons Attribution ShareAlike 4.0", "https://commons.wikimedia.org/wiki/File:Garden_and_west_wing_Hatfield_House_Hertfordshire_England_2_DxO.jpg"], ["Hindhead Commons and the Devil's Punch Bowl", "Mark", "Creative Commons Attribution 2.0", "https://commons.wikimedia.org/wiki/File:Devil%27s_Punch_Bowl,_Hindhead,_Surrey_-_September_2020.jpg"], ["Hughenden", "Steve Daniels", "Creative Commons Attribution ShareAlike 2.0", "https://commons.wikimedia.org/wiki/File:Hughenden_Manor_-_geograph.org.uk_-_6919035.jpg"], ["Lewes", "Arild Vågen", "Creative Commons Attribution ShareAlike 4.0", "https://commons.wikimedia.org/wiki/File:Lewes_Castle_April_2018_05.jpg"], ["Linlithgow Palace", "Godot13", "Creative Commons Attribution ShareAlike 4.0", "https://commons.wikimedia.org/wiki/File:Scotland-2016-Aerial-Linlithgow_Palace.jpg"], ["Mottisfont", "Eliot Finch", "Creative Commons Attribution ShareAlike 3.0", "https://commons.wikimedia.org/wiki/File:Mottisfont_Abbey_House.jpg"], ["Nuffield Place", "Mike Peel", "Creative Commons Attribution ShareAlike 4.0", "https://commons.wikimedia.org/wiki/File:At_Nuffield_Place_2025_029.jpg"], ["Nymans", "Andy Li", "Creative Commons Zero, public domain dedication", "https://commons.wikimedia.org/wiki/File:Nymans_house_and_gallery_entrance_2026-07-31.jpg"], ["Old Sarum", "Michael Dibb", "Creative Commons Attribution ShareAlike 2.0", "https://commons.wikimedia.org/wiki/File:Old_Sarum_(5)_-_geograph.org.uk_-_4902727.jpg"], ["Penshurst Place", "griffp", "Creative Commons Attribution ShareAlike 3.0", "https://commons.wikimedia.org/wiki/File:Penshurst_Place,_Penshurst,_Kent.jpg"], ["Petworth House and Park", "Chris Gunns", "Creative Commons Attribution ShareAlike 2.0", "https://commons.wikimedia.org/wiki/File:Petworth_Park_-_geograph.org.uk_-_5351279.jpg"], ["Plas Newydd House and Garden", "Gareth James", "Creative Commons Attribution ShareAlike 2.0", "https://commons.wikimedia.org/wiki/File:Plas_Newydd,_Anglesey_-_geograph.org.uk_-_5898551.jpg"], ["Polesden Lacey", "Colin Smith", "Creative Commons Attribution ShareAlike 2.0", "https://commons.wikimedia.org/wiki/File:Polesden_Lacey_-_geograph.org.uk_-_5282135.jpg"], ["Quebec House", "Marathon", "Creative Commons Attribution ShareAlike 2.0", "https://commons.wikimedia.org/wiki/File:Quebec_House_(geograph_5147310).jpg"], ["Rainham Hall", "Marathon", "Creative Commons Attribution ShareAlike 2.0", "https://commons.wikimedia.org/wiki/File:Rainham_Hall_-_geograph.org.uk_-_4977109.jpg"], ["Red House", "Tilman2007", "Creative Commons Attribution ShareAlike 4.0", "https://commons.wikimedia.org/wiki/File:1064203_II_RED_HOUSE,_RED_HOUSE_LANE,_E_side_Bexley_London_20250612_0015.jpg"], ["Sandwich", "Michael Garlick", "Creative Commons Attribution ShareAlike 2.0", "https://commons.wikimedia.org/wiki/File:Sandwich,_The_Barbican_-_geograph.org.uk_-_5855845.jpg"], ["Sheffield Park and Garden", "Daderot", "Creative Commons Zero, public domain dedication", "https://commons.wikimedia.org/wiki/File:Plantings_-_Sheffield_Park_and_Garden_-_East_Sussex,_England_-_DSC05586.jpg"], ["Standen House and Garden", "Andy Li", "Creative Commons Zero, public domain dedication", "https://commons.wikimedia.org/wiki/File:Standen_House_(South_side)_2024-10-08.jpg"], ["Stowe Gardens", "Scott Wylie", "Creative Commons Attribution 4.0", "https://commons.wikimedia.org/wiki/File:Temples_and_Follys_Stowe_landscape_gardens_22.jpg"], ["Sutton House and Breaker's Yard", "Ricardalovesmonuments", "Creative Commons Attribution ShareAlike 4.0", "https://commons.wikimedia.org/wiki/File:Sutton_House_London_Part_of_South_Facade.jpg"], ["Tredegar House", "WelshDave", "Creative Commons Attribution ShareAlike 4.0", "https://commons.wikimedia.org/wiki/File:Tredegar_House_Blue_Hour.jpg"], ["Uppark House and Garden", "Glen Bowman", "Creative Commons Attribution 2.0", "https://commons.wikimedia.org/wiki/File:Uppark_House,_Petersfield,_West_Sussex.jpg"], ["West Wycombe Park", "Scott Wylie", "Creative Commons Attribution ShareAlike 4.0", "https://commons.wikimedia.org/wiki/File:West_Wycombe_Park_July_2023_02.jpg"]];
+  var ov    = document.getElementById('trail-ov');
+  var body  = document.getElementById('trail-ov-body');
+  var title = document.getElementById('trail-ov-title');
+  var back  = document.getElementById('trail-ov-back');
+  var closeBtn = document.getElementById('trail-ov-close');
+  if(!ov || !body) return;
+
+  var lastFocus = null;
+
+  function esc(t){
+    return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+  function subjectsIn(nation){
+    var out = [];
+    for(var i=0;i<SUBJECT_ORDER.length;i++){
+      var sub = SUBJECT_ORDER[i], n = 0;
+      for(var j=0;j<TRAIL_PLACES.length;j++){
+        if(TRAIL_PLACES[j][0]===nation && TRAIL_PLACES[j][1]===sub) n++;
+      }
+      if(n) out.push([sub, n]);
+    }
+    return out;
+  }
+  function placesIn(nation, subject){
+    var out = [];
+    for(var j=0;j<TRAIL_PLACES.length;j++){
+      if(TRAIL_PLACES[j][0]===nation && TRAIL_PLACES[j][1]===subject) out.push(TRAIL_PLACES[j]);
+    }
+    return out;
+  }
+
+  function openOv(){
+    if(!ov.classList.contains('is-open')){
+      lastFocus = document.activeElement;
+      ov.hidden = false;
+      ov.classList.add('is-open');
+      document.documentElement.style.overflow = 'hidden';
+      document.body.style.overflow = 'hidden';
+    }
+    ov.scrollTop = 0;
+  }
+  function closeOv(){
+    ov.classList.remove('is-open');
+    ov.hidden = true;
+    document.documentElement.style.overflow = '';
+    document.body.style.overflow = '';
+    body.innerHTML = '';
+    if(lastFocus && lastFocus.focus){ try{ lastFocus.focus(); }catch(e){} }
+  }
+
+  /* LEVEL 2: the subjects present in one nation, in the fixed order. */
+  function showNation(nation){
+    title.textContent = nation;
+    back.textContent = 'All nations';
+    back.onclick = closeOv;
+    var list = subjectsIn(nation), html = '<div class="trail-subjects">';
+    for(var i=0;i<list.length;i++){
+      html += '<button type="button" class="trail-subject" data-nation="' + esc(nation) + '" data-subject="' + esc(list[i][0]) + '">'
+           +  '<span class="trail-subject-name">' + esc(list[i][0]) + '</span>'
+           +  '<span class="trail-subject-count">' + list[i][1] + ' places</span>'
+           +  '</button>';
+    }
+    body.innerHTML = html + '</div>';
+    openOv();
+  }
+
+  /* LEVEL 3: every place in one nation and subject, in file order. The image
+     element is created here and only here, so no picture is requested while the
+     page is simply loaded or while levels 1 and 2 are on screen. */
+  function showSubject(nation, subject){
+    title.textContent = nation + ': ' + subject;
+    back.textContent = 'All subjects in ' + nation;
+    back.onclick = function(){ showNation(nation); };
+    var list = placesIn(nation, subject), html = '<div class="trail-places">';
+    for(var i=0;i<list.length;i++){
+      var p = list[i];
+      /* An image element is built ONLY here, when a level 3 view is opened, and only
+         for a card that actually has a picture on disk. Places with no photo yet keep
+         an empty path in the data and stay as a navy block with the place name, so
+         nothing is ever requested for them. */
+      var media = (TRAIL_PHOTOS && p[4])
+        ? '<img src="' + esc(p[4]) + '" alt="' + esc(p[2]) + '" loading="lazy">'
+        : '<span class="trail-place-imgname">' + esc(p[2]) + '</span>';
+      html += '<article class="trail-place" data-img="' + esc(p[4]) + '">'
+           +  '<div class="trail-place-img">' + media + '</div>'
+           +  '<div class="trail-place-cap">'
+           +  '<div class="trail-place-name">' + esc(p[2]) + '</div>'
+           +  '<div class="trail-place-line">' + esc(p[3]) + '</div>'
+           +  '</div></article>';
+    }
+    html += '</div><div class="trail-ov__cta">'
+         +  '<a href="#enquire" class="btn btn-gold" data-trail-nation="' + esc(nation) + '" data-trail-subject="' + esc(subject) + '">Enquire about a Heritage Trail</a>'
+         +  '<span class="trail-cta-note">Priced per family for the guide and passes, on enquiry.</span>'
+         +  '</div>';
+    body.innerHTML = html;
+    openOv();
+  }
+
+  /* Level 1 tiles on the page. */
+  var grid = document.querySelector('#heritage-trail .trail-grid');
+  if(grid){
+    grid.addEventListener('click', function(e){
+      var t = e.target.closest ? e.target.closest('.trail-tile--nation') : null;
+      if(!t) return;
+      e.preventDefault();
+      showNation(t.getAttribute('data-nation'));
+    });
+  }
+  /* Clicks inside the overlay: a subject tile, or the enquiry button. */
+  body.addEventListener('click', function(e){
+    var sub = e.target.closest ? e.target.closest('.trail-subject') : null;
+    if(sub){ e.preventDefault(); showSubject(sub.getAttribute('data-nation'), sub.getAttribute('data-subject')); return; }
+    var cta = e.target.closest ? e.target.closest('[data-trail-nation]') : null;
+    if(cta){
+      e.preventDefault();
+      var nation = cta.getAttribute('data-trail-nation'), subject = cta.getAttribute('data-trail-subject');
+      /* Read the box BEFORE routing: the section button seeds its own sentence,
+         so emptiness has to be judged first, then the more specific nation and
+         subject sentence replaces that seed. */
+      var box = document.querySelector('#guest-form textarea[name="Special Requests"]');
+      var wasEmpty = box ? !(box.value || '').trim() : false;
+      closeOv();
+      if(typeof bhhTrailEnquire === 'function'){ bhhTrailEnquire(null); }
+      if(box && wasEmpty){
+        box.value = 'I am interested in a Heritage Trail in ' + nation + ', ' + subject + '.';
+      }
+    }
+  });
+
+  /* The credits view. It uses the same overlay panel, so there is no second
+     dialog and no new page. Only the Wikimedia Commons pictures are listed:
+     the Pexels and Unsplash licences ask for no credit. */
+  function showCredits(){
+    title.textContent = 'Photo credits';
+    back.textContent = 'Back to the Heritage Trail';
+    back.onclick = closeOv;
+    var html = '<p class="trail-credits-intro">Pictures from Wikimedia Commons, reused under the licence shown against each one. The remaining pictures are from Pexels and Unsplash, whose licences ask for no credit.</p><ul class="trail-credits">';
+    for(var i=0;i<TRAIL_CREDITS.length;i++){
+      var c = TRAIL_CREDITS[i];
+      html += '<li><span class="trail-credits-place">' + esc(c[0]) + '</span>'
+           +  '<span class="trail-credits-meta">' + esc(c[1]) + ', ' + esc(c[2]) + '</span>'
+           +  '<a class="trail-credits-file" href="' + esc(c[3]) + '" target="_blank" rel="noopener">View the original on Wikimedia Commons</a></li>';
+    }
+    body.innerHTML = html + '</ul>';
+    openOv();
+  }
+  var creditsLink = document.getElementById('trail-credits-link');
+  if(creditsLink){ creditsLink.addEventListener('click', function(e){ e.preventDefault(); showCredits(); }); }
+
+  closeBtn.addEventListener('click', closeOv);
+  document.addEventListener('keydown', function(e){
+    if((e.key === 'Escape' || e.keyCode === 27) && ov.classList.contains('is-open')) closeOv();
+  });
+})();
+</script>
+
 <section class="section section--white" id="about" style="min-height:100vh;display:flex;align-items:center;">
   <div class="container">
     <div class="fade-up" id="about-bhh" style="text-align:center;margin-bottom:3rem;scroll-margin-top:140px">
@@ -2240,8 +2778,8 @@ function closeMobileMenu(){
       </div>
       <div class="process-step">
         <div class="process-step-num">04</div>
-        <h4>Experience England</h4>
-        <p>Arrive, be welcomed, and experience an England that almost no visitor ever sees. Your family. Your evening. Your memory.</p>
+        <h4>Experience the United Kingdom</h4>
+        <p>Arrive, be welcomed, and experience a country that almost no visitor ever sees. Your family. Your evening. Your memory.</p>
       </div>
     </div>
   </div>
@@ -3748,7 +4286,7 @@ function closeMobileMenu(){
     <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">These terms (&ldquo;Terms&rdquo;) govern your use of the services provided by British Heritage Hosts Ltd (&ldquo;BHH&rdquo;), Company No. 17103555, Monomark House, 27 Old Gloucester Street, London WC1N 3AX. By submitting an enquiry, making a booking, or applying to become a host or partner, you agree to be bound by these Terms.</p>
 
     <h3>1. Our Services</h3>
-    <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">BHH provides premium, enquiry based hospitality experiences connecting international families with approved hosts across England. <strong>Services BHH provides, arranges and invoices</strong> are Heritage Guide, English Tea, British Dinner, Canal Day Cruise, Cultural Immersion Programme, Personal Interpreter Service and Riverside Grill. All such services are bespoke, subject to availability, with prices provided individually upon enquiry. <strong>Introduce only services.</strong> Certain services are not provided, sold or invoiced by BHH: currently Airport Transfer, Chauffeured Hire and Narrowboat Holiday. For these, BHH acts solely as an introducer to an independent partner, with whom booking and payment are made directly (see clause 12).</p>
+    <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">BHH provides premium, enquiry based hospitality experiences connecting international families with approved hosts across the United Kingdom. <strong>Services BHH provides, arranges and invoices</strong> are Heritage Guide, English Tea, British Dinner, Canal Day Cruise, Cultural Immersion Programme, Personal Interpreter Service and Riverside Grill. All such services are bespoke, subject to availability, with prices provided individually upon enquiry. <strong>Introduce only services.</strong> Certain services are not provided, sold or invoiced by BHH: currently Airport Transfer, Chauffeured Hire and Narrowboat Holiday. For these, BHH acts solely as an introducer to an independent partner, with whom booking and payment are made directly (see clause 12).</p>
 
     <h3>2. Bookings and Payment</h3>
     <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">All bookings are confirmed only upon receipt of full payment, processed securely through Airwallex. A booking reference will be issued upon confirmation. BHH reserves the right to decline any booking at its discretion.</p>
@@ -3797,7 +4335,7 @@ function closeMobileMenu(){
           <img class="nav-logo-img" src="images/bhh.png" alt="BHH" style="height:56px;width:auto;">
           <span style="font-family:'Cormorant Garamond',serif;font-size:1rem;color:rgba(245,240,232,0.6);letter-spacing:0.08em">BRITISH HERITAGE HOSTS</span>
         </div>
-        <p>Authentic British experiences for discerning international families visiting England.</p>
+        <p>Authentic British experiences for discerning international families visiting the United Kingdom.</p>
         <p style="margin-top:0.5rem;font-size:0.78rem">Company No. 17103555<br>Registered in England and Wales</p>
       </div>
       <div class="footer-col">
@@ -5432,7 +5970,7 @@ function closeThankyouModal(modalId) {
     <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">These terms (&ldquo;Terms&rdquo;) govern your use of the services provided by British Heritage Hosts Ltd (&ldquo;BHH&rdquo;), Company No. 17103555, Monomark House, 27 Old Gloucester Street, London WC1N 3AX. By submitting an enquiry, making a booking, or applying to become a host or partner, you agree to be bound by these Terms.</p>
 
     <h3>1. Our Services</h3>
-    <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">BHH provides premium, enquiry based hospitality experiences connecting international families with approved hosts across England. <strong>Services BHH provides, arranges and invoices</strong> are Heritage Guide, English Tea, British Dinner, Canal Day Cruise, Cultural Immersion Programme, Personal Interpreter Service and Riverside Grill. All such services are bespoke, subject to availability, with prices provided individually upon enquiry. <strong>Introduce only services.</strong> Certain services are not provided, sold or invoiced by BHH: currently Airport Transfer, Chauffeured Hire and Narrowboat Holiday. For these, BHH acts solely as an introducer to an independent partner, with whom booking and payment are made directly (see clause 12).</p>
+    <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">BHH provides premium, enquiry based hospitality experiences connecting international families with approved hosts across the United Kingdom. <strong>Services BHH provides, arranges and invoices</strong> are Heritage Guide, English Tea, British Dinner, Canal Day Cruise, Cultural Immersion Programme, Personal Interpreter Service and Riverside Grill. All such services are bespoke, subject to availability, with prices provided individually upon enquiry. <strong>Introduce only services.</strong> Certain services are not provided, sold or invoiced by BHH: currently Airport Transfer, Chauffeured Hire and Narrowboat Holiday. For these, BHH acts solely as an introducer to an independent partner, with whom booking and payment are made directly (see clause 12).</p>
 
     <h3>2. Bookings and Payment</h3>
     <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">All bookings are confirmed only upon receipt of full payment, processed securely through Airwallex. A booking reference will be issued upon confirmation. BHH reserves the right to decline any booking at its discretion.</p>
