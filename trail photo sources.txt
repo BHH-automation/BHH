@@ -575,3 +575,28 @@ FULL NO PHOTO FOUND LIST AFTER ALL BATCHES (31 of 162 places)
   155 Northern Ireland  The Argory
   161 Northern Ireland  Galgorm Resort, County Antrim
   162 Northern Ireland  Culloden Estate and Spa, Belfast
+
+BATCH 5, THE THREE HERITAGE SPAS SUBJECT TILES ON LEVEL 2 (8 September 2026)
+The England spa tile reuses a picture already in the folder. The other two are
+mood pictures of a country house hotel and its grounds, not a named place, used
+only as the tile picture for the Heritage spas subject. Both are Pexels, free
+for commercial use with no credit required, so neither appears in the Photo
+credits panel.
+
+File: images/trail/cliveden.webp
+Used for: the England Heritage spas subject tile
+Note: already in the folder and already recorded under Batch 2
+
+File: images/trail/spa mood scotland.webp
+Used for: the Scotland Heritage spas subject tile
+Subject: country house hotel and terraced gardens, no named place
+Source site: Pexels
+Photographer: Lebele
+Page: https://www.pexels.com/photo/the-manor-house-hotel-in-castle-combe-united-kingdom-11238596/
+
+File: images/trail/spa mood northern ireland.webp
+Used for: the Northern Ireland Heritage spas subject tile
+Subject: ivy covered country house hotel across its lawn, no named place
+Source site: Pexels
+Photographer: Lebele
+Page: https://www.pexels.com/photo/a-beautiful-mansion-under-a-cloudy-sky-11238628/

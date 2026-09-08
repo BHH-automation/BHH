@@ -1796,8 +1796,11 @@ footer {
   display:inline-block; margin:0 0 1rem; padding:0;
   background:none; border:none; cursor:pointer;
   color:var(--gold); font-family:var(--ff-body);
-  font-size:0.72rem; letter-spacing:0.08em; text-transform:uppercase;
+  font-size:0.7rem; letter-spacing:0.08em; text-transform:uppercase;
 }
+/* The Photo credits panel keeps the size the back link had before, so only the
+   two navigation links inside the browser were made smaller. */
+.trail-ov__back--credits{ font-size:0.72rem; }
 .trail-ov__back:hover{ color:var(--gold-light); }
 .trail-ov__title{
   font-family:var(--ff-display); font-weight:400; color:var(--cream);
@@ -1806,23 +1809,33 @@ footer {
 }
 .trail-ov .gold-line{ margin:1rem 0 1.6rem; }
 
-/* Level 2, the subject tiles. Plain navy with gold text, no photo. */
+/* Level 2, the subject tiles. Each one is a 4 by 3 photo block over a navy
+   caption strip, the same treatment as the four nation tiles on the page. A
+   subject with no picture keeps a plain navy block in the photo area, so every
+   tile in a row is the same height either way. */
 .trail-subjects{
   display:grid; grid-template-columns:repeat(4,1fr); gap:2px;
 }
 .trail-subject{
-  display:flex; flex-direction:column; justify-content:flex-end; min-width:0;
+  display:flex; flex-direction:column; justify-content:flex-start; min-width:0;
   background:var(--navy); border:1px solid rgba(201,168,76,0.25);
-  padding:1.1rem 1rem; min-height:132px;
+  padding:0; overflow:hidden;
   font:inherit; text-align:left; cursor:pointer; appearance:none;
 }
+.trail-subject-img{
+  width:100%; aspect-ratio:4/3; background:var(--navy); overflow:hidden;
+}
+.trail-subject-img img{ width:100%; height:100%; object-fit:cover; display:block; }
+.trail-subject-cap{ padding:0.7rem 0.8rem 0.85rem; flex:1 1 auto; }
 .trail-subject:hover{ border-color:var(--gold); background:rgba(201,168,76,0.08); }
 .trail-subject:focus-visible{ outline:2px solid var(--gold); outline-offset:2px; }
 .trail-subject-name{
+  display:block;
   font-family:var(--ff-display); font-size:1.05rem; line-height:1.2;
   color:var(--gold); overflow-wrap:break-word;
 }
 .trail-subject-count{
+  display:block;
   font-family:var(--ff-body); font-size:0.7rem; letter-spacing:0.08em;
   color:rgba(245,240,232,0.55); margin-top:0.3rem;
 }
@@ -1869,7 +1882,7 @@ footer {
 @media (max-width:767px){
   .trail-ov__inner{ padding:64px 12px 2.5rem; }
   .trail-subjects, .trail-places{ grid-template-columns:repeat(2,1fr); }
-  .trail-subject{ min-height:112px; padding:0.85rem 0.7rem; }
+  .trail-subject-cap{ padding:0.55rem 0.6rem 0.7rem; }
   .trail-subject-name{ font-size:15px; }
   .trail-subject-count{ font-size:11px; }
   .trail-place-name{ font-size:15px; }
@@ -1878,7 +1891,7 @@ footer {
 }
 @media (max-width:360px){
   .trail-ov__inner{ padding:60px 8px 2.2rem; }
-  .trail-subject{ padding:0.7rem 0.55rem; }
+  .trail-subject-cap{ padding:0.45rem 0.5rem 0.6rem; }
   .trail-place-cap{ padding:0.5rem 0.5rem 0.6rem; }
 }
 
@@ -2598,16 +2611,57 @@ function bhhTrailEnquire(e){
     if(lastFocus && lastFocus.focus){ try{ lastFocus.focus(); }catch(e){} }
   }
 
+  /* One picture per subject tile, taken from a place inside that subject and
+     nation, so nothing new is downloaded and nothing new needs crediting. A
+     subject that is not listed here keeps a plain navy block. These are built
+     only inside showNation, so they are requested when a level 2 view opens
+     and never on page load. */
+  var TRAIL_SUBJECT_PHOTOS = {
+    'England|Country houses and gardens': 'images/trail/chartwell.webp',
+    'England|Castles, abbeys and ancient sites': 'images/trail/dover castle.webp',
+    'England|Royal palaces': 'images/trail/windsor castle.webp',
+    'England|Royal and historic landmarks': 'images/trail/salisbury cathedral.webp',
+    'England|Great family estates': 'images/trail/blenheim palace.webp',
+    'England|Historic towns and villages': 'images/trail/rye.webp',
+    'England|Coast and countryside': 'images/trail/seven sisters and beachy head.webp',
+    'England|Heritage spas': 'images/trail/cliveden.webp',
+    'Wales|Country houses and gardens': 'images/trail/powis castle and garden.webp',
+    'Wales|Castles, abbeys and ancient sites': 'images/trail/caernarfon castle.webp',
+    'Wales|Historic towns and villages': 'images/trail/portmeirion.webp',
+    'Wales|Coast and countryside': 'images/trail/rhossili and the gower coast.webp',
+    'Wales|Heritage spas': 'images/trail/bodysgallen hall llandudno.webp',
+    'Scotland|Castles, abbeys and ancient sites': 'images/trail/stirling castle.webp',
+    'Scotland|Royal palaces': 'images/trail/palace of holyroodhouse.webp',
+    'Scotland|Historic towns and villages': 'images/trail/edinburgh old town and royal mile.webp',
+    'Scotland|Coast and countryside': 'images/trail/glenfinnan monument.webp',
+    'Scotland|Heritage spas': 'images/trail/spa mood scotland.webp',
+    'Northern Ireland|Country houses and gardens': 'images/trail/mount stewart.webp',
+    'Northern Ireland|Castles, abbeys and ancient sites': 'images/trail/dunluce castle.webp',
+    'Northern Ireland|Royal and historic landmarks': 'images/trail/titanic belfast.webp',
+    'Northern Ireland|Historic towns and villages': 'images/trail/derry city walls.webp',
+    'Northern Ireland|Coast and countryside': 'images/trail/giants causeway.webp',
+    'Northern Ireland|Heritage spas': 'images/trail/spa mood northern ireland.webp'
+  };
+
   /* LEVEL 2: the subjects present in one nation, in the fixed order. */
   function showNation(nation){
     title.textContent = nation;
-    back.textContent = 'All nations';
+    back.textContent = '\u2190 All nations';
+    back.className = 'trail-ov__back';
     back.onclick = closeOv;
     var list = subjectsIn(nation), html = '<div class="trail-subjects">';
     for(var i=0;i<list.length;i++){
-      html += '<button type="button" class="trail-subject" data-nation="' + esc(nation) + '" data-subject="' + esc(list[i][0]) + '">'
-           +  '<span class="trail-subject-name">' + esc(list[i][0]) + '</span>'
+      var sub = list[i][0];
+      var shot = TRAIL_SUBJECT_PHOTOS[nation + '|' + sub];
+      var media = (TRAIL_PHOTOS && shot)
+        ? '<img src="' + esc(shot) + '" alt="' + esc(nation + ', ' + sub) + '" loading="lazy">'
+        : '';
+      html += '<button type="button" class="trail-subject" data-nation="' + esc(nation) + '" data-subject="' + esc(sub) + '">'
+           +  '<span class="trail-subject-img">' + media + '</span>'
+           +  '<span class="trail-subject-cap">'
+           +  '<span class="trail-subject-name">' + esc(sub) + '</span>'
            +  '<span class="trail-subject-count">' + list[i][1] + ' places</span>'
+           +  '</span>'
            +  '</button>';
     }
     body.innerHTML = html + '</div>';
@@ -2619,7 +2673,8 @@ function bhhTrailEnquire(e){
      page is simply loaded or while levels 1 and 2 are on screen. */
   function showSubject(nation, subject){
     title.textContent = nation + ': ' + subject;
-    back.textContent = 'All subjects in ' + nation;
+    back.textContent = '\u2190 ' + nation;
+    back.className = 'trail-ov__back';
     back.onclick = function(){ showNation(nation); };
     var list = placesIn(nation, subject), html = '<div class="trail-places">';
     for(var i=0;i<list.length;i++){
@@ -2683,6 +2738,7 @@ function bhhTrailEnquire(e){
   function showCredits(){
     title.textContent = 'Photo credits';
     back.textContent = 'Back to the Heritage Trail';
+    back.className = 'trail-ov__back trail-ov__back--credits';
     back.onclick = closeOv;
     var html = '<p class="trail-credits-intro">Pictures from Wikimedia Commons, reused under the licence shown against each one. The remaining pictures are from Pexels and Unsplash, whose licences ask for no credit.</p><ul class="trail-credits">';
     for(var i=0;i<TRAIL_CREDITS.length;i++){
