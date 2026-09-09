@@ -804,3 +804,211 @@ Note: the hotel occupies the former Royal Mineral Water Hospital, whose carved
   the frame so that the people on the pavement are out of shot, leaving the
   facade, the pediment and the carved name. Kept at his instruction.
 This place is no longer on the still empty list, which is now 6 not 7.
+
+BATCH 7, THE 22 LEVEL 2 SUBJECT TILES (9 September 2026)
+
+Each level 2 subject tile used to reuse the photograph from one of its own
+level 3 place cards. Every one of the 22 now has its own separate photograph
+of the same place, so the tile and the place card show two different pictures.
+The two Heritage spas mood tiles for Scotland and Northern Ireland were
+already unique and are unchanged. No place card was touched.
+
+Tile: England, Castles, abbeys and ancient sites
+Place shown: Dover Castle
+File: images/trail/tile england castles abbeys and ancient sites.webp
+Source site: Wikimedia Commons
+Author: Tilman2007
+Licence: CC BY-SA 4.0
+Page: https://commons.wikimedia.org/wiki/File:Dover_Castle,_Inner_Bailey_Dover_1019075_20230813_0059.jpg
+Note: Dover Castle from below the curtain wall, a different view from the distant one on the place card. The bottom 16 per cent was cropped away to take visitors out of shot.
+
+Tile: England, Coast and countryside
+Place shown: Seven Sisters and Beachy Head
+File: images/trail/tile england coast and countryside.webp
+Source site: Wikimedia Commons
+Author: Balon Greyjoy
+Licence: CC0
+Page: https://commons.wikimedia.org/wiki/File:20200905_Seven_Sisters-3.jpg
+Note: The Seven Sisters from the cliff top with turquoise sea, a different view from the sunset cliff face on the place card.
+
+Tile: England, Country houses and gardens
+Place shown: Chartwell
+File: images/trail/tile england country houses and gardens.webp
+Source site: Wikimedia Commons
+Author: Tilman2007
+Licence: CC BY-SA 4.0
+Page: https://commons.wikimedia.org/wiki/File:1272626_I_CHARTWELL,_seen_from_NE_Westerham_20250908_0001.jpg
+Note: Chartwell seen from the north east, a different view from the lawn side one on the place card.
+
+Tile: England, Great family estates
+Place shown: Blenheim Palace
+File: images/trail/tile england great family estates.webp
+Source site: Wikimedia Commons
+Author: Balon Greyjoy
+Licence: CC BY-SA 4.0
+Page: https://commons.wikimedia.org/wiki/File:Blenheim_-_Blenheim_Palace_-_20210417125430.jpg
+Note: Blenheim Palace south front across the lawn, a different view from the lake and bridge on the place card.
+
+Tile: England, Heritage spas
+Place shown: Cliveden
+File: images/trail/tile england heritage spas.webp
+Source site: Wikimedia Commons
+Author: Mark Percy
+Licence: CC BY-SA 2.0
+Page: https://commons.wikimedia.org/wiki/File:Cliveden_House_-_geograph.org.uk_-_7910880.jpg
+Note: Cliveden above the parterre in flower, a different view from the entrance front on the place card.
+
+Tile: England, Historic towns and villages
+Place shown: Rye
+File: images/trail/tile england historic towns and villages.webp
+Source site: Unsplash
+Photographer: Adam Tams
+Page: https://unsplash.com/photos/a-cobblestone-street-between-buildings-d0AjN7xsMiE
+Note: Mermaid Street looking down the cobbles, a different view from the one on the place card. No Commons file, so no credit entry.
+
+Tile: England, Royal and historic landmarks
+Place shown: Salisbury Cathedral
+File: images/trail/tile england royal and historic landmarks.webp
+Source site: Pexels
+Photographer: mikebird
+Page: https://www.pexels.com/photo/cathedral-in-salisbury-seen-from-park-14325481/
+Note: The spire across the water meadows, a different view from the west front on the place card. No Commons file, so no credit entry.
+
+Tile: England, Royal palaces
+Place shown: Windsor Castle
+File: images/trail/tile england royal palaces.webp
+Source site: Pexels
+Photographer: Erencebeci
+Page: https://www.pexels.com/photo/trees-around-alley-towards-windsor-castle-18222816/
+Note: Windsor Castle from the Long Walk, a different view from the Round Tower on the place card. No Commons file, so no credit entry.
+
+Tile: Northern Ireland, Castles, abbeys and ancient sites
+Place shown: Dunluce Castle
+File: images/trail/tile northern ireland castles abbeys and ancient sites.webp
+Source site: Wikimedia Commons
+Author: Paul Buckingham
+Licence: CC BY-SA 2.0
+Page: https://commons.wikimedia.org/wiki/File:Dunluce_Castle_-_geograph.org.uk_-_8373571.jpg
+Note: Dunluce Castle from above showing the bridge and the stack, a different view from the one on the place card.
+
+Tile: Northern Ireland, Coast and countryside
+Place shown: Giant's Causeway
+File: images/trail/tile northern ireland coast and countryside.webp
+Source site: Wikimedia Commons
+Author: portengaround
+Licence: CC BY-SA 2.0
+Page: https://commons.wikimedia.org/wiki/File:Antrim_Coast_-_Giant%27s_Causeway_(19681698740).jpg
+Note: The Giant's Causeway columns under a blue sky, a different view from the golden one on the place card.
+
+Tile: Northern Ireland, Country houses and gardens
+Place shown: Mount Stewart
+File: images/trail/tile northern ireland country houses and gardens.webp
+Source site: Wikimedia Commons
+Author: Michael Dibb
+Licence: CC BY-SA 2.0
+Page: https://commons.wikimedia.org/wiki/File:Mount_Stewart_Gardens_(13)_-_geograph.org.uk_-_4550668.jpg
+Note: Mount Stewart across the sunken garden, a different view from the close one of the bay on the place card.
+
+Tile: Northern Ireland, Historic towns and villages
+Place shown: Derry city walls
+File: images/trail/tile northern ireland historic towns and villages.webp
+Source site: Wikimedia Commons
+Author: Colin Park
+Licence: CC BY-SA 2.0
+Page: https://commons.wikimedia.org/wiki/File:Londonderry_-_City_Walls_(Wall_of_Derry)_by_Walker%27s_Plinth_-_geograph.org.uk_-_7677239.jpg
+Note: The Derry walls walk with a cannon and the city beyond, a different view from the cannon and Guildhall on the place card.
+
+Tile: Northern Ireland, Royal and historic landmarks
+Place shown: Titanic Belfast
+File: images/trail/tile northern ireland royal and historic landmarks.webp
+Source site: Wikimedia Commons
+Author: Joseph Mischyshyn
+Licence: CC BY-SA 2.0
+Page: https://commons.wikimedia.org/wiki/File:Belfast_-_Titanic_Quarter_-_Titanic_Belfast_-_geograph.org.uk_-_3699861.jpg
+Note: Titanic Belfast front elevation, a different view from the one across the plaza on the place card. The bottom 20 per cent was cropped away.
+
+Tile: Scotland, Castles, abbeys and ancient sites
+Place shown: Stirling Castle
+File: images/trail/tile scotland castles abbeys and ancient sites.webp
+Source site: Wikimedia Commons
+Author: Brian Gratwicke from DC, USA
+Licence: CC BY 2.0
+Page: https://commons.wikimedia.org/wiki/File:Royal_Palace_and_great_hall,_Stirling_castle_(15250916835).jpg
+Note: The royal palace and great hall at Stirling Castle from the walls, a different view from the aerial one on the place card.
+
+Tile: Scotland, Coast and countryside
+Place shown: Glenfinnan Monument
+File: images/trail/tile scotland coast and countryside.webp
+Source site: Wikimedia Commons
+Author: Paul Stümke
+Licence: CC BY-SA 4.0
+Page: https://commons.wikimedia.org/wiki/File:Glenfinnan_Monument_at_Loch_Shiel.jpg
+Note: The Glenfinnan Monument on Loch Shiel, a different subject from the viaduct on the place card, at the same place.
+
+Tile: Scotland, Historic towns and villages
+Place shown: Edinburgh Old Town and Royal Mile
+File: images/trail/tile scotland historic towns and villages.webp
+Source site: Wikimedia Commons
+Author: Ronnie Macdonald from Chelmsford, United Kingdom
+Licence: CC BY 2.0
+Page: https://commons.wikimedia.org/wiki/File:Edinburgh_Old_Town_2_(5797761948).jpg
+Note: The Edinburgh Old Town skyline, a different view from the Royal Mile street one on the place card.
+
+Tile: Scotland, Royal palaces
+Place shown: Palace of Holyroodhouse
+File: images/trail/tile scotland royal palaces.webp
+Source site: Wikimedia Commons
+Author: Gillfoto
+Licence: CC BY-SA 4.0
+Page: https://commons.wikimedia.org/wiki/File:City_of_Edinburgh_-_Holyrood_Palace_-_20240528235057.jpg
+Note: The Palace of Holyroodhouse front and forecourt, a different view from the one over the gardens on the place card.
+
+Tile: Wales, Castles, abbeys and ancient sites
+Place shown: Caernarfon Castle
+File: images/trail/tile wales castles abbeys and ancient sites.webp
+Source site: Wikimedia Commons
+Author: Tilman2007
+Licence: CC BY-SA 4.0
+Page: https://commons.wikimedia.org/wiki/File:3814_Caernarfon_Castle,_Eagle_Tower_Caernarfon_20240530_0172_DxO.jpg
+Note: Caernarfon Castle towers against the sky, a different view from the close wall one on the place card.
+
+Tile: Wales, Coast and countryside
+Place shown: Rhossili and the Gower coast
+File: images/trail/tile wales coast and countryside.webp
+Source site: Wikimedia Commons
+Author: Neepster at English Wikipedia
+Licence: CC BY-SA 1.0
+Page: https://commons.wikimedia.org/wiki/File:Rhossili_06_05.jpg
+Note: Rhossili Bay and the Gower coast in clear light, a different view from the hazy one on the place card.
+
+Tile: Wales, Country houses and gardens
+Place shown: Powis Castle and Garden
+File: images/trail/tile wales country houses and gardens.webp
+Source site: Wikimedia Commons
+Author: Mike Peel
+Licence: CC BY-SA 4.0
+Page: https://commons.wikimedia.org/wiki/File:Powis_Castle_2016_059.jpg
+Note: Powis Castle above the clipped yews, a closer view than the wide garden one on the place card.
+
+Tile: Wales, Heritage spas
+Place shown: Bodysgallen Hall, Llandudno
+File: images/trail/tile wales heritage spas.webp
+Source site: Wikimedia Commons
+Author: Wici Rhuthun 1
+Licence: CC BY-SA 3.0
+Page: https://commons.wikimedia.org/wiki/File:Bodysgallen_Llandudno_07.JPG
+Note: Bodysgallen Hall from the drive, a different view from the aerial one on the place card.
+
+Tile: Wales, Historic towns and villages
+Place shown: Portmeirion
+File: images/trail/tile wales historic towns and villages.webp
+Source site: Wikimedia Commons
+Author: Peter Trimming
+Licence: CC BY-SA 2.0
+Page: https://commons.wikimedia.org/wiki/File:Portmeirion,_Gwynedd_-_geograph.org.uk_-_3102669.jpg
+Note: Portmeirion with the campanile and the dome, a different view from the one through foliage on the place card.
+
+19 of the 22 are Wikimedia Commons files and are listed in the Photo credits
+panel on the page, each labelled with the place name followed by (subject tile).
+The other 3 are Pexels or Unsplash files, which need no credit entry.
+
