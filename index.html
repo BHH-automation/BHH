@@ -2090,8 +2090,8 @@ function openTransportMode(mode, service){
   <input type="file" name="Overseas Criminal Clearance">
   <input name="Website"><textarea name="About"></textarea><input name="How Did You Hear"><input name="Referral Detail"><input name="GDPR Consent">
 </form>
-<form action='/?success=host' method='post' name='host-application' style='display:none'>
-  <input name="form-name" type="hidden" value="host-application">
+<form action='/?success=host' method='post' name='host-application-v2' data-netlify="true" style='display:none'>
+  <input name="form-name" type="hidden" value="host-application-v2">
   <input name="subject" type="hidden" value="BHH Host Application">
   <input name="bot-field">
   <!-- Your details -->
@@ -3199,8 +3199,8 @@ function bhhTrailEnquire(e){
       <!-- ═══════ HOST FORM ═══════ -->
       <div id="tab-host" class="enquire-panel" style="max-width:760px;margin:0 auto;opacity:1;display:none">
         <p class="lead" style="margin:0 auto 2rem;text-align:center">Share your home and culture with visiting families. We personally vet every host.</p>
-        <form action='/?success=host' id='host-form' method='POST' name='host-application' style='text-align:left'>
-          <input type="hidden" name="form-name" value="host-application">
+        <form action='/?success=host' id='host-form' method='POST' name='host-application-v2' style='text-align:left'>
+          <input type="hidden" name="form-name" value="host-application-v2">
           <p style="display:none"><label>Don't fill this out if you're human: <input name="bot-field"></label></p>
           <input type="hidden" name="subject" id="host-subject" value="BHH Host Application">
 
@@ -4463,9 +4463,15 @@ document.addEventListener('DOMContentLoaded', function() {
   // Check for form success parameter and show thank-you modal
   var params = new URLSearchParams(window.location.search);
   var successType = params.get('success');
+  // A redirect that arrives without the query string leaves nothing to read, so
+  // fall back to the note the form left as it submitted. See the block near the
+  // end of the page for why that happens and how the note is written.
+  if (!successType && window.bhhTakeThankYou) { successType = window.bhhTakeThankYou(); }
+  else if (window.bhhTakeThankYou) { window.bhhTakeThankYou(); }
   if (successType) {
-    // Hide all forms
-    var allForms = document.querySelectorAll('form[data-netlify]');
+    // Hide the visible form behind the card. The [id] part keeps the hidden
+    // detection stubs out of this, since their only concealment is display:none.
+    var allForms = document.querySelectorAll('form[data-netlify][id]');
     allForms.forEach(function(f) { f.style.display = 'none'; });
     
     // Show thank-you modal
@@ -5277,8 +5283,9 @@ function closeThankyouModal(modalId) {
     modal.style.display = 'none';
     document.body.style.overflow = '';
   }
-  // Show all forms again
-  var allForms = document.querySelectorAll('form[data-netlify]');
+  // Show the visible forms again. The [id] part keeps the hidden detection
+  // stubs out of this, so closing the card can never put a stub on the page.
+  var allForms = document.querySelectorAll('form[data-netlify][id]');
   allForms.forEach(function(f) { f.style.display = ''; });
 }
 
@@ -6187,7 +6194,7 @@ function closeLegalModal(type) {
 })();
 </script>
 <script>
-/* ── Languages Spoken multi-select (host-application · About You) ── */
+/* ── Languages Spoken multi-select (host-application-v2 · About You) ── */
 (function(){
   var root = document.querySelector('[data-langml]');
   if(!root) return;
@@ -6905,6 +6912,96 @@ function closeLegalModal(type) {
   if(!already && !isPhone()){
     timers.push(setTimeout(cycle, 1200));
   }
+})();
+</script>
+
+<script>
+/* ══ Thank you state that does not depend on the query string ═══════════════
+   Netlify takes the redirect that follows a submission from the form
+   definition it registered the FIRST time it saw that form, not from the copy
+   in today's deploy. A form first registered before its hidden stub carried an
+   action is sent back to "/" with the ?success= part dropped, so the page has
+   nothing left to read and the applicant sees the plain homepage instead of
+   the thank you card. Giving a form a new name re registers it and fixes that,
+   which is why the host form is now host-application-v2.
+
+   This block is the safety net for all five forms. As a form submits it sets a
+   pending value, and that value is written to sessionStorage only in pagehide,
+   at the moment the browser actually leaves the page. The handler that shows
+   the thank you card reads it when the query string is missing.
+
+   Three things keep the note honest. The four capture phase gates on these
+   forms (Host Type, Languages, travel insurance, scout postcode) all call
+   stopImmediatePropagation, so a blocked submit never reaches the listener
+   below, and a submit that fails the browser's own validation fires no submit
+   event at all. Anything that blocks the submission later, in particular the
+   certificate upload in setupDbsSubmit, is caught by the re check on the next
+   tick, which drops the pending value again; that path submits a second time
+   from script once the upload succeeds, and a scripted submit fires no submit
+   event, so form.submit is wrapped to set the value again. And the value only
+   reaches sessionStorage in pagehide, as the browser actually leaves.
+
+   Further limits, so a card can never greet somebody who did not just apply:
+   same browser tab only, ignored after two minutes, ignored unless the value
+   is one of the five known form types, ignored unless this page load was a
+   fresh navigation rather than a reload or the back button, and cleared the
+   moment it is read. The navigation check is skipped on any browser without
+   Navigation Timing, which is deliberate: the note is honoured there rather
+   than lost. Keep this a plain inline script, with no defer and no module type,
+   or it would run after DOMContentLoaded and the fallback would never fire. */
+(function(){
+  var KEY = 'bhh-thank-you';
+  var MAX_AGE = 2 * 60 * 1000;
+  var FORMS = {
+    'guest-form':'guest', 'host-form':'host', 'partner-form':'partner',
+    'scout-form':'scout', 'introduce-form':'introduction'
+  };
+  var TYPES = { guest:1, host:1, partner:1, scout:1, introduction:1 };
+
+  var pending = null, seq = 0;
+
+  // Reads the note and always clears it, so it is never seen twice.
+  window.bhhTakeThankYou = function(){
+    var raw = null;
+    try { raw = sessionStorage.getItem(KEY); sessionStorage.removeItem(KEY); } catch(e){ return null; }
+    if(!raw) return null;
+    var note;
+    try { note = JSON.parse(raw); } catch(e){ return null; }
+    if(!note || !TYPES[note.type] || !note.at) return null;
+    if(Date.now() - note.at > MAX_AGE) return null;
+    try {
+      var nav = performance.getEntriesByType('navigation')[0];
+      if(nav && nav.type !== 'navigate') return null;   // a reload or the back button is not an arrival from a submission
+    } catch(e){}                                        // no Navigation Timing: honour the note rather than lose it
+    return note.type;
+  };
+
+  Object.keys(FORMS).forEach(function(id){
+    var f = document.getElementById(id);
+    if(!f) return;
+    f.addEventListener('submit', function(e){
+      pending = FORMS[id];
+      var mine = ++seq;
+      // A handler that runs after this one may still block the submission, so
+      // look again once the whole submit event has finished. If the page is
+      // really leaving, this never runs and the pending value stands. The seq
+      // test means a later scripted submit is never undone by this check, in
+      // whichever order the two happen to run.
+      setTimeout(function(){ if(e.defaultPrevented && seq === mine){ pending = null; } }, 0);
+    }, false);
+    // The certificate upload path submits a second time from script once the
+    // upload succeeds, and a scripted submit fires no submit event.
+    var nativeSubmit = f.submit;
+    f.submit = function(){ pending = FORMS[id]; seq++; return nativeSubmit.apply(this, arguments); };
+  });
+
+  // Written only as the browser leaves the page, so a submission that never
+  // navigates leaves nothing behind.
+  window.addEventListener('pagehide', function(){
+    if(!pending) return;
+    try { sessionStorage.setItem(KEY, JSON.stringify({ type:pending, at:Date.now() })); } catch(e){}
+    pending = null;
+  });
 })();
 </script>
 </body>
