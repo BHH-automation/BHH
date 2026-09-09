@@ -2059,7 +2059,7 @@ function openTransportMode(mode, service){
 <body>
 
 <!-- Hidden forms for Netlify detection only -->
-<form method='post' name='guest-enquiry-v2' style='display:none'>
+<form action='/?success=guest' method='post' name='guest-enquiry-v2' style='display:none'>
   <input name="form-name" type="hidden" value="guest-enquiry-v2">
   <input name="subject" type="hidden" value="BHH Guest Enquiry">
   <input name="bot-field">
@@ -2075,34 +2075,54 @@ function openTransportMode(mode, service){
   <input name="How Did You Hear"><input name="Referral Detail">
   <input name="Travel Insurance Confirmed"><input name="GDPR Consent">
 </form>
-<form method='post' name='partner-application' enctype='multipart/form-data' style='display:none'>
+<form action='/?success=partner' method='post' name='partner-application' enctype='multipart/form-data' style='display:none'>
   <input name="form-name" type="hidden" value="partner-application">
   <input name="subject" type="hidden" value="BHH Partner Application">
   <input name="bot-field">
   <input name="Contact Name"><input name="Business Name"><input name="email">
   <select name="Country Code"><option value="+44">+44</option></select><input name="Phone Number">
-  <input name="city"><input name="County">
+  <input name="city"><input name="City Other"><input name="County">
   <input name="Partner Type"><input name="Partner Type Detail">
   <input name="Years of Experience">
   <input name="Partner Public Liability"><input name="PL Insurer Name"><input name="PL Policy Number"><input name="PL Certificate">
   <input name="Partner Professional Indemnity"><input name="PI Insurer Name"><input name="PI Policy Number"><input name="PI Certificate">
   <input name="DBS Checked"><input name="DBS Certificate"><input name="DBS Not Applicable Reason">
   <input type="file" name="Overseas Criminal Clearance">
-  <input name="Website"><textarea name="About"></textarea><input name="How Did You Hear"><input name="GDPR Consent">
+  <input name="Website"><textarea name="About"></textarea><input name="How Did You Hear"><input name="Referral Detail"><input name="GDPR Consent">
 </form>
-<form method='post' name='host-application' style='display:none'>
+<form action='/?success=host' method='post' name='host-application' style='display:none'>
   <input name="form-name" type="hidden" value="host-application">
   <input name="subject" type="hidden" value="BHH Host Application">
   <input name="bot-field">
-  <input name="salutation"><input name="fullname"><input name="email">
-  <select name="phone-code"><option value="+44">+44</option></select><input name="phone">
-  <input name="county"><input name="city"><input name="address">
-  <input name="property-type"><input name="max-guests">
-  <input name="household-adults"><input name="household-children">
-  <input name="services"><input name="halal-capable"><input name="languages">
-  <input name="DBS Checked"><input name="County Other"><input name="City Other"><input name="DBS Certificate">
+  <!-- Your details -->
+  <input name="Title"><input name="Full Name"><input name="email">
+  <select name="Country Code"><option value="+44">+44</option></select><input name="Phone Number">
+  <input name="city"><input name="City Other"><input name="County">
+  <!-- How would you like to host -->
+  <input name="Host Type">
+  <!-- Home host: property and address block after the postcode lookup -->
+  <input name="Property Type">
+  <input name="Postcode"><input name="Address Selected"><input name="House Number">
+  <input name="Street Address"><input name="Town"><input name="County Auto"><input name="Postcode Confirmed">
+  <input name="Max Guests"><input name="Adults in Household"><input name="Children in Household">
+  <!-- Home host: services and kitchen -->
+  <input name="services"><input name="Halal Kitchen"><input name="Alcohol Free">
+  <!-- Home host: home insurance, business use -->
+  <input name="Home Insurance Business Use"><input name="Home Insurer Name"><input name="Home Policy Number"><input name="Home Insurance Certificate">
+  <!-- Home host: public liability -->
+  <input name="Host Public Liability"><input name="Host PL Insurer Name"><input name="Host PL Policy Number"><input name="Host PL Certificate">
+  <!-- Heritage guide: guiding experience -->
+  <input name="Guiding Experience"><input name="Knowledge Area"><input name="Region">
+  <input name="Duration Offered"><input name="Days Available Per Week"><input name="Guide Transport">
+  <!-- Heritage guide: public liability and professional indemnity -->
+  <input name="Guide Public Liability"><input name="Guide PL Insurer Name"><input name="Guide PL Policy Number">
   <input name="Guide Professional Indemnity"><input name="Guide PI Insurer Name"><input name="Guide PI Policy Number">
-  <textarea name="about"></textarea><input name="referral">
+  <!-- Everyone: identity and background check -->
+  <input name="DBS Checked"><input name="DBS Certificate"><input name="DBS Not Applicable Reason">
+  <input type="file" name="Overseas Criminal Clearance">
+  <!-- Everyone: about you -->
+  <input name="Languages Spoken"><textarea name="About"></textarea>
+  <input name="How Did You Hear"><input name="Referral Detail"><input name="GDPR Consent">
 </form>
 <form action='/?success=introduction' method='post' name='transport-introduction' data-netlify="true" style='display:none'>
   <input name="form-name" type="hidden" value="transport-introduction">
@@ -3131,7 +3151,7 @@ function bhhTrailEnquire(e){
           </div>
           <div class="form-group"><label>Special Requests or Questions</label><textarea name="Special Requests" rows="3" placeholder="Allergies, accessibility needs, cultural preferences, or anything else…" required></textarea></div>
           <div class="form-group"><label>How Did You Hear About BHH? <span style="color:#C9A84C">*</span></label>
-            <select name="How Did You Hear" required onchange="toggleOtherField(this,'referral-other-wrap')">
+            <select name="How Did You Hear" required onchange="toggleOtherField(this,'guest-referral-other-wrap')">
               <option value="">Select…</option>
               <option value="Instagram">Instagram</option>
               <option value="Facebook">Facebook</option>
@@ -3187,7 +3207,7 @@ function bhhTrailEnquire(e){
           <p style="font-size:0.75rem;color:rgba(245,240,232,0.75);margin-bottom:1.2rem">Fields marked <span style="color:#C9A84C">*</span> are required.</p>
 
           <!-- STEP 1: WHO ARE YOU -->
-          <p style="font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin-bottom:0.8rem;font-weight:500">1 · Your Details</p>
+          <p class="host-step" data-step-label="Your Details" style="font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin-bottom:0.8rem;font-weight:500">1 · Your Details</p>
 
           <div class="form-row">
             <div class="form-group"><label>Title <span style="color:#C9A84C">*</span></label>
@@ -3278,13 +3298,13 @@ function bhhTrailEnquire(e){
           </div>
 
           <!-- STEP 2: HOST TYPE -->
-          <p style="font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin:1.5rem 0 0.8rem;font-weight:500">2 · How Would You Like to Host?</p>
+          <p class="host-step" data-step-label="How Would You Like to Host?" style="font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin:1.5rem 0 0.8rem;font-weight:500">2 · How Would You Like to Host?</p>
 
           <div class="form-group">
             <label>I am applying as a <span style="color:#C9A84C">*</span></label>
             <div style="display:flex;gap:0.8rem;flex-wrap:wrap;margin-top:0.5rem">
               <label class="host-type-pill" id="pill-home">
-                <input type="radio" name="Host Type" value="Home Host" required onchange="switchHostType('home')">
+                <input type="radio" name="Host Type" value="Home Host" onchange="switchHostType('home')">
                 🏡 Home Host
                 <span style="font-size:0.72rem;display:block;opacity:0.7;margin-top:2px">Dinner &amp; English Tea</span>
               </label>
@@ -3294,11 +3314,12 @@ function bhhTrailEnquire(e){
                 <span style="font-size:0.72rem;display:block;opacity:0.7;margin-top:2px">Tours &amp; cultural experiences</span>
               </label>
             </div>
+            <p class="langml__error" id="host-type-error" role="alert" hidden>Please choose whether you are applying as a Home Host or a Heritage Guide.</p>
           </div>
 
           <!-- STEP 3a: HOME HOST FIELDS -->
           <div id="host-home-fields" style="display:none">
-            <p style="font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin:1.5rem 0 0.8rem;font-weight:500">3 · Your Home</p>
+            <p class="host-step" data-step-label="Your Home" style="font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin:1.5rem 0 0.8rem;font-weight:500">3 · Your Home</p>
 
             <div class="form-group"><label>Property Type <span style="color:#C9A84C">*</span></label>
               <select name="Property Type" id="host-property-type" required>
@@ -3362,7 +3383,7 @@ function bhhTrailEnquire(e){
               </div>
             </div>
 
-            <p style="font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin:1.5rem 0 0.8rem;font-weight:500">4 · Services &amp; Kitchen</p>
+            <p class="host-step" data-step-label="Services &amp; Kitchen" style="font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin:1.5rem 0 0.8rem;font-weight:500">4 · Services &amp; Kitchen</p>
 
             <div class="form-group"><label>Services You Can Offer <span style="color:#C9A84C">*</span></label>
               <div style="display:flex;flex-wrap:wrap;gap:0.3rem;padding:0.3rem 0;max-width:100%">
@@ -3389,7 +3410,7 @@ function bhhTrailEnquire(e){
               </select>
             </div>
 
-            <p style="font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin:1.5rem 0 0.8rem;font-weight:500">5 · Home Insurance</p>
+            <p class="host-step" data-step-label="Home Insurance" style="font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin:1.5rem 0 0.8rem;font-weight:500">5 · Home Insurance</p>
 
                     <!-- ── HOST INSURANCE ─────────────────────────────────────────── -->
           <!-- ── HOME INSURANCE row: dropdown left, info right ── -->
@@ -3483,7 +3504,7 @@ function bhhTrailEnquire(e){
 
           <!-- STEP 3b: HERITAGE GUIDE FIELDS -->
           <div id="host-guide-fields" style="display:none">
-            <p style="font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin:1.5rem 0 0.8rem;font-weight:500">3 · Your Guiding Experience</p>
+            <p class="host-step" data-step-label="Your Guiding Experience" style="font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin:1.5rem 0 0.8rem;font-weight:500">3 · Your Guiding Experience</p>
 
             <div class="form-group"><label>Guiding Qualification <span style="color:#C9A84C">*</span></label>
               <select name="Guiding Experience" id="host-guiding-exp">
@@ -3554,7 +3575,7 @@ function bhhTrailEnquire(e){
               </select>
             </div>
 
-            <p style="font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin:1.5rem 0 0.8rem;font-weight:500">4 · Public Liability Insurance</p>
+            <p class="host-step" data-step-label="Public Liability Insurance" style="font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin:1.5rem 0 0.8rem;font-weight:500">4 · Public Liability Insurance</p>
 
             <!-- ── GUIDE PL row: dropdown left, info right ── -->
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;align-items:start;margin-bottom:1rem">
@@ -3592,7 +3613,7 @@ function bhhTrailEnquire(e){
             </div>
 
           <!-- ── PROFESSIONAL INDEMNITY (GUIDE) ── -->
-          <p style="font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin:1.5rem 0 0.8rem;font-weight:500">5 · Professional Indemnity Insurance</p>
+          <p class="host-step" data-step-label="Professional Indemnity Insurance" style="font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin:1.5rem 0 0.8rem;font-weight:500">5 · Professional Indemnity Insurance</p>
 
           <!-- ── GUIDE PI row: dropdown left, info right ── -->
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;align-items:start;margin-bottom:1rem">
@@ -3634,6 +3655,7 @@ function bhhTrailEnquire(e){
 
           <!-- STEP 6: VETTING — DBS (EVERYONE) -->
           </div>
+          <p id="host-dbs-heading" class="host-step" data-step-label="Identity &amp; Background Check" style="font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin:1.5rem 0 0.8rem;font-weight:500">6 · Identity &amp; Background Check</p>
           <div class="form-group"><label>DBS Checked <span style="color:#C9A84C">*</span></label>
             <select name="DBS Checked" required onchange="onDbsChange(this,'host')">
               <option value="">Select…</option>
@@ -3669,7 +3691,7 @@ function bhhTrailEnquire(e){
           </div>
 
           <!-- STEP 7: ABOUT YOU (EVERYONE) -->
-          <p id="host-about-heading" style="font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin:1.5rem 0 0.8rem;font-weight:500">7 · About You</p>
+          <p id="host-about-heading" class="host-step" data-step-label="About You" style="font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin:1.5rem 0 0.8rem;font-weight:500">7 · About You</p>
 
           <div class="form-group">
             <label id="langml-label">Languages Spoken in the Home <span style="color:#C9A84C">*</span></label>
@@ -3726,7 +3748,7 @@ function bhhTrailEnquire(e){
           </div>
           <div class="form-group"><label>Tell Us About Your Home and Family <span style="color:#C9A84C">*</span></label><textarea name="About" rows="4" placeholder="Describe your home, your family, your cooking skills, and why you would like to host international families." required></textarea></div>
           <div class="form-group"><label>How Did You Hear About BHH? <span style="color:#C9A84C">*</span></label>
-            <select name="How Did You Hear" required onchange="toggleOtherField(this,'referral-other-wrap')">
+            <select name="How Did You Hear" required onchange="toggleOtherField(this,'host-referral-other-wrap')">
               <option value="">Select…</option>
               <option value="Instagram">Instagram</option>
               <option value="Facebook">Facebook</option>
@@ -3966,7 +3988,7 @@ function bhhTrailEnquire(e){
           <div class="form-group"><label>Website or Portfolio</label><input type="url" name="Website" placeholder="https://yourwebsite.com"></div>
           <div class="form-group"><label>Describe Your Services and Experience <span style="color:#C9A84C">*</span></label><textarea name="About" rows="4" placeholder="Tell us about your business, the services you offer, your capacity, and why you would like to partner with BHH." required></textarea></div>
           <div class="form-group"><label>How Did You Hear About BHH? <span style="color:#C9A84C">*</span></label>
-          <select name="How Did You Hear" required onchange="toggleOtherField(this,'referral-other-wrap')">
+          <select name="How Did You Hear" required onchange="toggleOtherField(this,'partner-referral-other-wrap')">
             <option value="">Select…</option>
             <option value="Instagram">Instagram</option>
             <option value="Facebook">Facebook</option>
@@ -4605,7 +4627,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // loadCities must be global — called from inline onchange attribute
-function toggleOtherField(sel,wrapId){var w=document.getElementById(wrapId);if(!w){var parent=sel.parentElement;w=document.createElement('div');w.id=wrapId;w.style.marginTop='0.5rem';var fieldName=wrapId==='occasion-other-wrap'?'Occasion Detail':'Referral Detail';var input=document.createElement('input');input.type='text';input.name=fieldName;input.placeholder='e.g. Eid celebration, or describe in detail';var lbl=document.createElement('label');lbl.textContent='Please specify (required):';lbl.style.cssText='display:block;font-size:0.72rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:#C9A84C;margin-bottom:0.3rem';w.appendChild(lbl);input.style.cssText='width:100%;padding:0.5rem;background:rgba(255,255,255,0.05);border:1px solid rgba(201,168,76,0.3);color:#F5F0E8;border-radius:4px';w.appendChild(input);parent.appendChild(w);}var isOther=sel.value==='Other';w.style.display=isOther?'block':'none';var inp=w.querySelector('input');if(inp){inp.required=isOther;if(!isOther)inp.value='';}} function foldOtherDetails(gf){if(!gf)return;var parts=[];var occSel=gf.querySelector('select[name="Occasion"]');var occInp=gf.querySelector('input[name="Occasion Detail"]');if(occSel&&occSel.value==='Other'&&occInp&&occInp.value.trim()){parts.push('Occasion: '+occInp.value.trim());}var refSel=gf.querySelector('select[name="How Did You Hear"]');var refInp=gf.querySelector('input[name="Referral Detail"]');if(refSel&&refSel.value==='Other'&&refInp&&refInp.value.trim()){parts.push('Heard via: '+refInp.value.trim());}var dietSel=gf.querySelector('select[name="Dietary Requirements"]');if(dietSel&&dietSel.value==='Other'){parts.push('Dietary: Other');} var childSels=gf.querySelectorAll('[name^="Child Age "]');var infants=0,counted=0;childSels.forEach(function(s){if(s.value==='<2 years')infants++;else if(s.value)counted++;});if(infants+counted>0){var billable=Math.max(0,counted-2);var childLine=infants+' infant'+(infants===1?'':'s')+' free, '+counted+' child'+(counted===1?'':'ren')+' 3-11';if(billable>0)childLine+=' ('+billable+' billable at 25%)';parts.push(childLine);}if(parts.length){var sr=gf.querySelector('textarea[name="Special Requests"]');if(sr){var prefix='[AUTO] '+parts.join('. ')+'.';var existing=(sr.value||'').trim();sr.value=existing?prefix+' | '+existing:prefix;}}} document.addEventListener('DOMContentLoaded',function(){['guest-form','host-form','partner-form'].forEach(function(id){var f=document.getElementById(id);if(f)f.addEventListener('submit',function(){foldOtherDetails(f);});});});
+function toggleOtherField(sel,wrapId){var w=document.getElementById(wrapId);if(!w){var parent=sel.parentElement;w=document.createElement('div');w.id=wrapId;w.style.marginTop='0.5rem';var fieldName=wrapId.indexOf('occasion')!==-1?'Occasion Detail':'Referral Detail';var input=document.createElement('input');input.type='text';input.name=fieldName;input.placeholder='e.g. Eid celebration, or describe in detail';var lbl=document.createElement('label');lbl.textContent='Please specify (required):';lbl.style.cssText='display:block;font-size:0.72rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:#C9A84C;margin-bottom:0.3rem';w.appendChild(lbl);input.style.cssText='width:100%;padding:0.5rem;background:rgba(255,255,255,0.05);border:1px solid rgba(201,168,76,0.3);color:#F5F0E8;border-radius:4px';w.appendChild(input);parent.appendChild(w);}var isOther=sel.value==='Other';w.style.display=isOther?'block':'none';var inp=w.querySelector('input');if(inp){inp.required=isOther;if(!isOther)inp.value='';}} function foldOtherDetails(gf){if(!gf)return;var parts=[];var occSel=gf.querySelector('select[name="Occasion"]');var occInp=gf.querySelector('input[name="Occasion Detail"]');if(occSel&&occSel.value==='Other'&&occInp&&occInp.value.trim()){parts.push('Occasion: '+occInp.value.trim());}var refSel=gf.querySelector('select[name="How Did You Hear"]');var refInp=gf.querySelector('input[name="Referral Detail"]');if(refSel&&refSel.value==='Other'&&refInp&&refInp.value.trim()){parts.push('Heard via: '+refInp.value.trim());}var dietSel=gf.querySelector('select[name="Dietary Requirements"]');if(dietSel&&dietSel.value==='Other'){parts.push('Dietary: Other');} var childSels=gf.querySelectorAll('[name^="Child Age "]');var infants=0,counted=0;childSels.forEach(function(s){if(s.value==='<2 years')infants++;else if(s.value)counted++;});if(infants+counted>0){var billable=Math.max(0,counted-2);var childLine=infants+' infant'+(infants===1?'':'s')+' free, '+counted+' child'+(counted===1?'':'ren')+' 3-11';if(billable>0)childLine+=' ('+billable+' billable at 25%)';parts.push(childLine);}if(parts.length){var sr=gf.querySelector('textarea[name="Special Requests"]');if(sr){var prefix='[AUTO] '+parts.join('. ')+'.';var existing=(sr.value||'').trim();sr.value=existing?prefix+' | '+existing:prefix;}}} document.addEventListener('DOMContentLoaded',function(){['guest-form','host-form','partner-form'].forEach(function(id){var f=document.getElementById(id);if(f)f.addEventListener('submit',function(){foldOtherDetails(f);});});});
 
 // Child age dropdowns — global, called from inline onchange
 function updateChildAges() {
@@ -5665,11 +5687,8 @@ function closeThankyouModal(modalId) {
     if (pillHome) pillHome.classList.toggle('selected', isHome);
     if (pillGuide) pillGuide.classList.toggle('selected', !isHome);
 
-    // Update step numbers based on host type
-    var dbsHeading = document.getElementById('host-dbs-heading');
-    var aboutHeading = document.getElementById('host-about-heading');
-    if (dbsHeading) dbsHeading.textContent = isHome ? '6 · Identity & Background Check' : '4 · Identity & Background Check';
-    if (aboutHeading) aboutHeading.textContent = isHome ? '7 · About You' : '5 · About You';
+    // Step numbers are renumbered by renumberHostSteps, which counts only the
+    // sections currently on screen, so there is never a gap in the sequence.
 
     // Toggle required fields for home vs guide
     var homeRequired = ['host-property-type', 'host-max-guests', 'host-home-insurance'];
@@ -6079,6 +6098,95 @@ function closeLegalModal(type) {
 }
 </script>
 <script>
+/* ══ Host form: the "I am applying as" choice ═══════════════════════════════
+   Two faults are fixed here.
+
+   1. The first click did not always register. Each pill is a <label> wrapping a
+      radio that CSS hides with display:none, so the choice depended entirely on
+      the browser firing a click ON THE LABEL. A click only exists when the press
+      and the release happen over the same element. While the page is still
+      smooth scrolling (switchTab, the nav links and the door cards all call
+      scrollIntoView with behaviour smooth) the content slides under a stationary
+      pointer, the release lands on a different element, and the browser fires
+      the click on a common ancestor instead. The label never activates, the
+      radio is never ticked, switchHostType never runs and sections 3 to 5 stay
+      hidden. The pill is now chosen from the pointer press and release on the
+      pill itself, so a stationary press always counts even while the page moves.
+      A press that travels more than 12px is treated as a scroll or a drag and is
+      ignored, exactly as a native click would be.
+
+   2. The radio carried a native required attribute while being display:none.
+      Chrome cannot focus or point at a hidden control, so an otherwise complete
+      application simply refused to submit and showed nothing at all. The native
+      required is gone and the check below shows an inline message in the site's
+      own error style instead.
+
+   Scoped to #host-form only, so no other tab's form is affected. */
+(function(){
+  var form = document.getElementById('host-form');
+  if(!form) return;
+  var errEl = document.getElementById('host-type-error');
+
+  function choose(pill){
+    var radio = pill.querySelector('input[name="Host Type"]');
+    if(!radio || radio.checked) return;
+    radio.checked = true;
+    // Same signal joinAs() already uses, so the inline onchange still runs.
+    radio.dispatchEvent(new Event('change', { bubbles:true }));
+    if(errEl) errEl.hidden = true;
+  }
+
+  function pillFrom(target){
+    var el = target;
+    while(el && el !== form){
+      if(el.classList && el.classList.contains('host-type-pill')) return el;
+      el = el.parentElement;
+    }
+    return null;
+  }
+
+  var pressed = null, px = 0, py = 0;
+  document.addEventListener('pointerdown', function(e){
+    pressed = pillFrom(e.target);
+    px = e.clientX; py = e.clientY;
+  }, true);
+  document.addEventListener('pointerup', function(e){
+    var pill = pressed; pressed = null;
+    if(!pill) return;
+    // Viewport distance, so a press held still counts even if the page scrolled.
+    if(Math.abs(e.clientX - px) > 12 || Math.abs(e.clientY - py) > 12) return;
+    choose(pill);
+  }, true);
+  document.addEventListener('pointercancel', function(){ pressed = null; }, true);
+
+  // joinAs() ticks the radio directly, so clear the message on any change too.
+  form.addEventListener('change', function(e){
+    if(errEl && e.target && e.target.name === 'Host Type' && e.target.checked) errEl.hidden = true;
+  }, true);
+
+  // Keyboard and assistive activation still arrive as an ordinary click.
+  var pills = form.querySelectorAll('.host-type-pill');
+  for(var i=0; i<pills.length; i++){
+    pills[i].addEventListener('click', function(){ choose(this); });
+  }
+
+  // Refuse to submit while the choice is empty, and say why. This block is
+  // parsed before the form's other submit handlers, so it is the first to run.
+  form.addEventListener('submit', function(e){
+    if(form.querySelector('input[name="Host Type"]:checked')){
+      if(errEl) errEl.hidden = true;
+      return;
+    }
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    if(errEl){
+      errEl.hidden = false;
+      errEl.scrollIntoView({ block:'center' });
+    }
+  }, true);
+})();
+</script>
+<script>
 /* ── Languages Spoken multi-select (host-application · About You) ── */
 (function(){
   var root = document.querySelector('[data-langml]');
@@ -6253,8 +6361,24 @@ function closeLegalModal(type) {
     return run;
   }
 
-  // Host form — silent-abort protection (Home vs Heritage Guide branches, etc.).
-  setupSectionSync('host-form', 'tab-host');
+  // Host form — silent-abort protection (Home vs Heritage Guide branches, etc.),
+  // plus dynamic step numbering. The Home and Heritage Guide branches each hide
+  // the other's sections, so number only the sections on screen and the headings
+  // always read 1, 2, 3 … with no gap and no missing number.
+  function renumberHostSteps(){
+    var hform = document.getElementById('host-form');
+    if(!hform) return;
+    var steps = hform.querySelectorAll('.host-step');
+    var n = 0;
+    for(var i=0; i<steps.length; i++){
+      var el = steps[i];
+      if(el.offsetParent === null) continue;   // section collapsed → skip
+      n++;
+      var next = n + ' · ' + (el.getAttribute('data-step-label') || '');
+      if(el.textContent !== next) el.textContent = next;
+    }
+  }
+  setupSectionSync('host-form', 'tab-host', renumberHostSteps);
 
   // Partner form — same protection, plus dynamic step numbering. The Professional
   // Indemnity section is hidden for some Partner Types; number only visible steps
