@@ -2059,7 +2059,7 @@ function openTransportMode(mode, service){
 <body>
 
 <!-- Hidden forms for Netlify detection only -->
-<form action='/?success=guest' method='post' name='guest-enquiry-v2' style='display:none'>
+<form action='/?success=guest' method='post' name='guest-enquiry-v2' data-netlify-honeypot="bot-field" style='display:none'>
   <input name="form-name" type="hidden" value="guest-enquiry-v2">
   <input name="subject" type="hidden" value="BHH Guest Enquiry">
   <input name="bot-field">
@@ -2075,7 +2075,7 @@ function openTransportMode(mode, service){
   <input name="How Did You Hear"><input name="Referral Detail">
   <input name="Travel Insurance Confirmed"><input name="GDPR Consent">
 </form>
-<form action='/?success=partner' method='post' name='partner-application' enctype='multipart/form-data' style='display:none'>
+<form action='/?success=partner' method='post' name='partner-application' enctype='multipart/form-data' data-netlify-honeypot="bot-field" style='display:none'>
   <input name="form-name" type="hidden" value="partner-application">
   <input name="subject" type="hidden" value="BHH Partner Application">
   <input name="bot-field">
@@ -2090,7 +2090,7 @@ function openTransportMode(mode, service){
   <input type="file" name="Overseas Criminal Clearance">
   <input name="Website"><textarea name="About"></textarea><input name="How Did You Hear"><input name="Referral Detail"><input name="GDPR Consent">
 </form>
-<form action='/?success=host' method='post' name='host-application-v2' data-netlify="true" style='display:none'>
+<form action='/?success=host' method='post' name='host-application-v2' data-netlify="true" data-netlify-honeypot="bot-field" style='display:none'>
   <input name="form-name" type="hidden" value="host-application-v2">
   <input name="subject" type="hidden" value="BHH Host Application">
   <input name="bot-field">
@@ -2124,7 +2124,7 @@ function openTransportMode(mode, service){
   <input name="Languages Spoken"><textarea name="About"></textarea>
   <input name="How Did You Hear"><input name="Referral Detail"><input name="GDPR Consent">
 </form>
-<form action='/?success=introduction' method='post' name='transport-introduction' data-netlify="true" style='display:none'>
+<form action='/?success=introduction' method='post' name='transport-introduction' data-netlify="true" data-netlify-honeypot="bot-field" style='display:none'>
   <input name="form-name" type="hidden" value="transport-introduction">
   <input name="subject" type="hidden" value="BHH Introduction Request">
   <input name="bot-field">
@@ -2136,7 +2136,7 @@ function openTransportMode(mode, service){
   <textarea name="Notes"></textarea>
   <input name="GDPR Consent">
 </form>
-<form action='/?success=scout' method='post' name='heritage-scout-application' data-netlify="true" style='display:none'>
+<form action='/?success=scout' method='post' name='heritage-scout-application' data-netlify="true" data-netlify-honeypot="bot-field" style='display:none'>
   <input name="form-name" type="hidden" value="heritage-scout-application">
   <input name="subject" type="hidden" value="BHH Heritage Scout Application">
   <input name="bot-field">
@@ -3336,7 +3336,7 @@ function bhhTrailEnquire(e){
 
             <div class="form-group"><label>Postcode <span style="color:#C9A84C">*</span></label>
               <div style="display:flex;gap:0.6rem;align-items:flex-start">
-                <input type="text" id="host-postcode" name="Postcode" placeholder="e.g. SW1A 1AA" style="text-transform:uppercase;width:160px" maxlength="8" oninput="this.value=this.value.toUpperCase()">
+                <input type="text" id="host-postcode" name="Postcode" placeholder="e.g. SW1A 1AA" style="text-transform:uppercase;width:160px" maxlength="8" oninput="this.value=this.value.toUpperCase();onHostPostcodeInput(this)">
                 <button type="button" onclick="lookupPostcode()" style="padding:0.75rem 1.2rem;background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.4);color:var(--gold);font-family:var(--ff-body);font-size:0.78rem;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;white-space:nowrap;border-radius:3px;">Find Address</button>
               </div>
               <p id="host-postcode-status" style="font-size:0.72rem;margin:0.4rem 0 0;color:rgba(245,240,232,0.6)"></p>
@@ -3354,19 +3354,19 @@ function bhhTrailEnquire(e){
                 </div>
               </div>
               <div class="form-row">
-                <div class="form-group"><label>Street / Road</label>
-                  <input type="text" id="host-street" name="Street Address" placeholder="Auto-filled from postcode" readonly style="background:rgba(245,240,232,0.05)">
+                <div class="form-group"><label>Street / Road <span style="color:#C9A84C">*</span></label>
+                  <input type="text" id="host-street" name="Street Address" placeholder="e.g. High Street" required>
                 </div>
-                <div class="form-group"><label>Town / City</label>
-                  <input type="text" id="host-town" name="Town" readonly style="background:rgba(245,240,232,0.05)">
+                <div class="form-group"><label>Town / City <span style="color:#C9A84C">*</span></label>
+                  <input type="text" id="host-town" name="Town" required>
                 </div>
               </div>
               <div class="form-row">
                 <div class="form-group"><label>County</label>
-                  <input type="text" id="host-county-auto" name="County Auto" readonly style="background:rgba(245,240,232,0.05)">
+                  <input type="text" id="host-county-auto" name="County Auto">
                 </div>
                 <div class="form-group"><label>Postcode (confirmed)</label>
-                  <input type="text" id="host-postcode-confirmed" name="Postcode Confirmed" readonly style="background:rgba(245,240,232,0.05)">
+                  <input type="text" id="host-postcode-confirmed" name="Postcode Confirmed">
                 </div>
               </div>
             </div>
@@ -5711,7 +5711,47 @@ function closeThankyouModal(modalId) {
     });
   };
 
-  
+
+  // The address inputs sit in #host-address-fields, which starts hidden (so the
+  // section sync keeps them disabled). Open it as soon as the postcode looks
+  // valid, so the applicant can type the address by hand; Find Address still
+  // fills Town, County and Postcode Confirmed when used.
+  var HOST_PC_RE = /^[A-Z]{1,2}[0-9][A-Z0-9]?\s*[0-9][A-Z]{2}$/i;
+  var hostPcAuto = '';
+
+  function openHostAddress() {
+    var fields = document.getElementById('host-address-fields');
+    var sel = document.getElementById('host-address-select');
+    var houseWrap = document.getElementById('host-house-wrap');
+    if (sel) sel.closest('.form-group').style.display = 'none';
+    if (houseWrap) houseWrap.style.display = 'block';
+    if (fields) fields.style.display = 'block';
+  }
+
+  window.onHostPostcodeInput = function(input) {
+    var raw = input.value.trim();
+    var st = document.getElementById('host-postcode-status');
+    var fields = document.getElementById('host-address-fields');
+    var pcConfirmed = document.getElementById('host-postcode-confirmed');
+
+    if (!HOST_PC_RE.test(raw)) {
+      if (fields) fields.style.display = 'none';
+      st.textContent = '';
+      return;
+    }
+
+    var compact = raw.replace(/\s+/g, '').toUpperCase();
+    var formatted = compact.slice(0, -3) + ' ' + compact.slice(-3);
+    if (pcConfirmed && (!pcConfirmed.value || pcConfirmed.value === hostPcAuto)) {
+      pcConfirmed.value = formatted;
+      hostPcAuto = formatted;
+    }
+
+    openHostAddress();
+    st.style.color = 'rgba(245,240,232,0.6)';
+    st.textContent = 'Please enter your address below, or press Find Address to fill in the town and county.';
+  };
+
   window.lookupPostcode = async function() {
     var pc = document.getElementById('host-postcode').value.trim().replace(/\s+/g,'');
     var st = document.getElementById('host-postcode-status');
@@ -5730,8 +5770,8 @@ function closeThankyouModal(modalId) {
 
       if (!data.result) {
         st.style.color = '#E8A0A0';
-        st.textContent = 'Postcode not found. Please check and try again.';
-        fields.style.display = 'none';
+        st.textContent = 'Postcode not found. Please check it, or enter your address by hand below.';
+        openHostAddress();
         return;
       }
 
@@ -5751,13 +5791,10 @@ function closeThankyouModal(modalId) {
       document.getElementById('host-town').value = town;
       document.getElementById('host-county-auto').value = county;
       document.getElementById('host-postcode-confirmed').value = confirmedPC;
+      hostPcAuto = confirmedPC;
 
-      // Allow manual house number input
-      var houseWrap = document.getElementById('host-house-wrap');
-      if (houseWrap) houseWrap.style.display = 'block';
-
-      fields.style.display = 'block';
-      sel.closest('.form-group').style.display = 'none';
+      // Allow manual house number and street input
+      openHostAddress();
 
       st.style.color = 'rgba(201,168,76,0.9)';
       st.textContent = '✓ Postcode confirmed: ' + confirmedPC + '. Please enter your house number or name below.';
@@ -5765,7 +5802,7 @@ function closeThankyouModal(modalId) {
     } catch(e) {
       st.style.color = '#E8A0A0';
       st.textContent = 'Could not reach address lookup. Please enter your address manually.';
-      fields.style.display = 'block';
+      openHostAddress();
     }
   };
 
