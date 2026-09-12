@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://www.britishheritagehosts.com/sitemap.xml
+Sitemap: https://britishheritagehosts.com/sitemap.xml
