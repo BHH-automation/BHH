@@ -1543,6 +1543,28 @@ footer {
   .enquire-tabs .enquire-tab svg{ flex:0 0 auto; }
 }
 
+/* Enquiry tab strip, added 12 Sep 2026. The five tabs need 939px but the strip was
+   capped at 880px, so the fifth tab sat cut off behind a sideways scroll at every
+   width above the phone rules. From 1024 up the cap is raised just enough to fit all
+   five on one row. Between 768 and 1023 the tabs wrap onto two centred rows, the same
+   treatment the phone query below already applies. Phone behaviour is untouched. */
+@media (min-width:1024px){
+  .enquire-tabs{ max-width:960px !important; overflow-x:visible !important; }
+}
+@media (min-width:768px) and (max-width:1023px){
+  .enquire-tabs{
+    flex-wrap:wrap !important;
+    justify-content:center !important;
+    overflow-x:visible !important;
+  }
+  .enquire-tabs .enquire-tab{
+    flex:0 0 33.333% !important;
+    max-width:33.333% !important;
+    white-space:normal !important;
+    line-height:1.25 !important;
+  }
+}
+
 /* Very narrow phones: keep the brand wordmark on one line next to the badge
    and the menu button. */
 @media (max-width:360px){
