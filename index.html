@@ -334,6 +334,23 @@ nav {
   grid-template-columns: repeat(3, 1fr);
   gap: 2px;
 }
+.services-cat{
+  grid-column:1 / -1;
+  margin:1.8rem 0 0.5rem;
+  font-family:var(--ff-display);
+  font-size:1.55rem;
+  color:var(--navy);
+}
+.services-cat:first-child{ margin-top:0; }
+.services-cat span{
+  display:block;
+  font-family:var(--ff-body);
+  font-size:0.64rem;
+  letter-spacing:0.18em;
+  text-transform:uppercase;
+  color:var(--gold);
+  margin-bottom:0.25rem;
+}
 .service-card {
   position: relative;
   overflow: hidden;
@@ -1565,6 +1582,24 @@ footer {
   }
 }
 
+/* TRUST BAR under the hero, added 12 September 2026. One centred row of five short
+   facts on desktop, wrapping to two or three rows as the screen narrows, and a single
+   centred column on phones. No script and no images, so it costs nothing to load. */
+.trust-bar{ background:var(--navy); padding:1.1rem 0; border-top:1px solid var(--border); border-bottom:1px solid var(--border); }
+.trust-bar__list{ list-style:none; margin:0; padding:0; display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:0.6rem 2rem; }
+.trust-bar__list li{ position:relative; color:var(--cream); font-family:var(--ff-body); font-size:0.72rem; letter-spacing:0.08em; text-transform:uppercase; line-height:1.5; text-align:center; }
+.trust-bar__list li::before{ content:"\25C6"; color:var(--gold); margin-right:0.6rem; font-size:0.55rem; vertical-align:middle; }
+@media (min-width:1200px){
+  .trust-bar .container{ max-width:1320px; }
+  .trust-bar__list{ gap:0.6rem 1.6rem; }
+  .trust-bar__list li{ font-size:0.66rem; }
+}
+@media (max-width:767px){
+  .trust-bar{ padding:1rem 0; }
+  .trust-bar__list{ flex-direction:column; gap:0.55rem; }
+  .trust-bar__list li{ font-size:0.68rem; letter-spacing:0.06em; }
+}
+
 /* Very narrow phones: keep the brand wordmark on one line next to the badge
    and the menu button. */
 @media (max-width:360px){
@@ -1987,7 +2022,7 @@ footer {
         "@type": "ContactPoint",
         "contactType": "customer enquiries",
         "email": "info@britishheritagehosts.com",
-        "availableLanguage": ["English", "Arabic"]
+        "availableLanguage": ["English"]
       },
       "sameAs": [],
       "foundingDate": "2026",
@@ -2272,10 +2307,10 @@ function closeMobileMenu(){
       <h1>British heritage, as it <em style="font-style:normal;color:var(--gold)">truly</em> lives</h1>
       <p class="hero-sub"><span class="hero-sub--desktop">Private cultural experiences in real British homes,<br>curated exclusively for discerning international families visiting the United Kingdom.</span><span class="hero-sub--phone">Private experiences in real British homes, for international families</span></p>
       <div class="hero-btns">
-        <a href="#services" class="btn btn-gold">Explore Our Services</a>
-        <a href="#enquire" class="btn btn-outline-cream" onclick="joinAs('guest');return false;">Enquire for Your Family</a>
+        <a href="#enquire" class="btn btn-gold" onclick="joinAs('guest');return false;">Plan Your Private Visit</a>
+        <a href="#services" class="btn btn-outline-cream">Explore Our Experiences</a>
       </div>
-      <p class="hero-reply-line">We reply personally within 24 hours</p>
+      <p class="hero-reply-line">We reply personally, usually the same day</p>
     </div>
 
     <!-- Service preview strip — 5 services visible without scrolling -->
@@ -2342,6 +2377,21 @@ function closeMobileMenu(){
 
 </section>
 
+<!-- TRUST BAR: five facts already stated elsewhere on the page, gathered directly under
+     the hero so a first time visitor sees them before being asked for anything.
+     Static markup, no script, no images. Added 12 September 2026. -->
+<section class="trust-bar">
+  <div class="container">
+    <ul class="trust-bar__list">
+      <li>Registered British company</li>
+      <li>Never a shared group</li>
+      <li>Halal and alcohol free on request</li>
+      <li>Arabic interpreter service</li>
+      <li>Personal reply, usually the same day</li>
+    </ul>
+  </div>
+</section>
+
 <!-- SERVICES -->
 <section class="section section--white" id="services" style="min-height:100vh;display:flex;align-items:flex-start;padding-top:6rem;">
   <div class="container">
@@ -2353,22 +2403,7 @@ function closeMobileMenu(){
       <p class="lead" style="margin:0.6rem auto 0;text-align:center">Priced per family for the experiences British Heritage Hosts (BHH) arranges, quoted personally on enquiry.</p>
     </div>
     <div class="services-grid fade-up">
-
-      <a href="#enquire" data-service="Heritage Guide" class="service-card">
-    <div class="service-card-img service-card-carousel">
-      <img src="images/heritage-tour-family-tour-at-english-cas.webp" alt="Heritage Tour — family tour at a British castle" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
-      <img src="images/heritage-tour-british-heritage-guide.webp" alt="Heritage Tour — British Heritage Guide" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
-      <img src="images/heritage guide thames.webp" alt="Heritage Guide — riverside walk along the Thames" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
-    </div>
-        <div class="service-card-overlay"></div>
-        <div class="service-card-content">
-          <div class="service-card-num">01 / 09</div>
-          <h3>Heritage Guide</h3>
-          <span class="service-card-trail">Multi day Heritage Trail available</span>
-          <p class="service-card-desc">A personal British Heritage Guide takes your family through the most storied landscapes and history of the United Kingdom, for a day or a multi day trail. Female guides available on request.</p>
-          <span class="service-card-arrow">Discover more →</span>
-        </div>
-      </a>
+      <div class="services-cat"><span>Three of the nine</span>Around a British table</div>
 
       <a href="#enquire" data-service="English Tea" class="service-card">
     <div class="service-card-img service-card-carousel">
@@ -2378,7 +2413,7 @@ function closeMobileMenu(){
     </div>
         <div class="service-card-overlay"></div>
         <div class="service-card-content">
-          <div class="service-card-num">02 / 09</div>
+          <div class="service-card-num">01 / 09</div>
           <h3>English Tea</h3>
           <p class="service-card-desc">Fine china, three tiered stands, homemade scones and cakes, the quintessential English tradition in a private home.</p>
           <span class="service-card-arrow">Discover more →</span>
@@ -2393,28 +2428,43 @@ function closeMobileMenu(){
     </div>
         <div class="service-card-overlay"></div>
         <div class="service-card-content">
-          <div class="service-card-num">03 / 09</div>
+          <div class="service-card-num">02 / 09</div>
           <h3>British Dinner</h3>
           <p class="service-card-desc">A complete traditional Sunday roast in a real English dining room, your host family at the table, your family only.</p>
           <span class="service-card-arrow">Discover more →</span>
         </div>
       </a>
 
-<!-- TIER 2 (introduce-only): Transportation — merged Airport Transfer + Chauffeured Hire.
-     CTA opens the Transport introduction form, where Airport transfer and Chauffeured hire
-     remain separately selectable. No price shown; guest books and pays the provider directly. -->
-      <a href="#enquire" onclick="goToTransportTab('transport');return false;" class="service-card service-card--introduce">
+      <a href="#enquire" data-service="Riverside Grill" class="service-card">
     <div class="service-card-img service-card-carousel">
-      <img src="images/airport-private-transportation-airport-p.jpg" alt="Transportation — airport arrival" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
-      <img src="images/chauffeured hire hotel door.webp" alt="Transportation — chauffeur opening the saloon at the hotel" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
-      <img src="images/transportation van westminster.webp" alt="Transportation — private van by Westminster" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
+      <img src="images/riverside grill family.webp" alt="Riverside Grill — a family day by the river" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
+      <img src="images/riverside grill men.webp" alt="Riverside Grill — a gathering beside the river" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
+      <img src="images/riverside grill women.webp" alt="Riverside Grill — a gathering beside the river" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
+    </div>
+        <div class="service-card-overlay"></div>
+        <div class="service-card-content">
+          <div class="service-card-num">03 / 09</div>
+          <h3>Riverside Grill</h3>
+          <p class="service-card-desc">A private day at a riverside cottage from 10 am to 8 pm. A traditional Turkish mangal over real charcoal beside a clear flowing river, your family only, halal available. Also available for a larger private party of your own guests.</p>
+          <span class="service-card-arrow">Discover more →</span>
+        </div>
+      </a>
+
+      <div class="services-cat"><span>Three of the nine</span>Out in the country</div>
+
+      <a href="#enquire" data-service="Heritage Guide" class="service-card">
+    <div class="service-card-img service-card-carousel">
+      <img src="images/heritage-tour-family-tour-at-english-cas.webp" alt="Heritage Tour — family tour at a British castle" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
+      <img src="images/heritage-tour-british-heritage-guide.webp" alt="Heritage Tour — British Heritage Guide" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
+      <img src="images/heritage guide thames.webp" alt="Heritage Guide — riverside walk along the Thames" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
     </div>
         <div class="service-card-overlay"></div>
         <div class="service-card-content">
           <div class="service-card-num">04 / 09</div>
-          <h3>Transportation</h3>
-          <p class="service-card-desc">A car with a professional driver for your whole stay, airport arrivals and day or multi day hire. Arranged through a trusted provider. You book and pay directly with them, not through BHH.</p>
-          <span class="service-card-arrow">Request an introduction →</span>
+          <h3>Heritage Guide</h3>
+          <span class="service-card-trail">Multi day Heritage Trail available</span>
+          <p class="service-card-desc">A personal British Heritage Guide takes your family through the most storied landscapes and history of the United Kingdom, for a day or a multi day trail. Female guides available on request.</p>
+          <span class="service-card-arrow">Discover more →</span>
         </div>
       </a>
 
@@ -2448,6 +2498,23 @@ function closeMobileMenu(){
         </div>
       </a>
 
+      <div class="services-cat"><span>Three of the nine</span>Practical help during your visit</div>
+
+      <a href="#enquire" onclick="goToTransportTab('transport');return false;" class="service-card service-card--introduce">
+    <div class="service-card-img service-card-carousel">
+      <img src="images/airport-private-transportation-airport-p.jpg" alt="Transportation — airport arrival" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
+      <img src="images/chauffeured hire hotel door.webp" alt="Transportation — chauffeur opening the saloon at the hotel" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
+      <img src="images/transportation van westminster.webp" alt="Transportation — private van by Westminster" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
+    </div>
+        <div class="service-card-overlay"></div>
+        <div class="service-card-content">
+          <div class="service-card-num">07 / 09</div>
+          <h3>Transportation</h3>
+          <p class="service-card-desc">A car with a professional driver for your whole stay, airport arrivals and day or multi day hire. Arranged through a trusted provider. You book and pay directly with them, not through BHH.</p>
+          <span class="service-card-arrow">Request an introduction →</span>
+        </div>
+      </a>
+
       <a href="#enquire" data-service="Cultural Immersion Program" class="service-card">
         <div class="service-card-img service-card-carousel">
           <img src="images/cip-1.webp" alt="Private English coaching in an English home">
@@ -2456,7 +2523,7 @@ function closeMobileMenu(){
         </div>
         <div class="service-card-overlay"></div>
         <div class="service-card-content">
-          <div class="service-card-num">07 / 09</div>
+          <div class="service-card-num">08 / 09</div>
           <h3>Cultural Immersion Programme</h3>
           <p class="service-card-desc">Learn or improve English during your stay. Flexible courses with accredited London institutes, grouped by age, from a few sessions to a full programme, woven around tours, museums and cultural activities.</p>
           <span class="service-card-arrow">Discover more →</span>
@@ -2471,29 +2538,13 @@ function closeMobileMenu(){
         </div>
         <div class="service-card-overlay"></div>
         <div class="service-card-content">
-          <div class="service-card-num">08 / 09</div>
+          <div class="service-card-num">09 / 09</div>
           <h3>Personal Interpreter Service</h3>
           <p class="service-card-desc">A trusted interpreter by your side throughout your visit, for appointments, healthcare, schools, shopping and official matters. Available in Arabic, Russian and many other languages.</p>
           <span class="service-card-arrow">Discover more →</span>
         </div>
       </a>
-
-      <a href="#enquire" data-service="Riverside Grill" class="service-card">
-    <div class="service-card-img service-card-carousel">
-      <img src="images/riverside grill family.webp" alt="Riverside Grill — a family day by the river" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
-      <img src="images/riverside grill men.webp" alt="Riverside Grill — a gathering beside the river" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
-      <img src="images/riverside grill women.webp" alt="Riverside Grill — a gathering beside the river" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
-    </div>
-        <div class="service-card-overlay"></div>
-        <div class="service-card-content">
-          <div class="service-card-num">09 / 09</div>
-          <h3>Riverside Grill</h3>
-          <p class="service-card-desc">A private day at a riverside cottage from 10 am to 8 pm. A traditional Turkish mangal over real charcoal beside a clear flowing river, your family only, halal available. Also available for a larger private party of your own guests.</p>
-          <span class="service-card-arrow">Discover more →</span>
-        </div>
-      </a>
-
-    </div>
+</div>
   </div>
 </section>
 
@@ -2808,7 +2859,7 @@ function bhhTrailEnquire(e){
       <span class="eyebrow">About BHH</span>
       <h2 style="color:var(--navy)">About British Heritage Hosts</h2>
       <div class="gold-line gold-line--center"></div>
-      <p class="lead" style="margin:1rem auto 0;text-align:center;color:var(--muted)">British Heritage Hosts is a small team of hosts and organisers based in London and the English countryside. We open real British homes to international families for private teas, dinners, guided days and canal journeys, and we arrange every visit personally.</p>
+      <p class="lead" style="margin:1rem auto 0;text-align:center;color:var(--muted)">British Heritage Hosts is a carefully selected private network of British hosts, guides and organisers in London and the English countryside. We open real British homes to international families for private teas, dinners, guided days and canal journeys, and we arrange every visit personally.</p>
     </div>
     <div class="fade-up" style="text-align:center">
       <span class="eyebrow">The BHH Standard</span>
@@ -2944,7 +2995,7 @@ function bhhTrailEnquire(e){
           <input type="hidden" name="subject" id="guest-subject" value="BHH Guest Enquiry">
           <p style="font-size:0.75rem;color:rgba(245,240,232,1);margin-bottom:1.2rem;margin-top:0.5rem">Fields marked <span style='color:#C9A84C'>*</span> are required. &nbsp;|&nbsp; Enter phone number without leading zero (e.g. 7911 123456 not 07911 123456).</p>
           <div class="form-row" style="grid-template-columns:140px 1fr">
-            <div class="form-group"><label>Title</label>
+            <div class="form-group"><label>Title <span style="color:#C9A84C">*</span></label>
               <select name="Title" required>
                 <option value="">Select…</option>
                 <option value="Mr">Mr</option>
@@ -2959,7 +3010,7 @@ function bhhTrailEnquire(e){
                 <option value="Prof">Prof</option>
               </select>
             </div>
-            <div class="form-group"><label>Full Name</label><input type="text" name="Full Name" placeholder="Sarah Ahmed" required></div>
+            <div class="form-group"><label>Full Name <span style="color:#C9A84C">*</span></label><input type="text" name="Full Name" placeholder="Sarah Ahmed" required></div>
           </div>
           <div class="form-row">
             <div class="form-group"><label>Email <span style="color:#C9A84C">*</span></label><input type="email" name="email" placeholder="sarah@example.com" required></div>
@@ -3025,19 +3076,19 @@ function bhhTrailEnquire(e){
             </div>
           </div>
           <div class="form-row">
-            <div class="form-group"><label>Country of Residence</label>
+            <div class="form-group"><label>Country of Residence <span style="color:#C9A84C">*</span></label>
               <select name="country" id="guest-country" required onchange="loadCities(this.value,'guest-city')">
                 <option value="">Loading countries…</option>
               </select>
             </div>
-            <div class="form-group"><label>City</label>
+            <div class="form-group"><label>City <span style="color:#C9A84C">*</span></label>
               <select name="city" id="guest-city" required>
                 <option value="">Select country first…</option>
               </select>
             </div>
           </div>
           <div class="form-row">
-            <div class="form-group"><label>Nationality</label>
+            <div class="form-group"><label>Nationality <span style="color:#C9A84C">*</span></label>
               <select name="Nationality" id="guest-nationality" required>
                 <option value="">Loading…</option>
               </select>
@@ -3145,7 +3196,7 @@ function bhhTrailEnquire(e){
                 <option value="Other">Other (specify below)</option>
               </select>
             </div>
-            <div class="form-group"><label>Occasion</label>
+            <div class="form-group"><label>Occasion <span style="color:#C9A84C">*</span></label>
               <select name="Occasion" required onchange="toggleOtherField(this,'occasion-other-wrap')">
                 <option value="">Select…</option>
                 <option value="Holiday">Holiday / Leisure</option>
@@ -3157,7 +3208,7 @@ function bhhTrailEnquire(e){
               </select>
             </div>
           </div>
-          <div class="form-group"><label>Special Requests or Questions</label><textarea name="Special Requests" rows="3" placeholder="Allergies, accessibility needs, cultural preferences, or anything else…" required></textarea></div>
+          <div class="form-group"><label>Special Requests or Questions <span style="color:#C9A84C">*</span></label><textarea name="Special Requests" rows="3" placeholder="Allergies, accessibility needs, cultural preferences, or anything else…" required></textarea></div>
           <div class="form-group"><label>How Did You Hear About BHH? <span style="color:#C9A84C">*</span></label>
             <select name="How Did You Hear" required onchange="toggleOtherField(this,'guest-referral-other-wrap')">
               <option value="">Select…</option>
@@ -4207,7 +4258,7 @@ function bhhTrailEnquire(e){
             </span>
           </button>
           <button type="button" class="tchoice" onclick="openTransportMode('narrowboat')">
-            <span class="tchoice-media"><img src="images/private-canal-cruise-narrowboat-on-engli.jpg" alt="" loading="lazy"></span>
+            <span class="tchoice-media"><img src="images/private-canal-cruise-narrowboat-on-engli.jpg" alt="Narrowboat on an English canal" loading="lazy"></span>
             <span class="tchoice-body">
               <span class="tchoice-title">Arrange My Narrowboat</span>
               <span class="tchoice-sub">Multi day narrowboat holidays</span>
@@ -5992,9 +6043,9 @@ function closeThankyouModal(modalId) {
 <div id="thank-you-guest" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);align-items:center;justify-content:center;z-index:9999">
   <div style="background:#0D1B2A;color:#F5F0E8;max-width:560px;padding:3rem 2rem;text-align:center;border-radius:8px">
     <span style="font-size:1rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:#C9A84C;display:block;margin-bottom:1.2rem">Thank You</span>
-    <h1 style="font-family:'Cormorant Garamond',serif;font-weight:300;font-size:2.4rem;line-height:1.2;margin-bottom:1.5rem;color:#F5F0E8">We have received your enquiry</h1>
+    <h2 style="font-family:'Cormorant Garamond',serif;font-weight:300;font-size:2.4rem;line-height:1.2;margin-bottom:1.5rem;color:#F5F0E8">We have received your enquiry</h2>
     <div style="width:60px;height:1px;background:#C9A84C;margin:0 auto 1.5rem"></div>
-    <p style="font-size:1rem;font-weight:300;line-height:1.8;color:rgba(245,240,232,0.7);margin-bottom:2.5rem">A member of our team will be in touch within 24 hours. We look forward to creating an exceptional experience for you.</p>
+    <p style="font-size:1rem;font-weight:300;line-height:1.8;color:rgba(245,240,232,0.7);margin-bottom:2.5rem">A member of our team will be in touch, usually the same day. We look forward to creating an exceptional experience for you.</p>
     <button onclick="closeThankyouModal('thank-you-guest')" style="display:inline-block;padding:1rem 2.5rem;font-family:'Jost',sans-serif;font-size:0.78rem;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;background:#C9A84C;color:#0D1B2A;border:none;cursor:pointer;border-radius:4px">Return to Form</button>
   </div>
 </div>
@@ -6002,7 +6053,7 @@ function closeThankyouModal(modalId) {
 <div id="thank-you-host" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);align-items:center;justify-content:center;z-index:9999">
   <div style="background:#0D1B2A;color:#F5F0E8;max-width:560px;padding:3rem 2rem;text-align:center;border-radius:8px">
     <span style="font-size:1rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:#C9A84C;display:block;margin-bottom:1.2rem">Thank You</span>
-    <h1 style="font-family:'Cormorant Garamond',serif;font-weight:300;font-size:2.4rem;line-height:1.2;margin-bottom:1.5rem;color:#F5F0E8">We have received your application</h1>
+    <h2 style="font-family:'Cormorant Garamond',serif;font-weight:300;font-size:2.4rem;line-height:1.2;margin-bottom:1.5rem;color:#F5F0E8">We have received your application</h2>
     <div style="width:60px;height:1px;background:#C9A84C;margin:0 auto 1.5rem"></div>
     <p style="font-size:1rem;font-weight:300;line-height:1.8;color:rgba(245,240,232,0.7);margin-bottom:2.5rem">Thank you for your interest. We will review your application and be in touch within 5 business days.</p>
     <button onclick="closeThankyouModal('thank-you-host')" style="display:inline-block;padding:1rem 2.5rem;font-family:'Jost',sans-serif;font-size:0.78rem;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;background:#C9A84C;color:#0D1B2A;border:none;cursor:pointer;border-radius:4px">Return to Form</button>
@@ -6012,7 +6063,7 @@ function closeThankyouModal(modalId) {
 <div id="thank-you-partner" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);align-items:center;justify-content:center;z-index:9999">
   <div style="background:#0D1B2A;color:#F5F0E8;max-width:560px;padding:3rem 2rem;text-align:center;border-radius:8px">
     <span style="font-size:1rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:#C9A84C;display:block;margin-bottom:1.2rem">Thank You</span>
-    <h1 style="font-family:'Cormorant Garamond',serif;font-weight:300;font-size:2.4rem;line-height:1.2;margin-bottom:1.5rem;color:#F5F0E8">We have received your enquiry</h1>
+    <h2 style="font-family:'Cormorant Garamond',serif;font-weight:300;font-size:2.4rem;line-height:1.2;margin-bottom:1.5rem;color:#F5F0E8">We have received your enquiry</h2>
     <div style="width:60px;height:1px;background:#C9A84C;margin:0 auto 1.5rem"></div>
     <p style="font-size:1rem;font-weight:300;line-height:1.8;color:rgba(245,240,232,0.7);margin-bottom:2.5rem">Thank you for your interest in partnering with British Heritage Hosts. We will review your application and be in touch within 5 business days.</p>
     <button onclick="closeThankyouModal('thank-you-partner')" style="display:inline-block;padding:1rem 2.5rem;font-family:'Jost',sans-serif;font-size:0.78rem;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;background:#C9A84C;color:#0D1B2A;border:none;cursor:pointer;border-radius:4px">Return to Form</button>
@@ -6022,9 +6073,9 @@ function closeThankyouModal(modalId) {
 <div id="thank-you-introduction" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);align-items:center;justify-content:center;z-index:9999">
   <div style="background:#0D1B2A;color:#F5F0E8;max-width:560px;padding:3rem 2rem;text-align:center;border-radius:8px">
     <span style="font-size:1rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:#C9A84C;display:block;margin-bottom:1.2rem">Thank You</span>
-    <h1 style="font-family:'Cormorant Garamond',serif;font-weight:300;font-size:2.4rem;line-height:1.2;margin-bottom:1.5rem;color:#F5F0E8">We have received your request</h1>
+    <h2 style="font-family:'Cormorant Garamond',serif;font-weight:300;font-size:2.4rem;line-height:1.2;margin-bottom:1.5rem;color:#F5F0E8">We have received your request</h2>
     <div style="width:60px;height:1px;background:#C9A84C;margin:0 auto 1.5rem"></div>
-    <p style="font-size:1rem;font-weight:300;line-height:1.8;color:rgba(245,240,232,0.7);margin-bottom:2.5rem">We will introduce you to the right provider within 24 hours. Any booking and payment will be arranged directly with them, not through BHH.</p>
+    <p style="font-size:1rem;font-weight:300;line-height:1.8;color:rgba(245,240,232,0.7);margin-bottom:2.5rem">We will introduce you to the right provider, usually the same day. Any booking and payment will be arranged directly with them, not through BHH.</p>
     <button onclick="closeThankyouModal('thank-you-introduction')" style="display:inline-block;padding:1rem 2.5rem;font-family:'Jost',sans-serif;font-size:0.78rem;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;background:#C9A84C;color:#0D1B2A;border:none;cursor:pointer;border-radius:4px">Return to Form</button>
   </div>
 </div>
@@ -6032,7 +6083,7 @@ function closeThankyouModal(modalId) {
 <div id="thank-you-scout" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);align-items:center;justify-content:center;z-index:9999">
   <div style="background:#0D1B2A;color:#F5F0E8;max-width:560px;padding:3rem 2rem;text-align:center;border-radius:8px">
     <span style="font-size:1rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:#C9A84C;display:block;margin-bottom:1.2rem">Thank You</span>
-    <h1 style="font-family:'Cormorant Garamond',serif;font-weight:300;font-size:2.4rem;line-height:1.2;margin-bottom:1.5rem;color:#F5F0E8">We have received your application</h1>
+    <h2 style="font-family:'Cormorant Garamond',serif;font-weight:300;font-size:2.4rem;line-height:1.2;margin-bottom:1.5rem;color:#F5F0E8">We have received your application</h2>
     <div style="width:60px;height:1px;background:#C9A84C;margin:0 auto 1.5rem"></div>
     <p style="font-size:1rem;font-weight:300;line-height:1.8;color:rgba(245,240,232,0.7);margin-bottom:2.5rem">Thank you for your interest in becoming a Heritage Scout. We will review your application and be in touch within 5 business days to arrange an interview. Evidence such as DBS and insurance is collected later, after interview.</p>
     <button onclick="closeThankyouModal('thank-you-scout')" style="display:inline-block;padding:1rem 2.5rem;font-family:'Jost',sans-serif;font-size:0.78rem;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;background:#C9A84C;color:#0D1B2A;border:none;cursor:pointer;border-radius:4px">Return to Form</button>
@@ -6870,7 +6921,22 @@ function closeLegalModal(type) {
       var t = e2.target;
       var a = (t && t.closest) ? t.closest('.service-card') : null;
       if(!a || !gridEl.contains(a)) return;
-      var order = Array.prototype.indexOf.call(gridEl.querySelectorAll('.service-card'), a);
+      /* The cards are grouped into three categories, so their position in the grid is NO
+         LONGER their position in SERVICES. The experience is found by matching the card's
+         own heading against the display name of each SERVICES entry, so regrouping or
+         renumbering the cards can never open the wrong experience. The old index lookup
+         is kept only as a last resort if a heading is ever missing. */
+      var order = -1;
+      var cardH3 = a.querySelector('h3');
+      var cardName = cardH3 ? cardH3.textContent.trim() : '';
+      if(cardName){
+        for(var si=0; si<SERVICES.length; si++){
+          if(displayName(SERVICES[si]) === cardName){ order = si; break; }
+        }
+      }
+      if(order < 0){
+        order = Array.prototype.indexOf.call(gridEl.querySelectorAll('.service-card'), a);
+      }
       if(order < 0 || order >= SERVICES.length) return;
       e2.preventDefault();
       e2.stopPropagation();
