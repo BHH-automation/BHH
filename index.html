@@ -2995,8 +2995,8 @@ function bhhTrailEnquire(e){
           <input type="hidden" name="subject" id="guest-subject" value="BHH Guest Enquiry">
           <p style="font-size:0.75rem;color:rgba(245,240,232,1);margin-bottom:1.2rem;margin-top:0.5rem">Fields marked <span style='color:#C9A84C'>*</span> are required. &nbsp;|&nbsp; Enter phone number without leading zero (e.g. 7911 123456 not 07911 123456).</p>
           <div class="form-row" style="grid-template-columns:140px 1fr">
-            <div class="form-group"><label>Title <span style="color:#C9A84C">*</span></label>
-              <select name="Title" required>
+            <div class="form-group"><label for="guest-title">Title <span style="color:#C9A84C">*</span></label>
+              <select name="Title" id="guest-title" required>
                 <option value="">Select…</option>
                 <option value="Mr">Mr</option>
                 <option value="Mrs">Mrs</option>
@@ -3010,15 +3010,15 @@ function bhhTrailEnquire(e){
                 <option value="Prof">Prof</option>
               </select>
             </div>
-            <div class="form-group"><label>Full Name <span style="color:#C9A84C">*</span></label><input type="text" name="Full Name" placeholder="Sarah Ahmed" required></div>
+            <div class="form-group"><label for="guest-fullname">Full Name <span style="color:#C9A84C">*</span></label><input type="text" name="Full Name" id="guest-fullname" placeholder="Sarah Ahmed" required></div>
           </div>
           <div class="form-row">
-            <div class="form-group"><label>Email <span style="color:#C9A84C">*</span></label><input type="email" name="email" placeholder="sarah@example.com" required></div>
+            <div class="form-group"><label for="guest-email">Email <span style="color:#C9A84C">*</span></label><input type="email" name="email" id="guest-email" placeholder="sarah@example.com" required></div>
           </div>
           <div class="form-row">
-            <div class="form-group"><label>Phone <span style="color:#C9A84C">*</span></label>
+            <div class="form-group"><label for="phone-number-input-guest">Phone <span style="color:#C9A84C">*</span></label>
               <div style="display:flex;gap:0.5rem">
-                <select name="Country Code" required style="width:130px;flex-shrink:0;text-align:center">
+                <select name="Country Code" aria-label="Country dialling code" required style="width:130px;flex-shrink:0;text-align:center">
                   <option value="">Code…</option>
                   <option value="+44">🇬🇧 +44</option>
                   <option value="+966">🇸🇦 +966</option>
@@ -3076,29 +3076,29 @@ function bhhTrailEnquire(e){
             </div>
           </div>
           <div class="form-row">
-            <div class="form-group"><label>Country of Residence <span style="color:#C9A84C">*</span></label>
+            <div class="form-group"><label for="guest-country">Country of Residence <span style="color:#C9A84C">*</span></label>
               <select name="country" id="guest-country" required onchange="loadCities(this.value,'guest-city')">
                 <option value="">Loading countries…</option>
               </select>
             </div>
-            <div class="form-group"><label>City <span style="color:#C9A84C">*</span></label>
+            <div class="form-group"><label for="guest-city">City <span style="color:#C9A84C">*</span></label>
               <select name="city" id="guest-city" required>
                 <option value="">Select country first…</option>
               </select>
             </div>
           </div>
           <div class="form-row">
-            <div class="form-group"><label>Nationality <span style="color:#C9A84C">*</span></label>
+            <div class="form-group"><label for="guest-nationality">Nationality <span style="color:#C9A84C">*</span></label>
               <select name="Nationality" id="guest-nationality" required>
                 <option value="">Loading…</option>
               </select>
             </div>
           </div>
-          <div class="form-group"><label>Preferred Dates <span style="color:#C9A84C">*</span></label>
+          <div class="form-group"><label for="date-from">Preferred Dates <span style="color:#C9A84C">*</span></label>
             <div class="date-range-row">
-              <input type="date" name="Date From" id="date-from" style="flex:1" required onchange="setMinDateTo()">
+              <input type="date" name="Date From" id="date-from" aria-label="Preferred dates, check in" style="flex:1" required onchange="setMinDateTo()">
               <span style="color:rgba(245,240,232,0.4);font-size:0.8rem">to</span>
-              <input type="date" name="Date To" id="date-to" style="flex:1" required>
+              <input type="date" name="Date To" id="date-to" aria-label="Preferred dates, check out" style="flex:1" required>
             </div>
             <p style="font-size:0.7rem;color:rgba(245,240,232,0.6);margin-top:0.3rem;font-style:italic">Check out date must be after check in date.</p>
           </div>
@@ -3154,7 +3154,7 @@ function bhhTrailEnquire(e){
           <!-- WRAPPED: Adults, Children, Pricing Breakdown, and Age of Each Child are conditional on service selection -->
           <div id="guest-family-block">
           <div class="form-row">
-            <div class="form-group"><label>Number of Adults <span style="color:#C9A84C">*</span></label>
+            <div class="form-group"><label for="guest-adults">Number of Adults <span style="color:#C9A84C">*</span></label>
               <select name="Number of Adults" id="guest-adults" required onchange="updateChildAges(); updatePricingSummary(); refreshCapacityNotes()">
                 <option value="">Select…</option>
                 <option value="1">1</option><option value="2">2</option><option value="3">3</option>
@@ -3163,7 +3163,7 @@ function bhhTrailEnquire(e){
                 <option value="10">10</option>
               </select>
             </div>
-            <div class="form-group"><label>Number of Children <span style="color:#C9A84C">*</span></label>
+            <div class="form-group"><label for="guest-children">Number of Children <span style="color:#C9A84C">*</span></label>
               <select name="Number of Children" id="guest-children" required onchange="updateChildAges(); updatePricingSummary(); refreshCapacityNotes()">
                 <option value="">Select…</option>
                 <option value="0">0</option><option value="1">1</option><option value="2">2</option>
@@ -3185,7 +3185,7 @@ function bhhTrailEnquire(e){
           <!-- END guest-family-block -->
           <div class="form-row">
             <!-- Dietary Requirements — conditional on food service (Dinner or Tea only) -->
-            <div class="form-group" id="guest-dietary-block"><label>Dietary Requirements <span style="color:#C9A84C">*</span></label>
+            <div class="form-group" id="guest-dietary-block"><label for="guest-dietary-select">Dietary Requirements <span style="color:#C9A84C">*</span></label>
               <select name="Dietary Requirements" id="guest-dietary-select" required>
                 <option value="">Select…</option>
                 <option value="None">None</option>
@@ -3196,8 +3196,8 @@ function bhhTrailEnquire(e){
                 <option value="Other">Other (specify below)</option>
               </select>
             </div>
-            <div class="form-group"><label>Occasion <span style="color:#C9A84C">*</span></label>
-              <select name="Occasion" required onchange="toggleOtherField(this,'occasion-other-wrap')">
+            <div class="form-group"><label for="guest-occasion">Occasion <span style="color:#C9A84C">*</span></label>
+              <select name="Occasion" id="guest-occasion" required onchange="toggleOtherField(this,'occasion-other-wrap')">
                 <option value="">Select…</option>
                 <option value="Holiday">Holiday / Leisure</option>
                 <option value="Birthday">Birthday</option>
@@ -3208,9 +3208,9 @@ function bhhTrailEnquire(e){
               </select>
             </div>
           </div>
-          <div class="form-group"><label>Special Requests or Questions <span style="color:#C9A84C">*</span></label><textarea name="Special Requests" rows="3" placeholder="Allergies, accessibility needs, cultural preferences, or anything else…" required></textarea></div>
-          <div class="form-group"><label>How Did You Hear About BHH? <span style="color:#C9A84C">*</span></label>
-            <select name="How Did You Hear" required onchange="toggleOtherField(this,'guest-referral-other-wrap')">
+          <div class="form-group"><label for="guest-special">Special Requests or Questions <span style="color:#C9A84C">*</span></label><textarea name="Special Requests" id="guest-special" rows="3" placeholder="Allergies, accessibility needs, cultural preferences, or anything else…" required></textarea></div>
+          <div class="form-group"><label for="guest-referral-select">How Did You Hear About BHH? <span style="color:#C9A84C">*</span></label>
+            <select name="How Did You Hear" id="guest-referral-select" required onchange="toggleOtherField(this,'guest-referral-other-wrap')">
               <option value="">Select…</option>
               <option value="Instagram">Instagram</option>
               <option value="Facebook">Facebook</option>
