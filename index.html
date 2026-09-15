@@ -47,6 +47,11 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 html { scroll-behavior: smooth; }
+/* Held back from view for a moment while a recruitment address is opened, so
+   the reader never sees the top of the page slide away. Removed as soon as the
+   form is in place and in any case after 1.4 seconds, so it can never stick. */
+html.bhh-deeplink body { visibility: hidden; }
+html.bhh-deeplink { background: #0D1B2A; }
 
 body {
   font-family: var(--ff-body);
@@ -2148,6 +2153,43 @@ footer {
     }
     </script>
     <!-- ═══════════════════════════════════════════════════════════════════ -->
+<script>
+/* ── Recruitment addresses, handled before anything is drawn ─────────────────
+   britishheritagehosts.com/#host-application, /#partner-application and
+   /#scout-application open that form directly. Added to the head 15 September
+   2026 because running this after the page had drawn meant the reader saw the
+   top of the page first and then watched it move. Nothing here touches a
+   visitor who arrives at the site normally. */
+(function(){
+  var MAP = { '#host-application':'host', '#partner-application':'partner', '#scout-application':'scout' };
+  var tab = MAP[window.location.hash];
+  if (!tab) return;
+  var root = document.documentElement;
+  root.classList.add('bhh-deeplink');
+  var shown = false;
+  function reveal(){ if(!shown){ shown = true; root.classList.remove('bhh-deeplink'); } }
+  function place(){
+    var el = document.getElementById('enquire');
+    if (!el || typeof switchTab !== 'function') return false;
+    var saved = root.style.scrollBehavior;
+    root.style.scrollBehavior = 'auto';
+    switchTab(tab, false);
+    var top = el.getBoundingClientRect().top + window.pageYOffset;
+    try { window.scrollTo({top: top, left: 0, behavior: 'instant'}); }
+    catch(e){ window.scrollTo(0, top); }
+    root.style.scrollBehavior = saved;
+    return true;
+  }
+  var tries = 0;
+  (function attempt(){
+    tries++;
+    if (place()) { reveal(); setTimeout(place, 400); setTimeout(place, 1200); return; }
+    if (tries < 240) { requestAnimationFrame(attempt); } else { reveal(); }
+  })();
+  setTimeout(reveal, 1400);
+  window.addEventListener('load', function(){ place(); reveal(); });
+})();
+</script>
 </head>
 <script>
 function switchTab(tab, scrollToIt) {
@@ -4681,45 +4723,9 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   // ── Hash-based tab activation (direct URL navigation) ──
-  /* ── Direct addresses for the recruitment forms ──────────────────────────
-     britishheritagehosts.com/#host-application, /#partner-application and
-     /#scout-application open that form directly. Rewritten 15 September 2026:
-     the reader used to see the top of the page and then watch it travel down.
-     Now the jump is INSTANT and happens as early as the form can be placed,
-     so the reader simply arrives at the form. The position is asserted three
-     times, at 120, 500 and 1100 milliseconds, because pictures finishing later
-     can change the height of the page and move the form under the reader. */
-  var hash = window.location.hash;
-  var HASH_TABS = {
-    '#partner-application': 'partner',
-    '#host-application':    'host',
-    '#scout-application':   'scout'
-  };
-  if (HASH_TABS[hash]) {
-    (function(tab){
-      /* The style sheet sets html { scroll-behavior: smooth } for the ordinary
-         menu links, and "auto" on scrollIntoView means "do whatever the style
-         sheet says", so the jump kept gliding. Smooth scrolling is therefore
-         switched OFF on the page element for the duration of the jump and
-         switched back on afterwards, leaving every other link unchanged. */
-      var root = document.documentElement;
-      var saved = root.style.scrollBehavior;
-      root.style.scrollBehavior = 'auto';
-      var jump = function(){
-        var el = document.getElementById('enquire');
-        if (!el) return;
-        var top = el.getBoundingClientRect().top + window.pageYOffset;
-        /* "instant" is stated outright as well, so no style sheet setting and
-           no browser default can turn this into an animation. */
-        try { window.scrollTo({top: top, left: 0, behavior: 'instant'}); }
-        catch (e) { window.scrollTo(0, top); }
-      };
-      var go = function(){ switchTab(tab, false); jump(); };
-      setTimeout(go, 120);
-      setTimeout(jump, 500);
-      setTimeout(function(){ jump(); root.style.scrollBehavior = saved; }, 1100);
-    })(HASH_TABS[hash]);
-  }
+  /* The three recruitment addresses are handled by the early script in the
+     head of the page, which runs before anything is drawn. Nothing is needed
+     here. */
 
 }); // end DOMContentLoaded
 
