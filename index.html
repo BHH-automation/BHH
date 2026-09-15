@@ -4675,34 +4675,31 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   // ── Hash-based tab activation (direct URL navigation) ──
+  /* ── Direct addresses for the recruitment forms ──────────────────────────
+     britishheritagehosts.com/#host-application, /#partner-application and
+     /#scout-application open that form directly. Rewritten 15 September 2026:
+     the reader used to see the top of the page and then watch it travel down.
+     Now the jump is INSTANT and happens as early as the form can be placed,
+     so the reader simply arrives at the form. The position is asserted three
+     times, at 120, 500 and 1100 milliseconds, because pictures finishing later
+     can change the height of the page and move the form under the reader. */
   var hash = window.location.hash;
-  if (hash === '#partner-application') {
-    setTimeout(function(){
-      switchTab('partner');
-      setTimeout(function(){
+  var HASH_TABS = {
+    '#partner-application': 'partner',
+    '#host-application':    'host',
+    '#scout-application':   'scout'
+  };
+  if (HASH_TABS[hash]) {
+    (function(tab){
+      var jump = function(){
         var el = document.getElementById('enquire');
-        if (el) el.scrollIntoView({behavior:'smooth'});
-      }, 200);
-    }, 800);
-  } else if (hash === '#host-application') {
-    setTimeout(function(){
-      switchTab('host');
-      setTimeout(function(){
-        var el2 = document.getElementById('enquire');
-        if (el2) el2.scrollIntoView({behavior:'smooth'});
-      }, 200);
-    }, 800);
-  } else if (hash === '#scout-application') {
-    /* Added 15 September 2026. The host and partner addresses already existed;
-       the Heritage Scout had none, so a recruitment link for a Scout landed on
-       the guest form. Same pattern as the two above, nothing else changes. */
-    setTimeout(function(){
-      switchTab('scout');
-      setTimeout(function(){
-        var el3 = document.getElementById('enquire');
-        if (el3) el3.scrollIntoView({behavior:'smooth'});
-      }, 200);
-    }, 800);
+        if (el) el.scrollIntoView({behavior:'auto', block:'start'});
+      };
+      var go = function(){ switchTab(tab); jump(); };
+      setTimeout(go, 120);
+      setTimeout(jump, 500);
+      setTimeout(jump, 1100);
+    })(HASH_TABS[hash]);
   }
 
 }); // end DOMContentLoaded
