@@ -34,6 +34,10 @@
   --navy-mid: #1B3350;
   --gold: #C9A84C;
   --gold-light: #E8C97A;
+  /* 15 September 2026: the same gold on a cream or white background measures about
+     2.1:1, far below the 4.5:1 readable minimum. This is the same hue darkened for use
+     on the light sections: 5.27:1 on white, 4.65:1 on cream. Navy sections keep --gold. */
+  --gold-ink: #816927;
   --cream: #F5F0E8;
   --cream-dark: #EDE7DB;
   --white: #FFFFFF;
@@ -3130,15 +3134,15 @@ function bhhTrailEnquire(e){
       <p class="lead" style="margin:0 auto 2.5rem;text-align:center;color:var(--navy)">For general enquiries, press or partnerships, reach us directly.</p>
       <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:3rem;max-width:700px;margin:0 auto">
         <div style="text-align:center;min-width:180px">
-          <div style="font-size:0.68rem;font-weight:500;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin-bottom:0.6rem">Email</div>
-          <div style="font-size:0.92rem;color:var(--navy)"><a href="mailto:info@britishheritagehosts.com">info@britishheritagehosts.com</a></div>
+          <div style="font-size:0.68rem;font-weight:500;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold-ink);margin-bottom:0.6rem">Email</div>
+          <div style="font-size:0.92rem;color:var(--navy)"><a href="mailto:info@britishheritagehosts.com" style="color:var(--gold-ink);text-decoration:underline;text-underline-offset:3px">info@britishheritagehosts.com</a></div>
         </div>
         <div style="text-align:center;min-width:180px">
-          <div style="font-size:0.68rem;font-weight:500;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin-bottom:0.6rem">Phone</div>
+          <div style="font-size:0.68rem;font-weight:500;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold-ink);margin-bottom:0.6rem">Phone</div>
           <div style="font-size:0.92rem;color:var(--navy)"><a href="tel:+442031371973" style="color:inherit;text-decoration:none">+44 20 3137 1973</a></div>
         </div>
         <div style="text-align:center;min-width:180px">
-          <div style="font-size:0.68rem;font-weight:500;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin-bottom:0.6rem">Registered Office</div>
+          <div style="font-size:0.68rem;font-weight:500;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold-ink);margin-bottom:0.6rem">Registered Office</div>
           <div style="font-size:0.92rem;color:var(--navy);line-height:1.6">British Heritage Hosts Ltd<br>Monomark House, 27 Old Gloucester Street<br>London WC1N 3AX</div>
         </div>
       </div>
