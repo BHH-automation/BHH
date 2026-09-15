@@ -4691,14 +4691,24 @@ document.addEventListener('DOMContentLoaded', function() {
   };
   if (HASH_TABS[hash]) {
     (function(tab){
+      /* The style sheet sets html { scroll-behavior: smooth } for the ordinary
+         menu links, and "auto" on scrollIntoView means "do whatever the style
+         sheet says", so the jump kept gliding. Smooth scrolling is therefore
+         switched OFF on the page element for the duration of the jump and
+         switched back on afterwards, leaving every other link unchanged. */
+      var root = document.documentElement;
+      var saved = root.style.scrollBehavior;
+      root.style.scrollBehavior = 'auto';
       var jump = function(){
         var el = document.getElementById('enquire');
-        if (el) el.scrollIntoView({behavior:'auto', block:'start'});
+        if (!el) return;
+        var top = el.getBoundingClientRect().top + window.pageYOffset;
+        window.scrollTo(0, top);
       };
       var go = function(){ switchTab(tab); jump(); };
       setTimeout(go, 120);
       setTimeout(jump, 500);
-      setTimeout(jump, 1100);
+      setTimeout(function(){ jump(); root.style.scrollBehavior = saved; }, 1100);
     })(HASH_TABS[hash]);
   }
 
