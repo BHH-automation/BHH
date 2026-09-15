@@ -1197,6 +1197,14 @@ footer {
   -webkit-backdrop-filter:blur(4px); backdrop-filter:blur(4px); transition:color .2s, background .2s;
 }
 .hero-newsflash__close:hover{ color:var(--gold); background:rgba(10,20,35,.8); }
+/* 15 September 2026: from about 1100px down to 768px the hero text spans nearly the
+   full width, so the fixed showcase card lands on the subtitle and on the second
+   button. In that band the card is held back until the visitor has scrolled past
+   the hero, then behaves exactly as before. Wider and narrower widths untouched. */
+@media (min-width:768px) and (max-width:1100px){
+  .hero-newsflash.is-visible{ opacity:0; transform:translateY(6px); pointer-events:none; }
+  html.nf-scrolled .hero-newsflash.is-visible{ opacity:1; transform:translateY(0); pointer-events:auto; }
+}
 /* Mobile: shrink. Phone cut-off is 767px, so a 768px iPad portrait keeps desktop behaviour. */
 @media (max-width:767px){
   .hero-newsflash{ width:240px; bottom:16px; right:12px; }
@@ -7183,6 +7191,19 @@ function closeLegalModal(type) {
     try { sessionStorage.setItem(KEY, JSON.stringify({ type:pending, at:Date.now() })); } catch(e){}
     pending = null;
   });
+})();
+</script>
+<script>
+/* 15 September 2026: marks the document once the visitor has scrolled past the hero.
+   Only the 768px to 1100px rule above reads this class; nothing else depends on it. */
+(function(){
+  var root = document.documentElement;
+  function nfScrolled(){
+    root.classList.toggle('nf-scrolled', window.pageYOffset > window.innerHeight * 0.55);
+  }
+  window.addEventListener('scroll', nfScrolled, {passive:true});
+  window.addEventListener('resize', nfScrolled);
+  nfScrolled();
 })();
 </script>
 </body>
