@@ -623,10 +623,22 @@ nav {
   font-size: 0.7rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: rgba(245,240,232,0.5);
+  /* 15 September 2026: was rgba(245,240,232,0.5), measured 4.7:1 on the navy. Small
+     uppercase text at that weight reads as faint, so raised to 8.4:1. */
+  color: rgba(245,240,232,0.72);
   margin-bottom: 0.4rem;
   font-weight: 500;
 }
+/* ═══ 15 September 2026: readability of the enquiry form ═══
+   --muted (#666055) is a dark grey chosen for the cream sections, where it is correct.
+   Used inside the navy enquiry section it measured 2.79:1, well below the 4.5:1
+   readability standard, so the consent lines and the privacy note there now use a cream
+   based muted instead. Placeholders carried no colour at all, so each browser supplied
+   its own grey, 3.78:1 in Chrome. Nothing outside #enquire is touched. */
+:root{ --muted-on-navy: rgba(245,240,232,0.78); }
+#enquire input::placeholder,
+#enquire textarea::placeholder{ color: rgba(245,240,232,0.55); opacity: 1; }
+
 .form-group input,
 .form-group select,
 .form-group textarea {
@@ -744,7 +756,7 @@ nav {
 }
 .langml__chip-remove:hover { background: var(--gold); color: var(--navy); }
 .langml__chip-remove:focus-visible { outline: none; box-shadow: 0 0 0 2px rgba(201,168,76,0.75); }
-.langml__empty { margin: 0.1rem 0 0; font-size: 0.78rem; font-style: italic; color: rgba(245,240,232,0.4); }
+.langml__empty { margin: 0.1rem 0 0; font-size: 0.78rem; font-style: italic; color: rgba(245,240,232,0.7); } /* 15 September 2026: was 0.4, measured 3.43:1; now 8:1 */
 .langml__count { margin: 0.45rem 0 0; font-size: 0.68rem; letter-spacing: 0.09em; text-transform: uppercase; color: rgba(245,240,232,0.5); }
 .langml__error { grid-column: 1 / -1; margin: 0.1rem 0 0; font-size: 0.78rem; color: #E8A0A0; }
 .langml__error[hidden] { display: none; }
@@ -3382,7 +3394,7 @@ function bhhTrailEnquire(e){
             <p style="font-size:0.7rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);margin:0 0 0.5rem;font-weight:500">Travel Insurance</p>
             <p style="font-size:0.82rem;line-height:1.6;color:rgba(245,240,232,0.85);margin:0">We strongly recommend travel insurance covering cancellation, medical expenses and personal liability for your visit.</p>
             <div style="margin-top:0.8rem">
-              <label style="display:flex;align-items:flex-start;gap:0.6rem;cursor:pointer;font-size:0.82rem;line-height:1.5;color:var(--muted)">
+              <label style="display:flex;align-items:flex-start;gap:0.6rem;cursor:pointer;font-size:0.82rem;line-height:1.5;color:var(--muted-on-navy)">
                 <input type="checkbox" name="Travel Insurance Confirmed" value="Yes" style="margin-top:0.2rem;flex-shrink:0;accent-color:#C9A84C;cursor:pointer">
                 <span>I confirm I hold or will arrange travel insurance before my trip.</span>
               </label>
@@ -3392,13 +3404,13 @@ function bhhTrailEnquire(e){
 
           <!-- ═══ GDPR CONSENT (v8.4) ═══ -->
           <div style="margin-top:1.5rem;padding:1rem 1.1rem;background:rgba(201,168,76,0.05);border:1px solid rgba(201,168,76,0.25);border-radius:4px">
-            <label style="display:flex;align-items:flex-start;gap:0.7rem;cursor:pointer;font-size:0.82rem;line-height:1.6;color:var(--muted)">
+            <label style="display:flex;align-items:flex-start;gap:0.7rem;cursor:pointer;font-size:0.82rem;line-height:1.6;color:var(--muted-on-navy)">
               <input type="checkbox" name="GDPR Consent" value="Yes" required style="margin-top:0.25rem;flex-shrink:0;accent-color:#C9A84C;cursor:pointer">
               <span>I consent to British Heritage Hosts Ltd processing the personal data I have provided for the purpose of responding to this enquiry and arranging my booking, in accordance with the <a href="#" onclick="openLegalModal('privacy');return false;" style="color:var(--gold);text-decoration:underline">Privacy Policy</a>. I understand I can withdraw consent at any time by contacting <a href="mailto:info@britishheritagehosts.com" style="color:var(--gold);text-decoration:underline">info@britishheritagehosts.com</a>.</span>
             </label>
           </div>
           <div style="text-align:center;margin-top:1.5rem"><button type="submit" class="btn btn-gold" style="font-size:0.78rem;padding:1.1rem 3rem;cursor:pointer">Send Enquiry</button>
-            <p style="margin:1rem auto 0;max-width:460px;font-size:0.72rem;color:var(--muted);line-height:1.6">Your details are used only to answer this enquiry and arrange your visit. We never pass them to anyone outside the experience we arrange for you. See our <a href="#" onclick="openLegalModal('privacy');return false;" style="color:inherit;text-decoration:underline">Privacy Policy</a>.</p></div>
+            <p style="margin:1rem auto 0;max-width:460px;font-size:0.72rem;color:var(--muted-on-navy);line-height:1.6">Your details are used only to answer this enquiry and arrange your visit. We never pass them to anyone outside the experience we arrange for you. See our <a href="#" onclick="openLegalModal('privacy');return false;" style="color:inherit;text-decoration:underline">Privacy Policy</a>.</p></div>
         </form>
 
 
@@ -3975,7 +3987,7 @@ function bhhTrailEnquire(e){
             </select></div>
           <!-- ═══ GDPR CONSENT (v8.4) ═══ -->
           <div style="margin-top:1.5rem;padding:1rem 1.1rem;background:rgba(201,168,76,0.05);border:1px solid rgba(201,168,76,0.25);border-radius:4px">
-            <label style="display:flex;align-items:flex-start;gap:0.7rem;cursor:pointer;font-size:0.82rem;line-height:1.6;color:var(--muted)">
+            <label style="display:flex;align-items:flex-start;gap:0.7rem;cursor:pointer;font-size:0.82rem;line-height:1.6;color:var(--muted-on-navy)">
               <input type="checkbox" name="GDPR Consent" value="Yes" required style="margin-top:0.25rem;flex-shrink:0;accent-color:#C9A84C;cursor:pointer">
               <span>I consent to British Heritage Hosts Ltd processing the personal data I have provided for the purpose of reviewing my host application and, if successful, onboarding me to the BHH network, in accordance with the <a href="#" onclick="openLegalModal('privacy');return false;" style="color:var(--gold);text-decoration:underline">Privacy Policy</a>. I understand I can withdraw consent at any time by contacting <a href="mailto:info@britishheritagehosts.com" style="color:var(--gold);text-decoration:underline">info@britishheritagehosts.com</a>.</span>
             </label>
@@ -4214,7 +4226,7 @@ function bhhTrailEnquire(e){
           </select></div>
           <!-- ═══ GDPR CONSENT (v8.4) ═══ -->
           <div style="margin-top:1.5rem;padding:1rem 1.1rem;background:rgba(201,168,76,0.05);border:1px solid rgba(201,168,76,0.25);border-radius:4px">
-            <label style="display:flex;align-items:flex-start;gap:0.7rem;cursor:pointer;font-size:0.82rem;line-height:1.6;color:var(--muted)">
+            <label style="display:flex;align-items:flex-start;gap:0.7rem;cursor:pointer;font-size:0.82rem;line-height:1.6;color:var(--muted-on-navy)">
               <input type="checkbox" name="GDPR Consent" value="Yes" required style="margin-top:0.25rem;flex-shrink:0;accent-color:#C9A84C;cursor:pointer">
               <span>I consent to British Heritage Hosts Ltd processing the personal data I have provided for the purpose of reviewing my partner application and, if successful, onboarding my organisation to the BHH network, in accordance with the <a href="#" onclick="openLegalModal('privacy');return false;" style="color:var(--gold);text-decoration:underline">Privacy Policy</a>. I understand I can withdraw consent at any time by contacting <a href="mailto:info@britishheritagehosts.com" style="color:var(--gold);text-decoration:underline">info@britishheritagehosts.com</a>.</span>
             </label>
@@ -4238,7 +4250,7 @@ function bhhTrailEnquire(e){
                   <input type="hidden" name="form-name" value="heritage-scout-application">
                   <input type="hidden" name="subject" value="BHH Heritage Scout Application">
                   <p style="display:none"><label>Don't fill this out if you're human: <input name="bot-field"></label></p>
-                  <p style="font-size:0.75rem;color:var(--muted);margin-bottom:1.2rem;margin-top:0.5rem">Fields marked <span style='color:#C9A84C'>*</span> are required. &nbsp;|&nbsp; Enter phone number without leading zero (e.g. 7911 123456 not 07911 123456).</p>
+                  <p style="font-size:0.75rem;color:var(--muted-on-navy);margin-bottom:1.2rem;margin-top:0.5rem">Fields marked <span style='color:#C9A84C'>*</span> are required. &nbsp;|&nbsp; Enter phone number without leading zero (e.g. 7911 123456 not 07911 123456).</p>
         
                   <div class="form-group"><label>Full Name <span style="color:#C9A84C">*</span></label><input type="text" name="Full Name" placeholder="James Williams" required></div>
                   <div class="form-group"><label>Email <span style="color:#C9A84C">*</span></label><input type="email" name="email" placeholder="james@example.com" required></div>
@@ -4368,7 +4380,7 @@ function bhhTrailEnquire(e){
         
                   <!-- ═══ GDPR CONSENT ═══ -->
                   <div style="margin-top:1.5rem;padding:1rem 1.1rem;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.3);border-radius:4px">
-                    <label style="display:flex;align-items:flex-start;gap:0.7rem;cursor:pointer;font-size:0.82rem;line-height:1.6;color:var(--muted)">
+                    <label style="display:flex;align-items:flex-start;gap:0.7rem;cursor:pointer;font-size:0.82rem;line-height:1.6;color:var(--muted-on-navy)">
                       <input type="checkbox" name="GDPR Consent" value="Yes" required style="margin-top:0.25rem;flex-shrink:0;accent-color:#C9A84C;cursor:pointer">
                       <span>I consent to British Heritage Hosts Ltd processing the personal data I have provided for the purpose of assessing my application to become a Heritage Scout, in accordance with the <a href="#" onclick="openLegalModal('privacy');return false;" style="color:var(--gold);text-decoration:underline">Privacy Policy</a>. I understand I can withdraw consent at any time by contacting <a href="mailto:info@britishheritagehosts.com" style="color:var(--gold);text-decoration:underline">info@britishheritagehosts.com</a>.</span>
                     </label>
@@ -4419,7 +4431,7 @@ function bhhTrailEnquire(e){
                       <input type="hidden" name="form-name" value="transport-introduction">
                       <input type="hidden" name="subject" value="BHH Introduction Request">
                       <p style="display:none"><label>Don't fill this out if you're human: <input name="bot-field"></label></p>
-                      <p style="font-size:0.75rem;color:var(--muted);margin-bottom:1.2rem;margin-top:0.5rem">Fields marked <span style='color:#C9A84C'>*</span> are required. &nbsp;|&nbsp; Enter phone number without leading zero (e.g. 7911 123456 not 07911 123456).</p>
+                      <p style="font-size:0.75rem;color:var(--muted-on-navy);margin-bottom:1.2rem;margin-top:0.5rem">Fields marked <span style='color:#C9A84C'>*</span> are required. &nbsp;|&nbsp; Enter phone number without leading zero (e.g. 7911 123456 not 07911 123456).</p>
             
                       <div class="form-group"><label>Which service <span style="color:#C9A84C">*</span></label>
                         <select name="Partner Service" required>
@@ -4495,7 +4507,7 @@ function bhhTrailEnquire(e){
                       <div class="form-group"><label>Preferred Dates <span style="color:#C9A84C">*</span></label>
                         <div style="display:flex;gap:0.5rem;align-items:center">
                           <input type="date" name="Date From" style="flex:1" required>
-                          <span style="color:var(--muted);font-size:0.8rem">to</span>
+                          <span style="color:var(--muted-on-navy);font-size:0.8rem">to</span>
                           <input type="date" name="Date To" style="flex:1" required>
                         </div>
                       </div>
@@ -4506,7 +4518,7 @@ function bhhTrailEnquire(e){
             
                       <!-- ═══ GDPR CONSENT ═══ -->
                       <div style="margin-top:1.5rem;padding:1rem 1.1rem;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.3);border-radius:4px">
-                        <label style="display:flex;align-items:flex-start;gap:0.7rem;cursor:pointer;font-size:0.82rem;line-height:1.6;color:var(--muted)">
+                        <label style="display:flex;align-items:flex-start;gap:0.7rem;cursor:pointer;font-size:0.82rem;line-height:1.6;color:var(--muted-on-navy)">
                           <input type="checkbox" name="GDPR Consent" value="Yes" required style="margin-top:0.25rem;flex-shrink:0;accent-color:#C9A84C;cursor:pointer">
                           <span>I consent to British Heritage Hosts Ltd processing the personal data I have provided in order to introduce me to a relevant provider service, in accordance with the <a href="#" onclick="openLegalModal('privacy');return false;" style="color:var(--gold);text-decoration:underline">Privacy Policy</a>. I understand that any booking or payment is made directly with the provider, not with BHH, and that I can withdraw consent at any time by contacting <a href="mailto:info@britishheritagehosts.com" style="color:var(--gold);text-decoration:underline">info@britishheritagehosts.com</a>.</span>
                         </label>
