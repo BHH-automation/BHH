@@ -4692,6 +4692,17 @@ document.addEventListener('DOMContentLoaded', function() {
         if (el2) el2.scrollIntoView({behavior:'smooth'});
       }, 200);
     }, 800);
+  } else if (hash === '#scout-application') {
+    /* Added 15 September 2026. The host and partner addresses already existed;
+       the Heritage Scout had none, so a recruitment link for a Scout landed on
+       the guest form. Same pattern as the two above, nothing else changes. */
+    setTimeout(function(){
+      switchTab('scout');
+      setTimeout(function(){
+        var el3 = document.getElementById('enquire');
+        if (el3) el3.scrollIntoView({behavior:'smooth'});
+      }, 200);
+    }, 800);
   }
 
 }); // end DOMContentLoaded
