@@ -2150,7 +2150,7 @@ footer {
     <!-- ═══════════════════════════════════════════════════════════════════ -->
 </head>
 <script>
-function switchTab(tab) {
+function switchTab(tab, scrollToIt) {
   var allPanels = document.querySelectorAll('.enquire-panel');
   allPanels.forEach(function(panel) {
     panel.style.display = 'none';
@@ -2172,6 +2172,12 @@ function switchTab(tab) {
     targetTab.style.color = 'var(--gold)';
     targetTab.classList.add('enquire-tab--active');
   }
+  /* switchTab always glided to the section, and an explicit "smooth" here
+     ignores any style sheet setting, which is why the recruitment addresses
+     kept travelling however the jump itself was written. A second argument
+     was added on 15 September 2026 so a caller can ask for no scroll at all.
+     Every existing caller passes one argument and is unchanged. */
+  if (scrollToIt === false) return;
   var enquireSection = document.getElementById('enquire');
   if (enquireSection) {
     enquireSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -4703,9 +4709,12 @@ document.addEventListener('DOMContentLoaded', function() {
         var el = document.getElementById('enquire');
         if (!el) return;
         var top = el.getBoundingClientRect().top + window.pageYOffset;
-        window.scrollTo(0, top);
+        /* "instant" is stated outright as well, so no style sheet setting and
+           no browser default can turn this into an animation. */
+        try { window.scrollTo({top: top, left: 0, behavior: 'instant'}); }
+        catch (e) { window.scrollTo(0, top); }
       };
-      var go = function(){ switchTab(tab); jump(); };
+      var go = function(){ switchTab(tab, false); jump(); };
       setTimeout(go, 120);
       setTimeout(jump, 500);
       setTimeout(function(){ jump(); root.style.scrollBehavior = saved; }, 1100);
