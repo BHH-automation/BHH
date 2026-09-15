@@ -1317,6 +1317,98 @@ footer {
   }
 }
 
+
+/* ══ COMPUTER AND TABLET (≥768px): the same experience pop up, laid out wide ══
+   The markup and the script are shared with the phone. Only the appearance
+   differs: a centred panel, the photograph on the left, the name, description
+   and the enquire button on the right, and the all nine view in three columns. */
+@media (min-width:768px){
+  .nf-ov{
+    position:fixed; inset:0; z-index:9500;
+    align-items:center; justify-content:center; padding:48px 32px;
+    background:rgba(13,27,42,.97);
+    -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px);
+    font-family:var(--ff-body); color:var(--cream); overflow-y:auto;
+    overscroll-behavior:contain;
+  }
+  .nf-ov.is-open{ display:flex; }
+  .nf-ov__close{
+    position:fixed; top:24px; right:28px; z-index:3; width:46px; height:46px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    background:rgba(10,20,35,.85); border:1px solid var(--gold);
+    color:var(--gold-light); font-size:1.5rem; line-height:1; cursor:pointer;
+  }
+  .nf-ov__view{ display:none; }
+  #nf-ov-single.is-active{
+    display:flex; align-items:stretch; width:min(1040px,92vw);
+    background:rgba(10,20,35,.55); border:1px solid rgba(201,168,76,.35);
+    border-radius:8px; overflow:hidden;
+  }
+  #nf-ov-single .nf-ov__media{
+    position:relative; width:58%; min-height:470px; margin:0;
+    background:var(--navy); overflow:hidden; aspect-ratio:auto;
+  }
+  #nf-ov-single .nf-ov__blur{
+    position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+    filter:blur(14px) brightness(.55); transform:scale(1.15); z-index:0;
+  }
+  #nf-ov-single .nf-ov__img{
+    position:absolute; inset:0; width:100%; height:100%; object-fit:contain; z-index:1;
+  }
+  #nf-ov-single .nf-ov__arrow{
+    position:absolute; top:50%; transform:translateY(-50%); z-index:2;
+    width:46px; height:46px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    background:rgba(10,20,35,.6); border:1px solid rgba(201,168,76,.5);
+    color:var(--gold-light); font-size:1.7rem; line-height:1; cursor:pointer;
+  }
+  #nf-ov-single .nf-ov__arrow--prev{ left:12px; }
+  #nf-ov-single .nf-ov__arrow--next{ right:12px; }
+  #nf-ov-single .nf-ov__body{
+    width:42%; padding:2.8rem 2.6rem; text-align:left;
+    display:flex; flex-direction:column; justify-content:center;
+  }
+  #nf-ov-single .nf-ov__eyebrow{
+    display:block; font-size:.66rem; letter-spacing:.22em; text-transform:uppercase;
+    color:var(--gold); font-weight:600; margin-bottom:.6rem;
+  }
+  #nf-ov-single .nf-ov__name{
+    font-family:var(--ff-display); font-weight:400; font-size:38px; line-height:1.1;
+    color:var(--white); margin:0 0 1rem;
+  }
+  #nf-ov-single .nf-ov__desc{
+    font-size:15.5px; line-height:1.75; color:rgba(245,240,232,.85); margin:0 0 1.8rem;
+  }
+  #nf-ov-single .nf-ov__cta{
+    align-self:flex-start; width:auto; min-height:0; padding:1rem 2.2rem;
+    background:var(--gold); color:var(--navy); border:1px solid var(--gold); border-radius:4px;
+    font-family:var(--ff-body); font-size:13px; font-weight:600; letter-spacing:.12em;
+    text-transform:uppercase; cursor:pointer;
+  }
+  #nf-ov-gridview.is-active{ display:block; width:min(1100px,92vw); }
+  #nf-ov-gridview .nf-ov__gridwrap{ padding:0; }
+  #nf-ov-gridview .nf-ov__gridtitle{
+    font-family:var(--ff-display); font-weight:400; font-size:30px; color:var(--white);
+    text-align:center; margin:0 0 1.6rem;
+  }
+  #nf-ov-gridview .nf-ov__grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+  #nf-ov-gridview .nf-ov__tile{
+    display:block; width:100%; padding:0; background:transparent; border:0; cursor:pointer;
+    text-align:center; font-family:var(--ff-body); color:var(--cream);
+  }
+  #nf-ov-gridview .nf-ov__tilemedia{
+    display:block; position:relative; width:100%; aspect-ratio:4/3; overflow:hidden;
+    background:var(--navy); border:1px solid rgba(201,168,76,.45); border-radius:6px;
+  }
+  #nf-ov-gridview .nf-ov__tilemedia img{ position:absolute; inset:0; width:100%; height:100%; }
+  #nf-ov-gridview .nf-ov__tilemedia img.nf-b{ object-fit:cover; filter:blur(10px) brightness(.55); transform:scale(1.15); }
+  #nf-ov-gridview .nf-ov__tilemedia img.nf-f{ object-fit:contain; }
+  #nf-ov-gridview .nf-ov__tilename{
+    display:flex; align-items:center; justify-content:center; text-align:center;
+    min-height:42px; padding:.5rem 4px; font-size:14px; line-height:1.3; color:var(--cream);
+  }
+}
+
 /* ══ PHONE ONLY (≤767px): stop the page scrolling sideways ═══════════
    Every rule below is inside a ≤767px media query, so 768px and wider
    (tablet and desktop) are untouched. No overflow:hidden on the page is
@@ -6856,7 +6948,6 @@ function closeLegalModal(type) {
   var gridEl = document.querySelector('.services-grid');
   if(gridEl && ov){
     gridEl.addEventListener('click', function(e2){
-      if(!isPhone()) return;
       var t = e2.target;
       var a = (t && t.closest) ? t.closest('.service-card') : null;
       if(!a || !gridEl.contains(a)) return;
