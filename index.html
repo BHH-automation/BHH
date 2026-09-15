@@ -890,10 +890,18 @@ footer {
 }
 
 @media (max-width: 768px) {
-  .services-grid { grid-template-columns: 1fr; }
   .serve-grid, .about-grid, .contact-grid { grid-template-columns: 1fr; }
   .serve-panel:first-child { border-right: none; border-bottom: 1px solid var(--border); }
   .promise-grid { grid-template-columns: 1fr; gap: 2rem; }
+}
+/* 15 September 2026: at exactly 768px the services grid fell to ONE column, because the
+   single column rule was written max-width:768px while the phone grid rule stops at 767px,
+   so that width alone got one tall card per row. Two columns. */
+@media (min-width:768px) and (max-width:768px){
+  .services-grid{ grid-template-columns:repeat(2,1fr); }
+}
+@media (max-width: 768px) {
+  /* remainder of the original block continues below */
   .process-steps { grid-template-columns: 1fr 1fr; }
   .process-step { border-right: none; border-bottom: 1px solid rgba(201,168,76,0.2); }
   .footer-grid { grid-template-columns: 1fr 1fr; }
