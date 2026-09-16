@@ -11,6 +11,46 @@
 [context.production]
   environment = { CONTEXT = "production" }
 
+# 16 September 2026: the six spare addresses below send every visitor to the main
+# address instead of serving a second copy of the site. This keeps one website in
+# search results rather than seven competing copies of the same pages.
+
+[[redirects]]
+  from = "https://britishheritagehosts.co.uk/*"
+  to = "https://britishheritagehosts.com/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "https://www.britishheritagehosts.co.uk/*"
+  to = "https://britishheritagehosts.com/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "https://britainheritagehosts.com/*"
+  to = "https://britishheritagehosts.com/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "https://www.britainheritagehosts.com/*"
+  to = "https://britishheritagehosts.com/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "https://britainheritagehosts.co.uk/*"
+  to = "https://britishheritagehosts.com/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "https://www.britainheritagehosts.co.uk/*"
+  to = "https://britishheritagehosts.com/:splat"
+  status = 301
+  force = true
+
 # Redirect thank-you page back to home to prevent 404
 [[redirects]]
   from = "/thank-you"
