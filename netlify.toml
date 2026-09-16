@@ -23,3 +23,8 @@
   [headers.values]
     X-Frame-Options = "SAMEORIGIN"
     X-Content-Type-Options = "nosniff"
+    # 16 September 2026: when a visitor clicks away from the site, this controls how much
+    # of the address they came from is handed to the next site. Without it browsers pass
+    # the full address. With this they pass only "britishheritagehosts.com" to other sites,
+    # and nothing at all to an insecure one.
+    Referrer-Policy = "strict-origin-when-cross-origin"
