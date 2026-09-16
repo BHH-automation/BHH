@@ -649,6 +649,17 @@ nav {
   border-radius:0; padding:0.15rem 0 0.15rem 1rem;
 }
 
+/* 16 September 2026: nine cards in three groups of three, in a two column grid, leaves the
+   third card of EVERY group alone with an empty cell beside it. The grid children run
+   heading, card, card, card, so the orphan is every fourth child. Centred here, which keeps
+   all nine cards the same size. */
+@media (max-width:768px){
+  .services-grid > .service-card:nth-child(4n){
+    grid-column: 1 / -1;
+    justify-self: center;
+    width: calc(50% - 1px);
+  }
+}
 /* ═══ 16 September 2026: small gold TEXT on the light sections ═══
    The brand gold measures about 2.1:1 on cream and 2.3:1 on white, well under the 4.5:1
    readable minimum, and these are wayfinding labels a visitor reads, not ornament. They
