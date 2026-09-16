@@ -649,6 +649,27 @@ nav {
   border-radius:0; padding:0.15rem 0 0.15rem 1rem;
 }
 
+/* ═══ 16 September 2026: small gold TEXT on the light sections ═══
+   The brand gold measures about 2.1:1 on cream and 2.3:1 on white, well under the 4.5:1
+   readable minimum, and these are wayfinding labels a visitor reads, not ornament. They
+   now use --gold-ink, the same hue darkened, which measures 4.65:1 on cream and 5.27:1
+   on white. Scoped to the light sections only, so every gold element on navy is
+   untouched, where it already measures 7.6:1. Rules, borders, dividers and the large
+   ornamental numerals keep the lighter gold on purpose. */
+.section--white .eyebrow,
+.section--cream .eyebrow,
+.section--white .services-cat span,
+.section--cream .services-cat span,
+.section--white .service-card-num,
+.section--cream .service-card-num,
+.section--white .service-card-arrow,
+.section--cream .service-card-arrow,
+.legal-modal-inner .eyebrow{
+  color: var(--gold-ink);
+}
+/* The Heritage Trail label on a card sits over the PHOTOGRAPH, not over the cream, so it
+   keeps the lighter gold. Darkening it there took it from 7.6:1 down to 3.3:1. */
+
 /* ═══ 15 September 2026: readability of the enquiry form ═══
    --muted (#666055) is a dark grey chosen for the cream sections, where it is correct.
    Used inside the navy enquiry section it measured 2.79:1, well below the 4.5:1
@@ -6241,7 +6262,7 @@ function closeThankyouModal(modalId) {
     <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">Booking and transaction records: 7 years. Feedback data, where given: 36 months, then anonymised. Unsuccessful applications: 12 months, then deleted. Marketing preferences: until you withdraw consent.</p>
 
     <h3>6. Your Rights</h3>
-    <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">Under the UK GDPR, you have the right to access, correct, delete, restrict, or port your personal data, and to withdraw consent at any time. Contact us at <a href="mailto:info@britishheritagehosts.com" style="color:var(--gold)">info@britishheritagehosts.com</a>.</p>
+    <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">Under the UK GDPR, you have the right to access, correct, delete, restrict, or port your personal data, and to withdraw consent at any time. Contact us at <a href="mailto:info@britishheritagehosts.com" style="color:var(--gold-ink)">info@britishheritagehosts.com</a>.</p>
 
     <h3>7. Data Security</h3>
     <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">We implement appropriate technical and organisational measures to protect your data. Payment data is handled by our PCI compliant payment partner and is never stored on our systems.</p>
@@ -6253,7 +6274,7 @@ function closeThankyouModal(modalId) {
     <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">We may update this policy from time to time. Changes will be posted on this page with an updated date.</p>
 
     <h3>10. Contact Us</h3>
-    <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">British Heritage Hosts Ltd, Monomark House, 27 Old Gloucester Street, London WC1N 3AX. Email: <a href="mailto:info@britishheritagehosts.com" style="color:var(--gold)">info@britishheritagehosts.com</a>. You also have the right to lodge a complaint with the ICO at <a href="https://ico.org.uk" style="color:var(--gold)" target="_blank" rel="noopener">ico.org.uk</a>.</p>
+    <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">British Heritage Hosts Ltd, Monomark House, 27 Old Gloucester Street, London WC1N 3AX. Email: <a href="mailto:info@britishheritagehosts.com" style="color:var(--gold-ink)">info@britishheritagehosts.com</a>. You also have the right to lodge a complaint with the ICO at <a href="https://ico.org.uk" style="color:var(--gold-ink)" target="_blank" rel="noopener">ico.org.uk</a>.</p>
   </div>
 
   </div>
@@ -6307,7 +6328,7 @@ function closeThankyouModal(modalId) {
     <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">BHH offers two distinct categories of service. <strong>(a) Services we provide.</strong> Heritage Guide, English Tea, British Dinner, Canal Day Cruise, Cultural Immersion Programme, Personal Interpreter Service and Riverside Grill are arranged, sold and invoiced by BHH, and these Terms govern them in full. <strong>(b) Partners we introduce.</strong> For certain services, currently Airport Transfer, Chauffeured Hire and Narrowboat Holiday, BHH acts solely as an introducer. On the website, Airport Transfer and Chauffeured Hire are shown together as a single Transportation card. We connect you with an independent third party partner, and any contract, booking and payment for those services are made directly between you and that partner. BHH does not sell, supply, invoice or take payment for introduced services, is not a party to any resulting agreement, and accepts no liability for their provision. The partner's own terms, pricing, insurance and cancellation policy apply.</p>
 
     <h3>13. Contact Us</h3>
-    <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">British Heritage Hosts Ltd, Monomark House, 27 Old Gloucester Street, London WC1N 3AX. Email: <a href="mailto:info@britishheritagehosts.com" style="color:var(--gold)">info@britishheritagehosts.com</a></p>
+    <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">British Heritage Hosts Ltd, Monomark House, 27 Old Gloucester Street, London WC1N 3AX. Email: <a href="mailto:info@britishheritagehosts.com" style="color:var(--gold-ink)">info@britishheritagehosts.com</a></p>
   </div>
 
   </div>
