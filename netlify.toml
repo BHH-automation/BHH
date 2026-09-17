@@ -51,6 +51,35 @@
   status = 301
   force = true
 
+# 18 September 2026: working files that live in this folder for convenience but
+# must never be downloadable from the website. They are answered as not found.
+# The server functions themselves run on Supabase, so hiding the source here
+# changes nothing about how they work.
+
+[[redirects]]
+  from = "/supabase/*"
+  to = "/offline.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/*.bat"
+  to = "/offline.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/trail photo sources.txt"
+  to = "/offline.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/trail places data.txt"
+  to = "/offline.html"
+  status = 404
+  force = true
+
 # Redirect thank-you page back to home to prevent 404
 [[redirects]]
   from = "/thank-you"
