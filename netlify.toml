@@ -63,19 +63,19 @@
   force = true
 
 [[redirects]]
-  from = "/*.bat"
+  from = "/deploy%20site.bat"
   to = "/offline.html"
   status = 404
   force = true
 
 [[redirects]]
-  from = "/trail photo sources.txt"
+  from = "/trail%20photo%20sources.txt"
   to = "/offline.html"
   status = 404
   force = true
 
 [[redirects]]
-  from = "/trail places data.txt"
+  from = "/trail%20places%20data.txt"
   to = "/offline.html"
   status = 404
   force = true
