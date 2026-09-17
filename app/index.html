@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<!--
+  British Heritage Hosts Ltd, operator door
+  Owner: Faleh al Bishi, Director, British Heritage Hosts Ltd
+  Written 18 September 2026
+
+  A person who works for us signs in here with their mobile number and a 6 digit
+  code, then sees the jobs that belong to them. Phase 1 covers the charcoal grill
+  cooks. Nothing on this page is public: every answer comes from the operator
+  Edge Function, which checks the session before it returns anything.
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>British Heritage Hosts, your jobs</title>
+<meta name="theme-color" content="#0D1B2A">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="/appletouchicon.png">
+<link rel="manifest" href="/manifest.json">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Jost:wght@300;400;500;600&display=swap');
+:root {
+  --navy: #0D1B2A;
+  --navy-mid: #1B3350;
+  --gold: #C9A84C;
+  --gold-light: #E8C97A;
+  --cream: #F5F0E8;
+  --white: #FFFFFF;
+  --text: #1A1A1A;
+  --muted: #666055;
+  --line: rgba(201,168,76,0.28);
+  --ff-display: 'Cormorant Garamond', Georgia, serif;
+  --ff-body: 'Jost', system-ui, sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  min-height: 100vh;
+  background: var(--cream);
+  color: var(--text);
+  font-family: var(--ff-body);
+  font-weight: 300;
+  line-height: 1.6;
+}
+header {
+  background: var(--navy);
+  padding: 22px 20px 20px;
+  text-align: center;
+  padding-top: calc(22px + env(safe-area-inset-top));
+}
+header img { width: 46px; height: 46px; border-radius: 10px; }
+header h1 {
+  font-family: var(--ff-display);
+  font-weight: 400;
+  font-size: 22px;
+  color: var(--gold);
+  margin-top: 10px;
+  letter-spacing: 0.02em;
+}
+main { max-width: 620px; margin: 0 auto; padding: 26px 16px 60px; }
+.card {
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 22px 18px;
+  margin-bottom: 16px;
+}
+h2 {
+  font-family: var(--ff-display);
+  font-weight: 500;
+  font-size: 24px;
+  color: var(--navy);
+  margin-bottom: 8px;
+}
+p.lead { color: var(--muted); font-size: 15px; margin-bottom: 18px; }
+label {
+  display: block;
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 7px;
+}
+input {
+  width: 100%;
+  padding: 15px 14px;
+  font-family: var(--ff-body);
+  font-size: 17px;
+  color: var(--text);
+  background: var(--cream);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+}
+input:focus { outline: 2px solid var(--gold); outline-offset: 1px; }
+input.code { letter-spacing: 0.5em; text-align: center; font-size: 26px; }
+button {
+  width: 100%;
+  margin-top: 16px;
+  padding: 15px 20px;
+  font-family: var(--ff-body);
+  font-size: 14px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--navy);
+  background: var(--gold);
+  border: 1px solid var(--gold);
+  border-radius: 2px;
+  cursor: pointer;
+}
+button:disabled { opacity: 0.55; cursor: default; }
+button.quiet { background: transparent; color: var(--muted); border-color: var(--line); }
+.note { font-size: 14px; color: var(--muted); margin-top: 14px; text-align: center; }
+.note a { color: var(--navy); }
+.message { margin-top: 14px; padding: 12px 14px; border-radius: 2px; font-size: 15px; }
+.message.bad { background: #FBEDED; color: #8A2B2B; border: 1px solid #E7C3C3; }
+.message.good { background: #EDF5EE; color: #245C2E; border: 1px solid #C3DEC8; }
+.job { border-left: 3px solid var(--gold); }
+.job .when {
+  font-family: var(--ff-display);
+  font-size: 22px;
+  color: var(--navy);
+  font-weight: 500;
+}
+.job .ref { font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+.job dl { margin-top: 14px; display: grid; grid-template-columns: 112px 1fr; gap: 8px 12px; font-size: 15px; }
+.job dt { color: var(--muted); }
+.job dd { color: var(--text); }
+.job a.action {
+  display: block;
+  margin-top: 18px;
+  padding: 14px;
+  text-align: center;
+  background: var(--navy);
+  color: var(--gold);
+  text-decoration: none;
+  font-size: 14px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border-radius: 2px;
+}
+.pill {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 2px;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: var(--cream);
+  color: var(--muted);
+  border: 1px solid var(--line);
+}
+.hidden { display: none; }
+footer { text-align: center; padding: 8px 16px 40px; font-size: 13px; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<header>
+  <img src="/appletouchicon.png" alt="British Heritage Hosts">
+  <h1>Your jobs</h1>
+</header>
+
+<main>
+
+  <!-- step one, the mobile number -->
+  <section id="stepMobile" class="card">
+    <h2>Sign in</h2>
+    <p class="lead">Enter the mobile number we hold for you. We will text you a 6 digit code.</p>
+    <label for="mobile">Mobile number</label>
+    <input id="mobile" type="tel" inputmode="tel" autocomplete="tel" placeholder="07700 900123">
+    <button id="sendBtn" type="button">Send my code</button>
+    <div id="mobileMsg"></div>
+  </section>
+
+  <!-- step two, the code -->
+  <section id="stepCode" class="card hidden">
+    <h2>Enter your code</h2>
+    <p class="lead">We have texted a 6 digit code to your phone. It lasts 10 minutes.</p>
+    <label for="code">6 digit code</label>
+    <input id="code" class="code" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="000000">
+    <button id="verifyBtn" type="button">Sign in</button>
+    <button id="backBtn" class="quiet" type="button">Use a different number</button>
+    <div id="codeMsg"></div>
+  </section>
+
+  <!-- step three, the jobs -->
+  <section id="stepJobs" class="hidden">
+    <div class="card">
+      <h2 id="hello">Welcome</h2>
+      <p class="lead" id="jobCount">Loading your jobs.</p>
+      <button id="outBtn" class="quiet" type="button">Sign out</button>
+    </div>
+    <div id="jobList"></div>
+  </section>
+
+</main>
+
+<footer>British Heritage Hosts Ltd</footer>
+
+<script>
+(function () {
+  "use strict";
+
+  var FN = "https://pwqdzitsezblncmewxsf.supabase.co/functions/v1/operator";
+  var KEY = "bhh operator session";
+
+  var el = function (id) { return document.getElementById(id); };
+  var show = function (id) { el(id).classList.remove("hidden"); };
+  var hide = function (id) { el(id).classList.add("hidden"); };
+
+  function store(v) { try { localStorage.setItem(KEY, v); } catch (e) {} }
+  function stored() { try { return localStorage.getItem(KEY) || ""; } catch (e) { return ""; } }
+  function clearStored() { try { localStorage.removeItem(KEY); } catch (e) {} }
+
+  function say(where, text, good) {
+    el(where).innerHTML = text
+      ? '<div class="message ' + (good ? "good" : "bad") + '">' + text + "</div>"
+      : "";
+  }
+
+  function call(action, payload) {
+    var body = Object.assign({ action: action }, payload || {});
+    return fetch(FN, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body)
+    }).then(function (r) { return r.json().catch(function () { return { ok: false, message: "No reply from the server." }; }); });
+  }
+
+  function niceDate(value) {
+    if (!value) return "";
+    var d = new Date(value + "T00:00:00");
+    if (isNaN(d.getTime())) return value;
+    return d.toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+  }
+
+  function handoverWords(status) {
+    if (!status) return "Not opened yet";
+    if (status === "issued") return "Waiting for arrival signing";
+    if (status === "arrival_signed") return "Arrival signed, departure to do";
+    if (status === "departure_signed") return "Complete";
+    return status;
+  }
+
+  // ---- step one
+  el("sendBtn").addEventListener("click", function () {
+    var mobile = el("mobile").value.trim();
+    if (mobile.length < 7) { say("mobileMsg", "Please enter your mobile number.", false); return; }
+    el("sendBtn").disabled = true;
+    say("mobileMsg", "");
+    call("start", { mobile: mobile }).then(function (r) {
+      el("sendBtn").disabled = false;
+      if (!r.ok) { say("mobileMsg", r.message || "That did not work.", false); return; }
+      window.bhhMobile = mobile;
+      hide("stepMobile");
+      show("stepCode");
+      el("code").focus();
+    }).catch(function () {
+      el("sendBtn").disabled = false;
+      say("mobileMsg", "No connection. Please try again.", false);
+    });
+  });
+
+  // ---- step two
+  el("verifyBtn").addEventListener("click", function () {
+    var code = el("code").value.trim();
+    if (code.length !== 6) { say("codeMsg", "Please enter all 6 digits.", false); return; }
+    el("verifyBtn").disabled = true;
+    say("codeMsg", "");
+    call("verify", { mobile: window.bhhMobile, code: code }).then(function (r) {
+      el("verifyBtn").disabled = false;
+      if (!r.ok) { say("codeMsg", r.message || "That code is not right.", false); return; }
+      store(r.session);
+      hide("stepCode");
+      loadJobs();
+    }).catch(function () {
+      el("verifyBtn").disabled = false;
+      say("codeMsg", "No connection. Please try again.", false);
+    });
+  });
+
+  el("backBtn").addEventListener("click", function () {
+    hide("stepCode");
+    show("stepMobile");
+    say("codeMsg", "");
+  });
+
+  // ---- step three
+  el("outBtn").addEventListener("click", function () {
+    var s = stored();
+    clearStored();
+    call("signout", { session: s });
+    hide("stepJobs");
+    el("jobList").innerHTML = "";
+    el("mobile").value = "";
+    show("stepMobile");
+  });
+
+  function loadJobs() {
+    var s = stored();
+    if (!s) { show("stepMobile"); return; }
+    show("stepJobs");
+    call("jobs", { session: s }).then(function (r) {
+      if (!r.ok) {
+        clearStored();
+        hide("stepJobs");
+        show("stepMobile");
+        say("mobileMsg", "Please sign in again.", false);
+        return;
+      }
+      el("hello").textContent = r.name ? "Welcome, " + r.name : "Welcome";
+      var jobs = r.jobs || [];
+      el("jobCount").textContent = jobs.length === 0
+        ? "You have no jobs booked at the moment. This page will show them as soon as one is booked."
+        : (jobs.length === 1 ? "You have 1 job." : "You have " + jobs.length + " jobs.");
+
+      var html = "";
+      jobs.forEach(function (j) {
+        html += '<section class="card job">';
+        html += '<div class="ref">Booking ' + (j.reference || "") + "</div>";
+        html += '<div class="when">' + niceDate(j.date) + (j.time ? ", " + j.time : "") + "</div>";
+        html += "<dl>";
+        if (j.venue_name) html += "<dt>Venue</dt><dd>" + j.venue_name + "</dd>";
+        if (j.venue_address) html += "<dt>Address</dt><dd>" + j.venue_address + "</dd>";
+        if (j.venue_contact) html += "<dt>Meet</dt><dd>" + j.venue_contact + "</dd>";
+        if (j.guests) html += "<dt>Guests</dt><dd>" + j.guests + "</dd>";
+        html += "<dt>Handover</dt><dd><span class=\"pill\">" + handoverWords(j.handover_status) + "</span></dd>";
+        html += "</dl>";
+        if (j.handover_url) html += '<a class="action" href="' + j.handover_url + '">Open the handover</a>';
+        html += "</section>";
+      });
+      el("jobList").innerHTML = html;
+    }).catch(function () {
+      el("jobCount").textContent = "Your jobs could not be loaded. Please check your connection.";
+    });
+  }
+
+  // ---- on open
+  if (stored()) { hide("stepMobile"); loadJobs(); }
+})();
+</script>
+</body>
+</html>

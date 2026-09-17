@@ -1,0 +1,11 @@
+# British Heritage Hosts Ltd, files kept out of the published website
+# Owner: Faleh al Bishi, Director, British Heritage Hosts Ltd
+# Added 18 September 2026, when the deploy script began sending new files.
+# Anything listed here stays on this computer and is never published.
+
+Claude outputs/
+deploy site backup 18 September 2026.bat
+*.zip
+Thumbs.db
+desktop.ini
+supabase/.temp/
