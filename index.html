@@ -7366,26 +7366,46 @@ function closeLegalModal(type) {
 
 <script>
 /* ═══ ACCESSIBLE NAMES ON THE RECRUITMENT FORMS ═══════════════════════════
-   17 September 2026. Testing found that the guest enquiry form labels all of
-   its fields, but the host, partner, Heritage Scout and transport forms did
-   not: 43 controls between them relied on a placeholder alone. A placeholder
-   disappears as soon as the visitor types and is not a reliable accessible
-   name, so a screen reader user could be left without being told what a field
-   is for, and anyone who pauses mid form loses the prompt.
+   17 September 2026, revised 18 September 2026. Testing found that the guest
+   enquiry form labels all of its fields, but the host, partner, Heritage Scout
+   and transport forms did not: 23 controls between them, 21 dropdowns and 2
+   date fields, had no accessible name at all in the browser accessibility
+   tree. Each carried a visible caption printed above it, but the caption was
+   a plain label element with no connection to the field, so a screen reader
+   announced nothing.
 
-   This gives every such control a name taken from the field's own name
-   attribute, improved by the map below where the raw attribute would read
-   poorly. It never touches a control that already has a label, so the guest
-   form is unchanged. It runs again when a tab is switched and when new fields
-   appear, because several fields are only created once an earlier answer is
-   given. Nothing is visible, nothing moves, no styling changes.
+   The first version of this script invented a name from the field's own name
+   attribute. That closed the missing name defect but created a second one:
+   fourteen of the names it produced did not contain the words printed on the
+   screen, so a visitor using speech recognition could read a caption aloud
+   and find that nothing was selected.
 
-   A visible label is better than this and remains the longer term fix. This
-   closes the gap without a redesign of four forms. */
+   This version takes the visible caption itself as the name, and adds a plain
+   English expansion after a comma only where the caption alone is an
+   abbreviation or is too terse to stand on its own. The announced name
+   therefore always begins with the words the visitor can see, which is what
+   Name, Role, Value and Label in Name both ask for.
+
+   It never touches a control that already has a name, so the guest form is
+   unchanged. It runs again when a tab is switched and when new fields appear,
+   because several fields are only created once an earlier answer is given.
+   Nothing is visible, nothing moves, no styling changes. */
 (function(){
-  var NICE = {
+  /* An expansion is added after the visible caption only where the caption is
+     an abbreviation or would not make sense read on its own. */
+  var EXPAND = {
+    'DBS Checked':'Disclosure and Barring Service check',
+    'Basic DBS Consent':'Disclosure and Barring Service',
+    'Country Code':'telephone country code',
+    'Date From':'first date',
+    'Date To':'last date',
+    'Party Size':'number of people travelling',
+    'Partner Service':'the service you are asking to be introduced to',
+    'langml-select':'add a language you speak'
+  };
+  /* Used only when a control has no visible caption anywhere near it. */
+  var FALLBACK = {
     'email':'Email address',
-    'Country Code':'Telephone country code',
     'Phone Number':'Telephone number',
     'city':'City or town',
     'County':'County',
@@ -7393,8 +7413,6 @@ function closeLegalModal(type) {
     'Town':'Town, filled from the postcode',
     'About':'About you, in your own words',
     'How Did You Hear':'How did you hear about us',
-    'DBS Checked':'Disclosure and Barring Service check',
-    'Basic DBS Consent':'Consent to a basic Disclosure and Barring Service check',
     'Partner Public Liability':'Public liability insurance',
     'Public Liability Insurance':'Public liability insurance',
     'Right To Self Employment':'Right to work on a self employed basis',
@@ -7403,10 +7421,9 @@ function closeLegalModal(type) {
     'Relevant Experience':'Relevant experience',
     'Years of Experience':'Years of experience',
     'Partner Type':'Type of partner',
-    'Partner Service':'Service you are asking to be introduced to',
-    'Party Size':'Number of people travelling',
     'Date From':'First date',
     'Date To':'Last date',
+    'Party Size':'Number of people travelling',
     'Notes':'Anything else useful for the introduction',
     'Website':'Website address',
     'Business Name':'Business name',
@@ -7416,6 +7433,10 @@ function closeLegalModal(type) {
     'langml-select':'Add a language you speak'
   };
   function text(node){ return node && (node.textContent||'').trim(); }
+  /* the required marker and any trailing punctuation are not part of the name */
+  function tidy(s){
+    return (s||'').replace(/\s+/g,' ').replace(/[\s*:：]+$/,'').trim();
+  }
   function hasName(el){
     if(el.getAttribute('aria-label')) return true;
     if(el.getAttribute('aria-labelledby')) return true;
@@ -7429,11 +7450,34 @@ function closeLegalModal(type) {
     if(el.getAttribute('title')) return true;
     return false;
   }
+  /* the wording the visitor can actually see beside this control */
+  function caption(el){
+    var group = el.closest('.form-group') || el.parentElement;
+    if(group){
+      var lab = group.querySelector('label');
+      var t = tidy(text(lab));
+      if(t.length > 2) return t;
+    }
+    var n = el.previousElementSibling;
+    while(n){
+      if(!n.matches('input,select,textarea')){
+        var p = tidy(text(n));
+        if(p.length > 2) return p;
+      }
+      n = n.previousElementSibling;
+    }
+    return '';
+  }
   function label(el){
-    var n = el.getAttribute('name') || el.id || '';
-    if(!n) return '';
-    if(NICE[n]) return NICE[n];
-    return n.replace(/[-_]+/g,' ').replace(/\s+/g,' ').trim();
+    var key = el.getAttribute('name') || el.id || '';
+    var vis = caption(el);
+    if(vis){
+      var ex = EXPAND[key];
+      if(ex && vis.toLowerCase().indexOf(ex.toLowerCase()) === -1) return vis + ', ' + ex;
+      return vis;
+    }
+    if(FALLBACK[key]) return FALLBACK[key];
+    return key.replace(/[-_]+/g,' ').replace(/\s+/g,' ').trim();
   }
   function apply(){
     var list = document.querySelectorAll('#enquire input, #enquire select, #enquire textarea');
