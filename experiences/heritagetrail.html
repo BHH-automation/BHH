@@ -8,6 +8,9 @@
 <link rel="canonical" href="https://britishheritagehosts.com/experiences/heritagetrail.html">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="apple-touch-icon" href="/appletouchicon.png">
+<!-- 18 September 2026: makes the site installable to a phone home screen -->
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0D1B2A">
 <meta property="og:type" content="website">
 <meta property="og:title" content="The Heritage Trail | British Heritage Hosts">
 <meta property="og:description" content="A private multi day guided trail across the United Kingdom, for one family at a time.">
@@ -421,5 +424,14 @@
   </div>
 </footer>
 
+<script>
+/* 18 September 2026: registers the offline helper. Pages are still always fetched
+   fresh from the network, so a new deploy is never hidden behind a cached copy. */
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function () {
+    navigator.serviceWorker.register("/sw.js").catch(function () {});
+  });
+}
+</script>
 </body>
 </html>

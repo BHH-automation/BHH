@@ -26,6 +26,9 @@
 <!-- 16 September 2026: browser tab icon, gold B on navy -->
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="apple-touch-icon" href="/appletouchicon.png">
+<!-- 18 September 2026: makes the site installable to a phone home screen -->
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0D1B2A">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>British Heritage Hosts Ltd, Private British Experiences in Real Homes</title>
 <meta name="description" content="Private cultural experiences in real British homes, for families visiting the United Kingdom. Dinners, teas, heritage days and canal cruises.">
@@ -7365,97 +7368,82 @@ function closeLegalModal(type) {
 </script>
 
 <script>
-/* ═══ ACCESSIBLE NAMES ON THE RECRUITMENT FORMS ═══════════════════════════
-   17 September 2026, revised 18 September 2026. Testing found that the guest
-   enquiry form labels all of its fields, but the host, partner, Heritage Scout
-   and transport forms did not: 23 controls between them, 21 dropdowns and 2
-   date fields, had no accessible name at all in the browser accessibility
-   tree. Each carried a visible caption printed above it, but the caption was
-   a plain label element with no connection to the field, so a screen reader
-   announced nothing.
+/* ═══ ACCESSIBLE NAMES ON THE ENQUIRY FORMS ═══════════════════════════════
+   17 September 2026, revised 18 September 2026.
 
-   The first version of this script invented a name from the field's own name
-   attribute. That closed the missing name defect but created a second one:
-   fourteen of the names it produced did not contain the words printed on the
-   screen, so a visitor using speech recognition could read a caption aloud
-   and find that nothing was selected.
+   Three rounds of testing led to this. First, 23 controls on the host,
+   partner, Heritage Scout and transport forms had no accessible name at all:
+   each had a caption printed above it, but the caption was a plain label
+   element with no connection to the field, so a screen reader announced
+   nothing. Second, naming them from their internal field names removed the
+   silence but left fourteen announcing words that were not the words on the
+   screen, which fails Label in Name. Third, five controls that were never
+   silent still announced something other than their printed caption: four
+   telephone boxes announcing their placeholder sentence, and one dialling
+   code dropdown announcing an invented phrase.
 
-   This version takes the visible caption itself as the name, and adds a plain
-   English expansion after a comma only where the caption alone is an
-   abbreviation or is too terse to stand on its own. The announced name
-   therefore always begins with the words the visitor can see, which is what
-   Name, Role, Value and Label in Name both ask for.
+   The rule now is simple and the same everywhere: a control is named by the
+   words printed beside it. Where that caption is shared by two controls, the
+   caption is followed by a comma and a short qualifier so the two can be told
+   apart. Guidance text that was serving as a name becomes a description
+   instead, which is what a description is for.
 
-   It never touches a control that already has a name, so the guest form is
-   unchanged. It runs again when a tab is switched and when new fields appear,
-   because several fields are only created once an earlier answer is given.
-   Nothing is visible, nothing moves, no styling changes. */
+   Nothing here is visible. No wording on the page changes, nothing moves and
+   no styling changes. The only element added is a single off screen word
+   before each start date box, because the page prints a separator before the
+   end date box but nothing before the start. */
 (function(){
-  /* An expansion is added after the visible caption only where the caption is
-     an abbreviation or would not make sense read on its own. */
+  var uid = 0;
+  function nid(el, stem){ if(!el.id){ el.id = stem + '-' + (++uid); } return el.id; }
+  function text(node){ return node && (node.textContent||'').trim(); }
+  function tidy(s){ return (s||'').replace(/\s+/g,' ').replace(/[\s*:：]+$/,'').trim(); }
+
+  /* A qualifier is added after the printed caption only where the caption is
+     an abbreviation, or is shared by more than one control. */
   var EXPAND = {
     'DBS Checked':'Disclosure and Barring Service check',
     'Basic DBS Consent':'Disclosure and Barring Service',
-    'Country Code':'telephone country code',
-    'Date From':'first date',
-    'Date To':'last date',
+    'Country Code':'country dialling code',
     'Party Size':'number of people travelling',
     'Partner Service':'the service you are asking to be introduced to',
     'langml-select':'add a language you speak'
   };
-  /* Used only when a control has no visible caption anywhere near it. */
+  /* Used only when a control has no printed caption anywhere near it. */
   var FALLBACK = {
-    'email':'Email address',
-    'Phone Number':'Telephone number',
-    'city':'City or town',
-    'County':'County',
-    'Postcode':'Postcode',
-    'Town':'Town, filled from the postcode',
-    'About':'About you, in your own words',
-    'How Did You Hear':'How did you hear about us',
+    'email':'Email address', 'Phone Number':'Telephone number', 'city':'City or town',
+    'County':'County', 'Postcode':'Postcode', 'Town':'Town, filled from the postcode',
+    'About':'About you, in your own words', 'How Did You Hear':'How did you hear about us',
     'Partner Public Liability':'Public liability insurance',
     'Public Liability Insurance':'Public liability insurance',
     'Right To Self Employment':'Right to work on a self employed basis',
     'Self-Employed Status':'Self employed status',
     'Towns or Communities':'Towns or communities where you have local reach',
-    'Relevant Experience':'Relevant experience',
-    'Years of Experience':'Years of experience',
-    'Partner Type':'Type of partner',
-    'Date From':'First date',
-    'Date To':'Last date',
-    'Party Size':'Number of people travelling',
-    'Notes':'Anything else useful for the introduction',
-    'Website':'Website address',
-    'Business Name':'Business name',
-    'Contact Name':'Contact name',
-    'Full Name':'Full name',
-    'Title':'Title',
-    'langml-select':'Add a language you speak'
+    'Relevant Experience':'Relevant experience', 'Years of Experience':'Years of experience',
+    'Partner Type':'Type of partner', 'Notes':'Anything else useful for the introduction',
+    'Website':'Website address', 'Business Name':'Business name', 'Contact Name':'Contact name',
+    'Full Name':'Full name', 'Title':'Title', 'langml-select':'Add a language you speak'
   };
-  function text(node){ return node && (node.textContent||'').trim(); }
-  /* the required marker and any trailing punctuation are not part of the name */
-  function tidy(s){
-    return (s||'').replace(/\s+/g,' ').replace(/[\s*:：]+$/,'').trim();
-  }
-  function hasName(el){
-    if(el.getAttribute('aria-label')) return true;
-    if(el.getAttribute('aria-labelledby')) return true;
-    if(el.id){
-      var esc = (window.CSS && CSS.escape) ? CSS.escape(el.id) : el.id;
-      if(text(document.querySelector('label[for="' + esc + '"]'))) return true;
+
+  /* 1. The gold asterisk marking a required field is decoration. Leaving it in
+        the label made every bound field announce its caption followed by star.
+        The requirement itself is carried by the required attribute. */
+  function hideMarkers(root){
+    var labs = root.querySelectorAll('label');
+    for(var i=0;i<labs.length;i++){
+      var sp = labs[i].querySelectorAll('span');
+      for(var j=0;j<sp.length;j++){
+        if(text(sp[j]) === '*' && !sp[j].getAttribute('aria-hidden')){
+          sp[j].setAttribute('aria-hidden','true');
+        }
+      }
     }
-    /* a wrapping label only names the field if it actually contains words.
-       An empty one, used purely for layout, does not. */
-    if(text(el.closest('label'))) return true;
-    if(el.getAttribute('title')) return true;
-    return false;
   }
-  /* the wording the visitor can actually see beside this control */
+
+  /* the words printed beside this control */
   function caption(el){
     var group = el.closest('.form-group') || el.parentElement;
     if(group){
-      var lab = group.querySelector('label');
-      var t = tidy(text(lab));
+      var t = tidy(text(group.querySelector('label')));
       if(t.length > 2) return t;
     }
     var n = el.previousElementSibling;
@@ -7468,6 +7456,83 @@ function closeLegalModal(type) {
     }
     return '';
   }
+
+  /* 2. Bind the printed caption to the telephone box, so the box is named
+        Phone rather than by the placeholder sentence inside it, and hand that
+        sentence to aria describedby where it belongs. */
+  function phones(root){
+    var tels = root.querySelectorAll('input[type="tel"]');
+    for(var i=0;i<tels.length;i++){
+      var el = tels[i];
+      var group = el.closest('.form-group');
+      if(!group) continue;
+      var lab = group.querySelector('label');
+      if(lab && !lab.getAttribute('for') && !el.getAttribute('aria-label')){
+        lab.setAttribute('for', nid(el,'tel'));
+      }
+      if(!el.getAttribute('aria-describedby')){
+        var form = el.closest('form') || root, hint = null;
+        var ps = form.querySelectorAll('p');
+        for(var k=0;k<ps.length;k++){
+          if(/leading zero/i.test(ps[k].textContent||'')){ hint = ps[k]; break; }
+        }
+        if(hint) el.setAttribute('aria-describedby', nid(hint,'telhint'));
+      }
+    }
+  }
+
+  /* 3. The two date boxes share one printed caption. Reference that caption
+        rather than overriding it, and add the separator already printed
+        between them so the two can be told apart. */
+  function dates(root){
+    var ds = root.querySelectorAll('input[type="date"]');
+    for(var i=0;i<ds.length;i++){
+      var el = ds[i];
+      var group = el.closest('.form-group');
+      if(!group) continue;
+      var lab = group.querySelector('label');
+      if(!lab) continue;
+      var boxes = group.querySelectorAll('input[type="date"]');
+      var first = (boxes.length > 1 && boxes[0] === el);
+      var qual = null;
+      if(first){
+        qual = group.querySelector('[data-bhh-from]');
+        if(!qual){
+          qual = document.createElement('span');
+          qual.setAttribute('data-bhh-from','');
+          qual.textContent = 'from';
+          /* off screen, not display none, so it still contributes a name */
+          qual.style.cssText = 'position:absolute;width:1px;height:1px;overflow:hidden;' +
+                               'clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap';
+          el.parentNode.insertBefore(qual, el);
+        }
+      } else {
+        var sp = group.querySelectorAll('span');
+        for(var j=0;j<sp.length;j++){ if(text(sp[j]) === 'to'){ qual = sp[j]; break; } }
+      }
+      var ids = nid(lab,'datelab');
+      if(qual) ids += ' ' + nid(qual,'dateq');
+      el.setAttribute('aria-labelledby', ids);
+      el.removeAttribute('aria-label');
+      if(!el.getAttribute('aria-describedby')){
+        var ps = group.querySelectorAll('p');
+        if(ps.length) el.setAttribute('aria-describedby', nid(ps[0],'datehint'));
+      }
+    }
+  }
+
+  function hasName(el){
+    if(el.getAttribute('aria-label')) return true;
+    if(el.getAttribute('aria-labelledby')) return true;
+    if(el.id){
+      var esc = (window.CSS && CSS.escape) ? CSS.escape(el.id) : el.id;
+      if(text(document.querySelector('label[for="' + esc + '"]'))) return true;
+    }
+    /* a wrapping label only names the field if it actually contains words */
+    if(text(el.closest('label'))) return true;
+    if(el.getAttribute('title')) return true;
+    return false;
+  }
   function label(el){
     var key = el.getAttribute('name') || el.id || '';
     var vis = caption(el);
@@ -7479,15 +7544,39 @@ function closeLegalModal(type) {
     if(FALLBACK[key]) return FALLBACK[key];
     return key.replace(/[-_]+/g,' ').replace(/\s+/g,' ').trim();
   }
+
+  /* 4. Any control still carrying an aria label that does not contain its
+        printed caption is rewritten so that it does. */
+  function realign(root){
+    var list = root.querySelectorAll('input, select, textarea');
+    for(var i=0;i<list.length;i++){
+      var el = list[i];
+      if(el.type === 'hidden' || el.type === 'date') continue;
+      var a = el.getAttribute('aria-label');
+      if(!a) continue;
+      var vis = caption(el);
+      if(!vis || vis.length > 30) continue;
+      if(a.toLowerCase().indexOf(vis.toLowerCase()) !== -1) continue;
+      el.setAttribute('aria-label', label(el));
+    }
+  }
+
   function apply(){
-    var list = document.querySelectorAll('#enquire input, #enquire select, #enquire textarea');
+    var root = document.getElementById('enquire');
+    if(!root) return;
+    hideMarkers(root);
+    phones(root);
+    dates(root);
+    realign(root);
+    var list = root.querySelectorAll('input, select, textarea');
     for(var i=0;i<list.length;i++){
       var el = list[i];
       if(el.type === 'hidden') continue;
       if(el.getAttribute('name') === 'bot-field') continue;   // the spam trap, never announced
-      if(hasName(el)) continue;
-      var t = label(el);
-      if(t) el.setAttribute('aria-label', t);
+      if(!hasName(el)){
+        var t = label(el);
+        if(t) el.setAttribute('aria-label', t);
+      }
       if(el.required && !el.getAttribute('aria-required')) el.setAttribute('aria-required','true');
     }
   }
@@ -7504,6 +7593,15 @@ function closeLegalModal(type) {
     }
   });
 })();
+</script>
+<script>
+/* 18 September 2026: registers the offline helper. Pages are still always fetched
+   fresh from the network, so a new deploy is never hidden behind a cached copy. */
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function () {
+    navigator.serviceWorker.register("/sw.js").catch(function () {});
+  });
+}
 </script>
 </body>
 </html>
