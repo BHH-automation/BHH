@@ -416,6 +416,30 @@ nav {
 .service-card:hover .service-card-overlay {
   background: linear-gradient(to top, rgba(13,27,42,0.97) 0%, rgba(13,27,42,0.5) 60%, rgba(13,27,42,0.1) 100%);
 }
+/* 17 September 2026: the card heading sits directly on a photograph, and that
+   photograph changes every few seconds as the card cycles through its three
+   pictures. Measured against the pixels actually behind the words, the heading
+   fell as low as 1.8 to 1 on the brightest frames, against the 3 to 1 minimum
+   for text this size. The overlay is therefore deepened where the words sit and
+   the words carry their own shadow, so that reading them no longer depends on
+   which photograph happens to be showing. Phones are untouched: below 768px the
+   card text already sits on a solid navy panel. */
+@media (min-width:768px){
+  .service-card-overlay {
+    background: linear-gradient(to top, rgba(13,27,42,0.97) 0%, rgba(13,27,42,0.94) 30%,
+                                rgba(13,27,42,0.62) 52%, transparent 100%);
+  }
+  .service-card:hover .service-card-overlay {
+    background: linear-gradient(to top, rgba(13,27,42,0.98) 0%, rgba(13,27,42,0.93) 35%,
+                                rgba(13,27,42,0.60) 62%, rgba(13,27,42,0.12) 100%);
+  }
+  .service-card h3 { text-shadow: 0 1px 3px rgba(13,27,42,0.95), 0 0 12px rgba(13,27,42,0.8); }
+  /* The 01 / 09 label is decoration. The group heading above each row already
+     says which three of the nine these are, and this label carried the worst
+     contrast of anything on the page. It is no longer shown. It stays in the
+     markup because the phone overlay reads its text. */
+  .services-grid .service-card-num { display: none; }
+}
 .service-card-content {
   position: absolute; bottom: 0; left: 0; right: 0;
   padding: 2rem;
