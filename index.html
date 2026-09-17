@@ -2828,6 +2828,7 @@ function closeMobileMenu(){
 
     <div class="trail-cta fade-up">
       <a href="#enquire" class="btn btn-gold" onclick="return bhhTrailEnquire(event)">Enquire about a Heritage Trail</a>
+      <a href="experiences/heritagetrail.html" class="btn btn-outline-dark">See every place on the trail</a>
       <span class="trail-cta-note">Priced per family for the guide and passes, on enquiry.</span>
       <button type="button" class="trail-credits-link" id="trail-credits-link">Photo credits</button>
     </div>
@@ -2888,6 +2889,12 @@ function bhhTrailEnquire(e){
       switchTab('guest');
       var v8 = document.querySelector('#service-card-grid .service-card-v8[data-service="' + svc.replace(/"/g,'') + '"]');
       if(v8 && typeof toggleService === 'function' && !v8.classList.contains('selected')){ toggleService(v8); }
+      /* arriving from the Heritage Trail page: seed the same sentence the
+         Trail button on this page already writes, and only if the box is empty */
+      if(q.get('trail')){
+        var box = document.querySelector('#guest-form textarea[name="Special Requests"]');
+        if(box && !(box.value || '').trim()){ box.value = 'I am interested in a multi day Heritage Trail.'; }
+      }
     }
     var el = document.getElementById('enquire');
     if(el && el.scrollIntoView){ el.scrollIntoView({behavior:'auto'}); }

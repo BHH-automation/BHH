@@ -39,6 +39,9 @@ a{color:inherit}
 /* the photograph behind the title changes from page to page, so the words carry
    their own shadow rather than relying on the picture being dark in that corner */
 .xhero h1,.xhero p,.xhero .xeyebrow{text-shadow:0 2px 16px rgba(13,27,42,.85),0 1px 3px rgba(13,27,42,.6)}
+/* the small capitals sit on whatever the photograph happens to be, so the
+   lighter gold is used here rather than the deeper one used on flat colour */
+.xhero .xeyebrow{color:var(--gold-light)}
 
 /* body */
 .xsec{padding:clamp(2.6rem,6vw,4.4rem) 0}
