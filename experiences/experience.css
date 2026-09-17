@@ -63,7 +63,7 @@ a{color:inherit}
 @media(max-width:860px){.xsteps{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:480px){.xsteps{grid-template-columns:1fr}}
 .xstep .n{font-family:var(--ff-display);font-size:1.5rem;color:var(--gold-ink);display:block;margin-bottom:.25rem}
-.xstep h4{font-family:var(--ff-display);font-weight:400;font-size:1.06rem;color:var(--navy);margin-bottom:.3rem}
+.xstep h3{font-family:var(--ff-display);font-weight:400;font-size:1.06rem;color:var(--navy);margin-bottom:.3rem}
 .xstep p{font-size:.9rem;color:var(--text)}
 
 /* gallery */
