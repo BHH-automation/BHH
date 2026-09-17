@@ -7363,5 +7363,103 @@ function closeLegalModal(type) {
   nfScrolled();
 })();
 </script>
+
+<script>
+/* ═══ ACCESSIBLE NAMES ON THE RECRUITMENT FORMS ═══════════════════════════
+   17 September 2026. Testing found that the guest enquiry form labels all of
+   its fields, but the host, partner, Heritage Scout and transport forms did
+   not: 43 controls between them relied on a placeholder alone. A placeholder
+   disappears as soon as the visitor types and is not a reliable accessible
+   name, so a screen reader user could be left without being told what a field
+   is for, and anyone who pauses mid form loses the prompt.
+
+   This gives every such control a name taken from the field's own name
+   attribute, improved by the map below where the raw attribute would read
+   poorly. It never touches a control that already has a label, so the guest
+   form is unchanged. It runs again when a tab is switched and when new fields
+   appear, because several fields are only created once an earlier answer is
+   given. Nothing is visible, nothing moves, no styling changes.
+
+   A visible label is better than this and remains the longer term fix. This
+   closes the gap without a redesign of four forms. */
+(function(){
+  var NICE = {
+    'email':'Email address',
+    'Country Code':'Telephone country code',
+    'Phone Number':'Telephone number',
+    'city':'City or town',
+    'County':'County',
+    'Postcode':'Postcode',
+    'Town':'Town, filled from the postcode',
+    'About':'About you, in your own words',
+    'How Did You Hear':'How did you hear about us',
+    'DBS Checked':'Disclosure and Barring Service check',
+    'Basic DBS Consent':'Consent to a basic Disclosure and Barring Service check',
+    'Partner Public Liability':'Public liability insurance',
+    'Public Liability Insurance':'Public liability insurance',
+    'Right To Self Employment':'Right to work on a self employed basis',
+    'Self-Employed Status':'Self employed status',
+    'Towns or Communities':'Towns or communities where you have local reach',
+    'Relevant Experience':'Relevant experience',
+    'Years of Experience':'Years of experience',
+    'Partner Type':'Type of partner',
+    'Partner Service':'Service you are asking to be introduced to',
+    'Party Size':'Number of people travelling',
+    'Date From':'First date',
+    'Date To':'Last date',
+    'Notes':'Anything else useful for the introduction',
+    'Website':'Website address',
+    'Business Name':'Business name',
+    'Contact Name':'Contact name',
+    'Full Name':'Full name',
+    'Title':'Title',
+    'langml-select':'Add a language you speak'
+  };
+  function text(node){ return node && (node.textContent||'').trim(); }
+  function hasName(el){
+    if(el.getAttribute('aria-label')) return true;
+    if(el.getAttribute('aria-labelledby')) return true;
+    if(el.id){
+      var esc = (window.CSS && CSS.escape) ? CSS.escape(el.id) : el.id;
+      if(text(document.querySelector('label[for="' + esc + '"]'))) return true;
+    }
+    /* a wrapping label only names the field if it actually contains words.
+       An empty one, used purely for layout, does not. */
+    if(text(el.closest('label'))) return true;
+    if(el.getAttribute('title')) return true;
+    return false;
+  }
+  function label(el){
+    var n = el.getAttribute('name') || el.id || '';
+    if(!n) return '';
+    if(NICE[n]) return NICE[n];
+    return n.replace(/[-_]+/g,' ').replace(/\s+/g,' ').trim();
+  }
+  function apply(){
+    var list = document.querySelectorAll('#enquire input, #enquire select, #enquire textarea');
+    for(var i=0;i<list.length;i++){
+      var el = list[i];
+      if(el.type === 'hidden') continue;
+      if(el.getAttribute('name') === 'bot-field') continue;   // the spam trap, never announced
+      if(hasName(el)) continue;
+      var t = label(el);
+      if(t) el.setAttribute('aria-label', t);
+      if(el.required && !el.getAttribute('aria-required')) el.setAttribute('aria-required','true');
+    }
+  }
+  function ready(fn){ if(document.readyState === 'loading'){ document.addEventListener('DOMContentLoaded', fn); } else { fn(); } }
+  ready(function(){
+    apply();
+    var target = document.getElementById('enquire');
+    if(target && window.MutationObserver){
+      var pending = null;
+      new MutationObserver(function(){
+        if(pending) return;
+        pending = setTimeout(function(){ pending = null; apply(); }, 120);
+      }).observe(target, {childList:true, subtree:true, attributes:true, attributeFilter:['style','class','hidden']});
+    }
+  });
+})();
+</script>
 </body>
 </html>
