@@ -2511,12 +2511,16 @@ function openTransportMode(mode, service){
 </nav>
 <!-- Mobile menu -->
 <div class="mobile-menu" id="mobileMenu" role="dialog" aria-label="Menu">
-  <a href="#services" onclick="closeMobileMenu()">Our Services</a>
-  <a href="#heritage-trail" onclick="closeMobileMenu()">Heritage Trail</a>
-  <a href="#about-bhh" onclick="closeMobileMenu()">About</a>
-  <a href="#enquire" onclick="closeMobileMenu();switchTab('guest');document.getElementById('enquire').scrollIntoView({behavior:'smooth'});return false;">Enquire</a>
-  <a href="#contact" onclick="closeMobileMenu()">Contact</a>
+  <a href="#services" onclick="return bhhMenuGo('services')">Our Services</a>
+  <a href="#heritage-trail" onclick="return bhhMenuGo('heritage-trail')">Heritage Trail</a>
+  <a href="#about-bhh" onclick="return bhhMenuGo('about-bhh')">About</a>
+  <a href="#enquire" onclick="return bhhMenuGo('enquire','guest')">Enquire</a>
+  <a href="#contact" onclick="return bhhMenuGo('contact')">Contact</a>
   <div class="mobile-menu-heading">Work with us</div>
+  <a class="mobile-subitem" href="#enquire" onclick="return bhhMenuGo('enquire','host')">Become a Host</a>
+  <a class="mobile-subitem" href="#enquire" onclick="return bhhMenuGo('enquire','partner')">Become a Partner</a>
+  <a class="mobile-subitem" href="#enquire" onclick="return bhhMenuGo('enquire','scout')">Become a Heritage Scout</a>
+</div>
   <a class="mobile-subitem" href="#enquire" onclick="closeMobileMenu();switchTab('host');document.getElementById('enquire').scrollIntoView({behavior:'smooth'});return false;">Become a Host</a>
   <a class="mobile-subitem" href="#enquire" onclick="closeMobileMenu();switchTab('partner');document.getElementById('enquire').scrollIntoView({behavior:'smooth'});return false;">Become a Partner</a>
   <a class="mobile-subitem" href="#enquire" onclick="closeMobileMenu();switchTab('scout');document.getElementById('enquire').scrollIntoView({behavior:'smooth'});return false;">Become a Heritage Scout</a>
@@ -2546,9 +2550,19 @@ function openTransportMode(mode, service){
    Choosing a menu link closes the menu and lets the visitor travel on to the
    section they chose, rather than being sent back to the button.
 
-   The expanded state and the named panel relationship are unchanged. Nothing
-   is marked aria hidden, so neither the menu nor the focused element is ever
-   inside a hidden subtree. Nothing visible changes. */
+   Choosing a link also moves the keyboard to the section chosen, not only the
+   eye. Without that, focus fell to the document body and the next Tab press
+   started again from the top of the page.
+
+   The panel keeps its dialog role and its name, Menu. It does not carry aria
+   modal, because the control that closes it is the same button in the bar that
+   opens it, and that button sits outside the panel. Marking the panel modal
+   would tell assistive technology to ignore everything outside it, including
+   that button. Containment is provided instead by making the rest of the page
+   inert and by the key handler below, both of which assistive technology
+   respects. The expanded state and the named panel relationship are unchanged.
+   Nothing is marked aria hidden, so neither the menu nor the focused element is
+   ever inside a hidden subtree. Nothing visible changes. */
 var bhhMenuInert = [];
 
 function bhhMenuFocusables(){
@@ -2609,7 +2623,6 @@ function toggleMobileMenu(){
   btn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
   if(open){
     if(nav){ menu.style.top = nav.offsetHeight + 'px'; }
-    menu.setAttribute('aria-modal','true');
     bhhBackgroundInert(true);
     /* Focus is placed on the close control, which is this same button with its
        label changed. Tab from here reaches the menu links in order and
@@ -2617,17 +2630,37 @@ function toggleMobileMenu(){
        predictable from the moment the menu opens. */
     btn.focus();
   } else {
-    menu.removeAttribute('aria-modal');
     bhhBackgroundInert(false);
     btn.focus();
   }
+}
+
+/* Sends the keyboard as well as the eye to the chosen section. The heading is
+   given a tab index of minus one so it can receive focus without entering the
+   tab order, which is the accepted way to move focus to a passage of text. */
+function bhhFocusSection(id){
+  var sec = document.getElementById(id);
+  if(!sec) return;
+  var target = sec.querySelector('h1, h2, h3') || sec;
+  if(!target.hasAttribute('tabindex')){ target.setAttribute('tabindex','-1'); }
+  target.focus({preventScroll:true});
+  sec.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+/* Used by every link in the menu. Closes the panel, switches the enquiry tab
+   where one is named, then places the keyboard at the destination. */
+function bhhMenuGo(id, tab){
+  closeMobileMenu();
+  if(tab && typeof switchTab === 'function'){ switchTab(tab); }
+  setTimeout(function(){ bhhFocusSection(id); }, 60);
+  return false;
 }
 
 /* returnFocus is true when the visitor closed the menu and is staying put.
    The menu links pass nothing, because they are travelling onward. */
 function closeMobileMenu(returnFocus){
   var btn=document.getElementById('navToggle'), menu=document.getElementById('mobileMenu');
-  if(menu){ menu.classList.remove('open'); menu.removeAttribute('aria-modal'); }
+  if(menu){ menu.classList.remove('open'); }
   bhhBackgroundInert(false);
   if(btn){
     btn.classList.remove('is-open');
