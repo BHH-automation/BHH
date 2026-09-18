@@ -235,6 +235,20 @@ footer { text-align: center; padding: 8px 16px 40px; font-size: 13px; color: var
     return d.toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
   }
 
+  // The database returns a time as 18:00:00. People read 6:00 pm.
+  function niceTime(value) {
+    if (!value) return "";
+    var bits = String(value).split(":");
+    if (bits.length < 2) return value;
+    var h = parseInt(bits[0], 10);
+    var m = bits[1];
+    if (isNaN(h)) return value;
+    var suffix = h < 12 ? "am" : "pm";
+    var hour = h % 12;
+    if (hour === 0) hour = 12;
+    return hour + ":" + m + " " + suffix;
+  }
+
   function handoverWords(status) {
     if (!status) return "Not opened yet";
     if (status === "issued") return "Waiting for arrival signing";
@@ -319,7 +333,7 @@ footer { text-align: center; padding: 8px 16px 40px; font-size: 13px; color: var
       jobs.forEach(function (j) {
         html += '<section class="card job">';
         html += '<div class="ref">Booking ' + (j.reference || "") + "</div>";
-        html += '<div class="when">' + niceDate(j.date) + (j.time ? ", " + j.time : "") + "</div>";
+        html += '<div class="when">' + niceDate(j.date) + (j.time ? ", " + niceTime(j.time) : "") + "</div>";
         html += "<dl>";
         if (j.venue_name) html += "<dt>Venue</dt><dd>" + j.venue_name + "</dd>";
         if (j.venue_address) html += "<dt>Address</dt><dd>" + j.venue_address + "</dd>";

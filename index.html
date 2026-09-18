@@ -2531,17 +2531,110 @@ function openTransportMode(mode, service){
   <symbol id="ic-language" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/></symbol>
 </svg>
 <script>
+/* ═══ MOBILE MENU KEYBOARD BEHAVIOUR ══════════════════════════════════════
+   18 September 2026. Keyboard testing at 390 and 768 pixels found that with
+   the menu open, tabbing past the menu links moved focus to a button on the
+   page behind, entirely covered by the menu panel: no indicator visible, and
+   no way for the visitor to tell where they were. Recorded as KB 003, a
+   failure of Focus Not Obscured, Minimum, at Level AA.
+
+   The menu is now a single controlled interaction. Opening it moves focus to
+   the close control and makes the rest of the page inert, so nothing behind
+   the panel can take focus. Tab and Shift and Tab cycle between the close
+   button and the menu links and nowhere else. Escape closes it, and closing
+   by Escape or by the button returns focus to the button that opened it.
+   Choosing a menu link closes the menu and lets the visitor travel on to the
+   section they chose, rather than being sent back to the button.
+
+   The expanded state and the named panel relationship are unchanged. Nothing
+   is marked aria hidden, so neither the menu nor the focused element is ever
+   inside a hidden subtree. Nothing visible changes. */
+var bhhMenuInert = [];
+
+function bhhMenuFocusables(){
+  var btn = document.getElementById('navToggle'), menu = document.getElementById('mobileMenu');
+  if(!menu) return [];
+  var list = (btn ? [btn] : []).concat(
+    [].slice.call(menu.querySelectorAll('a[href], button, input, select, textarea, [tabindex]')));
+  return list.filter(function(e){
+    if(!e || e.disabled || e.getAttribute('tabindex') === '-1') return false;
+    var cs = getComputedStyle(e), r = e.getBoundingClientRect();
+    return cs.display !== 'none' && cs.visibility !== 'hidden' && r.width > 0 && r.height > 0;
+  });
+}
+
+/* Everything that is neither the bar nor the panel is made inert while the
+   menu is open, so the page behind cannot take focus or be clicked. */
+function bhhBackgroundInert(on){
+  var nav = document.querySelector('nav'), menu = document.getElementById('mobileMenu');
+  if(on){
+    bhhMenuInert = [];
+    [].slice.call(document.body.children).forEach(function(el){
+      if(el.tagName === 'SCRIPT' || el.tagName === 'STYLE') return;
+      if(el === nav || el === menu) return;
+      if(nav && el.contains(nav)) return;
+      if(menu && el.contains(menu)) return;
+      if(!el.hasAttribute('inert')){ el.setAttribute('inert',''); bhhMenuInert.push(el); }
+    });
+  } else {
+    bhhMenuInert.forEach(function(el){ el.removeAttribute('inert'); });
+    bhhMenuInert = [];
+  }
+}
+
+/* Tab and Shift and Tab stay inside the set, and Escape closes. The cycle is
+   enforced here as well as by inert, so the behaviour holds in a browser that
+   does not support inert. */
+function bhhMenuKeydown(e){
+  var menu = document.getElementById('mobileMenu');
+  if(!menu || !menu.classList.contains('open')) return;
+  if(e.key === 'Escape' || e.key === 'Esc'){ e.preventDefault(); closeMobileMenu(true); return; }
+  if(e.key !== 'Tab') return;
+  var f = bhhMenuFocusables();
+  if(!f.length) return;
+  var first = f[0], last = f[f.length - 1], here = f.indexOf(document.activeElement);
+  if(e.shiftKey){
+    if(here === 0 || here === -1){ e.preventDefault(); last.focus(); }
+  } else {
+    if(here === f.length - 1 || here === -1){ e.preventDefault(); first.focus(); }
+  }
+}
+document.addEventListener('keydown', bhhMenuKeydown, true);
+
 function toggleMobileMenu(){
   var btn=document.getElementById('navToggle'), menu=document.getElementById('mobileMenu'), nav=document.querySelector('nav');
   var open=menu.classList.toggle('open');
   btn.classList.toggle('is-open', open);
   btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-  if(open && nav){ menu.style.top = nav.offsetHeight + 'px'; }
+  btn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+  if(open){
+    if(nav){ menu.style.top = nav.offsetHeight + 'px'; }
+    menu.setAttribute('aria-modal','true');
+    bhhBackgroundInert(true);
+    /* Focus is placed on the close control, which is this same button with its
+       label changed. Tab from here reaches the menu links in order and
+       Shift and Tab reaches the last of them, so both directions are
+       predictable from the moment the menu opens. */
+    btn.focus();
+  } else {
+    menu.removeAttribute('aria-modal');
+    bhhBackgroundInert(false);
+    btn.focus();
+  }
 }
-function closeMobileMenu(){
+
+/* returnFocus is true when the visitor closed the menu and is staying put.
+   The menu links pass nothing, because they are travelling onward. */
+function closeMobileMenu(returnFocus){
   var btn=document.getElementById('navToggle'), menu=document.getElementById('mobileMenu');
-  if(menu) menu.classList.remove('open');
-  if(btn){ btn.classList.remove('is-open'); btn.setAttribute('aria-expanded','false'); }
+  if(menu){ menu.classList.remove('open'); menu.removeAttribute('aria-modal'); }
+  bhhBackgroundInert(false);
+  if(btn){
+    btn.classList.remove('is-open');
+    btn.setAttribute('aria-expanded','false');
+    btn.setAttribute('aria-label','Open menu');
+    if(returnFocus === true){ btn.focus(); }
+  }
 }
 </script>
 
