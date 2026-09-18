@@ -2373,6 +2373,20 @@ footer .footer-bottom, footer .footer-bottom *{ font-size:0.88rem !important; }
 .hero-reply-line{ margin-top:0.7rem !important; margin-bottom:0 !important; }
 .hero-services-strip{ padding:0.62rem 2rem !important; }
 .trust-bar{ padding:0.8rem 0 !important; }
+/* ═══ THE SHOWCASE CARD, SMALLER ═════════════════════════════
+   18 September 2026. The card that shows one experience at a time stood 280 by
+   370 pixels, which is nearly half the height of a laptop screen, and it covered
+   a good part of the photograph behind it. It is now about a quarter smaller in
+   each direction, so it takes roughly half the area it did. It still says the
+   same three things and still opens the same enquiry. */
+.hero-newsflash{ width:210px !important; }
+.hero-newsflash__card{ border-radius:105px 105px 12px 12px !important; }
+.hero-newsflash__imgwrap{ height:195px !important; border-radius:98px 98px 7px 7px !important; margin:6px 6px 0 !important; }
+.hero-newsflash__cap{ padding:.5rem .7rem .75rem !important; }
+.hero-newsflash__eyebrow{ font-size:0.68rem !important; letter-spacing:.14em !important; margin-bottom:.2rem !important; }
+.hero-newsflash__name{ font-size:15px !important; margin-bottom:.25rem !important; }
+.hero-newsflash__cta{ font-size:0.74rem !important; }
+.hero-newsflash__close{ width:22px !important; height:22px !important; top:5px !important; right:8px !important; font-size:.85rem !important; }
 </style>
 
     <!-- ═══ SEO & SOCIAL ═══════════════════════════════════════════════════ -->
@@ -7587,8 +7601,8 @@ function closeLegalModal(type) {
     var MARGIN = 24;
     var navB = navEl ? Math.round(navEl.getBoundingClientRect().height) : 132;
     // Width shrinks with viewport height: 220px @ vh600 … 280px @ vh940 (clamped).
-    var W = Math.round(220 + (vh - 600) * 60 / 340);
-    W = Math.max(220, Math.min(280, W));
+    var W = Math.round(168 + (vh - 600) * 42 / 340);
+    W = Math.max(168, Math.min(210, W));
     W = Math.min(W, vw - 40);                      // never wider than the screen allows
     var imgH = Math.round((W - 16) * IMG_RATIO);   // image height scales proportionally
     card.style.width = W + 'px';
