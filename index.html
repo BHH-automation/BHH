@@ -1858,6 +1858,45 @@ footer {
   .hero .eyebrow{ font-size:0.72rem; }
   .enquire-tabs .enquire-tab{ font-size:0.55rem !important; padding:0.7rem 0.15rem !important; }
 }
+/* ═══ THE EXPERIENCE CARDS AT 768 PIXELS AND WIDER ═══════════════════
+   18 September 2026. The name used to sit on top of the photograph, which meant
+   a dark veil had to be drawn over the picture for the words to be readable at
+   all, and the picture could barely be seen. The card is now built the way the
+   phone already builds it: the photograph is shown whole with nothing over it,
+   and the name sits in a solid navy strip beneath. White on navy measures 15.6
+   to 1, so no photograph can ever make the name hard to read. The short
+   description that used to appear when the pointer rested on a card is dropped,
+   as it is on phones; the card still opens its own experience page. */
+@media (min-width:768px){
+  .services-grid .service-card{
+    aspect-ratio:auto; height:auto;
+    display:flex; flex-direction:column;
+    background:var(--navy);
+  }
+  .services-grid .service-card-img{
+    position:relative; width:100%; height:auto; aspect-ratio:4/3; flex:0 0 auto;
+  }
+  .services-grid .service-card-overlay{ display:none !important; }
+  .services-grid .service-card-content{
+    position:static; flex:1 1 auto;
+    background:var(--navy); padding:0.75rem 1.1rem 1.05rem; text-align:left;
+  }
+  .services-grid .service-card-num{
+    display:block !important; color:var(--gold);
+    font-size:0.72rem; letter-spacing:0.14em; margin-bottom:0.3rem;
+  }
+  .services-grid .service-card h3{
+    color:var(--white); text-shadow:none; margin-bottom:0;
+  }
+  .services-grid .service-card-desc,
+  .services-grid .service-card-arrow,
+  .services-grid .service-card:hover .service-card-desc,
+  .services-grid .service-card:hover .service-card-arrow,
+  .services-grid .service-card:focus-within .service-card-desc,
+  .services-grid .service-card:focus-within .service-card-arrow{
+    display:none !important;
+  }
+}
 /* ═══ PHONE ONLY (≤767px): two column experiences grid, no showcase card ═══
    Placed last in this stylesheet so it wins over the earlier phone rules. Every rule is
    inside a max-width:767px query, so 768px and wider (tablet and desktop) is untouched. */
