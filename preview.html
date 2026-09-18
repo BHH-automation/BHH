@@ -7601,8 +7601,16 @@ function closeLegalModal(type) {
     var MARGIN = 24;
     var navB = navEl ? Math.round(navEl.getBoundingClientRect().height) : 132;
     // Width shrinks with viewport height: 220px @ vh600 … 280px @ vh940 (clamped).
-    var W = Math.round(152 + (vh - 600) * 40 / 340);
-    W = Math.max(152, Math.min(192, W));
+    /* PREVIEW PAGE ONLY: ?card=NNN fixes the width so sizes can be compared
+       without publishing the site again. Without it, the normal rule applies. */
+    var OVERRIDE = 0;
+    try { var m = location.search.match(/[?&]card=(\d+)/); if(m){ OVERRIDE = Math.max(130, Math.min(300, parseInt(m[1],10))); } } catch(e){}
+    var W;
+    if(OVERRIDE){ W = OVERRIDE; }
+    else {
+      W = Math.round(152 + (vh - 600) * 40 / 340);
+      W = Math.max(152, Math.min(192, W));
+    }
     W = Math.min(W, vw - 40);                      // never wider than the screen allows
     var imgH = Math.round((W - 16) * IMG_RATIO);   // image height scales proportionally
     card.style.width = W + 'px';
@@ -8011,6 +8019,43 @@ if ("serviceWorker" in navigator) {
     window.addEventListener('resize', function(){ clearTimeout(t); t=setTimeout(measure,120); });
     if(document.fonts && document.fonts.ready){ document.fonts.ready.then(measure); }
   });
+})();
+</script>
+<div id="bhhSizePicker" style="position:fixed;left:0;bottom:26px;z-index:99999;background:rgba(13,27,42,.92);border:1px solid #C9A84C;border-left:none;border-radius:0 6px 6px 0;padding:8px 12px;font-family:Jost,sans-serif;color:#F5F0E8;font-size:12px;line-height:1.5;max-width:230px">
+  <div style="color:#C9A84C;letter-spacing:.12em;text-transform:uppercase;font-size:10px;margin-bottom:6px">Card width, preview only</div>
+  <div id="bhhSizeRow" style="display:flex;flex-wrap:wrap;gap:5px"></div>
+  <div id="bhhSizeNow" style="margin-top:6px;color:rgba(245,240,232,.75);font-size:11px"></div>
+</div>
+<script>
+(function(){
+  var sizes=[150,165,180,195,210,225,240,255];
+  function current(){ var m=location.search.match(/[?&]card=(\d+)/); return m? parseInt(m[1],10) : 0; }
+  var cur=current();
+  var row=document.getElementById('bhhSizeRow');
+  sizes.forEach(function(n){
+    var a=document.createElement('a');
+    a.href='?card='+n;
+    a.textContent=n;
+    a.style.cssText='display:inline-block;padding:4px 8px;border:1px solid '+(n===cur?'#C9A84C':'rgba(201,168,76,.45)')+
+      ';border-radius:3px;color:'+(n===cur?'#0D1B2A':'#F5F0E8')+';background:'+(n===cur?'#C9A84C':'transparent')+
+      ';text-decoration:none;font-size:11px';
+    row.appendChild(a);
+  });
+  var a=document.createElement('a');
+  a.href=location.pathname; a.textContent='auto';
+  a.style.cssText='display:inline-block;padding:4px 8px;border:1px solid '+(cur?'rgba(201,168,76,.45)':'#C9A84C')+
+    ';border-radius:3px;color:'+(cur?'#F5F0E8':'#0D1B2A')+';background:'+(cur?'transparent':'#C9A84C')+
+    ';text-decoration:none;font-size:11px';
+  row.appendChild(a);
+  function report(){
+    var n=document.getElementById('hero-newsflash');
+    var el=document.getElementById('bhhSizeNow');
+    if(!n||!el) return;
+    var b=n.getBoundingClientRect();
+    if(!b.width){ el.textContent='card not shown at this width'; return; }
+    el.textContent='now '+Math.round(b.width)+' by '+Math.round(b.height)+' pixels';
+  }
+  setInterval(report, 900);
 })();
 </script>
 <div style="position:fixed;left:0;bottom:0;z-index:99999;background:#C9A84C;color:#0D1B2A;font-family:Jost,sans-serif;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;padding:4px 10px;border-top-right-radius:4px;pointer-events:none">Preview, not the live page</div>
