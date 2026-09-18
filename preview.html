@@ -2379,9 +2379,9 @@ footer .footer-bottom, footer .footer-bottom *{ font-size:0.88rem !important; }
    a good part of the photograph behind it. It is now about a quarter smaller in
    each direction, so it takes roughly half the area it did. It still says the
    same three things and still opens the same enquiry. */
-.hero-newsflash{ width:210px !important; }
-.hero-newsflash__card{ border-radius:105px 105px 12px 12px !important; }
-.hero-newsflash__imgwrap{ height:195px !important; border-radius:98px 98px 7px 7px !important; margin:6px 6px 0 !important; }
+.hero-newsflash{ width:192px; }   /* a starting value only: placeCard() sizes it */
+.hero-newsflash__card{ border-radius:96px 96px 12px 12px !important; }
+.hero-newsflash__imgwrap{ height:178px; border-radius:90px 90px 7px 7px !important; margin:6px 6px 0 !important; }
 .hero-newsflash__cap{ padding:.5rem .7rem .75rem !important; }
 .hero-newsflash__eyebrow{ font-size:0.68rem !important; letter-spacing:.14em !important; margin-bottom:.2rem !important; }
 .hero-newsflash__name{ font-size:15px !important; margin-bottom:.25rem !important; }
@@ -7601,8 +7601,8 @@ function closeLegalModal(type) {
     var MARGIN = 24;
     var navB = navEl ? Math.round(navEl.getBoundingClientRect().height) : 132;
     // Width shrinks with viewport height: 220px @ vh600 … 280px @ vh940 (clamped).
-    var W = Math.round(168 + (vh - 600) * 42 / 340);
-    W = Math.max(168, Math.min(210, W));
+    var W = Math.round(152 + (vh - 600) * 40 / 340);
+    W = Math.max(152, Math.min(192, W));
     W = Math.min(W, vw - 40);                      // never wider than the screen allows
     var imgH = Math.round((W - 16) * IMG_RATIO);   // image height scales proportionally
     card.style.width = W + 'px';
@@ -7611,7 +7611,7 @@ function closeLegalModal(type) {
     var wasHidden = card.hidden, prevVis = card.style.visibility;
     if(wasHidden){ card.style.visibility = 'hidden'; card.hidden = false; }
     var cardH = card.offsetHeight;
-    var avail = (vh - MARGIN) - (navB + 12);        // space between the fixed header and the fold
+    var avail = (vh - MARGIN) - (navB + 34);        // space between the fixed header and the fold
     if(cardH > avail){                              // extra safety on very short viewports
       imgH = Math.max(120, imgH - (cardH - avail));
       imgwrap.style.height = imgH + 'px';
@@ -7631,8 +7631,8 @@ function closeLegalModal(type) {
         rest = Math.max(MARGIN, Math.round(vh - stripTopAtTop) + 16);
       }
     }
-    if(rest + cardH > vh - (navB + 12)){            // never push the card under the fixed bar
-      rest = Math.max(MARGIN, vh - (navB + 12) - cardH);
+    if(rest + cardH > vh - (navB + 34)){            // never push the card under the fixed bar
+      rest = Math.max(MARGIN, vh - (navB + 34) - cardH);
     }
     card.style.bottom = rest + 'px';
   }
