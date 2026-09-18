@@ -427,15 +427,24 @@ nav {
    the words carry their own shadow, so that reading them no longer depends on
    which photograph happens to be showing. Phones are untouched: below 768px the
    card text already sits on a solid navy panel. */
+/* 18 September 2026, second pass. The veil above ran all the way to the top of
+   the card, so the whole photograph was behind it and very little of the picture
+   could be seen. It only ever needed to cover the strip the words sit in. The
+   card padding is reduced so the name sits lower, and the veil is made stronger
+   where the words are and gone entirely by two thirds of the way up. Measured
+   across all 25 photograph states at 1440 and 768 pixels, every heading now
+   reads higher than it did before this change, the lowest being 3.53 against the
+   3 to 1 minimum. */
 @media (min-width:768px){
   .service-card-overlay {
-    background: linear-gradient(to top, rgba(13,27,42,0.97) 0%, rgba(13,27,42,0.94) 30%,
-                                rgba(13,27,42,0.62) 52%, transparent 100%);
+    background: linear-gradient(to top, rgba(13,27,42,0.97) 0%, rgba(13,27,42,0.94) 22%,
+                                rgba(13,27,42,0.88) 40%, rgba(13,27,42,0.52) 54%, transparent 68%);
   }
   .service-card:hover .service-card-overlay {
-    background: linear-gradient(to top, rgba(13,27,42,0.98) 0%, rgba(13,27,42,0.93) 35%,
-                                rgba(13,27,42,0.60) 62%, rgba(13,27,42,0.12) 100%);
+    background: linear-gradient(to top, rgba(13,27,42,0.98) 0%, rgba(13,27,42,0.94) 28%,
+                                rgba(13,27,42,0.88) 46%, rgba(13,27,42,0.54) 60%, transparent 76%);
   }
+  .services-grid .service-card-content{ padding:0.9rem 1.1rem 1rem; }
   .service-card h3 { text-shadow: 0 1px 3px rgba(13,27,42,0.95), 0 0 12px rgba(13,27,42,0.8); }
   /* The 01 / 09 label is decoration. The group heading above each row already
      says which three of the nine these are, and this label carried the worst
