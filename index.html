@@ -2466,6 +2466,7 @@ function openTransportMode(mode, service){
   <input name="How Did You Hear"><input name="GDPR Consent">
 </form>
 
+<div id="navShell">
 <nav>
   <a class='nav-logo' href='/'>
     <img class="nav-logo-img" src="images/british-heritage-hosts.png" alt="British Heritage Hosts">
@@ -2510,7 +2511,7 @@ function openTransportMode(mode, service){
   </button>
 </nav>
 <!-- Mobile menu -->
-<div class="mobile-menu" id="mobileMenu" role="dialog" aria-label="Menu">
+<div class="mobile-menu" id="mobileMenu">
   <a href="#services" onclick="return bhhMenuGo('services')">Our Services</a>
   <a href="#heritage-trail" onclick="return bhhMenuGo('heritage-trail')">Heritage Trail</a>
   <a href="#about-bhh" onclick="return bhhMenuGo('about-bhh')">About</a>
@@ -2521,6 +2522,8 @@ function openTransportMode(mode, service){
   <a class="mobile-subitem" href="#enquire" onclick="return bhhMenuGo('enquire','partner')">Become a Partner</a>
   <a class="mobile-subitem" href="#enquire" onclick="return bhhMenuGo('enquire','scout')">Become a Heritage Scout</a>
 </div>
+</div>
+
   <a class="mobile-subitem" href="#enquire" onclick="closeMobileMenu();switchTab('host');document.getElementById('enquire').scrollIntoView({behavior:'smooth'});return false;">Become a Host</a>
   <a class="mobile-subitem" href="#enquire" onclick="closeMobileMenu();switchTab('partner');document.getElementById('enquire').scrollIntoView({behavior:'smooth'});return false;">Become a Partner</a>
   <a class="mobile-subitem" href="#enquire" onclick="closeMobileMenu();switchTab('scout');document.getElementById('enquire').scrollIntoView({behavior:'smooth'});return false;">Become a Heritage Scout</a>
@@ -2554,22 +2557,28 @@ function openTransportMode(mode, service){
    eye. Without that, focus fell to the document body and the next Tab press
    started again from the top of the page.
 
-   The panel keeps its dialog role and its name, Menu. It does not carry aria
-   modal, because the control that closes it is the same button in the bar that
-   opens it, and that button sits outside the panel. Marking the panel modal
-   would tell assistive technology to ignore everything outside it, including
-   that button. Containment is provided instead by making the rest of the page
-   inert and by the key handler below, both of which assistive technology
-   respects. The expanded state and the named panel relationship are unchanged.
-   Nothing is marked aria hidden, so neither the menu nor the focused element is
-   ever inside a hidden subtree. Nothing visible changes. */
+   The bar and the panel sit inside one wrapper, navShell. While the menu is
+   open that wrapper carries role dialog, aria modal true and the name Menu, so
+   every control needed to work the menu, including the button that closes it,
+   is a descendant of the element declared modal. When the menu closes the
+   wrapper gives all three attributes back and is an ordinary container again.
+   An earlier attempt put aria modal on the panel alone, which would have told
+   assistive technology to ignore the close button in the bar outside it.
+
+   The wrapper carries no styles. The bar and the panel are both positioned
+   fixed, so a plain container around them changes nothing on screen.
+
+   The expanded state and the named panel relationship are unchanged. Nothing is
+   marked aria hidden, so neither the menu nor the focused element is ever inside
+   a hidden subtree. Nothing visible changes. */
 var bhhMenuInert = [];
 
+/* Everything operable inside the shell, in document order: the logo, the close
+   control and the eight menu links. */
 function bhhMenuFocusables(){
-  var btn = document.getElementById('navToggle'), menu = document.getElementById('mobileMenu');
-  if(!menu) return [];
-  var list = (btn ? [btn] : []).concat(
-    [].slice.call(menu.querySelectorAll('a[href], button, input, select, textarea, [tabindex]')));
+  var shell = document.getElementById('navShell');
+  if(!shell) return [];
+  var list = [].slice.call(shell.querySelectorAll('a[href], button, input, select, textarea, [tabindex]'));
   return list.filter(function(e){
     if(!e || e.disabled || e.getAttribute('tabindex') === '-1') return false;
     var cs = getComputedStyle(e), r = e.getBoundingClientRect();
@@ -2580,14 +2589,12 @@ function bhhMenuFocusables(){
 /* Everything that is neither the bar nor the panel is made inert while the
    menu is open, so the page behind cannot take focus or be clicked. */
 function bhhBackgroundInert(on){
-  var nav = document.querySelector('nav'), menu = document.getElementById('mobileMenu');
+  var shell = document.getElementById('navShell');
   if(on){
     bhhMenuInert = [];
     [].slice.call(document.body.children).forEach(function(el){
       if(el.tagName === 'SCRIPT' || el.tagName === 'STYLE') return;
-      if(el === nav || el === menu) return;
-      if(nav && el.contains(nav)) return;
-      if(menu && el.contains(menu)) return;
+      if(el === shell || (shell && el.contains(shell))) return;
       if(!el.hasAttribute('inert')){ el.setAttribute('inert',''); bhhMenuInert.push(el); }
     });
   } else {
@@ -2621,8 +2628,10 @@ function toggleMobileMenu(){
   btn.classList.toggle('is-open', open);
   btn.setAttribute('aria-expanded', open ? 'true' : 'false');
   btn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+  var shell=document.getElementById('navShell');
   if(open){
     if(nav){ menu.style.top = nav.offsetHeight + 'px'; }
+    if(shell){ shell.setAttribute('role','dialog'); shell.setAttribute('aria-modal','true'); shell.setAttribute('aria-label','Menu'); }
     bhhBackgroundInert(true);
     /* Focus is placed on the close control, which is this same button with its
        label changed. Tab from here reaches the menu links in order and
@@ -2630,6 +2639,7 @@ function toggleMobileMenu(){
        predictable from the moment the menu opens. */
     btn.focus();
   } else {
+    if(shell){ shell.removeAttribute('role'); shell.removeAttribute('aria-modal'); shell.removeAttribute('aria-label'); }
     bhhBackgroundInert(false);
     btn.focus();
   }
@@ -2660,7 +2670,9 @@ function bhhMenuGo(id, tab){
    The menu links pass nothing, because they are travelling onward. */
 function closeMobileMenu(returnFocus){
   var btn=document.getElementById('navToggle'), menu=document.getElementById('mobileMenu');
+  var shell=document.getElementById('navShell');
   if(menu){ menu.classList.remove('open'); }
+  if(shell){ shell.removeAttribute('role'); shell.removeAttribute('aria-modal'); shell.removeAttribute('aria-label'); }
   bhhBackgroundInert(false);
   if(btn){
     btn.classList.remove('is-open');
