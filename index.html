@@ -1001,6 +1001,32 @@ footer {
 .service-card-carousel img.inactive {
   opacity: 0;
 }
+/* ── PAUSE CONTROL FOR THE EXPERIENCE PHOTOGRAPHS ──
+   18 September 2026. The nine experience cards change photograph every 3.5
+   seconds on their own, with no way to stop them. Pause, Stop, Hide, at Level
+   A, asks for a way to stop moving content that starts by itself, runs for
+   more than five seconds and sits beside other content. This control is that
+   way. It also honours the setting a visitor can turn on to ask for less
+   movement: where that is set nothing rotates and the control offers to start
+   it rather than to stop it. */
+.motion-control{ display:flex; justify-content:center; margin:1.8rem auto 0; }
+.motion-toggle{
+  font-family:inherit; font-size:0.8rem; letter-spacing:0.09em; text-transform:uppercase;
+  color:#0D1B2A; background:transparent; border:1px solid rgba(13,27,42,0.6);
+  border-radius:999px; padding:0.55rem 1.4rem; cursor:pointer;
+  display:inline-flex; align-items:center; gap:0.6rem;
+  transition:background 0.2s ease, border-color 0.2s ease;
+}
+.motion-toggle:hover{ background:rgba(13,27,42,0.07); border-color:#0D1B2A; }
+.motion-toggle:focus-visible{
+  outline:2px solid var(--gold); outline-offset:2px;
+  box-shadow:0 0 0 6px rgba(13,27,42,0.95);
+}
+.motion-toggle__glyph{ width:0.7rem; height:0.8rem; flex:none; }
+@media (prefers-reduced-motion: reduce){
+  .service-card-carousel img{ transition:none !important; }
+}
+
 /* Tier card selection — v6 tier block */
 .tier-card.selected {
   border: 1.5px solid #C9A84C !important;
@@ -2796,6 +2822,23 @@ function closeMobileMenu(returnFocus){
       <div class="gold-line gold-line--center"></div>
       <p class="lead" style="margin:0 auto;text-align:center">Each experience is arranged exclusively for your family. No other guests. No shared itineraries. No compromise.</p>
       <p class="lead" style="margin:0.6rem auto 0;text-align:center">Priced per family for the experiences British Heritage Hosts (BHH) arranges, quoted personally on enquiry.</p>
+      <div class="motion-control">
+        <button type="button" id="motionToggle" class="motion-toggle" aria-label="Pause the photographs" onclick="bhhToggleMotion()">
+          <svg class="motion-toggle__glyph" viewBox="0 0 12 14" aria-hidden="true" focusable="false">
+            <rect id="motionBarA" x="0" y="0" width="4" height="14" fill="currentColor"></rect>
+            <rect id="motionBarB" x="8" y="0" width="4" height="14" fill="currentColor"></rect>
+            <polygon id="motionPlay" points="0,0 12,7 0,14" fill="currentColor" style="display:none"></polygon>
+          </svg>
+          <span id="motionToggleText">Pause the photographs</span>
+        </button>
+      </div>
+      <script>
+      /* Declared here, before every script that reads it, so the showcase card
+         and the large view can ask the same question. */
+      function bhhReduceMotion(){
+        try{ return window.matchMedia('(prefers-reduced-motion: reduce)').matches; }catch(e){ return false; }
+      }
+      </script>
     </div>
     <div class="services-grid fade-up">
       <div class="services-cat"><span>Three of the nine</span>Around a British table</div>
@@ -4920,6 +4963,43 @@ document.addEventListener('DOMContentLoaded', function() {
   } else {
     carousels.forEach(function(c) { setTimeout(function(){ hydrate(c); }, 2500); });
   }
+  /* Every rotation registers the way to start itself here. Pausing clears them
+     all, playing starts them again, and where the visitor has asked for less
+     movement none of them is ever started. */
+  var bhhRotators = [], bhhMotionRunning = false;
+  function bhhRegisterRotator(start){ bhhRotators.push({start:start, ids:[]}); }
+  function bhhStartRotators(){
+    if(bhhMotionRunning) return;
+    bhhMotionRunning = true;
+    bhhRotators.forEach(function(r){ r.ids = r.start() || []; });
+  }
+  function bhhStopRotators(){
+    bhhMotionRunning = false;
+    bhhRotators.forEach(function(r){
+      (r.ids||[]).forEach(function(id){ clearTimeout(id); clearInterval(id); });
+      r.ids = [];
+    });
+  }
+  function bhhSyncMotionButton(){
+    var t = document.getElementById('motionToggleText');
+    if(!t) return;
+    var words = bhhMotionRunning ? 'Pause the photographs' : 'Play the photographs';
+    t.textContent = words;
+    var btn = document.getElementById('motionToggle');
+    if(btn) btn.setAttribute('aria-label', words);
+    var a = document.getElementById('motionBarA'), b2 = document.getElementById('motionBarB'),
+        pl = document.getElementById('motionPlay');
+    if(a && b2 && pl){
+      a.style.display = bhhMotionRunning ? '' : 'none';
+      b2.style.display = bhhMotionRunning ? '' : 'none';
+      pl.style.display = bhhMotionRunning ? 'none' : '';
+    }
+  }
+  window.bhhToggleMotion = function(){
+    if(bhhMotionRunning){ bhhStopRotators(); } else { bhhStartRotators(); }
+    bhhSyncMotionButton();
+  };
+
   carousels.forEach(function(c) {
     var imgs = c.querySelectorAll('img');
     if (imgs.length < 2) { if(imgs[0]) imgs[0].style.opacity='1'; return; }
@@ -4946,22 +5026,29 @@ document.addEventListener('DOMContentLoaded', function() {
       var startIn = 3500 + (phoneOrder * 260);
       phoneOrder++;
       setTimeout(function() { hydrate(c); }, Math.max(0, startIn - 1000));
-      setTimeout(function() { swap(); setInterval(swap, 3500); }, startIn);
+      bhhRegisterRotator(function(){
+        var ids = [];
+        ids.push(setTimeout(function(){ swap(); ids.push(setInterval(swap, 3500)); }, startIn));
+        return ids;
+      });
       return;
     }
     imgs[0].classList.add('active');
     for (var i = 1; i < imgs.length; i++) { imgs[i].classList.add('inactive'); }
     var idx = 0;
     setTimeout(function() { hydrate(c); }, 2500);
-    setInterval(function() {
+    var step = function(){
       hydrate(c);
       imgs[idx].classList.remove('active');
       imgs[idx].classList.add('inactive');
       idx = (idx + 1) % imgs.length;
       imgs[idx].classList.remove('inactive');
       imgs[idx].classList.add('active');
-    }, 3500);
+    };
+    bhhRegisterRotator(function(){ return [setInterval(step, 3500)]; });
   });
+  if(!bhhReduceMotion()){ bhhStartRotators(); }
+  bhhSyncMotionButton();
 });
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -7046,7 +7133,7 @@ function closeLegalModal(type) {
     imgEl.style.opacity = '1';
     paint(s, 0);
     if(imgTimer){ clearInterval(imgTimer); imgTimer = null; }
-    if(isPhone()) return;                         // PHONES: first photo only; the › moves to the next experience
+    if(isPhone() || bhhReduceMotion()) return;     // PHONES, and anyone asking for less movement: first photo only
     if(s.imgs.length > 1){                        // rotate through ALL of this card's photos, grid cadence
       imgTimer = setInterval(function(){
         imgIdx = (imgIdx + 1) % s.imgs.length;
@@ -7063,7 +7150,7 @@ function closeLegalModal(type) {
     card.hidden = false;
     // double rAF so the opacity/transform transition actually runs from the hidden state
     requestAnimationFrame(function(){ requestAnimationFrame(function(){ card.classList.add('is-visible'); }); });
-    if(isPhone()) return;                        // PHONES: fade in once, then stay (no timed fade-out, no auto-advance)
+    if(isPhone() || bhhReduceMotion()) return;    // PHONES, and anyone asking for less movement: fade in once, then stay
     var hold = s.imgs.length * ROTATE_MS;         // stay long enough to show every photo at grid cadence
     timers.push(setTimeout(function(){            // after fade-in (1s) + hold
       card.classList.remove('is-visible');        // fade out (1s via CSS)
@@ -7159,6 +7246,7 @@ function closeLegalModal(type) {
   function ovStopTimer(){ if(ovTimer){ clearInterval(ovTimer); ovTimer = null; } }
   function ovStartTimer(){
     ovStopTimer();
+    if(bhhReduceMotion()) return;                  // the visitor has asked for less movement
     if(SERVICES[ovIdx].imgs.length < 2) return;    // nothing to rotate through
     ovTimer = setInterval(function(){ ovStep(1); }, OV_ROTATE_MS);
   }
