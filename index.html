@@ -1888,14 +1888,45 @@ footer {
   .services-grid .service-card h3{
     color:var(--white); text-shadow:none; margin-bottom:0;
   }
-  .services-grid .service-card-desc,
-  .services-grid .service-card-arrow,
-  .services-grid .service-card:hover .service-card-desc,
-  .services-grid .service-card:hover .service-card-arrow,
-  .services-grid .service-card:focus-within .service-card-desc,
-  .services-grid .service-card:focus-within .service-card-arrow{
-    display:none !important;
+  /* The rule that hid the sentence and the Discover more line used to sit here.
+     They are shown at all times now: see the block further down. */
+}
+/* ═══ THE CARD WORDING, SHOWN AT ALL TIMES ════════════════════════
+   18 September 2026. The sentence and the Discover more line used to be hidden
+   until the pointer rested on the card, which meant no one on a phone or a
+   tablet ever saw them. They are now part of the navy strip and are always
+   there. Nothing moves when the pointer passes over a card.
+
+   The hover rules written for the old card shrank the name and collapsed the
+   sentence to nothing, because in that design the wording had to squeeze itself
+   into a photograph. The card no longer works that way, so those rules are
+   cancelled here for the nine experience cards. Cards elsewhere on the page are
+   not touched. */
+@media (min-width:768px){
+  .services-grid .service-card-desc{
+    display:block !important; max-height:none !important; opacity:1 !important;
+    color:rgba(245,240,232,0.72); font-size:0.8rem; line-height:1.5; margin:0.45rem 0 0;
+    transition:none !important;
   }
+  .services-grid .service-card-arrow{
+    display:inline-block !important; opacity:1 !important; transform:none !important;
+    margin-top:0.6rem; white-space:nowrap; transition:none !important;
+  }
+  /* The Heritage Trail line was given a height of zero in the old card so it
+     could hang over the description without pushing it out of a card that had no
+     room. The new card has room, so it takes its place in the flow again. */
+  .services-grid .service-card-trail,
+  .services-grid .service-card:hover .service-card-trail{
+    display:block; height:auto; overflow:visible;
+    margin:0.4rem 0 0; font-size:0.68rem; letter-spacing:0.06em; white-space:normal;
+  }
+
+  /* the same at rest and under the pointer */
+  .services-grid .service-card:hover .service-card-content{ padding:0.75rem 1.1rem 1.05rem; }
+  .services-grid .service-card:hover .service-card-num{ font-size:0.72rem; letter-spacing:0.14em; margin-bottom:0.3rem; }
+  .services-grid .service-card:hover h3{ font-size:1.6rem; line-height:1.2; margin-bottom:0; }
+  .services-grid .service-card:hover .service-card-desc{ font-size:0.8rem; line-height:1.5; }
+  .services-grid .service-card:hover .service-card-arrow{ margin-top:0.6rem; font-size:0.75rem; }
 }
 /* ═══ PHONE ONLY (≤767px): two column experiences grid, no showcase card ═══
    Placed last in this stylesheet so it wins over the earlier phone rules. Every rule is
