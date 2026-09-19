@@ -7887,19 +7887,24 @@ if ("serviceWorker" in navigator) {
    paragraphs and the pause button before the first card. On a window 700
    pixels tall a visitor who pressed Explore Our Experiences saw only the top
    edges of the first three cards.
-   The landing point is now the line that names the first group, Around a
-   British table, placed just clear of the fixed bar, so the first row of cards
-   is whole underneath it. The introduction and the pause button are one small
-   scroll above, unchanged and still in the keyboard order before the cards. */
+   Landing on the cards instead skipped the section's own title and promise,
+   which is worse, so the landing point is the first line of the section,
+   Nine Signature Experiences, placed just clear of the fixed bar. Before today
+   that line was hidden behind the bar, because the jump put the top of the
+   section at the top of the window and the bar covers the first 132 pixels.
+   Every word of the promise now shows, and the first row of cards begins
+   underneath it. (Decision of 19 September 2026, option B of three.) */
 (function(){
   'use strict';
 
   function navH(){ var n=document.querySelector('nav'); return n ? Math.round(n.getBoundingClientRect().height) : 132; }
 
   function landing(){
-    var cat=document.querySelector('#services .services-cat');
-    if(!cat) return null;
-    return Math.max(0, Math.round(cat.getBoundingClientRect().top + window.pageYOffset - navH() - 16));
+    var first=document.querySelector('#services .eyebrow') ||
+              document.querySelector('#services .services-intro') ||
+              document.querySelector('#services h2');
+    if(!first) return null;
+    return Math.max(0, Math.round(first.getBoundingClientRect().top + window.pageYOffset - navH() - 20));
   }
 
   window.bhhGoToExperiences = function(smooth){
@@ -7909,11 +7914,11 @@ if ("serviceWorker" in navigator) {
       if(sec) sec.scrollIntoView({behavior: smooth===false?'auto':'smooth', block:'start'});
       return false;
     }
-    /* the keyboard arrives where the eye does */
-    var cat=document.querySelector('#services .services-cat');
-    if(cat){
-      if(!cat.hasAttribute('tabindex')) cat.setAttribute('tabindex','-1');
-      cat.focus({preventScroll:true});
+    /* the keyboard arrives where the eye does, on the section's own heading */
+    var head=document.querySelector('#services h2');
+    if(head){
+      if(!head.hasAttribute('tabindex')) head.setAttribute('tabindex','-1');
+      head.focus({preventScroll:true});
     }
     window.scrollTo({top:y, behavior: smooth===false?'auto':'smooth'});
     return false;
