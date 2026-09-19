@@ -2607,6 +2607,26 @@ function openTransportMode(mode, service){
   <input name="How Did You Hear"><input name="Referral Detail">
   <input name="Travel Insurance Confirmed"><input name="GDPR Consent">
 </form>
+<!-- 19 September 2026: declares the short enquiry that the experience pages open
+     in place. Netlify files a submission by its form name, and its guidance is that a
+     name may only be shared by forms with identical fields, so this list and the one
+     built by experiences/enquiry.js are kept exactly in step. Separate from
+     guest-enquiry-v2 so the long form's enquiries cannot be affected. -->
+<form action='/?success=guest' method='post' name='experience-enquiry' data-netlify="true" data-netlify-honeypot="bot-field" style='display:none'>
+  <input name="form-name" type="hidden" value="experience-enquiry">
+  <input name="subject" type="hidden" value="BHH Experience Enquiry">
+  <input name="bot-field">
+  <input name="Experience Requested">
+  <input name="Full Name">
+  <input name="email">
+  <input name="Phone Number">
+  <input name="Date From">
+  <input name="Date To">
+  <input name="Number of Adults">
+  <input name="Number of Children">
+  <textarea name="Special Requests"></textarea>
+  <input name="GDPR Consent">
+</form>
 <form action='/?success=partner' method='post' name='partner-application' enctype='multipart/form-data' data-netlify-honeypot="bot-field" style='display:none'>
   <input name="form-name" type="hidden" value="partner-application">
   <input name="subject" type="hidden" value="BHH Partner Application">
