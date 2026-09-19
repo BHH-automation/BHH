@@ -174,3 +174,43 @@ a{color:inherit}
   .xq-panel{ max-width:none; min-height:100%; border-radius:0; border-left:none; border-right:none; padding:1.6rem 1.15rem 1.4rem; }
   .xq-title{ font-size:1.6rem; }
 }
+
+
+/* ── THE BANNER PHOTOGRAPH ────────────────────────────────────────────────
+   19 September 2026. The banner used to be a band as wide as the window and
+   only 468 pixels tall, and every photograph was enlarged until it covered
+   that band and the rest thrown away: 51 per cent of an ordinary picture on a
+   1440 screen, 63 per cent on a 1900 one. Faces were sliced at the forehead
+   and whole people were lost off the bottom.
+   From 900 pixels wide the banner is now two columns. The photograph takes the
+   left at its own shape, whatever that shape is, so a square picture stays
+   square and a wide one stays wide and nothing is cut. The title and the
+   sentence move to the navy beside it, where they need no shadow to be read.
+   Below 900 pixels nothing changes: the picture fills the width and the words
+   sit over its lower edge exactly as before. The words are now a child of the
+   section rather than of the picture, and the section is the positioned
+   ancestor, so that older arrangement still lands in the same place. */
+@media (min-width:900px){
+  .xhero{
+    display:grid;
+    grid-template-columns:auto minmax(320px,1fr);
+    align-items:stretch;
+    background:var(--navy);
+  }
+  .xhero-img{ grid-column:1; height:auto; max-height:620px; overflow:visible; }
+  .xhero-img img{
+    display:block; width:auto; height:auto;
+    max-height:620px; max-width:62vw;
+    object-fit:contain;
+  }
+  /* the dark veil existed only so the words could be read on the picture */
+  .xhero-img::after{ display:none; }
+  .xhero-txt{
+    position:static; grid-column:2;
+    display:flex; flex-direction:column; justify-content:center;
+    padding:2rem 3rem;
+  }
+  .xhero-txt .wrap{ width:auto; max-width:none; padding:0; margin:0; }
+  .xhero h1, .xhero p, .xhero .xeyebrow{ text-shadow:none; }
+  .xhero p{ max-width:36rem; }
+}
