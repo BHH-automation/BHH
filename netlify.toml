@@ -51,10 +51,11 @@
   status = 301
   force = true
 
-# 18 September 2026: working files that live in this folder for convenience but
-# must never be downloadable from the website. They are answered as not found.
-# The server functions themselves run on Supabase, so hiding the source here
-# changes nothing about how they work.
+# 18 September 2026, revised 19 September 2026: working files that live in this
+# folder for convenience but must never be downloadable from the website. They are
+# answered as not found. The server functions themselves run on Supabase, so hiding
+# the source here changes nothing about how they work. The two trail text files were
+# taken out of this folder on 19 September 2026, so they no longer need a rule.
 
 [[redirects]]
   from = "/supabase/*"
@@ -69,13 +70,13 @@
   force = true
 
 [[redirects]]
-  from = "/trail%20photo%20sources.txt"
+  from = "/preview%20site.bat"
   to = "/offline.html"
   status = 404
   force = true
 
 [[redirects]]
-  from = "/trail%20places%20data.txt"
+  from = "/deploy%20site%20backup%2018%20September%202026.bat"
   to = "/offline.html"
   status = 404
   force = true

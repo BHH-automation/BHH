@@ -162,16 +162,6 @@ nav {
   transition: color 0.2s;
 }
 .nav-links a:hover { color: var(--gold); }
-.nav-cta {
-  background: transparent;
-  border: 1px solid var(--gold);
-  color: var(--gold) !important;
-  padding: 0.5rem 1.4rem;
-  border-radius: 2px;
-  transition: all 0.2s !important;
-  white-space: nowrap;
-}
-.nav-cta:hover { background: var(--gold) !important; color: var(--navy) !important; }
 
 /* ── JOIN US DROPDOWN (desktop) ── */
 .nav-join { position: relative; }
@@ -201,7 +191,6 @@ nav {
   font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase;
 }
 .nav-join-menu a:hover { background: rgba(201,168,76,0.12); color: var(--gold) !important; }
-.door-icon { width: 18px; height: 18px; color: var(--gold); flex-shrink: 0; }
 
 /* ── HAMBURGER + MOBILE MENU ── */
 .nav-toggle {
@@ -229,10 +218,6 @@ nav {
   padding: 0.75rem 0.4rem; border-bottom: 1px solid rgba(245,240,232,0.06);
 }
 .mobile-menu a:hover { color: var(--gold); }
-.mobile-menu-label {
-  margin-top: 0.7rem; padding: 0.3rem 0.4rem;
-  font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold);
-}
 /* Non-clickable group heading above the 4 "Become a …" links (mobile only).
    Lighter/white and smaller than the links, with a thin gold top-border divider
    matching the menu's own border; its items are indented to read as a group. */
@@ -321,13 +306,6 @@ nav {
 }
 .hero h1 em { font-style: normal; color: var(--gold); }
 .hero .lead { color: rgba(245,240,232,0.7); margin-bottom: 2.5rem; max-width: 560px; margin-left: auto; margin-right: auto; font-size: 1.4rem; }
-.hero-tagline {
-  font-family: var(--ff-display);
-  font-size: 1.25rem;
-  font-style: italic;
-  color: rgba(201,168,76,0.7);
-  margin-bottom: 2.5rem;
-}
 .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
 /* hero-scroll removed */
 /* Compact hero + trim services top padding so #services is visible on load */
@@ -501,49 +479,14 @@ nav {
   .service-card:hover .service-card-arrow{ margin-top:0.3rem; font-size:0.58rem; }
 }
 /* Icon-based service cards (no photo) — same format as the photo cards */
-.service-card--icon { background: var(--navy); display: block; }
 .service-card--icon .service-card-overlay {
   background: linear-gradient(to top, rgba(13,27,42,0.95) 0%, rgba(13,27,42,0.55) 45%, rgba(201,168,76,0.05) 100%);
 }
 .service-card--icon:hover .service-card-overlay {
   background: linear-gradient(to top, rgba(13,27,42,0.97) 0%, rgba(13,27,42,0.6) 55%, rgba(201,168,76,0.08) 100%);
 }
-.service-card-iconwrap {
-  position: absolute; left: 0; right: 0; top: 0; bottom: 34%;
-  display: flex; align-items: center; justify-content: center;
-  pointer-events: none;
-}
-.service-card-iconwrap svg {
-  width: 88px; height: 88px; color: var(--gold);
-  transition: transform 0.7s ease;
-}
-.service-card--icon:hover .service-card-iconwrap svg { transform: scale(1.06); }
 
 /* ── WHO WE SERVE ── */
-.serve-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0;
-  border: 1px solid var(--border);
-}
-.serve-panel {
-  padding: 4rem;
-  position: relative;
-}
-.serve-panel:first-child {
-  border-right: 1px solid var(--border);
-}
-.serve-panel h3 { color: var(--cream); margin-bottom: 1rem; }
-.serve-panel p { color: rgba(245,240,232,0.6); font-size: 0.95rem; line-height: 1.8; margin-bottom: 1.5rem; }
-.serve-list { list-style: none; }
-.serve-list li {
-  display: flex; align-items: flex-start; gap: 0.8rem;
-  color: rgba(245,240,232,0.7);
-  font-size: 0.9rem;
-  padding: 0.5rem 0;
-  border-bottom: 1px solid rgba(201,168,76,0.1);
-}
-.serve-list li::before { content: '—'; color: var(--gold); flex-shrink: 0; }
 
 /* ── PROMISE ── */
 .promise-grid {
@@ -589,72 +532,11 @@ nav {
 .process-step p { font-size: 0.92rem; color: rgba(245,240,232,0.8); line-height: 1.7; }
 
 /* ── ABOUT ── */
-.about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: center; }
-.about-text h2 { color: var(--navy); margin-bottom: 1rem; }
-.about-text p { color: var(--muted); font-size: 0.95rem; line-height: 1.9; margin-bottom: 1.2rem; }
-.about-credentials {
-  display: flex; gap: 2rem; margin-top: 2rem;
-  padding-top: 2rem;
-  border-top: 1px solid var(--border);
-}
 .credential { text-align: center; }
-.credential-val {
-  font-family: var(--ff-display);
-  font-size: 2.2rem;
-  color: var(--navy);
-  display: block;
-}
-.credential-label { font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
-.about-image {
-  position: relative;
-}
-.about-image-main {
-  width: 100%; aspect-ratio: 3/4;
-  object-fit: cover;
-}
-.about-image-badge {
-  position: absolute; bottom: -1.5rem; left: -1.5rem;
-  background: var(--navy);
-  border: 1px solid var(--gold);
-  padding: 1.5rem;
-  width: 160px;
-}
-.about-image-badge p {
-  font-family: var(--ff-display);
-  font-size: 0.9rem;
-  font-style: italic;
-  color: var(--cream);
-  line-height: 1.4;
-  margin: 0;
-}
 
 /* ── FORMS ── */
 .form-section { max-width: 720px; margin: 0 auto; }
-.form-title { text-align: center; margin-bottom: 3rem; }
-.form-title h2 { color: var(--cream); }
-.form-tabs {
-  display: flex;
-  border-bottom: 1px solid var(--border);
-  margin-bottom: 3rem;
-}
-.form-tab {
-  flex: 1; text-align: center;
-  padding: 1rem;
-  font-size: 0.72rem;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: rgba(245,240,232,0.4);
-  cursor: pointer;
-  border-bottom: 2px solid transparent;
-  transition: all 0.2s;
-  font-family: var(--ff-body);
-  font-weight: 500;
-  background: none;
-  border: none;
-  border-bottom: 2px solid transparent;
-}
 .form-tab.active { color: var(--gold); border-bottom-color: var(--gold); }
-.form-panel { display: none; }
 .form-panel.active { display: block; }
 .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
 /* Preferred Dates row (was inline styles; moved here unchanged so the phone
@@ -903,60 +785,12 @@ footer {
 .footer-legal a { color: rgba(245,240,232,0.6); text-decoration: none; font-size: 0.72rem; } /* 16 September 2026: was 0.35, measured 2.94:1 */
 
 /* ── PAGE HERO (inner pages) ── */
-.page-hero {
-  background: var(--navy);
-  padding: 10rem 0 5rem;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-}
-.page-hero h1 { color: var(--cream); font-style: italic; font-weight: 300; }
 .page-hero .lead { margin: 1.5rem auto 0; color: rgba(245,240,232,0.6); text-align: center; }
 
 /* ── SERVICE DETAIL ── */
-.service-detail-hero {
-  min-height: 60vh;
-  display: flex; align-items: flex-end;
-  padding: 4rem 0;
-  position: relative;
-  overflow: hidden;
-}
-.service-detail-content { position: relative; z-index: 2; }
-.service-detail-content h1 { color: var(--cream); font-style: italic; }
 .service-detail-content .lead { color: rgba(245,240,232,0.65); }
-.service-what-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 2px;
-  margin-top: 4rem;
-}
-.service-what-item {
-  padding: 2.5rem;
-  background: var(--white);
-  border: 1px solid var(--cream-dark);
-}
-.service-what-item h4 {
-  font-size: 1.1rem;
-  color: var(--navy);
-  margin-bottom: 0.5rem;
-}
-.service-what-item p { font-size: 0.9rem; color: var(--muted); line-height: 1.7; }
-.service-what-icon {
-  width: 32px; height: 1px;
-  background: var(--gold);
-  margin-bottom: 1rem;
-}
 
 /* ── CONTACT ── */
-.contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; }
-.contact-info h2 { color: var(--cream); margin-bottom: 1rem; }
-.contact-info p { color: rgba(245,240,232,0.6); font-size: 0.95rem; line-height: 1.8; margin-bottom: 2rem; }
-.contact-detail { display: flex; gap: 1rem; margin-bottom: 1.2rem; align-items: flex-start; }
-.contact-detail-label {
-  font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase;
-  color: var(--gold); min-width: 80px; padding-top: 3px; font-weight: 500;
-}
-.contact-detail-val { font-size: 0.9rem; color: rgba(245,240,232,0.7); }
 
 /* ── ANIMATIONS ── */
 .fade-up {
@@ -985,7 +819,6 @@ footer {
   .nav-links { display: none; }
 }
 
-
 /* ── IMAGE CAROUSEL ── */
 .service-card-carousel {
   width: 100%; height: 100%;
@@ -1002,7 +835,7 @@ footer {
   transition: opacity 1s ease-in-out;
 }
 .service-card-carousel img:first-child {
-  opacity: 1;h
+  opacity: 1;
 }
 .service-card-carousel img.active {
   opacity: 1;
@@ -1473,7 +1306,6 @@ footer {
     min-height:44px; padding:.35rem 2px; font-size:12.5px; line-height:1.25; color:var(--cream);
   }
 }
-
 
 /* ══ COMPUTER AND TABLET (≥768px): the same experience pop up, laid out wide ══
    The markup and the script are shared with the phone. Only the appearance
@@ -2410,6 +2242,12 @@ html.bhh-focus #enquire .enquire-tabs{ display:none !important; }
   font-family:var(--ff-body); font-size:0.9rem; padding:0.75rem 1rem; cursor:pointer; text-align:left; }
 .bhh-more-exp:hover{ background:rgba(201,168,76,0.08); }
 .bhh-more-exp:focus-visible{ outline:2px solid var(--gold); outline-offset:2px; }
+
+/* 19 September 2026: 48 style rules were taken out here. Every class name in them
+   appeared nowhere in this page or its scripts, so no element could ever have
+   matched them. They were left from earlier designs of the who we serve panels,
+   the about section, the older enquiry form tabs, the inner page headers and the
+   service detail pages, which now have a stylesheet of their own. */
 </style>
 
     <!-- ═══ SEO & SOCIAL ═══════════════════════════════════════════════════ -->
@@ -3698,59 +3536,7 @@ function bhhTrailEnquire(e){
           <div class="form-row">
             <div class="form-group"><label for="phone-number-input-guest">Phone <span style="color:#C9A84C">*</span></label>
               <div style="display:flex;gap:0.5rem">
-                <select name="Country Code" aria-label="Country dialling code" required style="width:130px;flex-shrink:0;text-align:center">
-                  <option value="">Code…</option>
-                  <option value="+44">🇬🇧 +44</option>
-                  <option value="+966">🇸🇦 +966</option>
-                  <option value="+971">🇦🇪 +971</option>
-                  <option value="+974">🇶🇦 +974</option>
-                  <option value="+965">🇰🇼 +965</option>
-                  <option value="+968">🇴🇲 +968</option>
-                  <option value="+973">🇧🇭 +973</option>
-                  <option value="+1">🇺🇸 +1</option>
-                  <option value="+33">🇫🇷 +33</option>
-                  <option value="+49">🇩🇪 +49</option>
-                  <option value="+39">🇮🇹 +39</option>
-                  <option value="+34">🇪🇸 +34</option>
-                  <option value="+31">🇳🇱 +31</option>
-                  <option value="+32">🇧🇪 +32</option>
-                  <option value="+41">🇨🇭 +41</option>
-                  <option value="+43">🇦🇹 +43</option>
-                  <option value="+46">🇸🇪 +46</option>
-                  <option value="+47">🇳🇴 +47</option>
-                  <option value="+45">🇩🇰 +45</option>
-                  <option value="+358">🇫🇮 +358</option>
-                  <option value="+48">🇵🇱 +48</option>
-                  <option value="+7">🇷🇺 +7</option>
-                  <option value="+90">🇹🇷 +90</option>
-                  <option value="+91">🇮🇳 +91</option>
-                  <option value="+86">🇨🇳 +86</option>
-                  <option value="+81">🇯🇵 +81</option>
-                  <option value="+82">🇰🇷 +82</option>
-                  <option value="+65">🇸🇬 +65</option>
-                  <option value="+60">🇲🇾 +60</option>
-                  <option value="+62">🇮🇩 +62</option>
-                  <option value="+63">🇵🇭 +63</option>
-                  <option value="+66">🇹🇭 +66</option>
-                  <option value="+92">🇵🇰 +92</option>
-                  <option value="+880">🇧🇩 +880</option>
-                  <option value="+20">🇪🇬 +20</option>
-                  <option value="+212">🇲🇦 +212</option>
-                  <option value="+213">🇩🇿 +213</option>
-                  <option value="+27">🇿🇦 +27</option>
-                  <option value="+234">🇳🇬 +234</option>
-                  <option value="+254">🇰🇪 +254</option>
-                  <option value="+55">🇧🇷 +55</option>
-                  <option value="+52">🇲🇽 +52</option>
-                  <option value="+54">🇦🇷 +54</option>
-                  <option value="+61">🇦🇺 +61</option>
-                  <option value="+64">🇳🇿 +64</option>
-                  <option value="+353">🇮🇪 +353</option>
-                  <option value="+351">🇵🇹 +351</option>
-                  <option value="+30">🇬🇷 +30</option>
-                  <option value="+36">🇭🇺 +36</option>
-                  <option value="+420">🇨🇿 +420</option>
-                </select>
+                <select name="Country Code" aria-label="Country dialling code" required style="width:130px;flex-shrink:0;text-align:center" data-cc="1"><option value="">Code…</option><option value="+44">🇬🇧 +44</option></select>
                 <input type="tel" name="Phone Number" id="phone-number-input-guest" placeholder="7911 123456" style="flex:1" required pattern="[1-9][0-9]{6,13}" title="Enter your number without leading zero (e.g. 7911 123456)">
               </div>
             </div>
@@ -3970,59 +3756,7 @@ function bhhTrailEnquire(e){
           <div class="form-group"><label>Email <span style="color:#C9A84C">*</span></label><input type="email" name="email" placeholder="your@email.com" required></div>
         <div class="form-group"><label>Phone <span style="color:#C9A84C">*</span></label>
               <div style="display:flex;gap:0.5rem">
-                <select name="Country Code" required style="width:130px;flex-shrink:0;text-align:center">
-                  <option value="">Code…</option>
-                  <option value="+44">🇬🇧 +44</option>
-                  <option value="+966">🇸🇦 +966</option>
-                  <option value="+971">🇦🇪 +971</option>
-                  <option value="+974">🇶🇦 +974</option>
-                  <option value="+965">🇰🇼 +965</option>
-                  <option value="+968">🇴🇲 +968</option>
-                  <option value="+973">🇧🇭 +973</option>
-                  <option value="+1">🇺🇸 +1</option>
-                  <option value="+33">🇫🇷 +33</option>
-                  <option value="+49">🇩🇪 +49</option>
-                  <option value="+39">🇮🇹 +39</option>
-                  <option value="+34">🇪🇸 +34</option>
-                  <option value="+31">🇳🇱 +31</option>
-                  <option value="+32">🇧🇪 +32</option>
-                  <option value="+41">🇨🇭 +41</option>
-                  <option value="+43">🇦🇹 +43</option>
-                  <option value="+46">🇸🇪 +46</option>
-                  <option value="+47">🇳🇴 +47</option>
-                  <option value="+45">🇩🇰 +45</option>
-                  <option value="+358">🇫🇮 +358</option>
-                  <option value="+48">🇵🇱 +48</option>
-                  <option value="+7">🇷🇺 +7</option>
-                  <option value="+90">🇹🇷 +90</option>
-                  <option value="+91">🇮🇳 +91</option>
-                  <option value="+86">🇨🇳 +86</option>
-                  <option value="+81">🇯🇵 +81</option>
-                  <option value="+82">🇰🇷 +82</option>
-                  <option value="+65">🇸🇬 +65</option>
-                  <option value="+60">🇲🇾 +60</option>
-                  <option value="+62">🇮🇩 +62</option>
-                  <option value="+63">🇵🇭 +63</option>
-                  <option value="+66">🇹🇭 +66</option>
-                  <option value="+92">🇵🇰 +92</option>
-                  <option value="+880">🇧🇩 +880</option>
-                  <option value="+20">🇪🇬 +20</option>
-                  <option value="+212">🇲🇦 +212</option>
-                  <option value="+213">🇩🇿 +213</option>
-                  <option value="+27">🇿🇦 +27</option>
-                  <option value="+234">🇳🇬 +234</option>
-                  <option value="+254">🇰🇪 +254</option>
-                  <option value="+55">🇧🇷 +55</option>
-                  <option value="+52">🇲🇽 +52</option>
-                  <option value="+54">🇦🇷 +54</option>
-                  <option value="+61">🇦🇺 +61</option>
-                  <option value="+64">🇳🇿 +64</option>
-                  <option value="+353">🇮🇪 +353</option>
-                  <option value="+351">🇵🇹 +351</option>
-                  <option value="+30">🇬🇷 +30</option>
-                  <option value="+36">🇭🇺 +36</option>
-                  <option value="+420">🇨🇿 +420</option>
-                </select>
+                <select name="Country Code" required style="width:130px;flex-shrink:0;text-align:center" data-cc="1"><option value="">Code…</option><option value="+44">🇬🇧 +44</option></select>
                 <input type="tel" name="Phone Number" id="phone-number-input-host" placeholder="7911 123456" style="flex:1" required title="Enter your number without leading zero (e.g. 7911 123456)">
               </div>
             </div>
@@ -4533,59 +4267,7 @@ function bhhTrailEnquire(e){
             <div class="form-group"><label>Email <span style="color:#C9A84C">*</span></label><input type="email" name="email" placeholder="your@company.com" required></div>
             <div class="form-group"><label>Phone <span style="color:#C9A84C">*</span></label>
               <div style="display:flex;gap:0.5rem">
-                <select name="Country Code" required style="width:130px;flex-shrink:0;text-align:center">
-                  <option value="">Code…</option>
-                  <option value="+44">🇬🇧 +44</option>
-                  <option value="+966">🇸🇦 +966</option>
-                  <option value="+971">🇦🇪 +971</option>
-                  <option value="+974">🇶🇦 +974</option>
-                  <option value="+965">🇰🇼 +965</option>
-                  <option value="+968">🇴🇲 +968</option>
-                  <option value="+973">🇧🇭 +973</option>
-                  <option value="+1">🇺🇸 +1</option>
-                  <option value="+33">🇫🇷 +33</option>
-                  <option value="+49">🇩🇪 +49</option>
-                  <option value="+39">🇮🇹 +39</option>
-                  <option value="+34">🇪🇸 +34</option>
-                  <option value="+31">🇳🇱 +31</option>
-                  <option value="+32">🇧🇪 +32</option>
-                  <option value="+41">🇨🇭 +41</option>
-                  <option value="+43">🇦🇹 +43</option>
-                  <option value="+46">🇸🇪 +46</option>
-                  <option value="+47">🇳🇴 +47</option>
-                  <option value="+45">🇩🇰 +45</option>
-                  <option value="+358">🇫🇮 +358</option>
-                  <option value="+48">🇵🇱 +48</option>
-                  <option value="+7">🇷🇺 +7</option>
-                  <option value="+90">🇹🇷 +90</option>
-                  <option value="+91">🇮🇳 +91</option>
-                  <option value="+86">🇨🇳 +86</option>
-                  <option value="+81">🇯🇵 +81</option>
-                  <option value="+82">🇰🇷 +82</option>
-                  <option value="+65">🇸🇬 +65</option>
-                  <option value="+60">🇲🇾 +60</option>
-                  <option value="+62">🇮🇩 +62</option>
-                  <option value="+63">🇵🇭 +63</option>
-                  <option value="+66">🇹🇭 +66</option>
-                  <option value="+92">🇵🇰 +92</option>
-                  <option value="+880">🇧🇩 +880</option>
-                  <option value="+20">🇪🇬 +20</option>
-                  <option value="+212">🇲🇦 +212</option>
-                  <option value="+213">🇩🇿 +213</option>
-                  <option value="+27">🇿🇦 +27</option>
-                  <option value="+234">🇳🇬 +234</option>
-                  <option value="+254">🇰🇪 +254</option>
-                  <option value="+55">🇧🇷 +55</option>
-                  <option value="+52">🇲🇽 +52</option>
-                  <option value="+54">🇦🇷 +54</option>
-                  <option value="+61">🇦🇺 +61</option>
-                  <option value="+64">🇳🇿 +64</option>
-                  <option value="+353">🇮🇪 +353</option>
-                  <option value="+351">🇵🇹 +351</option>
-                  <option value="+30">🇬🇷 +30</option>
-                  <option value="+36">🇭🇺 +36</option>
-                  <option value="+420">🇨🇿 +420</option>
-                </select>
+                <select name="Country Code" required style="width:130px;flex-shrink:0;text-align:center" data-cc="1"><option value="">Code…</option><option value="+44">🇬🇧 +44</option></select>
                 <input type="tel" name="Phone Number" id="phone-number-input-partner" placeholder="7911 123456" style="flex:1" required title="Enter your number without leading zero (e.g. 7911 123456)">
               </div>
             </div>
@@ -4780,59 +4462,7 @@ function bhhTrailEnquire(e){
         
                   <div class="form-group"><label>Phone <span style="color:#C9A84C">*</span></label>
                     <div style="display:flex;gap:0.5rem">
-                      <select name="Country Code" required style="width:130px;flex-shrink:0;text-align:center">
-                        <option value="">Code…</option>
-                        <option value="+44">🇬🇧 +44</option>
-                        <option value="+966">🇸🇦 +966</option>
-                        <option value="+971">🇦🇪 +971</option>
-                        <option value="+974">🇶🇦 +974</option>
-                        <option value="+965">🇰🇼 +965</option>
-                        <option value="+968">🇴🇲 +968</option>
-                        <option value="+973">🇧🇭 +973</option>
-                        <option value="+1">🇺🇸 +1</option>
-                        <option value="+33">🇫🇷 +33</option>
-                        <option value="+49">🇩🇪 +49</option>
-                        <option value="+39">🇮🇹 +39</option>
-                        <option value="+34">🇪🇸 +34</option>
-                        <option value="+31">🇳🇱 +31</option>
-                        <option value="+32">🇧🇪 +32</option>
-                        <option value="+41">🇨🇭 +41</option>
-                        <option value="+43">🇦🇹 +43</option>
-                        <option value="+46">🇸🇪 +46</option>
-                        <option value="+47">🇳🇴 +47</option>
-                        <option value="+45">🇩🇰 +45</option>
-                        <option value="+358">🇫🇮 +358</option>
-                        <option value="+48">🇵🇱 +48</option>
-                        <option value="+7">🇷🇺 +7</option>
-                        <option value="+90">🇹🇷 +90</option>
-                        <option value="+91">🇮🇳 +91</option>
-                        <option value="+86">🇨🇳 +86</option>
-                        <option value="+81">🇯🇵 +81</option>
-                        <option value="+82">🇰🇷 +82</option>
-                        <option value="+65">🇸🇬 +65</option>
-                        <option value="+60">🇲🇾 +60</option>
-                        <option value="+62">🇮🇩 +62</option>
-                        <option value="+63">🇵🇭 +63</option>
-                        <option value="+66">🇹🇭 +66</option>
-                        <option value="+92">🇵🇰 +92</option>
-                        <option value="+880">🇧🇩 +880</option>
-                        <option value="+20">🇪🇬 +20</option>
-                        <option value="+212">🇲🇦 +212</option>
-                        <option value="+213">🇩🇿 +213</option>
-                        <option value="+27">🇿🇦 +27</option>
-                        <option value="+234">🇳🇬 +234</option>
-                        <option value="+254">🇰🇪 +254</option>
-                        <option value="+55">🇧🇷 +55</option>
-                        <option value="+52">🇲🇽 +52</option>
-                        <option value="+54">🇦🇷 +54</option>
-                        <option value="+61">🇦🇺 +61</option>
-                        <option value="+64">🇳🇿 +64</option>
-                        <option value="+353">🇮🇪 +353</option>
-                        <option value="+351">🇵🇹 +351</option>
-                        <option value="+30">🇬🇷 +30</option>
-                        <option value="+36">🇭🇺 +36</option>
-                        <option value="+420">🇨🇿 +420</option>
-                      </select>
+                      <select name="Country Code" required style="width:130px;flex-shrink:0;text-align:center" data-cc="1"><option value="">Code…</option><option value="+44">🇬🇧 +44</option></select>
                       <input type="tel" name="Phone Number" placeholder="7911 123456" style="flex:1" required pattern="[1-9][0-9]{6,13}" title="Enter your number without leading zero (e.g. 7911 123456)">
                     </div>
                   </div>
@@ -4921,8 +4551,8 @@ function bhhTrailEnquire(e){
           <button type="button" class="tchoice" onclick="openTransportMode('transport','Airport Transfer')">
             <span class="tchoice-media service-card-carousel" style="height:120px">
               <img src="images/airport-private-transportation-luxury-lo.webp" alt="Airport Transfer — family interior with driver" loading="lazy">
-              <img src="images/transportation van westminster.webp" alt="Airport Transfer — van passing Westminster" loading="lazy">
-              <img src="images/airport-private-transportation-airport-p.jpg" alt="Airport Transfer — driver at the van door at the airport" loading="lazy">
+              <img data-src="images/transportation van westminster.webp" alt="Airport Transfer — van passing Westminster" loading="lazy">
+              <img data-src="images/airport-private-transportation-airport-p.jpg" alt="Airport Transfer — driver at the van door at the airport" loading="lazy">
             </span>
             <span class="tchoice-body">
               <span class="tchoice-title">Arrange My Airport Transfer</span>
@@ -4932,8 +4562,8 @@ function bhhTrailEnquire(e){
           <button type="button" class="tchoice" onclick="openTransportMode('transport','Chauffeured Hire')">
             <span class="tchoice-media service-card-carousel" style="height:120px">
               <img src="images/chauffeured hire hotel door.webp" alt="Chauffeured Hire — chauffeur at the hotel door" loading="lazy">
-              <img src="images/chauffeured hire countryside.webp" alt="Chauffeured Hire — countryside day drive" loading="lazy">
-              <img src="images/chauffeured hire night city.webp" alt="Chauffeured Hire — night drive past Westminster" loading="lazy">
+              <img data-src="images/chauffeured hire countryside.webp" alt="Chauffeured Hire — countryside day drive" loading="lazy">
+              <img data-src="images/chauffeured hire night city.webp" alt="Chauffeured Hire — night drive past Westminster" loading="lazy">
             </span>
             <span class="tchoice-body">
               <span class="tchoice-title">Arrange My Chauffeured Hire</span>
@@ -4970,59 +4600,7 @@ function bhhTrailEnquire(e){
             
                       <div class="form-group"><label>Phone <span style="color:#C9A84C">*</span></label>
                         <div style="display:flex;gap:0.5rem">
-                          <select name="Country Code" required style="width:130px;flex-shrink:0;text-align:center">
-                            <option value="">Code…</option>
-                            <option value="+44">🇬🇧 +44</option>
-                            <option value="+966">🇸🇦 +966</option>
-                            <option value="+971">🇦🇪 +971</option>
-                            <option value="+974">🇶🇦 +974</option>
-                            <option value="+965">🇰🇼 +965</option>
-                            <option value="+968">🇴🇲 +968</option>
-                            <option value="+973">🇧🇭 +973</option>
-                            <option value="+1">🇺🇸 +1</option>
-                            <option value="+33">🇫🇷 +33</option>
-                            <option value="+49">🇩🇪 +49</option>
-                            <option value="+39">🇮🇹 +39</option>
-                            <option value="+34">🇪🇸 +34</option>
-                            <option value="+31">🇳🇱 +31</option>
-                            <option value="+32">🇧🇪 +32</option>
-                            <option value="+41">🇨🇭 +41</option>
-                            <option value="+43">🇦🇹 +43</option>
-                            <option value="+46">🇸🇪 +46</option>
-                            <option value="+47">🇳🇴 +47</option>
-                            <option value="+45">🇩🇰 +45</option>
-                            <option value="+358">🇫🇮 +358</option>
-                            <option value="+48">🇵🇱 +48</option>
-                            <option value="+7">🇷🇺 +7</option>
-                            <option value="+90">🇹🇷 +90</option>
-                            <option value="+91">🇮🇳 +91</option>
-                            <option value="+86">🇨🇳 +86</option>
-                            <option value="+81">🇯🇵 +81</option>
-                            <option value="+82">🇰🇷 +82</option>
-                            <option value="+65">🇸🇬 +65</option>
-                            <option value="+60">🇲🇾 +60</option>
-                            <option value="+62">🇮🇩 +62</option>
-                            <option value="+63">🇵🇭 +63</option>
-                            <option value="+66">🇹🇭 +66</option>
-                            <option value="+92">🇵🇰 +92</option>
-                            <option value="+880">🇧🇩 +880</option>
-                            <option value="+20">🇪🇬 +20</option>
-                            <option value="+212">🇲🇦 +212</option>
-                            <option value="+213">🇩🇿 +213</option>
-                            <option value="+27">🇿🇦 +27</option>
-                            <option value="+234">🇳🇬 +234</option>
-                            <option value="+254">🇰🇪 +254</option>
-                            <option value="+55">🇧🇷 +55</option>
-                            <option value="+52">🇲🇽 +52</option>
-                            <option value="+54">🇦🇷 +54</option>
-                            <option value="+61">🇦🇺 +61</option>
-                            <option value="+64">🇳🇿 +64</option>
-                            <option value="+353">🇮🇪 +353</option>
-                            <option value="+351">🇵🇹 +351</option>
-                            <option value="+30">🇬🇷 +30</option>
-                            <option value="+36">🇭🇺 +36</option>
-                            <option value="+420">🇨🇿 +420</option>
-                          </select>
+                          <select name="Country Code" required style="width:130px;flex-shrink:0;text-align:center" data-cc="1"><option value="">Code…</option><option value="+44">🇬🇧 +44</option></select>
                           <input type="tel" name="Phone Number" placeholder="7911 123456" style="flex:1" required pattern="[1-9][0-9]{6,13}" title="Enter your number without leading zero (e.g. 7911 123456)">
                         </div>
                       </div>
@@ -5160,15 +4738,34 @@ document.addEventListener('DOMContentLoaded', function() {
       im.removeAttribute('data-src');
     });
   }
+  /* 19 September 2026. hydrate() above was written to fetch the second and third
+     photograph only when a card comes near the screen, but every card also started
+     rotating the moment the page opened, and each rotation called hydrate. The
+     result was that an arriving visitor downloaded about 1.4 megabytes of card
+     photographs before scrolling a single line. A card now waits: nothing is
+     fetched and nothing rotates until that card has come within 300 pixels of the
+     screen. What a visitor sees once they reach the cards is unchanged. */
+  function markSeen(c) {
+    if (!c || c.dataset.seen === '1') return;
+    c.dataset.seen = '1';
+    hydrate(c);
+    var q = c.__onSeen || [];
+    c.__onSeen = [];
+    q.forEach(function(fn) { try { fn(); } catch (err) {} });
+  }
+  function whenSeen(c, fn) {
+    if (c && c.dataset.seen === '1') { fn(); return; }
+    (c.__onSeen = c.__onSeen || []).push(fn);
+  }
   if ('IntersectionObserver' in window) {
     var io = new IntersectionObserver(function(entries) {
       entries.forEach(function(e) {
-        if (e.isIntersecting) { hydrate(e.target); io.unobserve(e.target); }
+        if (e.isIntersecting) { markSeen(e.target); io.unobserve(e.target); }
       });
     }, { rootMargin: '300px' });
     carousels.forEach(function(c) { io.observe(c); });
   } else {
-    carousels.forEach(function(c) { setTimeout(function(){ hydrate(c); }, 2500); });
+    carousels.forEach(function(c) { setTimeout(function(){ markSeen(c); }, 2500); });
   }
   /* Every rotation registers the way to start itself here. Pausing clears them
      all, playing starts them again, and where the visitor has asked for less
@@ -5232,10 +4829,11 @@ document.addEventListener('DOMContentLoaded', function() {
       };
       var startIn = 3500 + (phoneOrder * 260);
       phoneOrder++;
-      setTimeout(function() { hydrate(c); }, Math.max(0, startIn - 1000));
       bhhRegisterRotator(function(){
         var ids = [];
-        ids.push(setTimeout(function(){ swap(); ids.push(setInterval(swap, 3500)); }, startIn));
+        whenSeen(c, function(){
+          ids.push(setTimeout(function(){ swap(); ids.push(setInterval(swap, 3500)); }, startIn));
+        });
         return ids;
       });
       return;
@@ -5243,7 +4841,6 @@ document.addEventListener('DOMContentLoaded', function() {
     imgs[0].classList.add('active');
     for (var i = 1; i < imgs.length; i++) { imgs[i].classList.add('inactive'); }
     var idx = 0;
-    setTimeout(function() { hydrate(c); }, 2500);
     var step = function(){
       hydrate(c);
       imgs[idx].classList.remove('active');
@@ -5252,7 +4849,11 @@ document.addEventListener('DOMContentLoaded', function() {
       imgs[idx].classList.remove('inactive');
       imgs[idx].classList.add('active');
     };
-    bhhRegisterRotator(function(){ return [setInterval(step, 3500)]; });
+    bhhRegisterRotator(function(){
+      var ids = [];
+      whenSeen(c, function(){ ids.push(setInterval(step, 3500)); });
+      return ids;
+    });
   });
   if(!bhhReduceMotion()){ bhhStartRotators(); }
   bhhSyncMotionButton();
@@ -6015,7 +5616,10 @@ function closeThankyouModal(modalId) {
 <!-- ═══════ BHH host/partner form enhancements ═══════
      Phone validation+formatting per country code, UK county/city dropdowns
      with "Other → free text", and DBS conditional (upload to Supabase / info note). -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!-- 19 September 2026: the storage library used to load here on every single
+     visit, 55 kilobytes for every guest, although only a host applicant attaching
+     a certificate ever needs it. It is now fetched the moment a certificate is
+     chosen, and again as a safety net when the form is sent. -->
 <script>
 (function(){
   'use strict';
@@ -6187,14 +5791,39 @@ function closeThankyouModal(modalId) {
   };
 
   function randId(){ return Date.now().toString(36) + '-' + Math.random().toString(36).slice(2,10); }
+  /* Fetches the storage library the first time it is needed and remembers the
+     attempt, so choosing a certificate and then sending the form loads it once. */
+  var _sbLoading = null;
+  function sbLoad(){
+    if(typeof supabase !== 'undefined' && supabase.createClient) return Promise.resolve();
+    if(_sbLoading) return _sbLoading;
+    _sbLoading = new Promise(function(resolve, reject){
+      var el = document.createElement('script');
+      el.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+      el.onload = function(){ resolve(); };
+      el.onerror = function(){ _sbLoading = null; reject(new Error('The upload service could not be reached.')); };
+      document.head.appendChild(el);
+    });
+    return _sbLoading;
+  }
+
   function uploadDbs(file, prefix){
+    return sbLoad().then(function(){
     var client = sbClient();
-    if(!client) return Promise.reject(new Error('Storage is not configured yet.'));
+    if(!client) throw new Error('Storage is not configured yet.');
     var ext = (file.name.split('.').pop()||'dat').toLowerCase();
     var objPath = prefix + '/' + randId() + '.' + ext;
     return client.storage.from(DBS_BUCKET).upload(objPath, file, {contentType:file.type, upsert:false})
       .then(function(res){ if(res.error) throw res.error; return (res.data && res.data.path) || objPath; });
+    });
   }
+
+  /* Start fetching as soon as a certificate is chosen, so the upload does not
+     wait for the library when the form is sent. */
+  document.addEventListener('change', function(e){
+    var t = e.target;
+    if(t && t.type === 'file' && /-dbs-file$/.test(t.id || '')){ sbLoad().catch(function(){}); }
+  }, true);
 
   function setupDbsSubmit(formId, prefix){
     var form = document.getElementById(formId);
@@ -8131,6 +7760,34 @@ if ("serviceWorker" in navigator) {
   }
   if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded', function(){ setTimeout(ready, 250); }); }
   else { setTimeout(ready, 250); }
+})();
+</script>
+
+<script>
+/* 19 September 2026: the 51 country dialling codes were written out five times,
+   once inside each form, about 12 kilobytes of the same list repeated. The list
+   now lives here once and is placed into every form when the page opens. Each
+   dropdown keeps the United Kingdom code in the page itself, so it still works
+   if this script never runs. */
+(function(){
+  var CODES=[["","Code…"],["+44","🇬🇧 +44"],["+966","🇸🇦 +966"],["+971","🇦🇪 +971"],["+974","🇶🇦 +974"],["+965","🇰🇼 +965"],["+968","🇴🇲 +968"],["+973","🇧🇭 +973"],["+1","🇺🇸 +1"],["+33","🇫🇷 +33"],["+49","🇩🇪 +49"],["+39","🇮🇹 +39"],["+34","🇪🇸 +34"],["+31","🇳🇱 +31"],["+32","🇧🇪 +32"],["+41","🇨🇭 +41"],["+43","🇦🇹 +43"],["+46","🇸🇪 +46"],["+47","🇳🇴 +47"],["+45","🇩🇰 +45"],["+358","🇫🇮 +358"],["+48","🇵🇱 +48"],["+7","🇷🇺 +7"],["+90","🇹🇷 +90"],["+91","🇮🇳 +91"],["+86","🇨🇳 +86"],["+81","🇯🇵 +81"],["+82","🇰🇷 +82"],["+65","🇸🇬 +65"],["+60","🇲🇾 +60"],["+62","🇮🇩 +62"],["+63","🇵🇭 +63"],["+66","🇹🇭 +66"],["+92","🇵🇰 +92"],["+880","🇧🇩 +880"],["+20","🇪🇬 +20"],["+212","🇲🇦 +212"],["+213","🇩🇿 +213"],["+27","🇿🇦 +27"],["+234","🇳🇬 +234"],["+254","🇰🇪 +254"],["+55","🇧🇷 +55"],["+52","🇲🇽 +52"],["+54","🇦🇷 +54"],["+61","🇦🇺 +61"],["+64","🇳🇿 +64"],["+353","🇮🇪 +353"],["+351","🇵🇹 +351"],["+30","🇬🇷 +30"],["+36","🇭🇺 +36"],["+420","🇨🇿 +420"]];
+  function fill(){
+    var sels=document.querySelectorAll('select[data-cc]');
+    for(var i=0;i<sels.length;i++){
+      var sel=sels[i];
+      if(sel.getAttribute('data-cc')==='done') continue;
+      var keep=sel.value;
+      sel.innerHTML='';
+      for(var j=0;j<CODES.length;j++){
+        var o=document.createElement('option');
+        o.value=CODES[j][0]; o.textContent=CODES[j][1];
+        sel.appendChild(o);
+      }
+      if(keep) sel.value=keep;
+      sel.setAttribute('data-cc','done');
+    }
+  }
+  if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',fill); } else { fill(); }
 })();
 </script>
 </body>

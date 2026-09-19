@@ -1,5 +1,4 @@
 User-agent: *
 Allow: /
-Disallow: /preview.html
 
 Sitemap: https://britishheritagehosts.com/sitemap.xml
