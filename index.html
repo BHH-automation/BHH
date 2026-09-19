@@ -2228,6 +2228,23 @@ footer .footer-bottom, footer .footer-bottom *{ font-size:0.88rem !important; }
 /* the whole row goes: with four tabs hidden the fifth only repeats what the
    heading below it already says, and it was being cut by the fixed bar */
 html.bhh-focus #enquire .enquire-tabs{ display:none !important; }
+
+/* ── ONE ROUTE, ONE FORM ──────────────────────────────────────────────────
+   19 September 2026. Pressing Plan Your Private Visit, or Enquire, landed a
+   guest on a row of five tabs, four of which invite them to join the business.
+   Those four already have their own place in the Work with us menu in the top
+   bar, so the row was a second copy of a menu the visitor already has. Whichever
+   route a visitor takes now, they meet that one form, and one quiet line gives
+   the whole row back to anyone who wants it. */
+html.bhh-one #enquire .enquire-tabs{ display:none !important; }
+.bhh-one-back{ text-align:center; margin:0 0 1.6rem; }
+.bhh-one-back button{
+  background:none; border:none; padding:0.35rem;
+  font-family:var(--ff-body); font-size:0.88rem; color:rgba(245,240,232,0.62);
+  text-decoration:underline; cursor:pointer;
+}
+.bhh-one-back button:hover{ color:var(--gold); }
+.bhh-one-back button:focus-visible{ outline:2px solid var(--gold); outline-offset:2px; }
 .bhh-focus-head{ max-width:880px; margin:0 auto 1.8rem; text-align:center; }
 .bhh-focus-eyebrow{ font-family:var(--ff-body); font-size:0.8rem; letter-spacing:0.16em;
   text-transform:uppercase; color:var(--gold); margin-bottom:0.4rem; }
@@ -7699,6 +7716,8 @@ if ("serviceWorker" in navigator) {
 
   window.bhhUnfocus = function(){
     document.documentElement.classList.remove('bhh-focus');
+    document.documentElement.classList.remove('bhh-one');
+    var oneBack=document.getElementById('bhhOneBack'); if(oneBack) oneBack.style.display='none';
     var head=document.getElementById('bhhFocusHead'); if(head) head.style.display='none';
     var grid=document.getElementById('service-card-grid'); if(grid) grid.classList.remove('bhh-tucked');
     var more=document.getElementById('bhhMoreExp'); if(more) more.style.display='none';
@@ -7788,6 +7807,76 @@ if ("serviceWorker" in navigator) {
     }
   }
   if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',fill); } else { fill(); }
+})();
+</script>
+
+<script>
+/* ── ONE ROUTE, ONE FORM ──────────────────────────────────────────────────
+   19 September 2026. See the stylesheet note of the same name.
+   A visitor who presses Plan Your Private Visit has said they are a guest, so
+   they meet the guest form alone. A visitor who chooses Become a Host from the
+   Work with us menu meets that form alone. Nothing is taken away: one line
+   under the heading brings the whole row of five back.
+   Arriving at the section any other way, by scrolling for instance, still shows
+   the row exactly as before. */
+(function(){
+  'use strict';
+
+  var WORDS = {
+    guest:     'Not a guest? See the other ways to work with us',
+    host:      'I am here for something else',
+    partner:   'I am here for something else',
+    scout:     'I am here for something else',
+    transport: 'I am here for something else'
+  };
+
+  function navH(){ var n=document.querySelector('nav'); return n ? Math.round(n.offsetHeight) : 132; }
+
+  window.bhhShowAllRoutes = function(){
+    document.documentElement.classList.remove('bhh-one');
+    var back=document.getElementById('bhhOneBack'); if(back) back.style.display='none';
+    var tabs=document.querySelector('#enquire .enquire-tabs');
+    if(tabs) window.scrollTo(0, Math.max(0, Math.round(tabs.getBoundingClientRect().top + window.pageYOffset - navH() - 16)));
+    return false;
+  };
+
+  function only(tab){
+    var tabs=document.querySelector('#enquire .enquire-tabs');
+    if(!tabs || !tabs.parentNode) return;
+    document.documentElement.classList.add('bhh-one');
+    /* an arrival from an experience page already carries its own line back */
+    if(document.documentElement.classList.contains('bhh-focus')) return;
+    var back=document.getElementById('bhhOneBack');
+    if(!back){
+      back=document.createElement('p');
+      back.id='bhhOneBack'; back.className='bhh-one-back';
+      back.innerHTML='<button type="button" onclick="return bhhShowAllRoutes()"></button>';
+      tabs.parentNode.insertBefore(back, tabs.nextSibling);
+    }
+    back.style.display='';
+    back.querySelector('button').textContent = WORDS[tab] || WORDS.host;
+  }
+
+  /* Which form did this link ask for? Every route already says so in its own
+     handler, so the link is read rather than a second list being kept here. */
+  function tabOf(a){
+    var oc = a.getAttribute('onclick') || '';
+    var m = oc.match(/switchTab\(\s*['"]([a-z]+)['"]/);
+    if(m) return m[1];
+    if(/goToTransportTab/.test(oc)) return 'transport';
+    return 'guest';
+  }
+
+  document.addEventListener('click', function(e){
+    var a = e.target && e.target.closest ? e.target.closest('a[href*="#enquire"]') : null;
+    if(!a) return;
+    if(e.metaKey || e.ctrlKey || e.shiftKey || e.button > 0) return;
+    if(a.id === 'navJoinBtn') return;               /* opens the menu, chooses nothing */
+    var tab = tabOf(a);
+    /* a link with no handler of its own still needs the right form opened */
+    if(!a.getAttribute('onclick') && typeof switchTab === 'function'){ switchTab(tab, false); }
+    setTimeout(function(){ only(tab); }, 0);
+  });
 })();
 </script>
 </body>

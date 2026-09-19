@@ -7,10 +7,10 @@ echo ==========================================
 echo.
 git add -A
 if errorlevel 1 goto failed
-git diff --cached --quiet
+git --no-pager diff --cached --quiet
 if not errorlevel 1 goto nochange
 echo Files about to be sent (new files are now included):
-git diff --cached --name-only
+git --no-pager diff --cached --name-only
 echo.
 git commit -m "Site update %DATE% %TIME%"
 if errorlevel 1 goto failed

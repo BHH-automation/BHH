@@ -8,10 +8,10 @@ echo ==========================================
 echo.
 git add -A
 if errorlevel 1 goto failed
-git diff --cached --quiet
+git --no-pager diff --cached --quiet
 if not errorlevel 1 goto nochange
 echo Files going into this preview:
-git diff --cached --name-only
+git --no-pager diff --cached --name-only
 echo.
 git commit -m "Preview %DATE% %TIME%"
 if errorlevel 1 goto failed
