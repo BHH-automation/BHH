@@ -7879,5 +7879,65 @@ if ("serviceWorker" in navigator) {
   });
 })();
 </script>
+
+<script>
+/* ── EXPLORE OUR EXPERIENCES LANDS ON THE EXPERIENCES ─────────────────────
+   19 September 2026. Every link to the services section jumped to the top of
+   that section, and the section opens with 444 pixels of heading, two
+   paragraphs and the pause button before the first card. On a window 700
+   pixels tall a visitor who pressed Explore Our Experiences saw only the top
+   edges of the first three cards.
+   The landing point is now the line that names the first group, Around a
+   British table, placed just clear of the fixed bar, so the first row of cards
+   is whole underneath it. The introduction and the pause button are one small
+   scroll above, unchanged and still in the keyboard order before the cards. */
+(function(){
+  'use strict';
+
+  function navH(){ var n=document.querySelector('nav'); return n ? Math.round(n.getBoundingClientRect().height) : 132; }
+
+  function landing(){
+    var cat=document.querySelector('#services .services-cat');
+    if(!cat) return null;
+    return Math.max(0, Math.round(cat.getBoundingClientRect().top + window.pageYOffset - navH() - 16));
+  }
+
+  window.bhhGoToExperiences = function(smooth){
+    var y=landing();
+    if(y===null){
+      var sec=document.getElementById('services');
+      if(sec) sec.scrollIntoView({behavior: smooth===false?'auto':'smooth', block:'start'});
+      return false;
+    }
+    /* the keyboard arrives where the eye does */
+    var cat=document.querySelector('#services .services-cat');
+    if(cat){
+      if(!cat.hasAttribute('tabindex')) cat.setAttribute('tabindex','-1');
+      cat.focus({preventScroll:true});
+    }
+    window.scrollTo({top:y, behavior: smooth===false?'auto':'smooth'});
+    return false;
+  };
+
+  /* the menu already routes through bhhFocusSection, so that one learns the
+     new landing point rather than a second rule being kept beside it */
+  if(typeof window.bhhFocusSection === 'function'){
+    var original = window.bhhFocusSection;
+    window.bhhFocusSection = function(id){
+      if(id === 'services'){ return window.bhhGoToExperiences(true); }
+      return original(id);
+    };
+  }
+
+  document.addEventListener('click', function(e){
+    var a = e.target && e.target.closest ? e.target.closest('a[href="#services"]') : null;
+    if(!a) return;
+    if(a.getAttribute('onclick')) return;              /* already has a route of its own */
+    if(e.metaKey || e.ctrlKey || e.shiftKey || e.button > 0) return;
+    e.preventDefault();
+    window.bhhGoToExperiences(true);
+  });
+})();
+</script>
 </body>
 </html>
