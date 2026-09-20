@@ -2278,7 +2278,7 @@ html.bhh-one #enquire .enquire-tabs{ display:none !important; }
 
 .services-split{
   display:grid; grid-template-columns:minmax(0,1fr) minmax(0,0.92fr);
-  gap:2.6rem; align-items:center; margin-top:0.5rem;
+  gap:2.6rem; align-items:start; margin-top:0.5rem;
 }
 .services-split .services-intro{ text-align:left; margin-bottom:0; }
 .services-split .services-intro h2{ font-size:1.95rem; line-height:1.16; margin:0.35rem 0; }
