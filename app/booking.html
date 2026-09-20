@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<!--
+  British Heritage Hosts Ltd, guest door
+  Owner: Faleh al Bishi, Director, British Heritage Hosts Ltd
+  Written 20 September 2026
+
+  A guest opens their own booking here. They type either the email address or
+  the mobile number held on their booking, we send a 6 digit code to that same
+  route, and they are in. No account and no password: the booking is the
+  record. Every answer comes from the guest Edge Function, which checks the
+  session before it returns anything.
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>British Heritage Hosts, your booking</title>
+<meta name="theme-color" content="#0D1B2A">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="/appletouchicon.png">
+<link rel="manifest" href="/manifest.json">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Jost:wght@300;400;500;600&display=swap');
+:root {
+  --navy: #0D1B2A;
+  --navy-mid: #1B3350;
+  --gold: #C9A84C;
+  --gold-light: #E8C97A;
+  --cream: #F5F0E8;
+  --white: #FFFFFF;
+  --text: #1A1A1A;
+  --muted: #666055;
+  --line: rgba(201,168,76,0.28);
+  --ff-display: 'Cormorant Garamond', Georgia, serif;
+  --ff-body: 'Jost', system-ui, sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  min-height: 100vh;
+  background: var(--cream);
+  color: var(--text);
+  font-family: var(--ff-body);
+  font-weight: 300;
+  line-height: 1.6;
+}
+header {
+  background: var(--navy);
+  padding: 22px 20px 20px;
+  text-align: center;
+  padding-top: calc(22px + env(safe-area-inset-top));
+}
+header img { width: 46px; height: 46px; border-radius: 10px; }
+header h1 {
+  font-family: var(--ff-display);
+  font-weight: 400;
+  font-size: 22px;
+  color: var(--gold);
+  margin-top: 10px;
+  letter-spacing: 0.02em;
+}
+main { max-width: 620px; margin: 0 auto; padding: 26px 16px 60px; }
+.card {
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 22px 18px;
+  margin-bottom: 16px;
+}
+h2 {
+  font-family: var(--ff-display);
+  font-weight: 500;
+  font-size: 24px;
+  color: var(--navy);
+  margin-bottom: 8px;
+}
+p.lead { color: var(--muted); font-size: 15px; margin-bottom: 18px; }
+label {
+  display: block;
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 7px;
+}
+input {
+  width: 100%;
+  padding: 15px 14px;
+  font-family: var(--ff-body);
+  font-size: 17px;
+  color: var(--text);
+  background: var(--cream);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+}
+input:focus { outline: 2px solid var(--gold); outline-offset: 1px; }
+input.code { letter-spacing: 0.5em; text-align: center; font-size: 26px; }
+button {
+  width: 100%;
+  margin-top: 16px;
+  padding: 15px 20px;
+  font-family: var(--ff-body);
+  font-size: 14px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--navy);
+  background: var(--gold);
+  border: 1px solid var(--gold);
+  border-radius: 2px;
+  cursor: pointer;
+}
+button:disabled { opacity: 0.55; cursor: default; }
+button.quiet { background: transparent; color: var(--muted); border-color: var(--line); }
+.note { font-size: 14px; color: var(--muted); margin-top: 14px; text-align: center; }
+.note a { color: var(--navy); }
+.message { margin-top: 14px; padding: 12px 14px; border-radius: 2px; font-size: 15px; }
+.message.bad { background: #FBEDED; color: #8A2B2B; border: 1px solid #E7C3C3; }
+.message.good { background: #EDF5EE; color: #245C2E; border: 1px solid #C3DEC8; }
+.booking { border-left: 3px solid var(--gold); }
+.booking .when {
+  font-family: var(--ff-display);
+  font-size: 22px;
+  color: var(--navy);
+  margin-bottom: 4px;
+}
+.booking .ref {
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+.booking .service {
+  font-size: 16px;
+  color: var(--navy);
+  margin-bottom: 12px;
+}
+dl { display: grid; grid-template-columns: 116px 1fr; gap: 7px 12px; font-size: 15px; }
+dt { color: var(--muted); }
+dd { color: var(--text); }
+.pill {
+  display: inline-block;
+  padding: 4px 11px;
+  border-radius: 999px;
+  font-size: 13px;
+  background: var(--cream);
+  color: var(--muted);
+  border: 1px solid var(--line);
+}
+.hidden { display: none; }
+footer { text-align: center; padding: 8px 16px 40px; font-size: 13px; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<header>
+  <img src="/appletouchicon.png" alt="British Heritage Hosts">
+  <h1>Your booking</h1>
+</header>
+
+<main>
+
+  <!-- step one, email address or mobile number -->
+  <section id="stepContact" class="card">
+    <h2>Open your booking</h2>
+    <p class="lead">Enter the email address or the mobile number you gave us. We will send you a 6 digit code that way.</p>
+    <label for="contact">Email address or mobile number</label>
+    <input id="contact" type="text" inputmode="email" autocomplete="username" placeholder="you@example.com">
+    <button id="sendBtn" type="button">Send my code</button>
+    <div id="contactMsg"></div>
+    <p class="note">No password to remember. If anything is wrong, write to <a href="mailto:info@britishheritagehosts.com">info@britishheritagehosts.com</a>.</p>
+  </section>
+
+  <!-- step two, the code -->
+  <section id="stepCode" class="card hidden">
+    <h2>Enter your code</h2>
+    <p class="lead" id="codeLead">We have sent you a 6 digit code. It lasts 10 minutes.</p>
+    <label for="code">6 digit code</label>
+    <input id="code" class="code" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="000000">
+    <button id="verifyBtn" type="button">Open my booking</button>
+    <button id="backBtn" class="quiet" type="button">Use something else</button>
+    <div id="codeMsg"></div>
+  </section>
+
+  <!-- step three, the bookings -->
+  <section id="stepBookings" class="hidden">
+    <div class="card">
+      <h2 id="hello">Welcome</h2>
+      <p class="lead" id="bookingCount">Loading your booking.</p>
+      <button id="outBtn" class="quiet" type="button">Sign out</button>
+    </div>
+    <div id="bookingList"></div>
+  </section>
+
+</main>
+
+<footer>British Heritage Hosts Ltd</footer>
+
+<script>
+(function () {
+  "use strict";
+
+  var FN = "https://pwqdzitsezblncmewxsf.supabase.co/functions/v1/guest";
+  var KEY = "bhh guest session";
+
+  var el = function (id) { return document.getElementById(id); };
+  var show = function (id) { el(id).classList.remove("hidden"); };
+  var hide = function (id) { el(id).classList.add("hidden"); };
+
+  function store(v) { try { localStorage.setItem(KEY, v); } catch (e) {} }
+  function stored() { try { return localStorage.getItem(KEY) || ""; } catch (e) { return ""; } }
+  function clearStored() { try { localStorage.removeItem(KEY); } catch (e) {} }
+
+  function esc(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+
+  function say(where, text, good) {
+    el(where).innerHTML = text
+      ? '<div class="message ' + (good ? "good" : "bad") + '">' + text + "</div>"
+      : "";
+  }
+
+  function call(action, payload) {
+    var body = Object.assign({ action: action }, payload || {});
+    return fetch(FN, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body)
+    }).then(function (r) { return r.json().catch(function () { return { ok: false, message: "No reply from the server." }; }); });
+  }
+
+  function niceDate(value) {
+    if (!value) return "";
+    var d = new Date(value + "T00:00:00");
+    if (isNaN(d.getTime())) return value;
+    return d.toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+  }
+
+  // The database returns a time as 18:00:00. People read 6:00 pm.
+  function niceTime(value) {
+    if (!value) return "";
+    var bits = String(value).split(":");
+    if (bits.length < 2) return value;
+    var h = parseInt(bits[0], 10);
+    var m = bits[1];
+    if (isNaN(h)) return value;
+    var suffix = h < 12 ? "am" : "pm";
+    var hour = h % 12;
+    if (hour === 0) hour = 12;
+    return hour + ":" + m + " " + suffix;
+  }
+
+  // The database status is a short word. A guest should read a sentence.
+  function statusWords(status) {
+    var s = String(status || "").toLowerCase();
+    if (s === "enquiry") return "We have your enquiry and are preparing your quotation";
+    if (s === "quoted") return "Quoted, waiting for you";
+    if (s === "confirmed") return "Confirmed";
+    if (s === "paid") return "Confirmed and paid";
+    if (s === "complete") return "Complete";
+    if (s === "cancelled") return "Cancelled";
+    return status || "In progress";
+  }
+
+  function peopleWords(adults, children) {
+    var parts = [];
+    if (adults) parts.push(adults === 1 ? "1 adult" : adults + " adults");
+    if (children) parts.push(children === 1 ? "1 child" : children + " children");
+    return parts.join(", ");
+  }
+
+  // ---- step one
+  el("sendBtn").addEventListener("click", function () {
+    var contact = el("contact").value.trim();
+    if (contact.length < 5) { say("contactMsg", "Please enter your email address or your mobile number.", false); return; }
+    el("sendBtn").disabled = true;
+    say("contactMsg", "");
+    call("start", { contact: contact }).then(function (r) {
+      el("sendBtn").disabled = false;
+      if (!r.ok) { say("contactMsg", r.message || "That did not work.", false); return; }
+      window.bhhContact = contact;
+      el("codeLead").textContent = r.channel === "mobile"
+        ? "We have texted a 6 digit code to your phone. It lasts 10 minutes."
+        : "We have emailed a 6 digit code to you. It lasts 10 minutes. Please look in your junk folder if it is not there.";
+      hide("stepContact");
+      show("stepCode");
+      el("code").focus();
+    }).catch(function () {
+      el("sendBtn").disabled = false;
+      say("contactMsg", "No connection. Please try again.", false);
+    });
+  });
+
+  // ---- step two
+  el("verifyBtn").addEventListener("click", function () {
+    var code = el("code").value.trim();
+    if (code.length !== 6) { say("codeMsg", "Please enter all 6 digits.", false); return; }
+    el("verifyBtn").disabled = true;
+    say("codeMsg", "");
+    call("verify", { contact: window.bhhContact, code: code }).then(function (r) {
+      el("verifyBtn").disabled = false;
+      if (!r.ok) { say("codeMsg", r.message || "That code is not right.", false); return; }
+      store(r.session);
+      hide("stepCode");
+      loadBookings();
+    }).catch(function () {
+      el("verifyBtn").disabled = false;
+      say("codeMsg", "No connection. Please try again.", false);
+    });
+  });
+
+  el("backBtn").addEventListener("click", function () {
+    hide("stepCode");
+    show("stepContact");
+    say("codeMsg", "");
+  });
+
+  // ---- step three
+  el("outBtn").addEventListener("click", function () {
+    var s = stored();
+    clearStored();
+    call("signout", { session: s });
+    hide("stepBookings");
+    el("bookingList").innerHTML = "";
+    el("contact").value = "";
+    show("stepContact");
+  });
+
+  function loadBookings() {
+    var s = stored();
+    if (!s) { show("stepContact"); return; }
+    show("stepBookings");
+    call("bookings", { session: s }).then(function (r) {
+      if (!r.ok) {
+        clearStored();
+        hide("stepBookings");
+        show("stepContact");
+        say("contactMsg", "Please sign in again.", false);
+        return;
+      }
+      el("hello").textContent = r.name ? "Welcome, " + r.name : "Welcome";
+      var list = r.bookings || [];
+      el("bookingCount").textContent = list.length === 0
+        ? "You have no booking with us yet. This page will show it as soon as one is made."
+        : (list.length === 1 ? "You have 1 booking." : "You have " + list.length + " bookings.");
+
+      var html = "";
+      list.forEach(function (b) {
+        var people = peopleWords(b.adults, b.children);
+        html += '<section class="card booking">';
+        html += '<div class="ref">Booking ' + esc(b.reference) + "</div>";
+        html += '<div class="when">' + esc(niceDate(b.date)) + (b.time ? ", " + esc(niceTime(b.time)) : "") + "</div>";
+        if (b.service) html += '<div class="service">' + esc(b.service) + "</div>";
+        html += "<dl>";
+        if (people) html += "<dt>Your party</dt><dd>" + esc(people) + "</dd>";
+        if (b.price_quoted) html += "<dt>Quoted</dt><dd>&pound;" + esc(b.price_quoted) + "</dd>";
+        html += "<dt>Where it stands</dt><dd><span class=\"pill\">" + esc(statusWords(b.status)) + "</span></dd>";
+        html += "</dl>";
+        html += "</section>";
+      });
+      el("bookingList").innerHTML = html;
+    }).catch(function () {
+      el("bookingCount").textContent = "Your booking could not be loaded. Please check your connection.";
+    });
+  }
+
+  // ---- on open
+  if (stored()) { hide("stepContact"); loadBookings(); }
+})();
+</script>
+</body>
+</html>
