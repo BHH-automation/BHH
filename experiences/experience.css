@@ -246,3 +246,9 @@ html{ scroll-behavior:smooth; }
   .xhero-toc{ gap:.35rem 1rem; }
   .xhero-toc a{ font-size:.74rem; }
 }
+/* link 5 also carries the enquiry link itself, in brackets, so a visitor can
+   go straight to the form without scrolling to the bottom of the page */
+.xhero-toc__last{ white-space:nowrap; color:rgba(245,240,232,.7); font-size:min(.78rem, 2.6vh); }
+.xhero-toc__last .xhero-toc__go{ color:var(--cream); text-decoration-color:rgba(245,240,232,.5); }
+.xhero-toc__last .xhero-toc__go:hover{ color:var(--gold-light); }
+@media (max-width:899px){ .xhero-toc__last{ white-space:normal; font-size:.74rem; } }
