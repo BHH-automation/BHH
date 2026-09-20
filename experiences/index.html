@@ -51,6 +51,12 @@
         <div class="gold-line gold-line--center"></div>
         <p class="lead">Each experience is arranged exclusively for your family. No other guests. No shared itineraries. No compromise.</p>
         <p class="lead">Priced per family for the experiences British Heritage Hosts (BHH) arranges, quoted personally on enquiry.</p>
+        <div class="services-intro__row">
+        <a class="services-trail" href="heritagetrail.html">
+          <img src="../images/trail/windsor castle.webp" alt="" loading="lazy">
+          <span><strong>The Heritage Trail</strong><em>Several days across the United Kingdom with one guide &rarr;</em></span>
+        </a>
+        </div>
       </div>
       <div class="services-preview__grid" id="servicesPreviewGrid" role="list">
         <button type="button" class="services-preview__tile" data-i="0" aria-label="English Tea, 01 of 09">
@@ -101,9 +107,6 @@
       </div>
     </div>
     <div class="services-preview__expand" id="servicesExpand"></div>
-    <div class="services-preview__more">
-      <a href="heritagetrail.html" class="services-preview__more-link services-preview__more-link--trail">The Heritage Trail, several days with one guide &rarr;</a>
-    </div>
     <script>
     (function(){
       var DATA = [
@@ -153,7 +156,7 @@
         var head = document.querySelector('.xnav');
         var headH = head ? head.getBoundingClientRect().height : 74;
         var first = document.querySelector('#services .eyebrow');
-        var last = document.querySelector('.services-preview__more-link') || document.querySelector('#servicesExpand');
+        var last = document.querySelector('#servicesExpand');
         if(!first || !last) return;
         var need = last.getBoundingClientRect().bottom - first.getBoundingClientRect().top;
         var have = window.innerHeight - headH - 40;

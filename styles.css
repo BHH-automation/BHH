@@ -2278,15 +2278,15 @@ html.bhh-one #enquire .enquire-tabs{ display:none !important; }
 
 .services-split{
   display:grid; grid-template-columns:minmax(0,1fr) 250px;
-  gap:2rem; align-items:start; margin-top:0;
+  gap:1.5rem; align-items:start; margin-top:0;
 }
 .services-split .services-intro{ text-align:left; margin-bottom:0; }
 .services-split .services-intro .eyebrow{ font-size:0.75rem; }
-.services-split .services-intro h2{ font-size:2.1rem; line-height:1.12; margin:0.3rem 0; }
+.services-split .services-intro h2{ font-size:2.1rem; line-height:1.1; margin:0.2rem 0; }
 .services-split .services-intro .gold-line--center{ margin:0.25rem 0; }
 .services-split .services-intro .lead{ text-align:left; margin:0.4rem 0 0; font-size:0.9rem; line-height:1.4; }
 .services-split .motion-control{ text-align:left; margin-top:0.55rem; }
-.services-split .motion-control .motion-toggle{ padding:0.32rem 0.8rem; font-size:0.78rem; }
+.services-split .motion-control .motion-toggle{ padding:0.3rem 0.6rem; font-size:0.72rem; }
 
 .services-preview__grid{
   display:grid; grid-template-columns:repeat(3,1fr); gap:0.4rem;
@@ -2360,9 +2360,22 @@ html.bhh-one #enquire .enquire-tabs{ display:none !important; }
 #services h2[tabindex="-1"]:focus{ outline:none; box-shadow:none; }
 
 /* 20 September 2026. The Heritage Trail is the multi day guided journey and
-   was reachable only by scrolling to its own section further down. It now has
-   a second button beside "See all nine experiences", in the same row, so it
-   is inside the block without adding any height. */
-.services-preview__more{ display:flex; flex-wrap:wrap; justify-content:center; gap:0.6rem 0.8rem; }
-.services-preview__more-link--trail{ background:transparent; color:var(--navy); border:1px solid var(--navy); }
-.services-preview__more-link--trail:hover{ background:var(--navy); color:var(--white); }
+   was reachable only by scrolling to its own section further down. A small
+   strip with a Windsor Castle photograph now sits inside the block, beside
+   the pause control on the same row, so it is on the first screen without
+   making the text column taller than the nine cards. */
+.services-intro__row{ display:flex; flex-wrap:wrap; align-items:center; gap:0.5rem 0.6rem; margin-top:0.35rem; }
+.services-intro__row .motion-control{ margin-top:0; }
+.services-trail{
+  display:flex; align-items:center; gap:0.45rem; text-decoration:none; max-width:215px;
+  background:var(--cream-dark); border-radius:8px; padding:0.2rem 0.45rem 0.2rem 0.2rem; color:var(--navy);
+}
+.services-trail img{ width:40px; height:30px; object-fit:cover; border-radius:4px; flex:none; }
+.services-trail span{ display:flex; flex-direction:column; line-height:1.2; }
+.services-trail strong{ font-family:var(--ff-display); font-weight:400; font-size:0.88rem; }
+.services-trail em{ font-style:normal; font-family:var(--ff-body); font-size:0.64rem; color:var(--muted); }
+.services-trail:hover strong{ color:var(--gold-ink); }
+@media (max-width:900px){
+  .services-intro__row{ justify-content:center; }
+  .services-trail{ max-width:300px; text-align:left; }
+}

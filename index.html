@@ -659,6 +659,7 @@ function closeMobileMenu(returnFocus){
         <div class="gold-line gold-line--center"></div>
         <p class="lead">Each experience is arranged exclusively for your family. No other guests. No shared itineraries. No compromise.</p>
         <p class="lead">Priced per family for the experiences British Heritage Hosts (BHH) arranges, quoted personally on enquiry.</p>
+        <div class="services-intro__row">
         <div class="motion-control">
           <button type="button" id="motionToggle" class="motion-toggle" aria-label="Pause the photographs" onclick="bhhToggleMotion()">
             <svg class="motion-toggle__glyph" viewBox="0 0 12 14" aria-hidden="true" focusable="false">
@@ -668,6 +669,11 @@ function closeMobileMenu(returnFocus){
             </svg>
             <span id="motionToggleText">Pause the photographs</span>
           </button>
+        </div>
+        <a class="services-trail" href="#heritage-trail">
+          <img src="images/trail/windsor castle.webp" alt="" loading="lazy">
+          <span><strong>The Heritage Trail</strong><em>Several days across the United Kingdom with one guide &rarr;</em></span>
+        </a>
         </div>
       </div>
       <div class="services-preview__grid" id="servicesPreviewGrid" role="list">
@@ -721,7 +727,6 @@ function closeMobileMenu(returnFocus){
     <div class="services-preview__expand" id="servicesExpand"></div>
     <div class="services-preview__more">
       <a href="experiences/index.html" class="services-preview__more-link">See all nine experiences &rarr;</a>
-      <a href="#heritage-trail" class="services-preview__more-link services-preview__more-link--trail">The Heritage Trail, several days with one guide &rarr;</a>
     </div>
     <script>
     (function(){
