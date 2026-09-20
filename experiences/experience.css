@@ -240,7 +240,7 @@ a{color:inherit}
   white-space:nowrap;
 }
 .xhero-toc a:hover{ color:var(--cream); text-decoration-color:var(--cream); }
-#what-this-is, #good-to-know, #how-it-is-arranged, #in-pictures, #plan-your-visit{ scroll-margin-top:90px; }
+#what-this-is, #good-to-know, #how-it-is-arranged, #in-pictures, #every-place, #plan-your-visit{ scroll-margin-top:90px; }
 html{ scroll-behavior:smooth; }
 @media (max-width:899px){
   .xhero-toc{ gap:.35rem 1rem; }

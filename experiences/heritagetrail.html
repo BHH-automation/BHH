@@ -47,8 +47,8 @@
       <span>BRITISH HERITAGE HOSTS</span>
     </a>
     <nav>
-      <a href="/#services">Our Services</a>
-      <a class="x2" href="heritageguide.html">Heritage Guide</a>
+      <a href="/experiences/">Our Services</a>
+      <a class='x2' href='/experiences/heritageguide'>Heritage Guide</a>
       <a class="x2" href="/#about-bhh">About</a>
       <a href="/?service=Heritage%20Guide&amp;trail=1#enquire">Enquire</a>
     </nav>
@@ -65,11 +65,19 @@
         <span class="xeyebrow">The Heritage Trail</span>
         <h1>Several days, one family, one guide</h1>
         <p>A private trail across England, Wales, Scotland and Northern Ireland. We plan the route, buy the entry passes and walk beside you from the first castle to the last garden.</p>
+        <nav class="xhero-toc" aria-label="On this page">
+          <a href="#what-this-is">1. What this is</a>
+          <a href="#good-to-know">2. Good to know</a>
+          <a href="#how-it-is-arranged">3. How it is arranged</a>
+          <a href="#every-place">4. The 162 places a trail can visit</a>
+          <span class="xhero-toc__last"><a href="#plan-your-visit">5. Plan a Heritage Trail</a> (<a class="xhero-toc__go" href="/?service=Heritage%20Guide&amp;trail=1#enquire">Enquire about a Heritage Trail</a>)</span>
+          <a class="xhero-toc__all" href="/experiences/">&larr; All nine experiences</a>
+        </nav>
       </div>
     </div>
 </section>
 
-<section class="xsec">
+<section class="xsec" id="what-this-is">
   <div class="wrap xcols">
     <div>
       <h2>What this is</h2>
@@ -83,7 +91,7 @@
       <div class="tnatcard"><span class="n">14</span><span class="l">Northern Ireland</span></div>
       </div>
     </div>
-    <aside class="xpanel">
+    <aside class="xpanel" id="good-to-know">
       <h3>Good to know</h3>
       <ul class="xlist">
         <li>One family, one guide, across several days.</li>
@@ -97,7 +105,7 @@
   </div>
 </section>
 
-<section class="xsec xsec--cream">
+<section class="xsec xsec--cream" id="how-it-is-arranged">
   <div class="wrap">
     <h2>How it is arranged</h2>
     <div class="xrule"></div>
@@ -110,7 +118,7 @@
   </div>
 </section>
 
-<section class="xsec">
+<section class="xsec" id="every-place">
   <div class="wrap">
     <h2>Every place on the trail</h2>
     <div class="xrule"></div>
@@ -404,13 +412,13 @@
   </div>
 </section>
 
-<section class="xcta">
+<section class="xcta" id="plan-your-visit">
   <div class="wrap">
     <h2>Plan a Heritage Trail</h2>
     <p>Tell us your dates and how many days you have, and we will tell you what a trail could look like for your family.</p>
     <div class="xbtns">
       <a class="xbtn" href="/?service=Heritage%20Guide&amp;trail=1#enquire">Enquire about a Heritage Trail</a>
-      <a class="xbtn xbtn--ghost" href="heritageguide.html">The single guided day</a>
+      <a class='xbtn xbtn--ghost' href='/experiences/heritageguide'>The single guided day</a>
     </div>
   </div>
 </section>
@@ -432,6 +440,16 @@ if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("/sw.js").catch(function () {});
   });
 }
+</script>
+<script>
+/* Arriving from the home page with a part named in the address (for example
+   #every-place): the photograph above shifts the page as it loads, so the
+   landing is repeated once everything has loaded, and lands under the header. */
+window.addEventListener('load', function(){
+  if(!location.hash) return;
+  var el = document.querySelector(location.hash);
+  if(el) el.scrollIntoView({behavior:'auto', block:'start'});
+});
 </script>
 </body>
 </html>
