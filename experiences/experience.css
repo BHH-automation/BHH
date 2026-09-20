@@ -255,3 +255,19 @@ html{ scroll-behavior:smooth; }
 /* a way back to the nine experiences page from the first screen */
 .xhero-toc__all{ flex-basis:100%; margin-top:.25rem; color:var(--cream); text-decoration:none; opacity:.9; }
 .xhero-toc__all:hover{ color:var(--gold-light); text-decoration:none; opacity:1; }
+
+/* 20 September 2026. On a phone the words used to sit on top of the photograph
+   behind a dark veil, which looked nothing like the laptop page and made the
+   five links hard to read. The phone now uses the same arrangement as the
+   laptop, stacked: the photograph first at its own shape, then the navy panel
+   with the title, the sentence and the links. */
+@media (max-width:899px){
+  .xhero{ display:block; }
+  .xhero-img{ height:auto; max-height:none; overflow:visible; }
+  .xhero-img img{ display:block; width:100%; height:auto; max-height:62vh; object-fit:cover; }
+  .xhero-img::after{ display:none; }
+  .xhero-txt{ position:static; padding:1.4rem 0 1.6rem; }
+  .xhero h1, .xhero p, .xhero .xeyebrow{ text-shadow:none; }
+  .xhero h1{ margin-bottom:.6rem; }
+  .xhero p{ margin-bottom:.2rem; }
+}
