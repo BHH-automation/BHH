@@ -161,8 +161,13 @@
         var need = last.getBoundingClientRect().bottom - first.getBoundingClientRect().top;
         var have = window.innerHeight - headH - 40;
         var z = have / need;
-        if(z >= 1){ box.style.zoom = ''; return; }
+        /* on a large screen (a television, a big monitor) the block grows to
+           use the room, up to 1.6 times, as long as it stays inside the width */
+        var wide = (window.innerWidth * 0.92) / box.getBoundingClientRect().width;
+        if(z > wide) z = wide;
+        if(z > 1.6) z = 1.6;
         if(z < 0.5) z = 0.5;
+        if(Math.abs(z - 1) < 0.02){ box.style.zoom = ''; return; }
         box.style.zoom = z.toFixed(3);
       }
       bhhFitServices();
