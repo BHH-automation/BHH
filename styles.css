@@ -2352,3 +2352,9 @@ html.bhh-one #enquire .enquire-tabs{ display:none !important; }
   .services-preview__card h3{ font-size:1.25rem; margin:0.1rem 0 0.25rem; }
   .services-preview__card p{ font-size:0.85rem; }
 }
+
+/* 20 September 2026. When Explore our experiences or Our Services lands on the
+   section, the script gives the heading keyboard focus so the keyboard arrives
+   where the eye does. Safari on iPhone draws a blue box around any focused
+   element, so the heading appeared boxed. No ring on that programmatic focus. */
+#services h2[tabindex="-1"]:focus{ outline:none; box-shadow:none; }
