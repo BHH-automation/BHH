@@ -2358,3 +2358,23 @@ html.bhh-one #enquire .enquire-tabs{ display:none !important; }
    where the eye does. Safari on iPhone draws a blue box around any focused
    element, so the heading appeared boxed. No ring on that programmatic focus. */
 #services h2[tabindex="-1"]:focus{ outline:none; box-shadow:none; }
+
+/* 20 September 2026. The Heritage Trail is the multi day guided journey and
+   was reachable only by scrolling to its own section further down. One line
+   under the promise text now names it inside the experiences block, so it is
+   on the first screen with the nine. */
+.services-trail{
+  display:flex; align-items:center; gap:0.6rem; margin-top:0.55rem; text-decoration:none;
+  background:var(--cream-dark); border-radius:8px; padding:0.35rem 0.6rem 0.35rem 0.35rem; color:var(--navy);
+}
+.services-trail img{ width:52px; height:40px; object-fit:cover; border-radius:5px; flex:none; }
+.services-trail span{ display:flex; flex-direction:column; line-height:1.25; }
+.services-trail strong{ font-family:var(--ff-display); font-weight:400; font-size:1rem; }
+.services-trail em{ font-style:normal; font-family:var(--ff-body); font-size:0.74rem; color:var(--muted); }
+.services-trail:hover strong{ color:var(--gold-ink); }
+/* the text column must not grow past the nine cards, so the pause control tightens a little */
+.services-split .motion-control{ margin-top:0.4rem; }
+.services-split .services-intro .lead{ margin-top:0.3rem; }
+@media (max-width:900px){
+  .services-trail{ display:inline-flex; text-align:left; margin:0.7rem auto 0; max-width:34rem; }
+}
