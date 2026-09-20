@@ -747,9 +747,19 @@ function closeMobileMenu(returnFocus){
         tiles.forEach(function(t){ t.classList.toggle('is-active', t.getAttribute('data-i') == i); });
       }
       document.querySelectorAll('.services-preview__tile').forEach(function(t){
-        t.addEventListener('click', function(){ render(t.getAttribute('data-i')); bhhFitServices(); });
+        t.addEventListener('click', function(){
+          render(t.getAttribute('data-i')); bhhFitServices();
+          /* on a phone the big card sits below the nine, so bring it into view */
+          if(window.innerWidth <= 900){
+            var box = document.getElementById('servicesExpand');
+            if(box && box.scrollIntoView) box.scrollIntoView({behavior:'smooth', block:'nearest'});
+          }
+        });
       });
-      render(0);
+      /* On a laptop the first card is open from the start. On a phone the big
+         card would only be half visible under the nine, so it stays closed until
+         a card is tapped, and the first screen ends cleanly at the ninth card. */
+      if(window.innerWidth > 900) render(0);
 
       /* Fit the whole block into the window. On a short window (a laptop at a
          high Windows scale) the block is drawn smaller until it fits between the
