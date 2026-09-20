@@ -1,0 +1,80 @@
+/* ═══ THE SHORT ENQUIRY PANEL, shared by the experience pages and the home
+   page Heritage Trail button. Copied from experience.css so the home page
+   can load it without the experience page header styles. ═══ */
+.xq-back{
+  position:fixed; inset:0; z-index:200;
+  background:rgba(8,15,23,.72); -webkit-backdrop-filter:blur(3px); backdrop-filter:blur(3px);
+  display:flex; align-items:flex-start; justify-content:center;
+  padding:3vh 1rem; overflow-y:auto; -webkit-overflow-scrolling:touch;
+}
+.xq-panel{
+  position:relative; width:100%; max-width:560px;
+  background:var(--navy); color:var(--cream);
+  border:1px solid var(--gold); border-radius:6px;
+  padding:2rem 1.9rem 1.8rem; box-shadow:0 24px 60px rgba(0,0,0,.5);
+}
+.xq-close{
+  position:absolute; top:.6rem; right:.7rem; width:34px; height:34px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  background:rgba(10,20,35,.6); border:1px solid rgba(201,168,76,.45);
+  color:rgba(245,240,232,.85); font-size:1.3rem; line-height:1; cursor:pointer;
+}
+.xq-close:hover{ color:var(--gold); background:rgba(10,20,35,.85); }
+.xq-close:focus-visible,
+.xq-send:focus-visible,
+.xq-panel a:focus-visible,
+.xq-panel input:focus-visible,
+.xq-panel textarea:focus-visible{
+  outline:2px solid var(--gold); outline-offset:2px; box-shadow:0 0 0 5px rgba(13,27,42,.95);
+}
+.xq-eyebrow{ font-size:.8rem; letter-spacing:.16em; text-transform:uppercase; color:var(--gold); margin-bottom:.3rem; }
+.xq-title{ font-family:var(--ff-display); font-weight:400; font-size:1.9rem; line-height:1.15; color:var(--cream); margin-bottom:.5rem; }
+.xq-lead{ font-size:.95rem; color:rgba(245,240,232,.75); margin-bottom:1.3rem; }
+
+.xq-field{ margin-bottom:.9rem; }
+.xq-field label{ display:block; font-size:.82rem; letter-spacing:.06em; text-transform:uppercase; color:var(--gold); margin-bottom:.3rem; }
+.xq-field label span{ color:var(--gold-light); }
+.xq-field input, .xq-field textarea{
+  width:100%; padding:.65rem .75rem; font-family:var(--ff-body); font-size:.95rem;
+  color:var(--cream); background:rgba(255,255,255,.06);
+  border:1px solid rgba(201,168,76,.35); border-radius:4px;
+}
+.xq-field input::placeholder, .xq-field textarea::placeholder{ color:rgba(245,240,232,.4); }
+.xq-field input:focus, .xq-field textarea:focus{ border-color:var(--gold); background:rgba(201,168,76,.06); }
+.xq-row{ display:grid; grid-template-columns:1fr 1fr; gap:.9rem; }
+@media(max-width:420px){ .xq-row{ grid-template-columns:1fr; gap:0; } }
+
+.xq-consent{ margin:.4rem 0 1rem; }
+.xq-consent label{ display:flex; gap:.6rem; align-items:flex-start;
+  font-size:.86rem; line-height:1.55; color:rgba(245,240,232,.8); cursor:pointer; }
+.xq-consent input{ margin-top:.25rem; width:17px; height:17px; flex:none; accent-color:var(--gold); }
+.xq-consent a{ color:var(--gold); }
+.xq-star{ color:var(--gold-light); }
+
+.xq-error{ margin:0 0 .8rem; font-size:.9rem; color:#FFB4A8; }
+.xq-send{
+  display:block; width:100%; padding:.85rem 1rem;
+  font-family:var(--ff-body); font-size:.875rem; font-weight:500;
+  letter-spacing:.13em; text-transform:uppercase;
+  background:var(--gold); color:var(--navy); border:1px solid var(--gold);
+  border-radius:4px; cursor:pointer;
+}
+.xq-send:hover{ background:var(--gold-light); border-color:var(--gold-light); }
+.xq-send[disabled]{ opacity:.65; cursor:default; }
+.xq-alt{ margin-top:.9rem; font-size:.88rem; color:rgba(245,240,232,.65); text-align:center; }
+.xq-alt a{ color:var(--gold); }
+
+/* the spam trap, never seen and never announced */
+.xq-hp{ position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden; }
+
+.xq-done{ text-align:center; padding:1rem 0 .4rem; }
+.xq-done .xq-eyebrow, .xq-done .xq-title{ text-align:center; }
+.xq-done .xq-send{ max-width:220px; margin:1.2rem auto 0; }
+
+@media(max-width:600px){
+  .xq-back{ padding:0; }
+  .xq-panel{ max-width:none; min-height:100%; border-radius:0; border-left:none; border-right:none; padding:1.6rem 1.15rem 1.4rem; }
+  .xq-title{ font-size:1.6rem; }
+}
+
+

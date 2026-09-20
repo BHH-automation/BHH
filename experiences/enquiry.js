@@ -27,6 +27,9 @@
 
   /* The page already carries its own name in every enquiry link. */
   function experienceName() {
+    /* a page can name the experience itself, as the home page does for the
+       Heritage Trail button; otherwise it is read from the enquiry links */
+    if (document.body && document.body.getAttribute('data-xq-name')) return document.body.getAttribute('data-xq-name');
     var a = document.querySelector('a[href*="?service="]');
     if (!a) return '';
     var m = (a.getAttribute('href') || '').match(/[?&]service=([^#&]*)/);
@@ -91,7 +94,7 @@
           '<p class="xq-error" id="xqError" role="alert" hidden></p>' +
           '<button type="submit" class="xq-send">Send my enquiry</button>' +
           '<p class="xq-alt">Would you rather give us the full details? ' +
-            '<a href="/?service=' + encodeURIComponent(name) + '#enquire">Open the long form</a></p>' +
+            '<a href="' + ((document.body && document.body.getAttribute('data-xq-long')) || ('/?service=' + encodeURIComponent(name) + '#enquire')) + '">Open the long form</a></p>' +
         '</form>' +
         '<div class="xq-done" id="xqDone" hidden>' +
           '<div class="xq-eyebrow">Thank you</div>' +
@@ -222,7 +225,7 @@
 
   /* Every link that used to travel to the home page form now opens the panel. */
   function intercept(e) {
-    var a = e.target.closest ? e.target.closest('a[href*="?service="]') : null;
+    var a = e.target.closest ? e.target.closest('a[href*="?service="], a[data-xq]') : null;
     if (!a) return;
     if (e.metaKey || e.ctrlKey || e.shiftKey || e.button > 0) return;   /* let a new tab be a new tab */
     e.preventDefault();

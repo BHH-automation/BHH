@@ -33,6 +33,8 @@
 <title>British Heritage Hosts Ltd, Private British Experiences in Real Homes</title>
 <meta name="description" content="Private cultural experiences in real British homes, for families visiting the United Kingdom. Dinners, teas, heritage days and canal cruises.">
 <link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="experiences/enquiry.css">
+<script src="experiences/enquiry.js" defer></script>
 
     <!-- ═══ SEO & SOCIAL ═══════════════════════════════════════════════════ -->
     <link rel="canonical" href="https://britishheritagehosts.com/" />
@@ -210,7 +212,7 @@ function openTransportMode(mode, service){
   }
 }
 </script>
-<body>
+<body data-xq-name="Heritage Trail" data-xq-long="/?service=Heritage%20Guide&amp;trail=1#enquire">
 
 <!-- Hidden forms for Netlify detection only -->
 <form action='/?success=guest' method='post' name='guest-enquiry-v2' data-netlify-honeypot="bot-field" style='display:none'>
@@ -1008,7 +1010,7 @@ function bhhJumpToEnquire(){
     </div>
 
     <div class="trail-cta fade-up">
-      <a href="#enquire" class="btn btn-gold" onclick="return bhhTrailEnquire(event)">Enquire about a Heritage Trail</a>
+      <a href="#enquire" class="btn btn-gold" data-xq onclick="return bhhTrailEnquire(event)">Enquire about a Heritage Trail</a>
       <a href="experiences/heritagetrail.html#every-place" class="btn btn-outline-dark">See the 162 places a trail can visit</a>
       <span class="trail-cta-note">Priced per family for the guide and passes, on enquiry.</span>
       <button type="button" class="trail-credits-link" id="trail-credits-link">Photo credits</button>
@@ -1038,14 +1040,17 @@ function bhhJumpToEnquire(){
    form, no new field, no new Netlify stub. */
 function bhhTrailEnquire(e){
   if(e && e.preventDefault){ e.preventDefault(); }
+  /* the short enquiry panel opens on this click when its script is present;
+     the long form is still prepared underneath for "Open the long form" */
+  var panelOpens = !!(document.body && document.body.getAttribute('data-xq-name'));
   var svc = 'Heritage Guide';
-  if(typeof switchTab === 'function'){ switchTab('guest'); }
+  if(typeof switchTab === 'function'){ switchTab('guest', panelOpens ? false : undefined); }
   var v8 = document.querySelector('#service-card-grid .service-card-v8[data-service="' + svc + '"]');
   if(v8 && typeof toggleService === 'function' && !v8.classList.contains('selected')){ toggleService(v8); }
   var box = document.querySelector('#guest-form textarea[name="Special Requests"]');
   if(box && !(box.value || '').trim()){ box.value = 'I am interested in a multi day Heritage Trail.'; }
   var target = document.getElementById('enquire');
-  bhhJumpToEnquire();
+  if(!panelOpens) bhhJumpToEnquire();
   return false;
 }
 </script>
