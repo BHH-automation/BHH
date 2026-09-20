@@ -228,3 +228,21 @@ a{color:inherit}
   .xhero h1{ font-size:clamp(1.6rem, min(5.4vw, 9.5vh), 3.6rem); margin-bottom:min(.9rem, 1.6vh); }
   .xhero p{ font-size:clamp(.85rem, min(2.1vw, 3.4vh), 1.08rem); line-height:1.45; }
 }
+
+/* 20 September 2026. Five numbered links under the banner sentence, one for
+   each part of the page, so a visitor sees the whole page at a glance and can
+   jump straight to the part they want. The targets carry a scroll margin so
+   they land just under the sticky header rather than behind it. */
+.xhero-toc{ display:flex; flex-wrap:wrap; gap:.45rem 1.4rem; margin-top:min(1.1rem, 2.4vh); }
+.xhero-toc a{
+  font-size:min(.78rem, 2.6vh); letter-spacing:.06em; color:var(--gold-light);
+  text-decoration:underline; text-underline-offset:.22em; text-decoration-color:rgba(232,201,122,.45);
+  white-space:nowrap;
+}
+.xhero-toc a:hover{ color:var(--cream); text-decoration-color:var(--cream); }
+#what-this-is, #good-to-know, #how-it-is-arranged, #in-pictures, #plan-your-visit{ scroll-margin-top:90px; }
+html{ scroll-behavior:smooth; }
+@media (max-width:899px){
+  .xhero-toc{ gap:.35rem 1rem; }
+  .xhero-toc a{ font-size:.74rem; }
+}
