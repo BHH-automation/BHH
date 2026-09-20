@@ -2276,10 +2276,17 @@ html.bhh-one #enquire .enquire-tabs{ display:none !important; }
    #servicesArchive rather than removed. ═══════════════════════════════════ */
 #servicesArchive{ display:none !important; }
 
-.services-preview{ margin-top:2.2rem; }
+.services-split{
+  display:grid; grid-template-columns:minmax(0,1fr) minmax(0,0.92fr);
+  gap:2.6rem; align-items:center; margin-top:0.5rem;
+}
+.services-split .services-intro{ text-align:left; margin-bottom:0; }
+.services-split .services-intro .gold-line--center{ margin:0.4rem 0; }
+.services-split .services-intro .lead{ text-align:left; margin:0.6rem 0 0; }
+.services-split .motion-control{ text-align:left; margin-top:0.9rem; }
+
 .services-preview__grid{
   display:grid; grid-template-columns:repeat(3,1fr); gap:0.5rem;
-  max-width:640px; margin:0 auto;
 }
 .services-preview__tile{
   position:relative; aspect-ratio:1/1; border-radius:8px; overflow:hidden;
@@ -2301,7 +2308,7 @@ html.bhh-one #enquire .enquire-tabs{ display:none !important; }
 .services-preview__tile:hover, .services-preview__tile:focus-visible{ border-color:var(--gold); outline:none; }
 .services-preview__tile.is-active{ border-color:var(--gold); }
 
-.services-preview__expand{ margin-top:1.4rem; max-width:640px; margin-left:auto; margin-right:auto; }
+.services-preview__expand{ margin-top:1.8rem; max-width:900px; margin-left:auto; margin-right:auto; }
 .services-preview__card{
   display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:1.4rem;
   align-items:center; background:var(--cream-dark); border-radius:12px; padding:1.3rem;
@@ -2321,6 +2328,14 @@ html.bhh-one #enquire .enquire-tabs{ display:none !important; }
   padding:0.75rem 1.6rem; border-radius:999px; text-decoration:none;
 }
 .services-preview__more-link:hover{ background:var(--navy-mid); }
+
+@media (max-width:900px){
+  .services-split{ grid-template-columns:1fr; gap:1.4rem; }
+  .services-split .services-intro{ text-align:center; }
+  .services-split .services-intro .lead{ text-align:center; margin-left:auto; margin-right:auto; }
+  .services-split .motion-control{ text-align:center; }
+  .services-preview__grid{ width:100%; max-width:640px; margin-left:auto; margin-right:auto; }
+}
 
 @media (max-width:480px){
   .services-preview__card{ grid-template-columns:1fr; }

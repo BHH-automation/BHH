@@ -645,32 +645,31 @@ function closeMobileMenu(returnFocus){
 <!-- SERVICES -->
 <section class="section section--white" id="services" style="padding-top:6rem;padding-bottom:3rem;">
   <div class="container">
-    <div class="services-intro fade-up">
-      <span class="eyebrow">Nine Signature Experiences</span>
-      <h2>Everything British heritage has to offer, privately</h2>
-      <div class="gold-line gold-line--center"></div>
-      <p class="lead" style="margin:0 auto;text-align:center">Each experience is arranged exclusively for your family. No other guests. No shared itineraries. No compromise.</p>
-      <p class="lead" style="margin:0.6rem auto 0;text-align:center">Priced per family for the experiences British Heritage Hosts (BHH) arranges, quoted personally on enquiry.</p>
-      <div class="motion-control">
-        <button type="button" id="motionToggle" class="motion-toggle" aria-label="Pause the photographs" onclick="bhhToggleMotion()">
-          <svg class="motion-toggle__glyph" viewBox="0 0 12 14" aria-hidden="true" focusable="false">
-            <rect id="motionBarA" x="0" y="0" width="4" height="14" fill="currentColor"></rect>
-            <rect id="motionBarB" x="8" y="0" width="4" height="14" fill="currentColor"></rect>
-            <polygon id="motionPlay" points="0,0 12,7 0,14" fill="currentColor" style="display:none"></polygon>
-          </svg>
-          <span id="motionToggleText">Pause the photographs</span>
-        </button>
+    <script>
+    /* Declared here, before every script that reads it, so the showcase card
+       and the large view can ask the same question. */
+    function bhhReduceMotion(){
+      try{ return window.matchMedia('(prefers-reduced-motion: reduce)').matches; }catch(e){ return false; }
+    }
+    </script>
+    <div class="services-split fade-up">
+      <div class="services-intro">
+        <span class="eyebrow">Nine Signature Experiences</span>
+        <h2>Everything British heritage has to offer, privately</h2>
+        <div class="gold-line gold-line--center"></div>
+        <p class="lead">Each experience is arranged exclusively for your family. No other guests. No shared itineraries. No compromise.</p>
+        <p class="lead">Priced per family for the experiences British Heritage Hosts (BHH) arranges, quoted personally on enquiry.</p>
+        <div class="motion-control">
+          <button type="button" id="motionToggle" class="motion-toggle" aria-label="Pause the photographs" onclick="bhhToggleMotion()">
+            <svg class="motion-toggle__glyph" viewBox="0 0 12 14" aria-hidden="true" focusable="false">
+              <rect id="motionBarA" x="0" y="0" width="4" height="14" fill="currentColor"></rect>
+              <rect id="motionBarB" x="8" y="0" width="4" height="14" fill="currentColor"></rect>
+              <polygon id="motionPlay" points="0,0 12,7 0,14" fill="currentColor" style="display:none"></polygon>
+            </svg>
+            <span id="motionToggleText">Pause the photographs</span>
+          </button>
+        </div>
       </div>
-      <script>
-      /* Declared here, before every script that reads it, so the showcase card
-         and the large view can ask the same question. */
-      function bhhReduceMotion(){
-        try{ return window.matchMedia('(prefers-reduced-motion: reduce)').matches; }catch(e){ return false; }
-      }
-      </script>
-    </div>
-    
-    <div class="services-preview fade-up">
       <div class="services-preview__grid" id="servicesPreviewGrid" role="list">
         <button type="button" class="services-preview__tile" data-i="0" aria-label="English Tea, 01 of 09">
           <img src="images/english-tea-traditional-afternoon-tea.webp" alt="" loading="lazy">
@@ -718,10 +717,10 @@ function closeMobileMenu(returnFocus){
           <span class="services-preview__tag">Personal Interpreter Service</span>
         </button>
       </div>
-      <div class="services-preview__expand" id="servicesExpand"></div>
-      <div class="services-preview__more">
-        <a href="experiences/index.html" class="services-preview__more-link">See all nine experiences &rarr;</a>
-      </div>
+    </div>
+    <div class="services-preview__expand" id="servicesExpand"></div>
+    <div class="services-preview__more">
+      <a href="experiences/index.html" class="services-preview__more-link">See all nine experiences &rarr;</a>
     </div>
     <script>
     (function(){
