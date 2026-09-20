@@ -336,7 +336,7 @@ function openTransportMode(mode, service){
     <li><a href="#services">Our Services</a></li>
     <li><a href="#heritage-trail">Heritage Trail</a></li>
     <li><a href="#about-bhh">About</a></li>
-    <li><a href="#enquire" onclick="closeMobileMenu();switchTab('guest');document.getElementById('enquire').scrollIntoView({behavior:'smooth'});return false;">Enquire</a></li>
+    <li><a href="#enquire" onclick="closeMobileMenu();switchTab('guest');bhhJumpToEnquire();return false;">Enquire</a></li>
     <li><a href="#contact">Contact</a></li>
     <li class="nav-join" id="navJoin">
       <a href="#enquire" role="button" aria-haspopup="true" aria-expanded="false" id="navJoinBtn"
@@ -345,19 +345,19 @@ function openTransportMode(mode, service){
       </a>
       <ul class="nav-join-menu" id="navJoinMenu" role="menu">
         <li role="none">
-          <a href="#enquire" role="menuitem" onclick="closeMobileMenu();switchTab('host');document.getElementById('enquire').scrollIntoView({behavior:'smooth'});return false;">
+          <a href="#enquire" role="menuitem" onclick="closeMobileMenu();switchTab('host');bhhJumpToEnquire();return false;">
             <svg width="18" height="18" aria-hidden="true"><use href="#ic-host"/></svg>
             Become a Host
           </a>
         </li>
         <li role="none">
-          <a href="#enquire" role="menuitem" onclick="closeMobileMenu();switchTab('partner');document.getElementById('enquire').scrollIntoView({behavior:'smooth'});return false;">
+          <a href="#enquire" role="menuitem" onclick="closeMobileMenu();switchTab('partner');bhhJumpToEnquire();return false;">
             <svg width="18" height="18" aria-hidden="true"><use href="#ic-partner"/></svg>
             Become a Partner
           </a>
         </li>
         <li role="none">
-          <a href="#enquire" role="menuitem" onclick="closeMobileMenu();switchTab('scout');document.getElementById('enquire').scrollIntoView({behavior:'smooth'});return false;">
+          <a href="#enquire" role="menuitem" onclick="closeMobileMenu();switchTab('scout');bhhJumpToEnquire();return false;">
             <svg width="18" height="18" aria-hidden="true"><use href="#ic-guide"/></svg>
             Become a Heritage Scout
           </a>
@@ -642,6 +642,20 @@ function closeMobileMenu(returnFocus){
   </div>
 </section>
 
+<script>
+/* 20 September 2026. Every Enquire link used a smooth scroll to the form.
+   From the Heritage Trail section the form is some five thousand units down,
+   so the page visibly travelled for a second or two before the form appeared.
+   The jump is now instant and lands the form just under the fixed bar. */
+function bhhJumpToEnquire(){
+  var el = document.getElementById('enquire');
+  if(!el) return;
+  var nav = document.querySelector('nav');
+  var navH = nav ? nav.getBoundingClientRect().height : 132;
+  var top = el.getBoundingClientRect().top + window.pageYOffset - navH;
+  try { window.scrollTo({top: top, left: 0, behavior: 'instant'}); } catch(e){ window.scrollTo(0, top); }
+}
+</script>
 <!-- SERVICES -->
 <section class="section section--white" id="services" style="padding-top:2.5rem;padding-bottom:1.5rem;scroll-margin-top:150px;">
   <div class="container">
@@ -1031,7 +1045,7 @@ function bhhTrailEnquire(e){
   var box = document.querySelector('#guest-form textarea[name="Special Requests"]');
   if(box && !(box.value || '').trim()){ box.value = 'I am interested in a multi day Heritage Trail.'; }
   var target = document.getElementById('enquire');
-  if(target && target.scrollIntoView){ target.scrollIntoView({behavior:'smooth'}); }
+  bhhJumpToEnquire();
   return false;
 }
 </script>
