@@ -747,9 +747,36 @@ function closeMobileMenu(returnFocus){
         tiles.forEach(function(t){ t.classList.toggle('is-active', t.getAttribute('data-i') == i); });
       }
       document.querySelectorAll('.services-preview__tile').forEach(function(t){
-        t.addEventListener('click', function(){ render(t.getAttribute('data-i')); });
+        t.addEventListener('click', function(){ render(t.getAttribute('data-i')); bhhFitServices(); });
       });
       render(0);
+
+      /* Fit the whole block into the window. On a short window (a laptop at a
+         high Windows scale) the block is drawn smaller until it fits between the
+         menu bar and the bottom of the window. On a normal window it stays at
+         full size. Never below half size; past that, scrolling is better. */
+      function bhhFitServices(){
+        var box = document.querySelector('#services .container');
+        if(!box) return;
+        if(window.innerWidth <= 900){ box.style.zoom = ''; return; }
+        box.style.zoom = '1';
+        var nav = document.querySelector('nav');
+        var navH = nav ? nav.getBoundingClientRect().height : 132;
+        var first = document.querySelector('#services .eyebrow');
+        var last = document.querySelector('.services-preview__more-link');
+        if(!first || !last) return;
+        var need = last.getBoundingClientRect().bottom - first.getBoundingClientRect().top;
+        var have = window.innerHeight - navH - 28;
+        var z = have / need;
+        if(z >= 1){ box.style.zoom = ''; return; }
+        if(z < 0.5) z = 0.5;
+        box.style.zoom = z.toFixed(3);
+      }
+      window.bhhFitServices = bhhFitServices;
+      bhhFitServices();
+      window.addEventListener('load', bhhFitServices);
+      var bhhFitTimer = null;
+      window.addEventListener('resize', function(){ clearTimeout(bhhFitTimer); bhhFitTimer = setTimeout(bhhFitServices, 120); });
     })();
     </script>
 
