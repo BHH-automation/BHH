@@ -2265,6 +2265,35 @@ html.bhh-one #enquire .enquire-tabs{ display:none !important; }
    matched them. They were left from earlier designs of the who we serve panels,
    the about section, the older enquiry form tabs, the inner page headers and the
    service detail pages, which now have a stylesheet of their own. */
+
+
+/* ── THE TOP BAR ON ONE LINE ──────────────────────────────────────────────
+   19 September 2026. Below 1366 pixels the six menu items wrapped onto two
+   lines, and below 1100 onto three, with the company name splitting after
+   British Heritage. The bar is a fixed height, so the wrapped words were
+   crammed into it rather than the bar growing.
+   Nothing is removed. The spacing between items, the spacing inside the
+   letters and the size of the company name now shrink gently with the window
+   instead of staying at their widest setting, and every item is told never to
+   split. The badge is untouched. The smallest the menu ever reaches is about
+   13 pixels, the floor set for readability, and at 1600 pixels and wider
+   everything is exactly the size it is today. */
+@media (min-width:768px){
+  nav{ padding:0.5rem clamp(0.9rem, 1.5vw, 2rem); gap:clamp(0.7rem, 1.6vw, 2rem); }
+  .nav-logo{ flex:0 1 auto; min-width:0; gap:clamp(0.5rem, 1vw, 1rem); }
+  .nav-logo-text{
+    white-space:nowrap;
+    font-size:clamp(0.95rem, 0.8vw + 0.35rem, 1.44rem);
+    letter-spacing:clamp(0.03em, 0.05vw, 0.08em);
+  }
+  .nav-links{ flex-wrap:nowrap; gap:clamp(0.85rem, 1.5vw, 2.5rem); }
+  .nav-links > li{ flex:0 0 auto; }
+  .nav-links a{
+    white-space:nowrap;
+    font-size:clamp(0.82rem, 0.62vw + 0.3rem, 1rem);
+    letter-spacing:clamp(0.06em, 0.09vw, 0.15em);
+  }
+}
 </style>
 
     <!-- ═══ SEO & SOCIAL ═══════════════════════════════════════════════════ -->
