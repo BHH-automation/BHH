@@ -252,3 +252,6 @@ html{ scroll-behavior:smooth; }
 .xhero-toc__last .xhero-toc__go{ color:var(--cream); text-decoration-color:rgba(245,240,232,.5); }
 .xhero-toc__last .xhero-toc__go:hover{ color:var(--gold-light); }
 @media (max-width:899px){ .xhero-toc__last{ white-space:normal; font-size:.74rem; } }
+/* a way back to the nine experiences page from the first screen */
+.xhero-toc__all{ flex-basis:100%; margin-top:.25rem; color:var(--cream); text-decoration:none; opacity:.9; }
+.xhero-toc__all:hover{ color:var(--gold-light); text-decoration:none; opacity:1; }
