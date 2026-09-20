@@ -18,6 +18,10 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="stylesheet" href="../styles.css">
 <link rel="stylesheet" href="experience.css">
+<style>
+/* The home stylesheet above styles the bare nav element as a fixed bar; this page has its own small header, so put its nav back in place. */
+.xnav nav{ position:static; padding:0; justify-content:flex-start; background:none; border:0; backdrop-filter:none; }
+</style>
 <script src="../cards.js" defer></script>
 </head>
 <body>
@@ -38,7 +42,7 @@
 </header>
 
 <main>
-<section class="section section--white" style="padding-top:7rem;padding-bottom:3rem;">
+<section class="section section--white" id="services" style="padding-top:2rem;padding-bottom:1.5rem;">
   <div class="container">
     <div class="services-split fade-up">
       <div class="services-intro">
@@ -122,9 +126,33 @@
         tiles.forEach(function(t){ t.classList.toggle('is-active', t.getAttribute('data-i') == i); });
       }
       document.querySelectorAll('.services-preview__tile').forEach(function(t){
-        t.addEventListener('click', function(){ render(t.getAttribute('data-i')); });
+        t.addEventListener('click', function(){ render(t.getAttribute('data-i')); bhhFitServices(); });
       });
       render(0);
+
+      /* Same fit rule as the home page: on a short window the block is drawn
+         smaller until it fits under the header, never below half size. */
+      function bhhFitServices(){
+        var box = document.querySelector('#services .container');
+        if(!box) return;
+        if(window.innerWidth <= 900){ box.style.zoom = ''; return; }
+        box.style.zoom = '1';
+        var head = document.querySelector('.xnav');
+        var headH = head ? head.getBoundingClientRect().height : 74;
+        var first = document.querySelector('#services .eyebrow');
+        var last = document.querySelector('#servicesExpand');
+        if(!first || !last) return;
+        var need = last.getBoundingClientRect().bottom - first.getBoundingClientRect().top;
+        var have = window.innerHeight - headH - 40;
+        var z = have / need;
+        if(z >= 1){ box.style.zoom = ''; return; }
+        if(z < 0.5) z = 0.5;
+        box.style.zoom = z.toFixed(3);
+      }
+      bhhFitServices();
+      window.addEventListener('load', bhhFitServices);
+      var bhhFitTimer = null;
+      window.addEventListener('resize', function(){ clearTimeout(bhhFitTimer); bhhFitTimer = setTimeout(bhhFitServices, 120); });
     })();
     </script>
   </div>
