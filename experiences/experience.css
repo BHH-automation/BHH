@@ -214,3 +214,17 @@ a{color:inherit}
   .xhero h1, .xhero p, .xhero .xeyebrow{ text-shadow:none; }
   .xhero p{ max-width:36rem; }
 }
+/* 20 September 2026. On a short window (a laptop at a high Windows scale the
+   page area can be under 450 units tall) the banner was taller than the window:
+   the photograph ran to 620 units and the title alone took three lines of 58
+   units, so the sentence under it was below the fold. The banner is now capped
+   at the window height less the header, and the title and sentence shrink with
+   the window height as well as the width, so the picture, the title and the
+   sentence are all on the first screen. Nothing changes on a tall window. */
+@media (min-width:900px){
+  .xhero-img, .xhero-img img{ max-height:min(620px, calc(100vh - 74px)); }
+  .xhero-txt{ padding:1.2rem 2.4rem; }
+  .xeyebrow{ font-size:min(.68rem, 2.2vh); margin-bottom:min(.7rem, 1.4vh); }
+  .xhero h1{ font-size:clamp(1.6rem, min(5.4vw, 9.5vh), 3.6rem); margin-bottom:min(.9rem, 1.6vh); }
+  .xhero p{ font-size:clamp(.85rem, min(2.1vw, 3.4vh), 1.08rem); line-height:1.45; }
+}
