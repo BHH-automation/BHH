@@ -309,9 +309,9 @@ async function actionBookings(body: Record<string, unknown>) {
       const { data: sv } = await admin
         .from("services")
         .select("*")
-        .eq("id", b.service_id)
+        .eq("service_id", b.service_id)
         .maybeSingle();
-      service = String(sv?.name ?? sv?.title ?? sv?.service_name ?? "");
+      service = String(sv?.service_name ?? "");
     }
     bookings.push({
       reference: String(b.booking_id ?? "").replace(/[^A-Za-z0-9]/g, "").slice(0, 8).toUpperCase(),

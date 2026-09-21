@@ -265,6 +265,17 @@ footer { text-align: center; padding: 8px 16px 40px; font-size: 13px; color: var
     return status || "In progress";
   }
 
+  // A quoted price is money, so it reads 1,850 not 1850.
+  function moneyWords(value) {
+    var n = Number(String(value).replace(/[^0-9.\-]/g, ""));
+    if (!isFinite(n)) return String(value);
+    var whole = Math.round(n) === n;
+    return n.toLocaleString("en-GB", {
+      minimumFractionDigits: whole ? 0 : 2,
+      maximumFractionDigits: 2
+    });
+  }
+
   function peopleWords(adults, children) {
     var parts = [];
     if (adults) parts.push(adults === 1 ? "1 adult" : adults + " adults");
@@ -356,7 +367,7 @@ footer { text-align: center; padding: 8px 16px 40px; font-size: 13px; color: var
         if (b.service) html += '<div class="service">' + esc(b.service) + "</div>";
         html += "<dl>";
         if (people) html += "<dt>Your party</dt><dd>" + esc(people) + "</dd>";
-        if (b.price_quoted) html += "<dt>Quoted</dt><dd>&pound;" + esc(b.price_quoted) + "</dd>";
+        if (b.price_quoted) html += "<dt>Quoted</dt><dd>&pound;" + esc(moneyWords(b.price_quoted)) + "</dd>";
         html += "<dt>Where it stands</dt><dd><span class=\"pill\">" + esc(statusWords(b.status)) + "</span></dd>";
         html += "</dl>";
         html += "</section>";
