@@ -54,7 +54,7 @@ h3 { font-size: clamp(1.4rem, 2.5vw, 2rem); }
   display: block;
 }
 .lead { font-size: 1.1rem; font-weight: 300; line-height: 1.8; color: var(--muted); max-width: 640px; }
-.enquire-panel .lead { color: rgba(245,240,232,0.85); }
+.enquire-panel .lead { color: var(--muted); }  /* was cream, a leftover from when this panel was dark; the panel is white now (23 Sep 2026 fix) */
 /* ── Get-in-touch tab icons ──
    Each icon carries its own INACTIVE colour via a single-class selector.
    The ACTIVE tab's icon is overridden to gold by a higher-specificity rule
@@ -630,6 +630,54 @@ nav {
 .section--cream .form-group select option {
   background: var(--white);
   color: var(--text);
+}
+
+/* FORM ON WHITE CARD (the enquiry panels: Guest, Host, Partner, Scout, Transport).
+   These fields were styled for the dark navy #enquire background, but the panel
+   itself has an inline white background, so cream-on-white made almost every
+   label, hint and typed value nearly invisible. Added 23 September 2026 after a
+   full nav consistency pass surfaced it — same treatment as the cream-section
+   override above, just scoped to the white panel instead. */
+.enquire-panel .form-group label {
+  color: var(--muted);
+}
+.enquire-panel .form-note {
+  color: var(--muted);
+}
+.enquire-panel .form-group input,
+.enquire-panel .form-group select,
+.enquire-panel .form-group textarea {
+  background: rgba(13,27,42,0.04);
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+.enquire-panel .form-group input:focus,
+.enquire-panel .form-group select:focus,
+.enquire-panel .form-group textarea:focus {
+  border-color: var(--gold);
+  background: rgba(201,168,76,0.08);
+}
+.enquire-panel .form-group select option {
+  background: var(--white);
+  color: var(--text);
+}
+.enquire-panel .form-group input::placeholder,
+.enquire-panel .form-group textarea::placeholder {
+  color: var(--muted);
+  opacity: 0.65;
+}
+.enquire-panel .service-card-v8 .svc-label {
+  color: var(--text);
+}
+/* The panel's hint, note and disclaimer paragraphs carry their own inline
+   colour (mostly rgba(245,240,232,*) or var(--muted-on-navy)) written for the
+   dark #enquire background. Redefining the variable fixes the ones that use
+   it; the !important catches the ones with a hardcoded rgba value inline,
+   which nothing else in these white panels legitimately needs. */
+.enquire-panel { --muted-on-navy: var(--muted); }
+.enquire-panel [style*="245,240,232"],
+.enquire-panel [style*="var(--cream)"] {
+  color: var(--muted) !important;
 }
 
 /* ── Languages multi-select (scoped: .langml) ── */
