@@ -348,6 +348,26 @@ function openTransportMode(mode, service){
     <svg class="icon-bars" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
     <svg class="icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M5 5l14 14M19 5 5 19"/></svg>
   </button>
+  <!-- 23 September 2026: the nine experiences sit in the top bar, as a second row under the main menu, so every link is at the top of the page -->
+  <div class="hero-services-strip">
+    <a href="#services" class="hero-svc-pill">Heritage Guide</a>
+    <span class="hero-svc-dot">·</span>
+    <a href="#services" class="hero-svc-pill">English Tea</a>
+    <span class="hero-svc-dot">·</span>
+    <a href="#services" class="hero-svc-pill">British Dinner</a>
+    <span class="hero-svc-dot">·</span>
+    <a href="#enquire" onclick="goToTransportTab('transport');bhhJumpToEnquire();return false;" class="hero-svc-pill">Transportation</a>
+    <span class="hero-svc-dot">·</span>
+    <a href="#services" class="hero-svc-pill">Canal Day Cruise</a>
+    <span class="hero-svc-dot">·</span>
+    <a href="#enquire" onclick="goToTransportTab('narrowboat');bhhJumpToEnquire();return false;" class="hero-svc-pill">Narrowboat Holiday</a>
+    <span class="hero-svc-dot">·</span>
+    <a href="#services" class="hero-svc-pill">Cultural Immersion Programme</a>
+    <span class="hero-svc-dot">·</span>
+    <a href="#services" class="hero-svc-pill">Personal Interpreter Service</a>
+    <span class="hero-svc-dot">·</span>
+    <a href="#services" class="hero-svc-pill">Riverside Grill</a>
+  </div>
 </nav>
 <!-- Mobile menu -->
 <div class="mobile-menu" id="mobileMenu">
@@ -541,26 +561,6 @@ function closeMobileMenu(returnFocus){
       <p class="hero-reply-line">We reply personally, usually the same day</p>
     </div>
 
-    <!-- Service preview strip — 5 services visible without scrolling -->
-    <div class="hero-services-strip">
-      <a href="#services" class="hero-svc-pill">Heritage Guide</a>
-      <span class="hero-svc-dot">·</span>
-      <a href="#services" class="hero-svc-pill">English Tea</a>
-      <span class="hero-svc-dot">·</span>
-      <a href="#services" class="hero-svc-pill">British Dinner</a>
-      <span class="hero-svc-dot">·</span>
-      <a href="#enquire" onclick="goToTransportTab('transport');return false;" class="hero-svc-pill">Transportation</a>
-      <span class="hero-svc-dot">·</span>
-      <a href="#services" class="hero-svc-pill">Canal Day Cruise</a>
-      <span class="hero-svc-dot">·</span>
-      <a href="#enquire" onclick="goToTransportTab('narrowboat');return false;" class="hero-svc-pill">Narrowboat Holiday</a>
-      <span class="hero-svc-dot">·</span>
-      <a href="#services" class="hero-svc-pill">Cultural Immersion Programme</a>
-      <span class="hero-svc-dot">·</span>
-      <a href="#services" class="hero-svc-pill">Personal Interpreter Service</a>
-      <span class="hero-svc-dot">·</span>
-      <a href="#services" class="hero-svc-pill">Riverside Grill</a>
-    </div>
 
   </div>
 
