@@ -1,0 +1,13 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.britishheritagehosts.app",
+      "sha256_cert_fingerprints": [
+        "5C:83:DA:7D:C5:65:5B:51:A5:47:AB:DF:C4:1F:29:0C:ED:62:E9:73:85:B8:09:AD:F3:C1:7F:9F:C1:F7:73:63",
+        "49:DE:14:94:19:C7:9C:79:F3:86:AB:19:A1:C1:D4:D7:35:F8:2D:2D:24:81:2C:5B:82:A5:03:9F:C7:A8:AC:82"
+      ]
+    }
+  }
+]
