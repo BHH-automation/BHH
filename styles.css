@@ -1121,6 +1121,7 @@ footer {
   flex-wrap: wrap;
   backdrop-filter: blur(6px);
 }
+@media (max-width:1023px){ .hero-services-strip{ display:none; } }
 .hero-svc-pill {
   font-family: var(--ff-body);
   font-size: 0.55rem;
@@ -1620,8 +1621,7 @@ footer {
   .hero-sub{ margin:0 auto 1.4rem; }
 
   /* 7. The strip of nine service names under the hero photo is hidden on
-        phones only; it is untouched on desktop. */
-  .hero-services-strip{ display:none; }
+        phones; see the 1023px rule below for the tablet range too. */
 
   /* 9 (side effect). The Contact block's email address is now real text
      rather than the Cloudflare placeholder text, and the real address
