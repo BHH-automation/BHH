@@ -30,8 +30,8 @@
 <link rel="manifest" href="/manifest.json">
 <meta name="theme-color" content="#0D1B2A">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>British Heritage Hosts Ltd, Private British Experiences in Real Homes</title>
-<meta name="description" content="Private cultural experiences in real British homes, for families visiting the United Kingdom. Dinners, teas, heritage days and canal cruises.">
+<title>Become a Heritage Scout</title>
+<meta name="description" content="British Heritage Hosts is looking for Heritage Scouts, self employed introducers earning a fee for every booking they bring.">
 <link rel="stylesheet" href="styles.css">
 <link rel="stylesheet" href="experiences/enquiry.css">
 <script src="experiences/enquiry.js" defer></script>
@@ -149,6 +149,10 @@
   window.addEventListener('load', function(){ place(); reveal(); });
 })();
 </script>
+<style>
+.trust-bar{ padding-top:132px !important; }
+@media (max-width:767px){ .trust-bar{ padding-top:65px !important; } }
+</style>
 </head>
 <script>
 function switchTab(tab, scrollToIt) {
@@ -335,11 +339,11 @@ function openTransportMode(mode, service){
     <span class="nav-logo-text">BRITISH HERITAGE HOSTS</span>
   </a>
   <ul class="nav-links">
-    <li><a href="#services">Our Services</a></li>
-    <li><a href="#heritage-trail">Heritage Trail</a></li>
-    <li><a href="#about-bhh">About</a></li>
-    <li><a href="#contact">Contact</a></li>
-    <li><a href="#enquire" onclick="closeMobileMenu();switchTab('guest');bhhJumpToEnquire();return false;">Guest</a></li>
+    <li style="display:none"><a href="#services">Our Services</a></li>
+    <li style="display:none"><a href="#heritage-trail">Heritage Trail</a></li>
+    <li><a href="/#about-bhh">About</a></li>
+    <li><a href="/#contact">Contact</a></li>
+    <li><a href="/#enquire">Guest</a></li>
     <li><a href="/becomehost.html">Host</a></li>
     <li><a href="/becomepartner.html">Partner</a></li>
     <li><a href="/becomescout.html">Scout</a></li>
@@ -351,11 +355,9 @@ function openTransportMode(mode, service){
 </nav>
 <!-- Mobile menu -->
 <div class="mobile-menu" id="mobileMenu">
-  <a href="#services" onclick="return bhhMenuGo('services')">Our Services</a>
-  <a href="#heritage-trail" onclick="return bhhMenuGo('heritage-trail')">Heritage Trail</a>
-  <a href="#about-bhh" onclick="return bhhMenuGo('about-bhh')">About</a>
-  <a href="#contact" onclick="return bhhMenuGo('contact')">Contact</a>
-  <a href="#enquire" onclick="return bhhMenuGo('enquire','guest')">Guest</a>
+  <a href="/#about-bhh">About</a>
+  <a href="/#contact">Contact</a>
+  <a href="/#enquire">Guest</a>
   <a href="/becomehost.html">Host</a>
   <a href="/becomepartner.html">Partner</a>
   <a href="/becomescout.html">Scout</a>
@@ -517,7 +519,7 @@ function closeMobileMenu(returnFocus){
 </script>
 
 <!-- HERO -->
-<section class="hero">
+<section class="hero" style="display:none !important">
   <div class="hero-pattern"></div>
 
   <!-- HERO: image as background, content overlaid and immediately visible -->
@@ -608,7 +610,7 @@ function closeMobileMenu(returnFocus){
 <!-- TRUST BAR: five facts already stated elsewhere on the page, gathered directly under
      the hero so a first time visitor sees them before being asked for anything.
      Static markup, no script, no images. Added 12 September 2026. -->
-<div class="host-invite-strip" style="background:var(--navy-mid);padding:1rem 1.5rem;text-align:center;border-top:1px solid rgba(201,168,76,0.25);border-bottom:1px solid rgba(201,168,76,0.25)">
+<div class="host-invite-strip" style="display:none;background:var(--navy-mid);padding:1rem 1.5rem;text-align:center;border-top:1px solid rgba(201,168,76,0.25);border-bottom:1px solid rgba(201,168,76,0.25)">
   <span style="color:#F5F0E8;font-size:0.95rem;font-family:var(--ff-body)">Considering hosting a visiting family? We would love to hear from you. <a href="/becomehost.html" style="color:var(--gold);font-weight:700;text-decoration:underline;text-underline-offset:3px">Become a Host</a></span>
 </div>
 <section class="trust-bar">
@@ -638,7 +640,7 @@ function bhhJumpToEnquire(){
 }
 </script>
 <!-- SERVICES -->
-<section class="section section--white" id="services" style="padding-top:2.5rem;padding-bottom:1.5rem;scroll-margin-top:150px;">
+<section class="section section--white" id="services" style="display:none;padding-top:2.5rem;padding-bottom:1.5rem;scroll-margin-top:150px;">
   <div class="container">
     <script>
     /* Declared here, before every script that reads it, so the showcase card
@@ -948,7 +950,7 @@ function bhhJumpToEnquire(){
      Heritage Guide card on the enquiry form exactly as clicking experience card
      01 does. Tile pictures are placeholders taken from the repo images folder,
      one src per tile, so each one can be swapped on its own line later. -->
-<section class="section section--cream" id="heritage-trail">
+<section class="section section--cream" id="heritage-trail" style="display:none">
   <div class="container">
     <div class="services-intro fade-up">
       <span class="eyebrow">THE HERITAGE TRAIL</span>
@@ -1284,7 +1286,7 @@ function bhhTrailEnquire(e){
 })();
 </script>
 
-<section class="section section--white" id="about" style="min-height:100vh;display:flex;align-items:center;">
+<section class="section section--white" id="about" style="display:none;min-height:100vh;align-items:center;">
   <div class="container">
     <div class="fade-up" id="about-bhh" style="text-align:center;margin-bottom:3rem;scroll-margin-top:140px">
       <span class="eyebrow">About BHH</span>
@@ -1333,7 +1335,7 @@ function bhhTrailEnquire(e){
 </section>
 
 <!-- HOW IT WORKS -->
-<section class="section section--dark" style="min-height:100vh;display:flex;align-items:center;">
+<section class="section section--dark" style="display:none;min-height:100vh;align-items:center;">
   <div class="container" style="width:100%">
     <div class="fade-up" style="text-align:center;margin-bottom:2rem">
       <span class="eyebrow">The Guest Journey</span>
@@ -1368,7 +1370,7 @@ function bhhTrailEnquire(e){
 <!-- CONTACT INFO -->
 <!-- PROOF PLACEHOLDER: ready to be filled and unhidden later. display:none, so it
      does not render and cannot affect layout. -->
-<section class="section section--cream" id="contact" style="min-height:100vh;display:flex;align-items:center;">
+<section class="section section--cream" id="contact" style="display:none;min-height:100vh;align-items:center;">
   <div class="container">
     <div class="fade-up">
       <span class="eyebrow">Contact Us</span>
@@ -2562,28 +2564,15 @@ function bhhTrailEnquire(e){
         <p>Authentic British experiences for international families visiting the United Kingdom.</p>
         <p style="margin-top:0.5rem;font-size:0.85rem"><a href="https://find-and-update.company-information.service.gov.uk/company/17103555" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline">Company No. 17103555</a><br>Registered in England and Wales</p>
       </div>
-      <div class="footer-col">
+      <div class="footer-col" style="display:none">
         <h5>Experiences</h5>
-        <ul>
-          <li><a href="#enquire">Heritage Guide</a></li>
-          <li><a href="#enquire">English Tea</a></li>
-          <li><a href="#enquire">British Dinner</a></li>
-          <li><a href="#enquire" onclick="goToTransportTab('transport');return false;">Transportation</a></li>
-          <li><a href="#enquire">Canal Day Cruise</a></li>
-          <li><a href="#enquire" onclick="goToTransportTab('narrowboat');return false;">Narrowboat Holiday</a></li>
-          <li><a href="#enquire">Cultural Immersion Programme</a></li>
-          <li><a href="#enquire">Personal Interpreter Service</a></li>
-          <li><a href="#enquire">Riverside Grill</a></li>
-        </ul>
+        <ul></ul>
       </div>
       <div class="footer-col">
         <h5>Company</h5>
         <ul>
-          <li><a href="#about-bhh">About BHH</a></li>
-          <li><a href="#enquire" onclick="switchTab('host')">Become a Host</a></li>
-          <li><a href="#enquire" onclick="switchTab('scout');return false;">Become a Heritage Scout</a></li>
-          <li><a href="#enquire">Enquire</a></li>
-          <li><a href="#contact">Contact</a></li>
+          <li><a href="/">Visit britishheritagehosts.com</a></li>
+          <li><a href="/#contact">Contact</a></li>
         </ul>
       </div>
       <div class="footer-col">
@@ -5675,6 +5664,12 @@ if ("serviceWorker" in navigator) {
     window.bhhGoToExperiences(true);
   });
 })();
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  if (typeof switchTab === 'function') { switchTab('scout', false); }
+  if (typeof window.bhhOnlyTab === 'function') { window.bhhOnlyTab('scout'); }
+});
 </script>
 </body>
 </html>

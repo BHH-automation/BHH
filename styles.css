@@ -203,8 +203,8 @@ nav {
   font-weight: 500;
 }
 .mobile-menu .mobile-door:hover { background: rgba(201,168,76,0.14); color: var(--gold); }
-@media (max-width: 768px) { .nav-toggle { display: inline-flex; } }
-@media (min-width: 769px) { .mobile-menu { display: none; } }
+@media (max-width: 1023px) { .nav-toggle { display: inline-flex; } }
+@media (min-width: 1024px) { .mobile-menu { display: none; } }
 
 /* ── BUTTONS ── */
 .btn {
@@ -782,6 +782,11 @@ footer {
   .footer-grid { grid-template-columns: 1fr 1fr; }
   .form-row { grid-template-columns: 1fr; }
   nav { padding: 1rem; }
+}
+@media (max-width: 1023px) {
+  /* Flat Guest/Host/Partner/Scout nav (8 items) needs the full desktop row width;
+     below 1024px it collapses into the hamburger menu instead of colliding with
+     the logo wordmark. Added 23 September 2026. */
   .nav-links { display: none; }
 }
 
