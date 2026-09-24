@@ -68,7 +68,7 @@
             '<input id="xqEmail" name="email" type="email" autocomplete="email" required></div>' +
 
           '<div class="xq-field"><label for="xqPhone">Telephone, with country code <span>*</span></label>' +
-            '<input id="xqPhone" name="Phone Number" type="tel" autocomplete="tel" placeholder="+966 50 000 0000" required></div>' +
+            '<input id="xqPhone" name="Phone Number" type="tel" autocomplete="tel" placeholder="+44 7911 123456" required></div>' +
 
           '<div class="xq-row">' +
             '<div class="xq-field"><label for="xqFrom">Arriving <span>*</span></label>' +
