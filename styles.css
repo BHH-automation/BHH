@@ -2496,3 +2496,11 @@ html.bhh-one #enquire .enquire-tabs{ display:none !important; }
 .trail-ov__bar .btn{ box-shadow:0 4px 14px rgba(0,0,0,0.35); }
 .trail-ov.is-open .trail-ov__inner{ padding-bottom:1rem; }
 .trail-ov__note{ text-align:center; margin-top:1.6rem; color:rgba(245,240,232,0.6); }
+
+/* 24 September 2026: the page heading on About, Join and the role pages is the main heading (h1) for search engines and screen readers, drawn at the h2 size so nothing moves */
+h1.as-h2{ font-size: clamp(2rem, 4vw, 3.5rem); }
+.services-intro h1.as-h2 { color: var(--navy); font-size: 2.7rem; }
+.services-split .services-intro h1.as-h2{ font-size:2.1rem; line-height:1.1; margin:0.2rem 0; }
+@media (max-width:900px){
+  .services-split .services-intro h1.as-h2{ font-size:1.5rem; line-height:1.15; margin:0.25rem 0; }
+}

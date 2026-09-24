@@ -37,12 +37,12 @@
 <script src="experiences/enquiry.js" defer></script>
 
     <!-- ═══ SEO & SOCIAL ═══════════════════════════════════════════════════ -->
-    <link rel="canonical" href="https://britishheritagehosts.com/" />
+    <link rel="canonical" href="https://britishheritagehosts.com/joinus" />
     <meta name="robots" content="index, follow" />
 
     <!-- Open Graph -->
     <meta property="og:type"        content="website" />
-    <meta property="og:url"         content="https://britishheritagehosts.com/" />
+    <meta property="og:url"         content="https://britishheritagehosts.com/joinus" />
     <meta property="og:site_name"   content="British Heritage Hosts" />
     <meta property="og:title"       content="British Heritage Hosts, Private British Experiences in Real Homes" />
     <meta property="og:description" content="Authentic private experiences in real British homes, family dinners, afternoon teas, heritage tours, canal cruises and private transportation. Exclusively yours." />
@@ -264,8 +264,8 @@ function openTransportMode(mode, service){
   <textarea name="Special Requests"></textarea>
   <input name="GDPR Consent">
 </form>
-<form action='/?success=partner' method='post' name='partner-application' enctype='multipart/form-data' data-netlify-honeypot="bot-field" style='display:none'>
-  <input name="form-name" type="hidden" value="partner-application">
+<form action='/?success=partner' method='post' name='partner-application-v2' enctype='multipart/form-data' data-netlify-honeypot="bot-field" style='display:none'>
+  <input name="form-name" type="hidden" value="partner-application-v2">
   <input name="subject" type="hidden" value="BHH Partner Application">
   <input name="bot-field">
   <input name="Contact Name"><input name="Business Name"><input name="email">
@@ -1404,7 +1404,7 @@ function bhhTrailEnquire(e){
 #enquire{ display:none !important; }
 .join{ padding:3.5rem 1.5rem 5rem; text-align:center; }
 .join .eyebrow{ color:var(--gold); }
-.join h2{ color:var(--cream); font-family:'Cormorant Garamond',serif; font-weight:300; font-size:clamp(2rem,4vw,2.8rem); margin:0.4rem 0 0.6rem; }
+.join h2, .join h1.as-h2{ color:var(--cream); font-family:'Cormorant Garamond',serif; font-weight:300; font-size:clamp(2rem,4vw,2.8rem); margin:0.4rem 0 0.6rem; }
 .join__lead{ color:rgba(245,240,232,0.85); max-width:560px; margin:0 auto 2.6rem; line-height:1.7; }
 .join__grid{ display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:1.2rem; }
 .join-card{ display:flex; flex-direction:column; background:#FFFFFF; border-radius:14px; overflow:hidden; text-decoration:none; text-align:left; border-top:5px solid var(--gold); box-shadow:0 1px 4px rgba(13,27,42,0.08); transition:transform .2s ease, box-shadow .2s ease; }
@@ -1421,7 +1421,7 @@ function bhhTrailEnquire(e){
 </style>
 <section class="section section--dark join" id="join">
   <p class="eyebrow">Work with us</p>
-  <h2>Join British Heritage Hosts</h2>
+  <h1 class="as-h2">Join British Heritage Hosts</h1>
   <p class="join__lead">Choose how you would like to take part.</p>
   <div class="join__group">
     <h3 class="join__group-title">Hosts</h3>
@@ -2288,8 +2288,8 @@ function bhhTrailEnquire(e){
       <!-- ═══════ PARTNER FORM ═══════ -->
       <div id="tab-partner" class="enquire-panel" style="max-width:760px;margin:0 auto;opacity:1;display:none;background:#FFFFFF;border-radius:14px;padding:1.8rem 1.5rem 2.2rem;border-top:5px solid #9BB08A;box-shadow:0 1px 4px rgba(13,27,42,0.08)"><img src="images/riverside%20grill%20family.webp" alt="Riverside Grill experience run by a BHH partner" style="display:block;width:100%;height:200px;object-fit:cover;object-position:center 10%;border-radius:10px;margin-bottom:1.6rem">
         <p class="lead" style="margin:0 auto 2rem;text-align:center">Join our network of trusted service providers. We vet every partner professionally.</p>
-        <form action='/?success=partner' id='partner-form' method='POST' name='partner-application' style='text-align:left'>
-          <input type="hidden" name="form-name" value="partner-application">
+        <form action='/?success=partner' id='partner-form' method='POST' name='partner-application-v2' style='text-align:left'>
+          <input type="hidden" name="form-name" value="partner-application-v2">
           <p style="display:none"><label>Don't fill this out if you're human: <input name="bot-field"></label></p>
           <input type="hidden" name="subject" id="partner-subject" value="BHH Partner Application">
           <p style="font-size:0.85rem;color:rgba(245,240,232,1);margin-bottom:1.2rem;margin-top:0.5rem">Fields marked <span style='color:#C9A84C;font-weight:600'>*</span> are required. &nbsp;|&nbsp; Enter phone number without leading zero (e.g. 7911 123456 not 07911 123456).</p>

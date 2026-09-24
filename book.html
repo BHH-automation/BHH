@@ -257,8 +257,8 @@ function openTransportMode(mode, service){
   <textarea name="Special Requests"></textarea>
   <input name="GDPR Consent">
 </form>
-<form action='/?success=partner' method='post' name='partner-application' enctype='multipart/form-data' data-netlify-honeypot="bot-field" style='display:none'>
-  <input name="form-name" type="hidden" value="partner-application">
+<form action='/?success=partner' method='post' name='partner-application-v2' enctype='multipart/form-data' data-netlify-honeypot="bot-field" style='display:none'>
+  <input name="form-name" type="hidden" value="partner-application-v2">
   <input name="subject" type="hidden" value="BHH Partner Application">
   <input name="bot-field">
   <input name="Contact Name"><input name="Business Name"><input name="email">
@@ -2147,8 +2147,8 @@ function bhhTrailEnquire(e){
       <!-- ═══════ PARTNER FORM ═══════ -->
       <div id="tab-partner" class="enquire-panel" style="max-width:760px;margin:0 auto;opacity:1;display:none;background:#FFFFFF;border-radius:14px;padding:1.8rem 1.5rem 2.2rem;border-top:5px solid #9BB08A;box-shadow:0 1px 4px rgba(13,27,42,0.08)"><img src="images/riverside%20grill%20family.webp" alt="Riverside Grill experience run by a BHH partner" style="display:block;width:100%;height:200px;object-fit:cover;object-position:center 10%;border-radius:10px;margin-bottom:1.6rem">
         <p class="lead" style="margin:0 auto 2rem;text-align:center">Join our network of trusted service providers. We vet every partner professionally.</p>
-        <form action='/?success=partner' id='partner-form' method='POST' name='partner-application' style='text-align:left'>
-          <input type="hidden" name="form-name" value="partner-application">
+        <form action='/?success=partner' id='partner-form' method='POST' name='partner-application-v2' style='text-align:left'>
+          <input type="hidden" name="form-name" value="partner-application-v2">
           <p style="display:none"><label>Don't fill this out if you're human: <input name="bot-field"></label></p>
           <input type="hidden" name="subject" id="partner-subject" value="BHH Partner Application">
           <p style="font-size:0.85rem;color:rgba(245,240,232,1);margin-bottom:1.2rem;margin-top:0.5rem">Fields marked <span style='color:#C9A84C;font-weight:600'>*</span> are required. &nbsp;|&nbsp; Enter phone number without leading zero (e.g. 7911 123456 not 07911 123456).</p>

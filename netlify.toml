@@ -11,6 +11,44 @@
 [context.production]
   environment = { CONTEXT = "production" }
 
+# 24 September 2026: the old recruitment pages forward to the new Join pages.
+
+[[redirects]]
+  from = "/becomehost"
+  to = "/join/homehost"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/becomehost.html"
+  to = "/join/homehost"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/becomepartner"
+  to = "/joinus"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/becomepartner.html"
+  to = "/joinus"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/becomescout"
+  to = "/join/heritagescout"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/becomescout.html"
+  to = "/join/heritagescout"
+  status = 301
+  force = true
+
 # 25 September 2026: the home page is the family page, so the old Book page address
 # forwards to it. One family page instead of two copies.
 
