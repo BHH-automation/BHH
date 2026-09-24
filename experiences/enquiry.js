@@ -43,6 +43,7 @@
     });
   }
 
+  var longHref = '';
   function build(name) {
     var today = new Date().toISOString().slice(0, 10);
     var wrap = document.createElement('div');
@@ -94,7 +95,7 @@
           '<p class="xq-error" id="xqError" role="alert" hidden></p>' +
           '<button type="submit" class="xq-send">Send my enquiry</button>' +
           '<p class="xq-alt">Would you rather give us the full details? ' +
-            '<a href="' + ((document.body && document.body.getAttribute('data-xq-long')) || ('/?service=' + encodeURIComponent(name) + '#enquire')) + '">Open the long form</a></p>' +
+            '<a href="' + (longHref || (document.body && document.body.getAttribute('data-xq-long')) || ('/?service=' + encodeURIComponent(name) + '#enquire')) + '">Open the long form</a></p>' +
         '</form>' +
         '<div class="xq-done" id="xqDone" hidden>' +
           '<div class="xq-eyebrow">Thank you</div>' +
@@ -152,9 +153,12 @@
     if (lastFocus && lastFocus.focus) { lastFocus.focus(); }
   }
 
-  function open() {
+  /* 25 September 2026: a button may name its own experience (data-xq-name), as the
+     both Dinner and Tea button does, and its own address becomes the long form link */
+  function open(ownName, ownHref) {
     if (panel) return;
-    var name = experienceName();
+    var name = ownName || experienceName();
+    longHref = ownName ? (ownHref || '') : '';
     if (!name) return;                       /* nothing to enquire about, leave the link alone */
     lastFocus = document.activeElement;
     panel = build(name);
@@ -229,7 +233,7 @@
     if (!a) return;
     if (e.metaKey || e.ctrlKey || e.shiftKey || e.button > 0) return;   /* let a new tab be a new tab */
     e.preventDefault();
-    open();
+    open(a.getAttribute('data-xq-name') || '', a.getAttribute('href') || '');
   }
 
   function start() {

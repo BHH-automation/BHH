@@ -1047,8 +1047,11 @@ function bhhTrailEnquire(e){
       if(typeof goToTransportTab === 'function'){ goToTransportTab(mode); }
     } else if(svc){
       switchTab('guest');
-      var v8 = document.querySelector('#service-card-grid .service-card-v8[data-service="' + svc.replace(/"/g,'') + '"]');
-      if(v8 && typeof toggleService === 'function' && !v8.classList.contains('selected')){ toggleService(v8); }
+      /* 25 September 2026: several experiences can arrive together, separated by commas */
+      svc.split(',').forEach(function(one){
+        var v8 = document.querySelector('#service-card-grid .service-card-v8[data-service="' + one.trim().replace(/"/g,'') + '"]');
+        if(v8 && typeof toggleService === 'function' && !v8.classList.contains('selected')){ toggleService(v8); }
+      });
       /* arriving from the Heritage Trail page: seed the same sentence the
          Trail button on this page already writes, and only if the box is empty */
       if(q.get('trail')){

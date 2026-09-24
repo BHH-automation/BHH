@@ -281,3 +281,6 @@ html{ scroll-behavior:smooth; }
   .xnav nav.xmenu{margin-left:0;width:100%;display:grid;grid-template-columns:1.3fr 1.1fr .6fr;gap:.6rem;align-items:start}
   .xnav nav.xmenu a{font-size:.62rem;letter-spacing:.08em;line-height:1.5;text-align:center}
 }
+
+/* 25 September 2026: the enquiry buttons at the top of each experience page */
+.xhero-btns{ justify-content:flex-start; margin:0 0 1.6rem; }
