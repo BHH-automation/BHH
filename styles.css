@@ -2481,3 +2481,18 @@ html.bhh-one #enquire .enquire-tabs{ display:none !important; }
 .role-intro p{ margin:0 0 1rem; }
 .role-intro p:last-child{ margin-bottom:0; }
 .role-intro strong{ display:block; color:var(--gold); font-size:0.78rem; letter-spacing:0.14em; text-transform:uppercase; font-weight:600; margin-bottom:0.25rem; }
+
+/* 25 September 2026: the Heritage Trail enquiry button stays at the bottom of the
+   screen while a nation or a subject is open. */
+.trail-ov__bar{
+  /* sticky, not fixed: the overlay's blur makes it the frame for fixed children,
+     so a fixed bar would scroll away with the places */
+  position:sticky; bottom:0; z-index:3;
+  display:flex; justify-content:center;
+  padding:14px 16px calc(14px + env(safe-area-inset-bottom));
+  background:linear-gradient(to top, rgba(13,27,42,1) 65%, rgba(13,27,42,0));
+}
+.trail-ov__bar[hidden]{ display:none; }
+.trail-ov__bar .btn{ box-shadow:0 4px 14px rgba(0,0,0,0.35); }
+.trail-ov.is-open .trail-ov__inner{ padding-bottom:1rem; }
+.trail-ov__note{ text-align:center; margin-top:1.6rem; color:rgba(245,240,232,0.6); }

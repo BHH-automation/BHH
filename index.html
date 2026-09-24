@@ -997,6 +997,11 @@ function bhhJumpToEnquire(){
         <div class="gold-line"></div>
         <div id="trail-ov-body"></div>
       </div>
+      <!-- 25 September 2026: the enquiry button stays on screen while a family browses
+           a nation or a subject, so they can ask the moment something catches their eye. -->
+      <div class="trail-ov__bar" id="trail-ov-bar" hidden>
+        <a href="#enquire" class="btn btn-gold" id="trail-ov-enquire" data-xq>Enquire about a Heritage Trail</a>
+      </div>
     </div>
   </div>
 </section>
@@ -1083,6 +1088,9 @@ function bhhTrailEnquire(e){
   if(!ov || !body) return;
 
   var lastFocus = null;
+  var bar = document.getElementById('trail-ov-bar');
+  var curNation = '', curSubject = '';
+  function showBar(on){ if(bar){ bar.hidden = !on; } }
 
   function esc(t){
     return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
@@ -1159,6 +1167,7 @@ function bhhTrailEnquire(e){
 
   /* LEVEL 2: the subjects present in one nation, in the fixed order. */
   function showNation(nation){
+    curNation = nation; curSubject = ''; showBar(true);
     title.textContent = nation;
     back.textContent = '\u2190 All nations';
     back.className = 'trail-ov__back';
@@ -1186,6 +1195,7 @@ function bhhTrailEnquire(e){
      element is created here and only here, so no picture is requested while the
      page is simply loaded or while levels 1 and 2 are on screen. */
   function showSubject(nation, subject){
+    curNation = nation; curSubject = subject; showBar(true);
     title.textContent = nation + ': ' + subject;
     back.textContent = '\u2190 ' + nation;
     back.className = 'trail-ov__back';
@@ -1207,10 +1217,7 @@ function bhhTrailEnquire(e){
            +  '<div class="trail-place-line">' + esc(p[3]) + '</div>'
            +  '</div></article>';
     }
-    html += '</div><div class="trail-ov__cta">'
-         +  '<a href="#enquire" class="btn btn-gold" data-trail-nation="' + esc(nation) + '" data-trail-subject="' + esc(subject) + '">Enquire about a Heritage Trail</a>'
-         +  '<span class="trail-cta-note">Priced per family for the guide and passes, on enquiry.</span>'
-         +  '</div>';
+    html += '</div><p class="trail-cta-note trail-ov__note">Priced per family for the guide and passes, on enquiry.</p>';
     body.innerHTML = html;
     openOv();
   }
@@ -1246,10 +1253,33 @@ function bhhTrailEnquire(e){
     }
   });
 
+  /* The enquiry button in the bar: the sentence names the nation, and the subject
+     when one is open. */
+  var barBtn = document.getElementById('trail-ov-enquire');
+  if(barBtn){
+    barBtn.addEventListener('click', function(e){
+      e.preventDefault();
+      var box = document.querySelector('#guest-form textarea[name="Special Requests"]');
+      var wasEmpty = box ? !(box.value || '').trim() : false;
+      var where = curNation ? (curSubject ? curNation + ', ' + curSubject : curNation) : '';
+      closeOv();
+      if(typeof bhhTrailEnquire === 'function'){ bhhTrailEnquire(null); }
+      var line = where ? 'I am interested in a Heritage Trail in ' + where + '.' : '';
+      if(box && wasEmpty && line){ box.value = line; }
+      /* the short enquiry panel opens on this same click (data-xq), so its notes box
+         is filled a moment later with the same sentence */
+      setTimeout(function(){
+        var notes = document.getElementById('xqNotes');
+        if(notes && !(notes.value || '').trim() && line){ notes.value = line; }
+      }, 0);
+    });
+  }
+
   /* The credits view. It uses the same overlay panel, so there is no second
      dialog and no new page. Only the Wikimedia Commons pictures are listed:
      the Pexels and Unsplash licences ask for no credit. */
   function showCredits(){
+    showBar(false);
     title.textContent = 'Photo credits';
     back.textContent = 'Back to the Heritage Trail';
     back.className = 'trail-ov__back trail-ov__back--credits';
