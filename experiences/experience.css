@@ -271,3 +271,13 @@ html{ scroll-behavior:smooth; }
   .xhero h1{ margin-bottom:.6rem; }
   .xhero p{ margin-bottom:.2rem; }
 }
+
+/* 24 September 2026: the same three tabs as the rest of the site, sorted by who is
+   visiting. These pages belong to the family side, so Book is marked. On a phone the
+   three tabs sit in their own row under the badge, each allowed to wrap. */
+.xnav nav.xmenu a[aria-current="page"]{color:var(--gold-light)}
+@media(max-width:760px){
+  .xnav .wrap{flex-wrap:wrap;row-gap:.2rem;padding-bottom:.6rem}
+  .xnav nav.xmenu{margin-left:0;width:100%;display:grid;grid-template-columns:1.3fr 1.1fr .6fr;gap:.6rem;align-items:start}
+  .xnav nav.xmenu a{font-size:.62rem;letter-spacing:.08em;line-height:1.5;text-align:center}
+}
