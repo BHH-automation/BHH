@@ -149,6 +149,14 @@
   window.addEventListener('load', function(){ place(); reveal(); });
 })();
 </script>
+<style>
+/* 25 September 2026: the home page is the family page, as Uber's home page is its Ride
+   page. Hosts, partners and scouts have their own pages under Join British Heritage Hosts,
+   and About and Contact live on the About page. */
+.host-invite-strip, #about, #contact{ display:none !important; }
+.enquire-tab[data-tab="host"], .enquire-tab[data-tab="partner"], .enquire-tab[data-tab="scout"]{ display:none !important; }
+#bhhOneBack{ display:none !important; }
+</style>
 </head>
 <script>
 function switchTab(tab, scrollToIt) {
@@ -336,7 +344,7 @@ function openTransportMode(mode, service){
     <span class="nav-logo-text">BRITISH HERITAGE HOSTS</span>
   </a>
   <ul class="nav-links">
-    <li><a href="/book.html">Book British Heritage Experience</a></li>
+    <li><a href="/book.html" aria-current="page">Book British Heritage Experience</a></li>
     <li><a href="/joinus.html">Join British Heritage Hosts</a></li>
     <li><a href="/about.html">About</a></li>
   </ul>
@@ -347,7 +355,7 @@ function openTransportMode(mode, service){
 </nav>
 <!-- Mobile menu -->
 <div class="mobile-menu" id="mobileMenu">
-  <a href="/book.html">Book British Heritage Experience</a>
+  <a href="/book.html" aria-current="page">Book British Heritage Experience</a>
   <a href="/joinus.html">Join British Heritage Hosts</a>
   <a href="/about.html">About</a>
 </div>
@@ -2585,12 +2593,12 @@ function bhhTrailEnquire(e){
       <div class="footer-col">
         <h5>Company</h5>
         <ul>
-          <li><a href="#about-bhh">About BHH</a></li>
-          <li><a href="/becomehost.html">Become a Host</a></li>
-          <li><a href="/becomepartner.html">Become a Partner</a></li>
-          <li><a href="/becomescout.html">Become a Heritage Scout</a></li>
+          <li><a href="/about.html">About BHH</a></li>
+          <li><a href="/join/homehost">Become a Host</a></li>
+          <li><a href="/joinus">Become a Partner</a></li>
+          <li><a href="/join/heritagescout">Become a Heritage Scout</a></li>
           <li><a href="#enquire">Enquire</a></li>
-          <li><a href="#contact">Contact</a></li>
+          <li><a href="/about.html#contact">Contact</a></li>
         </ul>
       </div>
       <div class="footer-col">
