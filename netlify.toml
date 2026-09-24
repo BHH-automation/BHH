@@ -11,6 +11,21 @@
 [context.production]
   environment = { CONTEXT = "production" }
 
+# 25 September 2026: the home page is the family page, so the old Book page address
+# forwards to it. One family page instead of two copies.
+
+[[redirects]]
+  from = "/book"
+  to = "/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/book.html"
+  to = "/"
+  status = 301
+  force = true
+
 # 16 September 2026: the six spare addresses below send every visitor to the main
 # address instead of serving a second copy of the site. This keeps one website in
 # search results rather than seven competing copies of the same pages.

@@ -156,6 +156,10 @@
 .host-invite-strip, #about, #contact{ display:none !important; }
 .enquire-tab[data-tab="host"], .enquire-tab[data-tab="partner"], .enquire-tab[data-tab="scout"]{ display:none !important; }
 #bhhOneBack{ display:none !important; }
+/* 25 September 2026: repeats taken off the family page. The nine photo cards are the one
+   list of experiences, and the Heritage Trail has its own section, so the corner pop up,
+   the small trail card and the see all link only repeated them. */
+.hero-newsflash, .services-trail, .services-preview__more-link{ display:none !important; }
 </style>
 </head>
 <script>
@@ -344,7 +348,7 @@ function openTransportMode(mode, service){
     <span class="nav-logo-text">BRITISH HERITAGE HOSTS</span>
   </a>
   <ul class="nav-links">
-    <li><a href="/book.html" aria-current="page">Book British Heritage Experience</a></li>
+    <li><a href="/" aria-current="page">Book British Heritage Experience</a></li>
     <li><a href="/joinus.html">Join British Heritage Hosts</a></li>
     <li><a href="/about.html">About</a></li>
   </ul>
@@ -355,7 +359,7 @@ function openTransportMode(mode, service){
 </nav>
 <!-- Mobile menu -->
 <div class="mobile-menu" id="mobileMenu">
-  <a href="/book.html" aria-current="page">Book British Heritage Experience</a>
+  <a href="/" aria-current="page">Book British Heritage Experience</a>
   <a href="/joinus.html">Join British Heritage Hosts</a>
   <a href="/about.html">About</a>
 </div>
@@ -754,6 +758,12 @@ function bhhJumpToEnquire(){
         var navH = nav ? nav.getBoundingClientRect().height : 132;
         var first = document.querySelector('#services .eyebrow');
         var last = document.querySelector('.services-preview__more-link');
+        /* 25 September 2026: the see all link is hidden on the family page, so the
+           block is measured to the bottom of the open card or the photo grid instead. */
+        if(!last || last.offsetParent === null){
+          last = document.querySelector('#servicesExpand');
+          if(!last || last.offsetParent === null) last = document.querySelector('#servicesPreviewGrid');
+        }
         if(!first || !last) return;
         var need = last.getBoundingClientRect().bottom - first.getBoundingClientRect().top;
         var have = window.innerHeight - navH - 28;
@@ -2577,27 +2587,9 @@ function bhhTrailEnquire(e){
         <p style="margin-top:0.5rem;font-size:0.85rem"><a href="https://find-and-update.company-information.service.gov.uk/company/17103555" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline">Company No. 17103555</a><br>Registered in England and Wales</p>
       </div>
       <div class="footer-col">
-        <h5>Experiences</h5>
-        <ul>
-          <li><a href="#enquire">Heritage Guide</a></li>
-          <li><a href="#enquire">English Tea</a></li>
-          <li><a href="#enquire">British Dinner</a></li>
-          <li><a href="#enquire" onclick="goToTransportTab('transport');return false;">Transportation</a></li>
-          <li><a href="#enquire">Canal Day Cruise</a></li>
-          <li><a href="#enquire" onclick="goToTransportTab('narrowboat');return false;">Narrowboat Holiday</a></li>
-          <li><a href="#enquire">Cultural Immersion Programme</a></li>
-          <li><a href="#enquire">Personal Interpreter Service</a></li>
-          <li><a href="#enquire">Riverside Grill</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
         <h5>Company</h5>
         <ul>
           <li><a href="/about.html">About BHH</a></li>
-          <li><a href="/join/homehost">Become a Host</a></li>
-          <li><a href="/joinus">Become a Partner</a></li>
-          <li><a href="/join/heritagescout">Become a Heritage Scout</a></li>
-          <li><a href="#enquire">Enquire</a></li>
           <li><a href="/about.html#contact">Contact</a></li>
         </ul>
       </div>
