@@ -30,8 +30,8 @@
 <link rel="manifest" href="/manifest.json">
 <meta name="theme-color" content="#0D1B2A">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Become a Partner</title>
-<meta name="description" content="British Heritage Hosts is building a network of trusted service providers. Join as a partner, personally vetted by BHH.">
+<title>Join Us | British Heritage Hosts</title>
+<meta name="description" content="Work with British Heritage Hosts as a Host, a Partner or a Heritage Scout. Choose how you would like to take part.">
 <link rel="stylesheet" href="styles.css">
 <link rel="stylesheet" href="experiences/enquiry.css">
 <script src="experiences/enquiry.js" defer></script>
@@ -1390,6 +1390,56 @@ function bhhTrailEnquire(e){
 </section>
 
 <!-- CTA -->
+<!-- 24 September 2026: Join Us. One page for everyone who wants to work with BHH;
+     each card opens that visitor's own page and form. -->
+<style>
+#enquire{ display:none !important; }
+.join{ padding:3.5rem 1.5rem 5rem; text-align:center; }
+.join .eyebrow{ color:var(--gold); }
+.join h2{ color:var(--cream); font-family:'Cormorant Garamond',serif; font-weight:300; font-size:clamp(2rem,4vw,2.8rem); margin:0.4rem 0 0.6rem; }
+.join__lead{ color:rgba(245,240,232,0.85); max-width:560px; margin:0 auto 2.6rem; line-height:1.7; }
+.join__grid{ display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:1.5rem; max-width:1100px; margin:0 auto; }
+.join-card{ display:flex; flex-direction:column; background:#FFFFFF; border-radius:14px; overflow:hidden; text-decoration:none; text-align:left; border-top:5px solid var(--gold); box-shadow:0 1px 4px rgba(13,27,42,0.08); transition:transform .2s ease, box-shadow .2s ease; }
+.join-card:hover{ transform:translateY(-3px); box-shadow:0 10px 26px rgba(0,0,0,0.25); }
+.join-card img{ display:block; width:100%; height:200px; object-fit:cover; }
+.join-card__body{ display:flex; flex-direction:column; gap:0.6rem; padding:1.4rem 1.4rem 1.6rem; flex:1; }
+.join-card__title{ font-family:'Cormorant Garamond',serif; font-size:1.6rem; color:var(--navy); }
+.join-card__text{ color:var(--muted); line-height:1.6; font-size:0.95rem; flex:1; }
+.join-card__btn{ color:var(--navy); font-size:0.82rem; letter-spacing:0.12em; text-transform:uppercase; font-weight:600; text-decoration:underline; text-underline-offset:4px; }
+@media (max-width:900px){ .join__grid{ grid-template-columns:1fr; max-width:520px; } }
+</style>
+<section class="section section--dark join" id="join">
+  <p class="eyebrow">Work with us</p>
+  <h2>Join British Heritage Hosts</h2>
+  <p class="join__lead">Choose how you would like to take part.</p>
+  <div class="join__grid">
+      <a class="join-card" href="/becomehost.html" style="border-top-color:#C4826A">
+        <img src="images/private-family-dinner-host-and-guest-fam.webp" alt="Host welcoming a guest family to dinner" style="object-position:center" loading="lazy">
+        <span class="join-card__body">
+          <span class="join-card__title">Become a Host</span>
+          <span class="join-card__text">Share your home and culture with visiting families. We personally vet every host.</span>
+          <span class="join-card__btn">Apply as a Host &rarr;</span>
+        </span>
+      </a>
+      <a class="join-card" href="/becomepartner.html" style="border-top-color:#9BB08A">
+        <img src="images/riverside%20grill%20family.webp" alt="Riverside Grill experience run by a BHH partner" style="object-position:center 10%" loading="lazy">
+        <span class="join-card__body">
+          <span class="join-card__title">Become a Partner</span>
+          <span class="join-card__text">Join our network of trusted service providers. We vet every partner professionally.</span>
+          <span class="join-card__btn">Apply as a Partner &rarr;</span>
+        </span>
+      </a>
+      <a class="join-card" href="/becomescout.html" style="border-top-color:#7FB3AE">
+        <img src="images/heritage-tour-british-heritage-guide.webp" alt="Heritage guide leading a tour" style="object-position:center 10%" loading="lazy">
+        <span class="join-card__body">
+          <span class="join-card__title">Become a Heritage Scout</span>
+          <span class="join-card__text">You know your area. Introduce us to the hosts, guides and interpreters worth knowing. A fixed fee for every booking your people deliver.</span>
+          <span class="join-card__btn">Apply as a Scout &rarr;</span>
+        </span>
+      </a>
+  </div>
+</section>
+
 <section class="section section--dark" id="enquire" style="min-height:100vh;text-align:center;overflow:visible">
   <div class="container">
     <div class="fade-up" style="min-height:600px">
@@ -5658,12 +5708,6 @@ if ("serviceWorker" in navigator) {
     window.bhhGoToExperiences(true);
   });
 })();
-</script>
-<script>
-document.addEventListener('DOMContentLoaded', function(){
-  if (typeof switchTab === 'function') { switchTab('partner', false); }
-  if (typeof window.bhhOnlyTab === 'function') { window.bhhOnlyTab('partner'); }
-});
 </script>
 </body>
 </html>

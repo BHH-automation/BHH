@@ -1122,24 +1122,17 @@ footer {
   backdrop-filter: blur(6px);
 }
 @media (max-width:1023px){ .hero-services-strip{ display:none; } }
-/* 23 September 2026: the nine experiences moved from the bottom of the opening
-   picture into the top bar, as a second row directly under the main menu, so every
-   link on the page is at the top. The bar measures its own height (see --bhh-nav),
-   so the opening picture moves down by exactly the height of the new row. */
-nav{ flex-wrap:wrap; row-gap:0; }
-nav .hero-services-strip{
-  flex:0 0 calc(100% + 2 * clamp(0.9rem, 1.5vw, 2rem));
-  margin:0.35rem calc(-1 * clamp(0.9rem, 1.5vw, 2rem)) -0.5rem;
-  background:rgba(0,0,0,0.14);
-  backdrop-filter:none;
+/* 24 September 2026: the top menu is sorted by who is visiting, as Uber sorts
+   by rider, driver and business. Three tabs (Experiences for families, Join Us for
+   hosts, partners and scouts, About) and one gold button that opens the guest
+   enquiry. The nine experiences live in the Experiences section, not the bar. */
+.nav-links a.nav-cta{
+  background:var(--gold); color:var(--navy); padding:0.8rem 1.5rem;
+  border-radius:2px; letter-spacing:0.12em; font-weight:600;
 }
-/* On a narrower laptop (1024 to 1365 pixels) the nine names cannot share one line at a
-   readable size, so they sit in two tidy rows of five and four instead of trailing off. */
-@media (min-width:1024px) and (max-width:1365px){
-  nav .hero-services-strip{ display:grid; grid-template-columns:repeat(5, auto); justify-content:center; column-gap:2rem; row-gap:0.3rem; }
-  nav .hero-svc-dot{ display:none; }
-  nav .hero-svc-pill{ text-align:center; }
-}
+.nav-links a.nav-cta:hover{ background:#d8b85a; color:var(--navy); }
+.nav-links a[aria-current="page"]{ color:var(--gold); }
+.mobile-menu a.nav-cta{ color:var(--gold); font-weight:600; }
 .hero-svc-pill {
   font-family: var(--ff-body);
   font-size: clamp(0.7rem, 0.3rem + 0.4vw, 0.875rem);

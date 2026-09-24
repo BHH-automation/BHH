@@ -335,50 +335,22 @@ function openTransportMode(mode, service){
     <span class="nav-logo-text">BRITISH HERITAGE HOSTS</span>
   </a>
   <ul class="nav-links">
-    <li><a href="#services">Our Services</a></li>
-    <li><a href="#heritage-trail">Heritage Trail</a></li>
+    <li><a href="#services">Experiences</a></li>
+    <li><a href="/joinus.html">Join Us</a></li>
     <li><a href="#about-bhh">About</a></li>
-    <li><a href="#contact">Contact</a></li>
-    <li><a href="#enquire" onclick="closeMobileMenu();switchTab('guest');bhhJumpToEnquire();return false;">Guest</a></li>
-    <li><a href="/becomehost.html">Host</a></li>
-    <li><a href="/becomepartner.html">Partner</a></li>
-    <li><a href="/becomescout.html">Scout</a></li>
+    <li><a href="#enquire" class="nav-cta" onclick="closeMobileMenu();switchTab('guest');bhhJumpToEnquire();return false;">Plan Your Visit</a></li>
   </ul>
   <button class="nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu" onclick="toggleMobileMenu()">
     <svg class="icon-bars" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
     <svg class="icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M5 5l14 14M19 5 5 19"/></svg>
   </button>
-  <!-- 23 September 2026: the nine experiences sit in the top bar, as a second row under the main menu, so every link is at the top of the page -->
-  <div class="hero-services-strip">
-    <a href="#services" class="hero-svc-pill">Heritage Guide</a>
-    <span class="hero-svc-dot">·</span>
-    <a href="#services" class="hero-svc-pill">English Tea</a>
-    <span class="hero-svc-dot">·</span>
-    <a href="#services" class="hero-svc-pill">British Dinner</a>
-    <span class="hero-svc-dot">·</span>
-    <a href="#enquire" onclick="goToTransportTab('transport');bhhJumpToEnquire();return false;" class="hero-svc-pill">Transportation</a>
-    <span class="hero-svc-dot">·</span>
-    <a href="#services" class="hero-svc-pill">Canal Day Cruise</a>
-    <span class="hero-svc-dot">·</span>
-    <a href="#enquire" onclick="goToTransportTab('narrowboat');bhhJumpToEnquire();return false;" class="hero-svc-pill">Narrowboat Holiday</a>
-    <span class="hero-svc-dot">·</span>
-    <a href="#services" class="hero-svc-pill">Cultural Immersion Programme</a>
-    <span class="hero-svc-dot">·</span>
-    <a href="#services" class="hero-svc-pill">Personal Interpreter Service</a>
-    <span class="hero-svc-dot">·</span>
-    <a href="#services" class="hero-svc-pill">Riverside Grill</a>
-  </div>
 </nav>
 <!-- Mobile menu -->
 <div class="mobile-menu" id="mobileMenu">
-  <a href="#services" onclick="return bhhMenuGo('services')">Our Services</a>
-  <a href="#heritage-trail" onclick="return bhhMenuGo('heritage-trail')">Heritage Trail</a>
+  <a href="#services" onclick="return bhhMenuGo('services')">Experiences</a>
+  <a href="/joinus.html">Join Us</a>
   <a href="#about-bhh" onclick="return bhhMenuGo('about-bhh')">About</a>
-  <a href="#contact" onclick="return bhhMenuGo('contact')">Contact</a>
-  <a href="#enquire" onclick="return bhhMenuGo('enquire','guest')">Guest</a>
-  <a href="/becomehost.html">Host</a>
-  <a href="/becomepartner.html">Partner</a>
-  <a href="/becomescout.html">Scout</a>
+  <a href="#enquire" class="nav-cta" onclick="return bhhMenuGo('enquire','guest')">Plan Your Visit</a>
 </div>
 </div>
 <!-- Shared icon sprite for nav menus -->
