@@ -153,6 +153,15 @@
 .trust-bar{ padding-top:132px !important; }
 @media (max-width:767px){ .trust-bar{ padding-top:65px !important; } }
 </style>
+<style>
+/* 24 September 2026: a private page for hosts, partners and scouts; the family promises row is hidden */
+.trust-bar__list{ display:none !important; }
+.trust-bar{ border:0 !important; }
+.trust-bar{ padding-bottom:0 !important; }
+#enquire{ padding-top:2.5rem !important; }
+/* a private page: no link out to the other forms */
+#bhhOneBack{ display:none !important; }
+</style>
 </head>
 <script>
 function switchTab(tab, scrollToIt) {
@@ -339,10 +348,9 @@ function openTransportMode(mode, service){
     <span class="nav-logo-text">BRITISH HERITAGE HOSTS</span>
   </a>
   <ul class="nav-links">
-    <li><a href="/#services">Experiences</a></li>
-    <li><a href="/joinus.html" aria-current="page">Join Us</a></li>
-    <li><a href="/#about-bhh">About</a></li>
-    <li><a href="/#enquire" class="nav-cta">Plan Your Visit</a></li>
+    <li><a href="/book.html">Book British Heritage Experience</a></li>
+    <li><a href="/joinus.html" aria-current="page">Join British Heritage Hosts</a></li>
+    <li><a href="/about.html">About</a></li>
   </ul>
   <button class="nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu" onclick="toggleMobileMenu()">
     <svg class="icon-bars" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
@@ -351,10 +359,9 @@ function openTransportMode(mode, service){
 </nav>
 <!-- Mobile menu -->
 <div class="mobile-menu" id="mobileMenu">
-  <a href="/#services">Experiences</a>
-  <a href="/joinus.html">Join Us</a>
-  <a href="/#about-bhh">About</a>
-  <a href="/#enquire" class="nav-cta">Plan Your Visit</a>
+  <a href="/book.html">Book British Heritage Experience</a>
+  <a href="/joinus.html" aria-current="page">Join British Heritage Hosts</a>
+  <a href="/about.html">About</a>
 </div>
 </div>
 <!-- Shared icon sprite for nav menus -->
@@ -2566,7 +2573,7 @@ function bhhTrailEnquire(e){
         <h5>Company</h5>
         <ul>
           <li><a href="/">Visit britishheritagehosts.com</a></li>
-          <li><a href="/#contact">Contact</a></li>
+          <li><a href="/about.html#contact">Contact</a></li>
         </ul>
       </div>
       <div class="footer-col">
