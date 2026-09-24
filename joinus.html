@@ -273,6 +273,7 @@ function openTransportMode(mode, service){
   <input name="city"><input name="City Other"><input name="County">
   <input name="Partner Type"><input name="Partner Type Detail">
   <input name="Years of Experience">
+  <input name="Company Number"><input name="Operator Licence Number"><input name="Licensing Authority"><input name="Hire and Reward Insurance"><input name="Boat Licence Number"><input name="Boat Safety Certificate Number">
   <input name="Partner Public Liability"><input name="PL Insurer Name"><input name="PL Policy Number"><input name="PL Certificate">
   <input name="Partner Professional Indemnity"><input name="PI Insurer Name"><input name="PI Policy Number"><input name="PI Certificate">
   <input name="DBS Checked"><input name="DBS Certificate"><input name="DBS Not Applicable Reason">
@@ -1405,45 +1406,109 @@ function bhhTrailEnquire(e){
 .join .eyebrow{ color:var(--gold); }
 .join h2{ color:var(--cream); font-family:'Cormorant Garamond',serif; font-weight:300; font-size:clamp(2rem,4vw,2.8rem); margin:0.4rem 0 0.6rem; }
 .join__lead{ color:rgba(245,240,232,0.85); max-width:560px; margin:0 auto 2.6rem; line-height:1.7; }
-.join__grid{ display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:1.5rem; max-width:1100px; margin:0 auto; }
+.join__grid{ display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:1.2rem; }
 .join-card{ display:flex; flex-direction:column; background:#FFFFFF; border-radius:14px; overflow:hidden; text-decoration:none; text-align:left; border-top:5px solid var(--gold); box-shadow:0 1px 4px rgba(13,27,42,0.08); transition:transform .2s ease, box-shadow .2s ease; }
 .join-card:hover{ transform:translateY(-3px); box-shadow:0 10px 26px rgba(0,0,0,0.25); }
-.join-card img{ display:block; width:100%; height:200px; object-fit:cover; }
+.join-card img{ display:block; width:100%; height:170px; object-fit:cover; object-position:center 25%; }
+.join__group{ max-width:1100px; margin:0 auto 2.6rem; text-align:left; }
+.join__group-title{ color:var(--gold); font-family:var(--ff-body); font-size:0.85rem; letter-spacing:0.2em; text-transform:uppercase; font-weight:500; margin:0 0 1rem; }
 .join-card__body{ display:flex; flex-direction:column; gap:0.6rem; padding:1.4rem 1.4rem 1.6rem; flex:1; }
 .join-card__title{ font-family:'Cormorant Garamond',serif; font-size:1.6rem; color:var(--navy); }
 .join-card__text{ color:var(--muted); line-height:1.6; font-size:0.95rem; flex:1; }
 .join-card__btn{ color:var(--navy); font-size:0.82rem; letter-spacing:0.12em; text-transform:uppercase; font-weight:600; text-decoration:underline; text-underline-offset:4px; }
-@media (max-width:900px){ .join__grid{ grid-template-columns:1fr; max-width:520px; } }
+@media (max-width:900px){ .join__grid{ grid-template-columns:1fr 1fr; } }
+@media (max-width:600px){ .join__grid{ grid-template-columns:1fr; } }
 </style>
 <section class="section section--dark join" id="join">
   <p class="eyebrow">Work with us</p>
   <h2>Join British Heritage Hosts</h2>
   <p class="join__lead">Choose how you would like to take part.</p>
-  <div class="join__grid">
-      <a class="join-card" href="/becomehost.html" style="border-top-color:#C4826A">
-        <img src="images/private-family-dinner-host-and-guest-fam.webp" alt="Host welcoming a guest family to dinner" style="object-position:center" loading="lazy">
+  <div class="join__group">
+    <h3 class="join__group-title">Hosts</h3>
+    <div class="join__grid">
+      <a class="join-card" href="/join/homehost">
+        <img src="/images/join/home host.jpg" alt="Home Host at work" loading="lazy">
         <span class="join-card__body">
-          <span class="join-card__title">Become a Host</span>
-          <span class="join-card__text">Share your home and culture with visiting families. We personally vet every host.</span>
-          <span class="join-card__btn">Apply as a Host &rarr;</span>
+          <span class="join-card__title">Home Host</span>
+          <span class="join-card__text">Welcome visiting families for dinner or tea in your home.</span>
+          <span class="join-card__btn">Apply &rarr;</span>
         </span>
       </a>
-      <a class="join-card" href="/becomepartner.html" style="border-top-color:#9BB08A">
-        <img src="images/riverside%20grill%20family.webp" alt="Riverside Grill experience run by a BHH partner" style="object-position:center 10%" loading="lazy">
+      <a class="join-card" href="/join/heritageguide">
+        <img src="/images/join/heritage guide.jpg" alt="Heritage Guide at work" loading="lazy">
         <span class="join-card__body">
-          <span class="join-card__title">Become a Partner</span>
-          <span class="join-card__text">Join our network of trusted service providers. We vet every partner professionally.</span>
-          <span class="join-card__btn">Apply as a Partner &rarr;</span>
+          <span class="join-card__title">Heritage Guide</span>
+          <span class="join-card__text">Guide families through castles, palaces and London.</span>
+          <span class="join-card__btn">Apply &rarr;</span>
         </span>
       </a>
-      <a class="join-card" href="/becomescout.html" style="border-top-color:#7FB3AE">
-        <img src="images/heritage-tour-british-heritage-guide.webp" alt="Heritage guide leading a tour" style="object-position:center 10%" loading="lazy">
+    </div>
+  </div>
+  <div class="join__group">
+    <h3 class="join__group-title">Partners</h3>
+    <div class="join__grid">
+      <a class="join-card" href="/join/grillchef">
+        <img src="/images/join/grill chef.jpg" alt="Grill Chef at work" loading="lazy">
         <span class="join-card__body">
-          <span class="join-card__title">Become a Heritage Scout</span>
-          <span class="join-card__text">You know your area. Introduce us to the hosts, guides and interpreters worth knowing. A fixed fee for every booking your people deliver.</span>
-          <span class="join-card__btn">Apply as a Scout &rarr;</span>
+          <span class="join-card__title">Grill Chef</span>
+          <span class="join-card__text">Cook over charcoal at our riverside grill days.</span>
+          <span class="join-card__btn">Apply &rarr;</span>
         </span>
       </a>
+      <a class="join-card" href="/join/interpreter">
+        <img src="/images/join/interpreter.jpg" alt="Interpreter at work" loading="lazy">
+        <span class="join-card__body">
+          <span class="join-card__title">Interpreter</span>
+          <span class="join-card__text">Speak for families at appointments and meetings.</span>
+          <span class="join-card__btn">Apply &rarr;</span>
+        </span>
+      </a>
+      <a class="join-card" href="/join/englishteacher">
+        <img src="/images/join/english language teacher.jpg" alt="English Language Teacher at work" loading="lazy">
+        <span class="join-card__body">
+          <span class="join-card__title">English Language Teacher</span>
+          <span class="join-card__text">Teach English to visiting children and adults.</span>
+          <span class="join-card__btn">Apply &rarr;</span>
+        </span>
+      </a>
+      <a class="join-card" href="/join/tableetiquette">
+        <img src="/images/join/table etiquette coach.jpg" alt="Table Etiquette Coach at work" loading="lazy">
+        <span class="join-card__body">
+          <span class="join-card__title">Table Etiquette Coach</span>
+          <span class="join-card__text">Train our hosts in the British dining table.</span>
+          <span class="join-card__btn">Apply &rarr;</span>
+        </span>
+      </a>
+      <a class="join-card" href="/join/canalboat">
+        <img src="/images/join/canal boat operator.jpg" alt="Canal Boat Operator at work" loading="lazy">
+        <span class="join-card__body">
+          <span class="join-card__title">Canal Boat Operator</span>
+          <span class="join-card__text">Take families along England's canals.</span>
+          <span class="join-card__btn">Apply &rarr;</span>
+        </span>
+      </a>
+      <a class="join-card" href="/join/transport">
+        <img src="/images/join/transportation driver.jpg" alt="Transportation Driver at work" loading="lazy">
+        <span class="join-card__body">
+          <span class="join-card__title">Transportation Driver</span>
+          <span class="join-card__text">Drive families to and from their visits.</span>
+          <span class="join-card__btn">Apply &rarr;</span>
+        </span>
+      </a>
+    </div>
+  </div>
+  <div class="join__group">
+    <h3 class="join__group-title">Scouts</h3>
+    <div class="join__grid">
+      <a class="join-card" href="/join/heritagescout">
+        <img src="/images/join/heritage scout.jpg" alt="Heritage Scout at work" loading="lazy">
+        <span class="join-card__body">
+          <span class="join-card__title">Heritage Scout</span>
+          <span class="join-card__text">Introduce us to the people worth knowing in your area.</span>
+          <span class="join-card__btn">Apply &rarr;</span>
+        </span>
+      </a>
+    </div>
   </div>
 </section>
 
@@ -2270,7 +2335,40 @@ function bhhTrailEnquire(e){
               <p style="font-size:0.82rem;color:rgba(245,240,232,0.6);margin-top:0.3rem;font-style:italic">Be specific. This helps us assess whether your service fits the BHH network.</p>
             </div>
           </div>
+
+          <!-- 24 September 2026: Transportation and Canal Boat companies are INTRODUCED, not hired.
+               BHH never books or pays them, so the personal checks (years of experience, DBS)
+               are hidden for these two types and their licences are asked for instead. -->
+          <div id="partner-intro-transport" style="display:none;margin-bottom:1rem;padding:1rem 1.1rem;background:rgba(201,168,76,0.05);border:1px solid rgba(201,168,76,0.25);border-radius:4px">
+            <p class="partner-step" data-step-label="Licence and Insurance" style="font-size:0.82rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin:1.5rem 0 0.8rem;font-weight:500">Licence and Insurance</p>
+            <p style="font-size:0.85rem;color:rgba(245,240,232,0.75);margin:0 0 0.9rem;line-height:1.6">We introduce visiting families to you. They book and pay you directly.</p>
+            <div class="form-group"><label>Company Registration Number (if a limited company)</label><input type="text" name="Company Number" placeholder="e.g. 12345678"></div>
+            <div class="form-row">
+              <div class="form-group"><label>Private Hire Operator Licence Number <span style="color:#C9A84C">*</span></label><input type="text" name="Operator Licence Number" id="intro-operator-licence" required placeholder="e.g. 001234"></div>
+              <div class="form-group"><label>Issued By <span style="color:#C9A84C">*</span></label><input type="text" name="Licensing Authority" id="intro-licensing-authority" required placeholder="e.g. Transport for London"></div>
+            </div>
+            <div class="form-group"><label>Hire and Reward Insurance for Paying Passengers <span style="color:#C9A84C">*</span></label>
+              <select name="Hire and Reward Insurance" id="intro-hire-reward" required>
+                <option value="">Select…</option>
+                <option value="Yes">Yes, all our vehicles are covered</option>
+                <option value="No">No</option>
+              </select>
+            </div>
+            <p style="font-size:0.85rem;color:rgba(245,240,232,0.75);margin:0 0 0.9rem;line-height:1.6">We will ask you to email copies of your licence and insurance before we introduce any family to you.</p>
+          </div>
+          <div id="partner-intro-canal" style="display:none;margin-bottom:1rem;padding:1rem 1.1rem;background:rgba(201,168,76,0.05);border:1px solid rgba(201,168,76,0.25);border-radius:4px">
+            <p class="partner-step" data-step-label="Licence and Safety" style="font-size:0.82rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin:1.5rem 0 0.8rem;font-weight:500">Licence and Safety</p>
+            <p style="font-size:0.85rem;color:rgba(245,240,232,0.75);margin:0 0 0.9rem;line-height:1.6">We introduce visiting families to you. They book and pay you directly.</p>
+            <div class="form-group"><label>Company Registration Number (if a limited company)</label><input type="text" name="Company Number" placeholder="e.g. 12345678"></div>
+            <div class="form-row">
+              <div class="form-group"><label>Canal and River Trust Boat Licence Number <span style="color:#C9A84C">*</span></label><input type="text" name="Boat Licence Number" id="intro-boat-licence" required placeholder="e.g. 123456"></div>
+              <div class="form-group"><label>Boat Safety Scheme Certificate Number <span style="color:#C9A84C">*</span></label><input type="text" name="Boat Safety Certificate Number" id="intro-bss" required placeholder="e.g. BSS 1234567"></div>
+            </div>
+            <p style="font-size:0.85rem;color:rgba(245,240,232,0.75);margin:0 0 0.9rem;line-height:1.6">We will ask you to email copies of your licence, safety certificate and insurance before we introduce any family to you.</p>
+          </div>
+          <div id="partner-person-checks">
           <div class="form-group"><label>Years of Experience <span style="color:#C9A84C">*</span></label><input type="number" name="Years of Experience" min="0" max="50" placeholder="5" pattern="[0-9]*" inputmode="numeric" onkeypress="return /[0-9]/.test(event.key)" required></div>
+          </div>
           <!-- ── PARTNER PUBLIC LIABILITY (shown for all partner types) ── -->
           <p class="partner-step" data-step-label="Public Liability (PL) Insurance" style="font-size:0.82rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin:1.5rem 0 0.8rem;font-weight:500">Public Liability (PL) Insurance</p>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;align-items:start;margin-bottom:1rem">
@@ -2345,6 +2443,7 @@ function bhhTrailEnquire(e){
           </div>
           </div><!-- /#partner-pi-section -->
 
+          <div id="partner-person-checks-dbs">
           <p class="partner-step" data-step-label="Identity &amp; Background Check" style="font-size:0.82rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin:1.5rem 0 0.8rem;font-weight:500">Identity &amp; Background Check</p>
           <div class="form-group"><label>DBS Checked <span style="color:#C9A84C">*</span></label>
             <select name="DBS Checked" required onchange="onDbsChange(this,'partner')">
@@ -2376,6 +2475,7 @@ function bhhTrailEnquire(e){
               <input type="file" id="partner-dbs-na-file" name="Overseas Criminal Clearance" accept=".pdf,.jpg,.jpeg,.png" style="width:100%;color:var(--cream);font-size:0.8rem">
               <p style="font-size:0.82rem;color:rgba(245,240,232,0.6);margin-top:0.5rem;font-style:italic">BHH will review your clearance document as part of the onboarding process.</p>
             </div>
+          </div>
           </div>
           <div class="form-group"><label>Website or Portfolio</label><input type="url" name="Website" placeholder="https://yourwebsite.com"></div>
           <div class="form-group"><label>Describe Your Services and Experience <span style="color:#C9A84C">*</span></label><textarea name="About" rows="4" placeholder="Tell us about your business, the services you offer, your capacity, and why you would like to partner with BHH." required></textarea></div>
@@ -3966,6 +4066,16 @@ function closeThankyouModal(modalId) {
                     'Cultural Immersion Programme (CIP) - School Partner', 'Other'];
     var piSection = document.getElementById('partner-pi-section');
     if (piSection) piSection.style.display = (PI_TYPES.indexOf(sel.value) !== -1) ? 'block' : 'none';
+
+    // Introduced companies (we never hire or pay them): company licences, not personal checks.
+    var isTransport = sel.value === 'Transportation Provider', isCanal = sel.value === 'Canal Boat Operator';
+    var tBox = document.getElementById('partner-intro-transport'), cBox = document.getElementById('partner-intro-canal');
+    if (tBox) tBox.style.display = isTransport ? 'block' : 'none';
+    if (cBox) cBox.style.display = isCanal ? 'block' : 'none';
+    var person = document.getElementById('partner-person-checks');
+    if (person) person.style.display = (isTransport || isCanal) ? 'none' : 'block';
+    var personDbs = document.getElementById('partner-person-checks-dbs');
+    if (personDbs) personDbs.style.display = (isTransport || isCanal) ? 'none' : 'block';
 
     // Re-run disable/enable sync + renumber the visible step headings.
     if (window.refreshPartnerForm) window.refreshPartnerForm();
