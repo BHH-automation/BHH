@@ -2475,3 +2475,9 @@ html.bhh-one #enquire .enquire-tabs{ display:none !important; }
 @media (max-width:360px){
   .enquire-tabs .enquire-tab{ font-size:0.8rem !important; padding:0.85rem 0.9rem !important; }
 }
+
+/* 25 September 2026: role introduction on each Join page, above the form. */
+.role-intro{ max-width:640px; margin:0 auto 2rem; text-align:left; color:#F5F0E8; font-family:var(--ff-body); font-size:0.98rem; line-height:1.65; }
+.role-intro p{ margin:0 0 1rem; }
+.role-intro p:last-child{ margin-bottom:0; }
+.role-intro strong{ display:block; color:var(--gold); font-size:0.78rem; letter-spacing:0.14em; text-transform:uppercase; font-weight:600; margin-bottom:0.25rem; }
