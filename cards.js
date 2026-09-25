@@ -103,7 +103,9 @@ document.addEventListener('DOMContentLoaded', function() {
   function bhhSyncMotionButton(){
     var t = document.getElementById('motionToggleText');
     if(!t) return;
-    var words = bhhMotionRunning ? 'Pause the photographs' : 'Play the photographs';
+    /* 25 September 2026: Arabic pages show the button in Arabic */
+    var ar = document.documentElement.lang === 'ar';
+    var words = bhhMotionRunning ? (ar ? 'إيقاف الصور' : 'Pause the photographs') : (ar ? 'تشغيل الصور' : 'Play the photographs');
     t.textContent = words;
     var btn = document.getElementById('motionToggle');
     if(btn) btn.setAttribute('aria-label', words);
