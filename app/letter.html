@@ -44,7 +44,7 @@ td.num, th.num { text-align: right; white-space: nowrap; }
 <script>
 (function () {
   "use strict";
-  var FN = "https://pwqdzitsezblncmewxsf.supabase.co/functions/v1/payments";
+  var FN = "https://pwqdzitsezblncmewxsf.supabase.co/functions/v1/Payments";
   var q = new URLSearchParams(location.search);
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
   function pounds(p) { var n = (p || 0) / 100; return "£" + n.toLocaleString("en-GB", { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }

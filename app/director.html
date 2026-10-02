@@ -76,7 +76,7 @@
       <label for="blockDay" style="margin-top:20px">Mark a date as unavailable</label>
       <div class="grid2">
         <input id="blockDay" type="date">
-        <input id="blockNote" placeholder="Reason, private">
+        <input id="blockNote" placeholder="Reason, for example Holiday">
       </div>
       <button id="block" class="quiet" type="button">Mark unavailable</button>
       <div id="blocked"></div>
@@ -92,7 +92,7 @@
 <script>
 (function () {
   "use strict";
-  var FN = "https://pwqdzitsezblncmewxsf.supabase.co/functions/v1/payments";
+  var FN = "https://pwqdzitsezblncmewxsf.supabase.co/functions/v1/Payments";
   var KEY = "bhh director session";
   var SERVICES = ["British Dinner", "English Tea", "Heritage Guide", "Riverside Grill", "Cultural Immersion Programme", "Personal Interpreter Service"];
   var el = function (id) { return document.getElementById(id); };

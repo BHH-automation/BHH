@@ -8,7 +8,7 @@
    cannot be read, the form works exactly as before. */
 (function () {
   "use strict";
-  var FN = "https://pwqdzitsezblncmewxsf.supabase.co/functions/v1/payments";
+  var FN = "https://pwqdzitsezblncmewxsf.supabase.co/functions/v1/Payments";
   var AR = (document.documentElement.lang || "").toLowerCase().indexOf("ar") === 0;
   var rules = null;
 
