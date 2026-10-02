@@ -11,6 +11,72 @@
 [context.production]
   environment = { CONTEXT = "production" }
 
+# RECRUITMENT PAUSED 1 October 2026, at his request, until the website is finished.
+# Every Join and Become address goes to the home page for now (302 = temporary).
+# To reopen recruitment, delete everything from this line down to "END RECRUITMENT PAUSED".
+
+[[redirects]]
+  from = "/joinus"
+  to = "/"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/joinus.html"
+  to = "/"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/join"
+  to = "/"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/join/*"
+  to = "/"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/becomehost"
+  to = "/"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/becomehost.html"
+  to = "/"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/becomepartner"
+  to = "/"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/becomepartner.html"
+  to = "/"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/becomescout"
+  to = "/"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/becomescout.html"
+  to = "/"
+  status = 302
+  force = true
+
+# END RECRUITMENT PAUSED
+
 # 24 September 2026: the old recruitment pages forward to the new Join pages.
 
 [[redirects]]

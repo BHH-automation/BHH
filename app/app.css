@@ -1,0 +1,62 @@
+/* British Heritage Hosts Ltd, shared styles for the payment, letter and Director pages
+   Owner: Faleh al Bishi, Director, British Heritage Hosts Ltd. Written 2 October 2026. */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Jost:wght@300;400;500&display=swap');
+:root {
+  --navy: #0D1B2A; --gold: #C9A84C; --cream: #F5F0E8; --white: #FFFFFF;
+  --text: #1A1A1A; --muted: #666055; --line: rgba(201,168,76,0.28);
+  --ff-display: 'Cormorant Garamond', Georgia, serif; --ff-body: 'Jost', system-ui, sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { min-height: 100vh; background: var(--cream); color: var(--text); font-family: var(--ff-body); font-weight: 300; line-height: 1.6; }
+header { background: var(--navy); padding: 22px 20px 20px; padding-top: calc(22px + env(safe-area-inset-top)); text-align: center; }
+header img { width: 46px; height: 46px; border-radius: 10px; }
+header h1 { font-family: var(--ff-display); font-weight: 400; font-size: 22px; color: var(--gold); margin-top: 10px; letter-spacing: 0.02em; }
+main { max-width: 640px; margin: 0 auto; padding: 26px 16px 60px; }
+main.wide { max-width: 980px; }
+.card { background: var(--white); border: 1px solid var(--line); border-radius: 3px; padding: 22px 18px; margin-bottom: 16px; }
+h2 { font-family: var(--ff-display); font-weight: 500; font-size: 26px; color: var(--navy); margin-bottom: 8px; }
+h3 { font-family: var(--ff-display); font-weight: 500; font-size: 22px; color: var(--navy); margin-bottom: 10px; }
+p { margin-bottom: 10px; }
+p.lead { color: var(--muted); font-size: 15px; }
+.small { font-size: 13px; color: var(--muted); }
+.ref { font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+.booking { border-left: 3px solid var(--gold); }
+.item { display: flex; justify-content: space-between; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+.item .service { font-size: 17px; color: var(--navy); font-weight: 400; }
+.item .when { font-size: 15px; }
+.item .price { white-space: nowrap; font-size: 16px; }
+.total { display: flex; justify-content: space-between; font-family: var(--ff-display); font-size: 24px; color: var(--navy); padding: 14px 0 6px; }
+label { display: block; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin: 12px 0 6px; }
+label.check { text-transform: none; letter-spacing: 0; font-size: 15px; color: var(--text); display: flex; gap: 10px; align-items: flex-start; }
+label.check input { width: auto; margin-top: 5px; }
+input, select, textarea { width: 100%; padding: 12px; font-family: var(--ff-body); font-size: 16px; color: var(--text); background: var(--cream); border: 1px solid var(--line); border-radius: 2px; }
+input:focus, select:focus, textarea:focus { outline: 2px solid var(--gold); outline-offset: 1px; }
+button, a.button { display: block; width: 100%; margin-top: 14px; padding: 15px 20px; font-family: var(--ff-body); font-size: 14px; letter-spacing: 0.12em; text-transform: uppercase; text-align: center; text-decoration: none; color: var(--navy); background: var(--gold); border: 1px solid var(--gold); border-radius: 2px; cursor: pointer; }
+button:disabled { opacity: 0.55; cursor: default; }
+button.quiet { background: transparent; color: var(--muted); border-color: var(--line); }
+button.danger { background: #8A2B2B; border-color: #8A2B2B; color: #fff; }
+button.inline { display: inline-block; width: auto; padding: 8px 14px; margin: 6px 6px 0 0; font-size: 12px; }
+.note { font-size: 14px; color: var(--muted); margin-top: 14px; text-align: center; }
+.note a, p a, label a { color: var(--navy); }
+.message { margin-top: 14px; padding: 12px 14px; border-radius: 2px; font-size: 15px; }
+.message.bad { background: #FBEDED; color: #8A2B2B; border: 1px solid #E7C3C3; }
+.message.good { background: #EDF5EE; color: #245C2E; border: 1px solid #C3DEC8; }
+.warn { color: #8A2B2B; margin-top: 12px; }
+.pill { display: inline-block; padding: 4px 12px; border-radius: 999px; font-size: 13px; background: var(--cream); color: var(--muted); border: 1px solid var(--line); }
+.pill-paid, .pill-refunded { background: #EDF5EE; color: #245C2E; border-color: #C3DEC8; }
+.pill-cancel_requested { background: #FFF6E0; color: #7A5A00; border-color: #EAD7A0; }
+table.rules { width: 100%; border-collapse: collapse; font-size: 15px; margin: 6px 0; }
+table.rules td { padding: 9px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+table.rules td:last-child { text-align: right; padding-left: 12px; }
+table.rules tr.sum td { font-weight: 500; color: var(--navy); border-bottom: none; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 14px; }
+.row-item { display: grid; grid-template-columns: 2fr 1.3fr 0.7fr 0.7fr 1fr auto; gap: 8px; align-items: end; padding: 8px 0; border-bottom: 1px solid var(--line); }
+.row-item label { margin-top: 0; }
+@media (max-width: 700px) {
+  .grid2 { grid-template-columns: 1fr; }
+  .row-item { grid-template-columns: 1fr 1fr; }
+}
+.terms { max-height: 320px; overflow-y: auto; margin-top: 12px; padding: 14px; background: var(--cream); border: 1px solid var(--line); font-size: 14px; }
+.terms h2, .terms h3 { font-size: 18px; margin: 10px 0 6px; }
+.hidden { display: none !important; }
+footer { text-align: center; padding: 8px 16px 40px; font-size: 13px; color: var(--muted); }

@@ -2504,3 +2504,13 @@ h1.as-h2{ font-size: clamp(2rem, 4vw, 3.5rem); }
 @media (max-width:900px){
   .services-split .services-intro h1.as-h2{ font-size:1.5rem; line-height:1.15; margin:0.25rem 0; }
 }
+
+/* RECRUITMENT PAUSED 1 October 2026, at his request, until the website is finished.
+   Hides every Join and Become link, the host invitation strip and the Host, Partner
+   and Heritage Scout forms. To reopen recruitment, delete this block. */
+li:has(> a[href*="joinus"]), li:has(> a[href^="/join/"]), li:has(> a[href*="become"]),
+a[href*="joinus"], a[href^="/join/"], a[href*="becomehost"], a[href*="becomepartner"], a[href*="becomescout"],
+.host-invite-strip,
+#tab-host, #tab-partner, #tab-scout,
+.enquire-tab[data-tab="host"], .enquire-tab[data-tab="partner"], .enquire-tab[data-tab="scout"]{ display:none !important; }
+/* END RECRUITMENT PAUSED */

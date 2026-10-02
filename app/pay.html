@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<!--
+  British Heritage Hosts Ltd, guest proposal and payment page
+  Owner: Faleh al Bishi, Director, British Heritage Hosts Ltd
+  Written 2 October 2026
+
+  The guest arrives here from the link in their proposal email. The link
+  carries the booking reference and a long private key, so nobody can open a
+  booking by guessing a reference. From here the guest pays by card through
+  Stripe, sees the booking confirmed, downloads the confirmation letter, and can
+  ask to cancel, seeing first the refund clause 3 of the Terms gives them.
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="author" content="Faleh al Bishi">
+<title>British Heritage Hosts, your proposal</title>
+<meta name="theme-color" content="#0D1B2A">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="/appletouchicon.png">
+<link rel="stylesheet" href="/app/app.css">
+</head>
+<body>
+
+<header>
+  <img src="/appletouchicon.png" alt="British Heritage Hosts">
+  <h1 id="title">Your proposal</h1>
+</header>
+
+<main>
+  <section id="loading" class="card"><p class="lead">Opening your proposal.</p></section>
+  <section id="problem" class="card hidden"><h2>We could not open this page</h2><p class="lead" id="problemText"></p>
+    <p class="note">Please write to <a href="mailto:info@britishheritagehosts.com">info@britishheritagehosts.com</a> and we will help.</p></section>
+
+  <div id="content" class="hidden">
+    <section class="card">
+      <div class="ref" id="ref"></div>
+      <h2 id="hello"></h2>
+      <p class="lead" id="statusLine"></p>
+      <div id="banner"></div>
+    </section>
+
+    <section class="card booking">
+      <h3>Your experiences</h3>
+      <div id="items"></div>
+      <div class="total"><span>Total</span><span id="total"></span></div>
+      <p class="small">Prices are in pounds sterling and are for your family only. No other guests join you.</p>
+    </section>
+
+    <!-- unpaid -->
+    <section id="payCard" class="card hidden">
+      <h3>Confirm and pay</h3>
+      <p>Your booking is confirmed as soon as payment is received, and a booking reference is sent to you straight away. Payment is taken securely by card through Stripe. We never see or keep your card details.</p>
+      <label class="check"><input type="checkbox" id="agree"> <span>I have read and accept the <a href="#" id="termsLink">Terms of Service</a>, including the cancellation policy below.</span></label>
+      <div id="termsBox" class="terms hidden"></div>
+      <button id="payBtn" type="button">Pay <span id="payAmount"></span> by card</button>
+      <div id="payMsg"></div>
+    </section>
+
+    <!-- paid -->
+    <section id="letterCard" class="card hidden">
+      <h3>Booking confirmation letter</h3>
+      <p>A letter confirming your booking, with your reference, dates and the amount paid. You can print it or save it as a PDF, for example to show with a visa application.</p>
+      <a class="button" id="letterBtn" href="#" target="_blank" rel="noopener">Open my confirmation letter</a>
+    </section>
+
+    <section class="card">
+      <h3>Cancellation policy</h3>
+      <p class="small">From clause 3 of our Terms of Service. Each experience is counted from its own date.</p>
+      <table class="rules">
+        <tr><td>More than 14 days before</td><td>Full refund</td></tr>
+        <tr><td>7 to 14 days before</td><td>50% refund</td></tr>
+        <tr><td>Less than 7 days before</td><td>No refund, unless we can rearrange to another date</td></tr>
+        <tr><td>If we cancel</td><td>Full refund</td></tr>
+      </table>
+    </section>
+
+    <section id="cancelCard" class="card hidden">
+      <h3>If you need to cancel</h3>
+      <p>If you cancelled today, this is what you would receive back:</p>
+      <div id="cancelPreview"></div>
+      <button id="cancelBtn" class="quiet" type="button">Ask to cancel my booking</button>
+      <div id="cancelConfirm" class="hidden">
+        <p class="warn">Are you sure? This asks us to cancel the whole booking.</p>
+        <button id="cancelYes" type="button" class="danger">Yes, cancel my booking</button>
+        <button id="cancelNo" type="button" class="quiet">No, keep my booking</button>
+      </div>
+      <div id="cancelMsg"></div>
+    </section>
+  </div>
+</main>
+
+<footer>British Heritage Hosts Ltd, Company No. 17103555, registered in England and Wales</footer>
+
+<script>
+(function () {
+  "use strict";
+  var FN = "https://pwqdzitsezblncmewxsf.supabase.co/functions/v1/payments";
+  var q = new URLSearchParams(location.search);
+  var REF = (q.get("r") || "").toUpperCase(), KEY = q.get("k") || "";
+  var el = function (id) { return document.getElementById(id); };
+  var show = function (id) { el(id).classList.remove("hidden"); };
+  var hide = function (id) { el(id).classList.add("hidden"); };
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+  function pounds(p) { var n = (p || 0) / 100; return "£" + n.toLocaleString("en-GB", { minimumFractionDigits: n % 1 ? 2 : 0, maximumFractionDigits: 2 }); }
+  function niceDate(v) { var d = new Date(v + "T12:00:00"); return isNaN(d) ? v : d.toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long", year: "numeric" }); }
+  function people(a, c) { var p = []; if (a) p.push(a === 1 ? "1 adult" : a + " adults"); if (c) p.push(c === 1 ? "1 child" : c + " children"); return p.join(", "); }
+  function say(where, text, good) { el(where).innerHTML = text ? '<div class="message ' + (good ? "good" : "bad") + '">' + text + "</div>" : ""; }
+  function call(action) {
+    return fetch(FN, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: action, ref: REF, key: KEY }) })
+      .then(function (r) { return r.json().catch(function () { return { ok: false, message: "No reply from the server." }; }); });
+  }
+
+  var STATUS = {
+    sent: "Waiting for your payment",
+    paid: "Confirmed and paid",
+    cancel_requested: "You have asked to cancel. We will confirm shortly.",
+    refunded: "Cancelled and refunded",
+    cancelled: "Cancelled",
+    withdrawn: "This proposal has been withdrawn"
+  };
+
+  function render(p) {
+    hide("loading"); show("content");
+    el("ref").textContent = "Reference " + p.reference;
+    el("hello").textContent = "Dear " + p.name;
+    el("statusLine").innerHTML = '<span class="pill pill-' + esc(p.status) + '">' + esc(STATUS[p.status] || p.status) + "</span>";
+    el("title").textContent = p.status === "sent" ? "Your proposal" : "Your booking";
+
+    el("items").innerHTML = (p.items || []).map(function (it) {
+      return '<div class="item"><div><div class="service">' + esc(it.service) + '</div><div class="when">' + esc(niceDate(it.date)) +
+        "</div>" + (people(it.adults, it.children) ? '<div class="small">' + esc(people(it.adults, it.children)) + "</div>" : "") +
+        (it.note ? '<div class="small">' + esc(it.note) + "</div>" : "") + '</div><div class="price">' + pounds(it.price_pence) + "</div></div>";
+    }).join("");
+    el("total").textContent = pounds(p.total_pence);
+    el("payAmount").textContent = pounds(p.total_pence);
+
+    ["payCard", "letterCard", "cancelCard"].forEach(hide);
+    if (p.status === "sent") show("payCard");
+    if (p.status === "paid") {
+      show("letterCard"); show("cancelCard");
+      el("letterBtn").href = "/app/letter.html?r=" + encodeURIComponent(REF) + "&k=" + encodeURIComponent(KEY);
+      var c = p.cancel_preview;
+      el("cancelPreview").innerHTML = '<table class="rules">' + c.lines.map(function (l) {
+        return "<tr><td>" + esc(l.service) + "<br><span class=\"small\">" + esc(l.rule) + "</span></td><td>" + pounds(l.refund_pence) + "</td></tr>";
+      }).join("") + '<tr class="sum"><td>Refund if you cancel today</td><td>' + pounds(c.total_pence) + "</td></tr></table>";
+    }
+    if (p.status === "cancel_requested") {
+      el("banner").innerHTML = '<div class="message good">Refund due under clause 3: <strong>' + pounds(p.refund_due_pence) + "</strong>. We will confirm by email.</div>";
+    }
+    if (p.status === "refunded") {
+      el("banner").innerHTML = '<div class="message good">' + pounds(p.refund_pence) + " has been refunded to the card you paid with. It usually arrives within 5 to 10 working days.</div>";
+    }
+    if (q.get("paid") === "1" && p.status === "sent") {
+      el("banner").innerHTML = '<div class="message good">Thank you. Your payment is being confirmed. This page will update in a moment.</div>';
+      setTimeout(load, 4000);
+    }
+    if (q.get("paid") === "1" && p.status === "paid") {
+      el("banner").innerHTML = '<div class="message good">Thank you. Your payment has been received and your booking is confirmed. We have emailed your booking reference to you.</div>';
+    }
+  }
+
+  function load() {
+    call("view").then(function (r) {
+      if (!r.ok) { hide("loading"); show("problem"); el("problemText").textContent = r.message || "This link is not valid."; return; }
+      render(r.proposal);
+    }).catch(function () { hide("loading"); show("problem"); el("problemText").textContent = "No connection. Please try again."; });
+  }
+
+  el("payBtn").addEventListener("click", function () {
+    if (!el("agree").checked) { say("payMsg", "Please tick the box to accept the Terms of Service first.", false); return; }
+    el("payBtn").disabled = true; say("payMsg", "Opening the secure payment page.", true);
+    call("checkout").then(function (r) {
+      if (!r.ok || !r.url) { el("payBtn").disabled = false; say("payMsg", r.message || "The payment page could not be opened.", false); return; }
+      location.href = r.url;
+    }).catch(function () { el("payBtn").disabled = false; say("payMsg", "No connection. Please try again.", false); });
+  });
+
+  // The Terms are read from the website itself, so this page always shows the
+  // same wording as the Terms of Service on the home page.
+  el("termsLink").addEventListener("click", function (e) {
+    e.preventDefault();
+    var box = el("termsBox");
+    if (!box.classList.contains("hidden")) { hide("termsBox"); return; }
+    show("termsBox");
+    if (box.getAttribute("data-loaded")) return;
+    box.textContent = "Loading the Terms of Service.";
+    fetch("/index.html").then(function (r) { return r.text(); }).then(function (html) {
+      var doc = new DOMParser().parseFromString(html, "text/html");
+      var m = doc.getElementById("modal-terms");
+      if (!m) { box.textContent = "The Terms of Service could not be loaded. Please read them on our home page."; return; }
+      m.querySelectorAll("button, script").forEach(function (n) { n.remove(); });
+      box.innerHTML = m.innerHTML;
+      box.setAttribute("data-loaded", "1");
+    }).catch(function () { box.textContent = "The Terms of Service could not be loaded. Please read them on our home page."; });
+  });
+
+  el("cancelBtn").addEventListener("click", function () { hide("cancelBtn"); show("cancelConfirm"); });
+  el("cancelNo").addEventListener("click", function () { hide("cancelConfirm"); show("cancelBtn"); });
+  el("cancelYes").addEventListener("click", function () {
+    el("cancelYes").disabled = true;
+    call("cancel").then(function (r) {
+      if (!r.ok) { el("cancelYes").disabled = false; say("cancelMsg", r.message || "That did not work.", false); return; }
+      load();
+    }).catch(function () { el("cancelYes").disabled = false; say("cancelMsg", "No connection. Please try again.", false); });
+  });
+
+  if (!REF || !KEY) { hide("loading"); show("problem"); el("problemText").textContent = "This link is incomplete. Please use the link in your email."; }
+  else load();
+})();
+</script>
+</body>
+</html>

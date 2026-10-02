@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<!--
+  British Heritage Hosts Ltd, booking confirmation letter
+  Owner: Faleh al Bishi, Director, British Heritage Hosts Ltd
+  Written 2 October 2026
+
+  A printable letter confirming a paid booking. The guest opens it from their
+  booking page and prints it or saves it as a PDF, for example to show with a
+  visa application. It states only what is true: the booking, its dates and
+  the payment. It does not invite anyone or vouch for anyone's travel.
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<meta name="author" content="Faleh al Bishi">
+<title>Booking confirmation letter</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Jost:wght@300;400;500&display=swap');
+body { background: #e9e5dc; font-family: 'Jost', system-ui, sans-serif; font-weight: 300; color: #1A1A1A; margin: 0; padding: 24px 12px; }
+.page { max-width: 760px; margin: 0 auto; background: #fff; padding: 48px 52px; box-shadow: 0 2px 14px rgba(0,0,0,0.12); line-height: 1.6; font-size: 15px; }
+.head { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #C9A84C; padding-bottom: 16px; margin-bottom: 26px; gap: 16px; }
+.brand { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 26px; color: #0D1B2A; letter-spacing: 0.04em; }
+.addr { font-size: 12px; color: #666055; text-align: right; line-height: 1.5; }
+h1 { font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 500; font-size: 28px; color: #0D1B2A; margin: 0 0 18px; }
+table { width: 100%; border-collapse: collapse; margin: 14px 0 18px; }
+td, th { text-align: left; padding: 8px 6px; border-bottom: 1px solid #e3dccd; vertical-align: top; }
+th { font-weight: 500; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #666055; }
+td.num, th.num { text-align: right; white-space: nowrap; }
+.facts td:first-child { color: #666055; width: 38%; }
+.sign { margin-top: 34px; }
+.foot { margin-top: 34px; font-size: 11.5px; color: #666055; border-top: 1px solid #e3dccd; padding-top: 12px; }
+.tools { max-width: 760px; margin: 0 auto 14px; text-align: right; }
+.tools button { font-family: inherit; font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase; background: #C9A84C; color: #0D1B2A; border: 0; padding: 11px 18px; cursor: pointer; }
+.msg { max-width: 760px; margin: 40px auto; background: #fff; padding: 30px; text-align: center; }
+@media (max-width: 600px) { .page { padding: 26px 18px; } .head { flex-direction: column; } .addr { text-align: left; } }
+@media print { body { background: #fff; padding: 0; } .page { box-shadow: none; padding: 0; max-width: none; } .tools { display: none; } }
+</style>
+</head>
+<body>
+<div class="tools"><button type="button" onclick="window.print()">Print or save as PDF</button></div>
+<div id="out"><div class="msg">Preparing your letter.</div></div>
+<script>
+(function () {
+  "use strict";
+  var FN = "https://pwqdzitsezblncmewxsf.supabase.co/functions/v1/payments";
+  var q = new URLSearchParams(location.search);
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+  function pounds(p) { var n = (p || 0) / 100; return "£" + n.toLocaleString("en-GB", { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+  function nice(v) { var d = new Date(String(v).slice(0, 10) + "T12:00:00"); return isNaN(d) ? v : d.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" }); }
+  function people(a, c) { var p = []; if (a) p.push(a === 1 ? "1 adult" : a + " adults"); if (c) p.push(c === 1 ? "1 child" : c + " children"); return p.join(", ") || "Family"; }
+
+  fetch(FN, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "letter", ref: q.get("r"), key: q.get("k") }) })
+    .then(function (r) { return r.json(); })
+    .then(function (r) {
+      if (!r.ok) { document.getElementById("out").innerHTML = '<div class="msg">' + esc(r.message || "This letter is not available.") + "</div>"; return; }
+      var L = r.letter;
+      document.title = "Booking confirmation " + L.reference;
+      var rows = L.items.map(function (it) {
+        return "<tr><td>" + esc(nice(it.date)) + "</td><td>" + esc(it.service) + "</td><td>" + esc(people(it.adults, it.children)) + '</td><td class="num">' + pounds(it.price_pence) + "</td></tr>";
+      }).join("");
+      document.getElementById("out").innerHTML =
+        '<div class="page">' +
+        '<div class="head"><div class="brand">BRITISH HERITAGE HOSTS</div><div class="addr">British Heritage Hosts Ltd<br>Monomark House, 27 Old Gloucester Street<br>London WC1N 3AX, United Kingdom<br>info@britishheritagehosts.com<br>Company No. 17103555</div></div>' +
+        "<p>Date of this letter: " + esc(nice(new Date().toISOString())) + "</p>" +
+        "<h1>Booking confirmation</h1>" +
+        "<p>To whom it may concern,</p>" +
+        "<p>This letter confirms that British Heritage Hosts Ltd, a company registered in England and Wales, holds a confirmed and fully paid booking in the name of <strong>" + esc(L.name) + "</strong> for the private cultural experiences listed below, taking place in the United Kingdom.</p>" +
+        '<table class="facts">' +
+        "<tr><td>Booking reference</td><td><strong>" + esc(L.reference) + "</strong></td></tr>" +
+        "<tr><td>Lead guest</td><td>" + esc(L.name) + "</td></tr>" +
+        (L.nationality ? "<tr><td>Nationality</td><td>" + esc(L.nationality) + "</td></tr>" : "") +
+        "<tr><td>Dates of the experiences</td><td>" + esc(nice(L.first_date)) + (L.last_date && L.last_date !== L.first_date ? " to " + esc(nice(L.last_date)) : "") + "</td></tr>" +
+        "<tr><td>Amount paid</td><td>" + pounds(L.total_pence) + ", received on " + esc(nice(L.paid_at)) + "</td></tr>" +
+        "</table>" +
+        "<table><tr><th>Date</th><th>Experience</th><th>Party</th><th class=\"num\">Price</th></tr>" + rows + "</table>" +
+        "<p>This letter confirms the booking and payment only. Accommodation, flights and entry to the United Kingdom are arranged by the guest and are not part of this booking.</p>" +
+        "<p>To confirm this letter is genuine, please write to info@britishheritagehosts.com quoting the booking reference.</p>" +
+        '<div class="sign"><p>Yours faithfully,</p><p><strong>British Heritage Hosts Ltd</strong></p></div>' +
+        '<div class="foot">British Heritage Hosts Ltd is registered in England and Wales, Company No. 17103555. Registered office: Monomark House, 27 Old Gloucester Street, London WC1N 3AX.</div>' +
+        "</div>";
+    })
+    .catch(function () { document.getElementById("out").innerHTML = '<div class="msg">No connection. Please try again.</div>'; });
+})();
+</script>
+</body>
+</html>

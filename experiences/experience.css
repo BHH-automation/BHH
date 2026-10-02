@@ -284,3 +284,13 @@ html{ scroll-behavior:smooth; }
 
 /* 25 September 2026: the enquiry buttons at the top of each experience page */
 .xhero-btns{ justify-content:flex-start; margin:0 0 1.6rem; }
+
+/* RECRUITMENT PAUSED 1 October 2026, at his request, until the website is finished.
+   Hides every Join and Become link, the host invitation strip and the Host, Partner
+   and Heritage Scout forms. To reopen recruitment, delete this block. */
+li:has(> a[href*="joinus"]), li:has(> a[href^="/join/"]), li:has(> a[href*="become"]),
+a[href*="joinus"], a[href^="/join/"], a[href*="becomehost"], a[href*="becomepartner"], a[href*="becomescout"],
+.host-invite-strip,
+#tab-host, #tab-partner, #tab-scout,
+.enquire-tab[data-tab="host"], .enquire-tab[data-tab="partner"], .enquire-tab[data-tab="scout"]{ display:none !important; }
+/* END RECRUITMENT PAUSED */
