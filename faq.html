@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<!--
+  British Heritage Hosts Ltd, questions and answers page
+  Owner: Faleh al Bishi, Director, British Heritage Hosts Ltd
+  Written 3 October 2026. Built from faq/build.py so the English and Arabic
+  pages always carry the same 29 questions.
+  Visitor questions arrive through the Netlify form "faq-question". Nothing is
+  added to this page until the Director has answered and approved it.
+-->
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="Faleh al Bishi">
+<title>Questions and answers | British Heritage Hosts</title>
+<meta name="description" content="Answers to the questions families ask before booking a private British heritage experience: booking, payment, cancellation, children, halal food and privacy.">
+<link rel="canonical" href="https://britishheritagehosts.com/faq">
+<link rel="alternate" hreflang="en" href="https://britishheritagehosts.com/faq">
+<link rel="alternate" hreflang="ar" href="https://britishheritagehosts.com/ar/faq">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="/appletouchicon.png">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0D1B2A">
+<link rel="stylesheet" href="/experiences/experience.css">
+<style>
+.fq-hero{background:var(--navy);color:var(--cream);padding:4.2rem 0 3.4rem}
+.fq-hero .xeyebrow{display:block;font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold-light);margin-bottom:.8rem}
+.fq-hero h1{font-family:var(--ff-display);font-weight:400;font-size:clamp(2.2rem,5vw,3.4rem);line-height:1.1;margin-bottom:1rem}
+.fq-hero p{max-width:640px;color:rgba(245,240,232,.86);font-size:1.05rem}
+.fq-hero nav{display:flex;flex-wrap:wrap;gap:.6rem 1.4rem;margin-top:1.8rem}
+.fq-hero nav a{color:var(--gold-light);font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;text-decoration:none}
+.fq-sec{padding:3.2rem 0;border-bottom:1px solid var(--border)}
+.fq-sec:nth-of-type(even){background:var(--cream)}
+.fq-sec h2{font-family:var(--ff-display);font-weight:400;font-size:2rem;color:var(--navy);margin-bottom:1.4rem}
+.fq-list{max-width:820px}
+details.fq{border-top:1px solid var(--border);padding:0}
+details.fq:last-child{border-bottom:1px solid var(--border)}
+details.fq summary{list-style:none;cursor:pointer;padding:1.1rem 2.2rem 1.1rem 0;position:relative;font-family:var(--ff-display);font-size:1.3rem;color:var(--navy);line-height:1.3}
+details.fq summary::-webkit-details-marker{display:none}
+details.fq summary::after{content:"+";position:absolute;right:.2rem;top:1rem;font-family:var(--ff-body);font-size:1.4rem;color:var(--gold-ink);transition:transform .2s}
+details.fq[open] summary::after{transform:rotate(45deg)}
+details.fq p{padding:0 0 1.3rem;color:var(--text);max-width:720px}
+.fq-ask{padding:3.6rem 0;background:var(--cream)}
+.fq-ask h2{font-family:var(--ff-display);font-weight:400;font-size:2rem;color:var(--navy);margin-bottom:.6rem}
+.fq-ask form{max-width:640px;margin-top:1.4rem}
+.fq-ask label{display:block;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:1rem 0 .4rem}
+.fq-ask input,.fq-ask textarea{width:100%;padding:.85rem;font:inherit;font-size:1rem;border:1px solid var(--border);background:var(--white);border-radius:2px}
+.fq-ask textarea{min-height:140px;resize:vertical}
+.fq-ask label.ck{display:flex;gap:.7rem;align-items:flex-start;text-transform:none;letter-spacing:0;font-size:.9rem;color:var(--text)}
+.fq-ask label.ck input{width:auto;margin-top:.3rem}
+.fq-ask button{margin-top:1.4rem;background:var(--gold);color:var(--navy);border:0;padding:1rem 1.8rem;font:inherit;font-size:.8rem;letter-spacing:.16em;text-transform:uppercase;cursor:pointer}
+.fq-ask button:disabled{opacity:.6}
+.fq-msg{margin-top:1rem;padding:.9rem 1rem;font-size:.95rem}
+.fq-msg.ok{background:#EDF5EE;color:#245C2E;border:1px solid #C3DEC8}
+.fq-msg.bad{background:#FBEDED;color:#8A2B2B;border:1px solid #E7C3C3}
+.fq-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
+.xnav .lang{border:1px solid rgba(201,168,76,.5);padding:.3rem .7rem}
+html[dir="rtl"] details.fq summary{padding:1.1rem 0 1.1rem 2.2rem}
+html[dir="rtl"] details.fq summary::after{right:auto;left:.2rem}
+html[lang="ar"] body,html[lang="ar"] input,html[lang="ar"] textarea,html[lang="ar"] button{font-family:'Tajawal','Jost',system-ui,sans-serif}
+html[lang="ar"] h1,html[lang="ar"] h2,html[lang="ar"] summary{font-family:'Amiri','Cormorant Garamond',Georgia,serif}
+html[lang="ar"] .fq-hero .xeyebrow,html[lang="ar"] .fq-hero nav a,html[lang="ar"] .fq-ask label,html[lang="ar"] .fq-ask button,html[lang="ar"] .xnav nav a{letter-spacing:0;text-transform:none}
+</style>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What is British Heritage Hosts?", "acceptedAnswer": {"@type": "Answer", "text": "Private cultural experiences in real British homes for families visiting the United Kingdom. We are a company registered in England and Wales, Company No. 17103555."}}, {"@type": "Question", "name": "How do you choose hosts and guides?", "acceptedAnswer": {"@type": "Answer", "text": "We vet every host, guide and partner before they join."}}, {"@type": "Question", "name": "Are your hosts insured?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Every host must hold home insurance that covers paying guests, plus public liability cover of at least £1,000,000, before their first booking."}}, {"@type": "Question", "name": "Where do the experiences take place?", "acceptedAnswer": {"@type": "Answer", "text": "London and the English countryside. The Heritage Trail can also visit Wales, Scotland and Northern Ireland."}}, {"@type": "Question", "name": "How do I book?", "acceptedAnswer": {"@type": "Answer", "text": "Send an enquiry, receive your personal proposal, then accept and pay. Your booking is confirmed once payment is received."}}, {"@type": "Question", "name": "How quickly will you reply?", "acceptedAnswer": {"@type": "Answer", "text": "We reply personally, usually the same day."}}, {"@type": "Question", "name": "How much does it cost?", "acceptedAnswer": {"@type": "Answer", "text": "Each experience is priced per family. We quote you personally when you enquire."}}, {"@type": "Question", "name": "How do we pay, and in which currency?", "acceptedAnswer": {"@type": "Answer", "text": "By card, in pounds sterling, on a secure Stripe payment page. Your booking is confirmed as soon as payment is received."}}, {"@type": "Question", "name": "How far ahead should we book?", "acceptedAnswer": {"@type": "Answer", "text": "At least 7 days before your first experience, so we have time to arrange your host or guide. The earlier you book, the more choice of dates."}}, {"@type": "Question", "name": "Can we combine several experiences into one visit?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Choose as many as you like in one enquiry and we arrange and price them together as a single visit."}}, {"@type": "Question", "name": "What if we need to cancel?", "acceptedAnswer": {"@type": "Answer", "text": "Each experience is counted from its own date. More than 14 days before: full refund. 7 to 14 days before: 50% refund. Less than 7 days before: no refund, unless we can rearrange to another date. If we cancel: full refund. The full terms are in clause 3 of our Terms of Service."}}, {"@type": "Question", "name": "Do we need travel insurance?", "acceptedAnswer": {"@type": "Answer", "text": "We strongly recommend travel insurance covering cancellation, medical costs and personal liability, and ask you to confirm it when you enquire."}}, {"@type": "Question", "name": "Can you help with visas?", "acceptedAnswer": {"@type": "Answer", "text": "We don't arrange visas. Once your booking is paid, you can download a booking confirmation letter with your reference, dates and amount paid, which you may show with your application."}}, {"@type": "Question", "name": "Will other guests join us?", "acceptedAnswer": {"@type": "Answer", "text": "No. Every experience is for your family only."}}, {"@type": "Question", "name": "How are children counted?", "acceptedAnswer": {"@type": "Answer", "text": "A family is 2 adults and 2 children aged 3 to 11. Children 12 and over count as adults, and children aged 2 and under are free."}}, {"@type": "Question", "name": "Can a larger family or group book?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, subject to the host's acceptance. The Riverside Grill can also host a larger private party of your own guests."}}, {"@type": "Question", "name": "Can you arrange an experience for a birthday, anniversary or honeymoon?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Tell us the occasion when you enquire and we will plan around it."}}, {"@type": "Question", "name": "What does the Heritage Trail include?", "acceptedAnswer": {"@type": "Answer", "text": "One guide for several days. We plan the route, buy the entry passes and walk beside you. You book your own hotel and driver."}}, {"@type": "Question", "name": "Can we have a female guide?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, female guides are available on request."}}, {"@type": "Question", "name": "We don't speak English well. Can you help?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Our Personal Interpreter Service provides an interpreter in your family's language."}}, {"@type": "Question", "name": "Which languages can the interpreter speak?", "acceptedAnswer": {"@type": "Answer", "text": "The language your family speaks. Tell us which one when you enquire."}}, {"@type": "Question", "name": "Can our children learn English during the visit?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. The Cultural Immersion Programme offers courses with accredited London institutes, grouped by age."}}, {"@type": "Question", "name": "Are experiences available all year?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, apart from a few dates when we cannot arrange experiences. The enquiry form will tell you if a date isn't available."}}, {"@type": "Question", "name": "Can we choose the area or the host?", "acceptedAnswer": {"@type": "Answer", "text": "Tell us your preferred area when you enquire, and we confirm it in your proposal. Hosts and guides are matched by us to suit your family."}}, {"@type": "Question", "name": "Do you book hotels?", "acceptedAnswer": {"@type": "Answer", "text": "No. You book your own hotel. We arrange the experiences."}}, {"@type": "Question", "name": "Do you arrange transport and narrowboat holidays?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, through trusted providers. You book and pay them directly, not through us."}}, {"@type": "Question", "name": "Is the food halal, and is it alcohol free?", "acceptedAnswer": {"@type": "Answer", "text": "Halal catering is available and alcohol free settings are arranged on request. Prayer times are respected."}}, {"@type": "Question", "name": "Can you cater for other diets?", "acceptedAnswer": {"@type": "Answer", "text": "Yes: vegetarian, vegan, gluten free or anything else you tell us."}}, {"@type": "Question", "name": "Is my information kept private?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. We use your details only to answer your enquiry and arrange your visit, and never pass them to anyone outside the experience we arrange for you."}}]}</script>
+</head>
+<body>
+
+<header class="xnav">
+  <div class="wrap">
+    <a class="brand" href="/">
+      <img src="/images/british-heritage-hosts.png" alt="British Heritage Hosts">
+      <span>BRITISH HERITAGE HOSTS</span>
+    </a>
+    <nav class="xmenu">
+      <a href="/">Book British Heritage Experience</a>
+      <a href="/about">About</a>
+      <a class="lang" href="/ar/faq" lang="ar" hreflang="ar">العربية</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<section class="fq-hero">
+  <div class="wrap">
+    <span class="xeyebrow">Questions and answers</span>
+    <h1>Before you book</h1>
+    <p>The questions families ask us most, answered plainly. If yours is not here, ask us below and we will reply personally.</p>
+    <nav aria-label="On this page">
+      <a href="#part1">About British Heritage Hosts</a>
+      <a href="#part2">Booking and payment</a>
+      <a href="#part3">Your family&#x27;s visit</a>
+      <a href="#part4">Food and faith</a>
+      <a href="#part5">Your privacy</a>
+      <a href="#ask">Ask us a question</a>
+    </nav>
+  </div>
+</section>
+
+<section class="fq-sec" id="part1">
+  <div class="wrap">
+    <h2>About British Heritage Hosts</h2>
+    <div class="fq-list">
+      <details class="fq"><summary>What is British Heritage Hosts?</summary><p>Private cultural experiences in real British homes for families visiting the United Kingdom. We are a company registered in England and Wales, Company No. 17103555.</p></details>
+      <details class="fq"><summary>How do you choose hosts and guides?</summary><p>We vet every host, guide and partner before they join.</p></details>
+      <details class="fq"><summary>Are your hosts insured?</summary><p>Yes. Every host must hold home insurance that covers paying guests, plus public liability cover of at least £1,000,000, before their first booking.</p></details>
+      <details class="fq"><summary>Where do the experiences take place?</summary><p>London and the English countryside. The Heritage Trail can also visit Wales, Scotland and Northern Ireland.</p></details>
+    </div>
+  </div>
+</section>
+<section class="fq-sec" id="part2">
+  <div class="wrap">
+    <h2>Booking and payment</h2>
+    <div class="fq-list">
+      <details class="fq"><summary>How do I book?</summary><p>Send an enquiry, receive your personal proposal, then accept and pay. Your booking is confirmed once payment is received.</p></details>
+      <details class="fq"><summary>How quickly will you reply?</summary><p>We reply personally, usually the same day.</p></details>
+      <details class="fq"><summary>How much does it cost?</summary><p>Each experience is priced per family. We quote you personally when you enquire.</p></details>
+      <details class="fq"><summary>How do we pay, and in which currency?</summary><p>By card, in pounds sterling, on a secure Stripe payment page. Your booking is confirmed as soon as payment is received.</p></details>
+      <details class="fq"><summary>How far ahead should we book?</summary><p>At least 7 days before your first experience, so we have time to arrange your host or guide. The earlier you book, the more choice of dates.</p></details>
+      <details class="fq"><summary>Can we combine several experiences into one visit?</summary><p>Yes. Choose as many as you like in one enquiry and we arrange and price them together as a single visit.</p></details>
+      <details class="fq"><summary>What if we need to cancel?</summary><p>Each experience is counted from its own date. More than 14 days before: full refund. 7 to 14 days before: 50% refund. Less than 7 days before: no refund, unless we can rearrange to another date. If we cancel: full refund. The full terms are in clause 3 of our Terms of Service.</p></details>
+      <details class="fq"><summary>Do we need travel insurance?</summary><p>We strongly recommend travel insurance covering cancellation, medical costs and personal liability, and ask you to confirm it when you enquire.</p></details>
+      <details class="fq"><summary>Can you help with visas?</summary><p>We don&#x27;t arrange visas. Once your booking is paid, you can download a booking confirmation letter with your reference, dates and amount paid, which you may show with your application.</p></details>
+    </div>
+  </div>
+</section>
+<section class="fq-sec" id="part3">
+  <div class="wrap">
+    <h2>Your family&#x27;s visit</h2>
+    <div class="fq-list">
+      <details class="fq"><summary>Will other guests join us?</summary><p>No. Every experience is for your family only.</p></details>
+      <details class="fq"><summary>How are children counted?</summary><p>A family is 2 adults and 2 children aged 3 to 11. Children 12 and over count as adults, and children aged 2 and under are free.</p></details>
+      <details class="fq"><summary>Can a larger family or group book?</summary><p>Yes, subject to the host&#x27;s acceptance. The Riverside Grill can also host a larger private party of your own guests.</p></details>
+      <details class="fq"><summary>Can you arrange an experience for a birthday, anniversary or honeymoon?</summary><p>Yes. Tell us the occasion when you enquire and we will plan around it.</p></details>
+      <details class="fq"><summary>What does the Heritage Trail include?</summary><p>One guide for several days. We plan the route, buy the entry passes and walk beside you. You book your own hotel and driver.</p></details>
+      <details class="fq"><summary>Can we have a female guide?</summary><p>Yes, female guides are available on request.</p></details>
+      <details class="fq"><summary>We don&#x27;t speak English well. Can you help?</summary><p>Yes. Our Personal Interpreter Service provides an interpreter in your family&#x27;s language.</p></details>
+      <details class="fq"><summary>Which languages can the interpreter speak?</summary><p>The language your family speaks. Tell us which one when you enquire.</p></details>
+      <details class="fq"><summary>Can our children learn English during the visit?</summary><p>Yes. The Cultural Immersion Programme offers courses with accredited London institutes, grouped by age.</p></details>
+      <details class="fq"><summary>Are experiences available all year?</summary><p>Yes, apart from a few dates when we cannot arrange experiences. The enquiry form will tell you if a date isn&#x27;t available.</p></details>
+      <details class="fq"><summary>Can we choose the area or the host?</summary><p>Tell us your preferred area when you enquire, and we confirm it in your proposal. Hosts and guides are matched by us to suit your family.</p></details>
+      <details class="fq"><summary>Do you book hotels?</summary><p>No. You book your own hotel. We arrange the experiences.</p></details>
+      <details class="fq"><summary>Do you arrange transport and narrowboat holidays?</summary><p>Yes, through trusted providers. You book and pay them directly, not through us.</p></details>
+    </div>
+  </div>
+</section>
+<section class="fq-sec" id="part4">
+  <div class="wrap">
+    <h2>Food and faith</h2>
+    <div class="fq-list">
+      <details class="fq"><summary>Is the food halal, and is it alcohol free?</summary><p>Halal catering is available and alcohol free settings are arranged on request. Prayer times are respected.</p></details>
+      <details class="fq"><summary>Can you cater for other diets?</summary><p>Yes: vegetarian, vegan, gluten free or anything else you tell us.</p></details>
+    </div>
+  </div>
+</section>
+<section class="fq-sec" id="part5">
+  <div class="wrap">
+    <h2>Your privacy</h2>
+    <div class="fq-list">
+      <details class="fq"><summary>Is my information kept private?</summary><p>Yes. We use your details only to answer your enquiry and arrange your visit, and never pass them to anyone outside the experience we arrange for you.</p></details>
+    </div>
+  </div>
+</section>
+
+<section class="fq-ask" id="ask">
+  <div class="wrap">
+    <h2>Ask us a question</h2>
+    <p>We read every question ourselves. We reply to you by email, and may add the question to this page once we have answered it, without your name.</p>
+    <form name="faq-question" method="POST" data-netlify="true" netlify-honeypot="bot-field" id="askForm">
+      <input type="hidden" name="form-name" value="faq-question">
+      <input type="hidden" name="Page Language" value="English">
+      <p class="fq-hidden"><label>Leave this empty <input name="bot-field" tabindex="-1" autocomplete="off"></label></p>
+      <label for="qName">Your name</label>
+      <input id="qName" name="Name" required maxlength="120" autocomplete="name">
+      <label for="qEmail">Your email</label>
+      <input id="qEmail" name="Email" type="email" required maxlength="200" autocomplete="email">
+      <label for="qText">Your question</label>
+      <textarea id="qText" name="Question" required maxlength="2000"></textarea>
+      <label class="ck"><input type="checkbox" name="GDPR Consent" value="Yes" required> <span>I agree that British Heritage Hosts Ltd may use my name and email address to answer this question, as set out in the Privacy Policy.</span></label>
+      <button type="submit" id="askBtn">Send my question</button>
+      <div id="askMsg" role="status"></div>
+    </form>
+  </div>
+</section>
+
+<section class="xcta">
+  <div class="wrap">
+    <h2>Ready to plan your visit?</h2>
+    <div class="xbtns"><a class="xbtn" href="/#enquire">Plan your private visit</a></div>
+  </div>
+</section>
+</main>
+
+<footer class="xfoot">
+  <div class="wrap">
+    <p>British Heritage Hosts Ltd &nbsp;&middot;&nbsp; Monomark House, 27 Old Gloucester Street, London WC1N 3AX</p>
+    <p><a href="mailto:info@britishheritagehosts.com">info@britishheritagehosts.com</a> &nbsp;&middot;&nbsp; <a href="tel:+442031371973">+44 20 3137 1973</a></p>
+    <p>Registered in England and Wales, Company No. 17103555.</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+  var f = document.getElementById("askForm"), b = document.getElementById("askBtn"), m = document.getElementById("askMsg");
+  function say(t, ok) { m.className = "fq-msg " + (ok ? "ok" : "bad"); m.textContent = t; }
+  f.addEventListener("submit", function (e) {
+    e.preventDefault();
+    if (!f.reportValidity()) return;
+    b.disabled = true;
+    fetch("/", { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: new URLSearchParams(new FormData(f)).toString() })
+      .then(function (r) {
+        if (!r.ok) throw new Error(r.status);
+        f.reset(); say("Thank you. Your question has reached us and we will reply by email, usually the same day.", true);
+      })
+      .catch(function () { say("Your question could not be sent. Please try again, or write to info@britishheritagehosts.com.", false); })
+      .then(function () { b.disabled = false; });
+  });
+})();
+</script>
+</body>
+</html>

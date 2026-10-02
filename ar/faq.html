@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<!--
+  British Heritage Hosts Ltd, Arabic questions and answers page
+  Owner: Faleh al Bishi, Director, British Heritage Hosts Ltd
+  Written 3 October 2026. Built from faq/build.py so the English and Arabic
+  pages always carry the same 29 questions.
+  Visitor questions arrive through the Netlify form "faq-question". Nothing is
+  added to this page until the Director has answered and approved it.
+-->
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="Faleh al Bishi">
+<title>أسئلة وأجوبة | بريتش هيريتج هوستس</title>
+<meta name="description" content="إجابات عن الأسئلة التي تطرحها العائلات قبل حجز تجربة تراثية بريطانية خاصة: الحجز والدفع والإلغاء والأطفال والطعام الحلال والخصوصية.">
+<link rel="canonical" href="https://britishheritagehosts.com/ar/faq">
+<link rel="alternate" hreflang="en" href="https://britishheritagehosts.com/faq">
+<link rel="alternate" hreflang="ar" href="https://britishheritagehosts.com/ar/faq">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="/appletouchicon.png">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0D1B2A">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="/experiences/experience.css">
+<style>
+.fq-hero{background:var(--navy);color:var(--cream);padding:4.2rem 0 3.4rem}
+.fq-hero .xeyebrow{display:block;font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold-light);margin-bottom:.8rem}
+.fq-hero h1{font-family:var(--ff-display);font-weight:400;font-size:clamp(2.2rem,5vw,3.4rem);line-height:1.1;margin-bottom:1rem}
+.fq-hero p{max-width:640px;color:rgba(245,240,232,.86);font-size:1.05rem}
+.fq-hero nav{display:flex;flex-wrap:wrap;gap:.6rem 1.4rem;margin-top:1.8rem}
+.fq-hero nav a{color:var(--gold-light);font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;text-decoration:none}
+.fq-sec{padding:3.2rem 0;border-bottom:1px solid var(--border)}
+.fq-sec:nth-of-type(even){background:var(--cream)}
+.fq-sec h2{font-family:var(--ff-display);font-weight:400;font-size:2rem;color:var(--navy);margin-bottom:1.4rem}
+.fq-list{max-width:820px}
+details.fq{border-top:1px solid var(--border);padding:0}
+details.fq:last-child{border-bottom:1px solid var(--border)}
+details.fq summary{list-style:none;cursor:pointer;padding:1.1rem 2.2rem 1.1rem 0;position:relative;font-family:var(--ff-display);font-size:1.3rem;color:var(--navy);line-height:1.3}
+details.fq summary::-webkit-details-marker{display:none}
+details.fq summary::after{content:"+";position:absolute;right:.2rem;top:1rem;font-family:var(--ff-body);font-size:1.4rem;color:var(--gold-ink);transition:transform .2s}
+details.fq[open] summary::after{transform:rotate(45deg)}
+details.fq p{padding:0 0 1.3rem;color:var(--text);max-width:720px}
+.fq-ask{padding:3.6rem 0;background:var(--cream)}
+.fq-ask h2{font-family:var(--ff-display);font-weight:400;font-size:2rem;color:var(--navy);margin-bottom:.6rem}
+.fq-ask form{max-width:640px;margin-top:1.4rem}
+.fq-ask label{display:block;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:1rem 0 .4rem}
+.fq-ask input,.fq-ask textarea{width:100%;padding:.85rem;font:inherit;font-size:1rem;border:1px solid var(--border);background:var(--white);border-radius:2px}
+.fq-ask textarea{min-height:140px;resize:vertical}
+.fq-ask label.ck{display:flex;gap:.7rem;align-items:flex-start;text-transform:none;letter-spacing:0;font-size:.9rem;color:var(--text)}
+.fq-ask label.ck input{width:auto;margin-top:.3rem}
+.fq-ask button{margin-top:1.4rem;background:var(--gold);color:var(--navy);border:0;padding:1rem 1.8rem;font:inherit;font-size:.8rem;letter-spacing:.16em;text-transform:uppercase;cursor:pointer}
+.fq-ask button:disabled{opacity:.6}
+.fq-msg{margin-top:1rem;padding:.9rem 1rem;font-size:.95rem}
+.fq-msg.ok{background:#EDF5EE;color:#245C2E;border:1px solid #C3DEC8}
+.fq-msg.bad{background:#FBEDED;color:#8A2B2B;border:1px solid #E7C3C3}
+.fq-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
+.xnav .lang{border:1px solid rgba(201,168,76,.5);padding:.3rem .7rem}
+html[dir="rtl"] details.fq summary{padding:1.1rem 0 1.1rem 2.2rem}
+html[dir="rtl"] details.fq summary::after{right:auto;left:.2rem}
+html[lang="ar"] body,html[lang="ar"] input,html[lang="ar"] textarea,html[lang="ar"] button{font-family:'Tajawal','Jost',system-ui,sans-serif}
+html[lang="ar"] h1,html[lang="ar"] h2,html[lang="ar"] summary{font-family:'Amiri','Cormorant Garamond',Georgia,serif}
+html[lang="ar"] .fq-hero .xeyebrow,html[lang="ar"] .fq-hero nav a,html[lang="ar"] .fq-ask label,html[lang="ar"] .fq-ask button,html[lang="ar"] .xnav nav a{letter-spacing:0;text-transform:none}
+</style>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "ما هي بريتش هيريتج هوستس؟", "acceptedAnswer": {"@type": "Answer", "text": "نقدم تجارب ثقافية خاصة داخل بيوت بريطانية حقيقية للعائلات الزائرة للمملكة المتحدة. نحن شركة مسجلة في إنجلترا وويلز برقم 17103555."}}, {"@type": "Question", "name": "كيف تختارون المضيفين والمرشدين؟", "acceptedAnswer": {"@type": "Answer", "text": "نتحقق من كل مضيف ومرشد وشريك قبل انضمامه إلينا."}}, {"@type": "Question", "name": "هل المضيفون لديكم مؤمَّن عليهم؟", "acceptedAnswer": {"@type": "Answer", "text": "نعم. يجب أن يحمل كل مضيف تأمينًا منزليًا يغطي الضيوف بأجر، إضافة إلى تأمين مسؤولية تجاه الغير لا يقل عن 1,000,000 جنيه إسترليني، وذلك قبل أول حجز له."}}, {"@type": "Question", "name": "أين تقام التجارب؟", "acceptedAnswer": {"@type": "Answer", "text": "في لندن والريف الإنجليزي. ويمكن لمسار التراث أن يشمل أيضًا ويلز واسكتلندا وأيرلندا الشمالية."}}, {"@type": "Question", "name": "كيف أحجز؟", "acceptedAnswer": {"@type": "Answer", "text": "أرسلوا استفسارًا، وستصلكم عرضكم الخاص، ثم وافقوا عليه وادفعوا. يُؤكَّد حجزكم فور استلام الدفعة."}}, {"@type": "Question", "name": "متى ستردّون عليّ؟", "acceptedAnswer": {"@type": "Answer", "text": "نرد عليكم شخصيًا، وغالبًا في اليوم نفسه."}}, {"@type": "Question", "name": "كم التكلفة؟", "acceptedAnswer": {"@type": "Answer", "text": "تُسعَّر كل تجربة للعائلة الواحدة، ونرسل لكم السعر شخصيًا عند الاستفسار."}}, {"@type": "Question", "name": "كيف ندفع، وبأي عملة؟", "acceptedAnswer": {"@type": "Answer", "text": "بالبطاقة، بالجنيه الإسترليني، عبر صفحة دفع آمنة من Stripe. ويُؤكَّد حجزكم فور استلام الدفعة."}}, {"@type": "Question", "name": "قبل كم يومًا يجب أن نحجز؟", "acceptedAnswer": {"@type": "Answer", "text": "قبل 7 أيام على الأقل من أول تجربة، حتى يتسنى لنا ترتيب المضيف أو المرشد. وكلما حجزتم مبكرًا اتسع اختيار المواعيد."}}, {"@type": "Question", "name": "هل يمكننا الجمع بين عدة تجارب في زيارة واحدة؟", "acceptedAnswer": {"@type": "Answer", "text": "نعم. اختاروا ما تشاؤون في استفسار واحد، وسنرتبها ونسعّرها معًا كزيارة واحدة."}}, {"@type": "Question", "name": "ماذا لو احتجنا إلى الإلغاء؟", "acceptedAnswer": {"@type": "Answer", "text": "تُحسب كل تجربة من تاريخها. قبل أكثر من 14 يومًا: استرداد كامل. قبل 7 إلى 14 يومًا: استرداد 50%. قبل أقل من 7 أيام: لا استرداد، إلا إذا أمكننا نقلها إلى موعد آخر. وإذا ألغينا نحن: استرداد كامل. الشروط الكاملة في البند 3 من شروط الخدمة."}}, {"@type": "Question", "name": "هل نحتاج إلى تأمين سفر؟", "acceptedAnswer": {"@type": "Answer", "text": "ننصح بشدة بتأمين سفر يغطي الإلغاء والتكاليف الطبية والمسؤولية الشخصية، ونطلب منكم تأكيد ذلك عند الاستفسار."}}, {"@type": "Question", "name": "هل تساعدون في التأشيرات؟", "acceptedAnswer": {"@type": "Answer", "text": "لا نتولى ترتيب التأشيرات. ولكن بعد دفع حجزكم يمكنكم تنزيل خطاب تأكيد الحجز متضمنًا رقم الحجز والتواريخ والمبلغ المدفوع، ويمكنكم تقديمه مع طلبكم."}}, {"@type": "Question", "name": "هل سينضم إلينا ضيوف آخرون؟", "acceptedAnswer": {"@type": "Answer", "text": "لا. كل تجربة لعائلتكم وحدها."}}, {"@type": "Question", "name": "كيف يُحتسب الأطفال؟", "acceptedAnswer": {"@type": "Answer", "text": "العائلة شخصان بالغان وطفلان أعمارهما من 3 إلى 11 سنة. ويُحتسب من بلغ 12 سنة فأكثر بالغًا، أما من هم في سن سنتين فأقل فمجانًا."}}, {"@type": "Question", "name": "هل يمكن لعائلة كبيرة أو مجموعة أن تحجز؟", "acceptedAnswer": {"@type": "Answer", "text": "نعم، بشرط موافقة المضيف. ويمكن لتجربة الشواء على ضفة النهر أن تستضيف أيضًا حفلًا خاصًا أكبر لضيوفكم."}}, {"@type": "Question", "name": "هل يمكنكم ترتيب تجربة لعيد ميلاد أو ذكرى زواج أو شهر عسل؟", "acceptedAnswer": {"@type": "Answer", "text": "نعم. أخبرونا بالمناسبة عند الاستفسار وسنخطط لها."}}, {"@type": "Question", "name": "ماذا يشمل مسار التراث؟", "acceptedAnswer": {"@type": "Answer", "text": "مرشد واحد لعدة أيام. نخطط المسار ونشتري تذاكر الدخول ونرافقكم طوال الطريق. وتحجزون أنتم الفندق والسائق."}}, {"@type": "Question", "name": "هل يمكن أن تكون المرشدة امرأة؟", "acceptedAnswer": {"@type": "Answer", "text": "نعم، تتوفر مرشدات عند الطلب."}}, {"@type": "Question", "name": "لا نتحدث الإنجليزية جيدًا، هل يمكنكم المساعدة؟", "acceptedAnswer": {"@type": "Answer", "text": "نعم. توفر خدمة المترجم الشخصي مترجمًا بلغة عائلتكم."}}, {"@type": "Question", "name": "ما اللغات التي يتحدثها المترجم؟", "acceptedAnswer": {"@type": "Answer", "text": "اللغة التي تتحدثها عائلتكم. أخبرونا بها عند الاستفسار."}}, {"@type": "Question", "name": "هل يمكن لأطفالنا تعلّم الإنجليزية أثناء الزيارة؟", "acceptedAnswer": {"@type": "Answer", "text": "نعم. يقدم برنامج الانغماس الثقافي دورات مع معاهد معتمدة في لندن، مقسمة حسب العمر."}}, {"@type": "Question", "name": "هل التجارب متاحة طوال العام؟", "acceptedAnswer": {"@type": "Answer", "text": "نعم، باستثناء أيام قليلة لا يمكننا فيها ترتيب التجارب، وسينبهكم نموذج الاستفسار إن كان التاريخ غير متاح."}}, {"@type": "Question", "name": "هل يمكننا اختيار المنطقة أو المضيف؟", "acceptedAnswer": {"@type": "Answer", "text": "أخبرونا بالمنطقة التي تفضلونها عند الاستفسار، وسنؤكدها في عرضكم. أما المضيفون والمرشدون فنختارهم نحن بما يناسب عائلتكم."}}, {"@type": "Question", "name": "هل تحجزون الفنادق؟", "acceptedAnswer": {"@type": "Answer", "text": "لا. تحجزون الفندق بأنفسكم، ونحن نرتب التجارب."}}, {"@type": "Question", "name": "هل ترتبون التنقل وعطلات القوارب النهرية؟", "acceptedAnswer": {"@type": "Answer", "text": "نعم، عبر مزودين موثوقين. وتحجزون وتدفعون لهم مباشرة، لا عن طريقنا."}}, {"@type": "Question", "name": "هل الطعام حلال وخالٍ من الكحول؟", "acceptedAnswer": {"@type": "Answer", "text": "يتوفر طعام حلال، وتُرتَّب أجواء خالية من الكحول عند الطلب، وتُراعى أوقات الصلاة."}}, {"@type": "Question", "name": "هل تراعون أنظمة غذائية أخرى؟", "acceptedAnswer": {"@type": "Answer", "text": "نعم: نباتي، أو نباتي صرف، أو خالٍ من الغلوتين، أو أي شيء آخر تخبروننا به."}}, {"@type": "Question", "name": "هل تبقى معلوماتي خاصة؟", "acceptedAnswer": {"@type": "Answer", "text": "نعم. نستخدم بياناتكم فقط للرد على استفساركم وترتيب زيارتكم، ولا نشاركها مع أي أحد خارج التجربة التي نرتبها لكم."}}]}</script>
+</head>
+<body>
+
+<header class="xnav">
+  <div class="wrap">
+    <a class="brand" href="/ar/">
+      <img src="/images/british-heritage-hosts.png" alt="British Heritage Hosts">
+      <span>BRITISH HERITAGE HOSTS</span>
+    </a>
+    <nav class="xmenu">
+      <a href="/ar/">احجز تجربة التراث البريطاني</a>
+      <a href="/about">من نحن</a>
+      <a class="lang" href="/faq" lang="en" hreflang="en">English</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<section class="fq-hero">
+  <div class="wrap">
+    <span class="xeyebrow">أسئلة وأجوبة</span>
+    <h1>قبل أن تحجزوا</h1>
+    <p>أكثر الأسئلة التي تطرحها علينا العائلات، بإجابات واضحة. وإن لم تجدوا سؤالكم هنا فاسألونا في الأسفل وسنرد عليكم شخصيًا.</p>
+    <nav aria-label="في هذه الصفحة">
+      <a href="#part1">عن بريتش هيريتج هوستس</a>
+      <a href="#part2">الحجز والدفع</a>
+      <a href="#part3">زيارة عائلتكم</a>
+      <a href="#part4">الطعام والعبادة</a>
+      <a href="#part5">خصوصيتكم</a>
+      <a href="#ask">اسألونا</a>
+    </nav>
+  </div>
+</section>
+
+<section class="fq-sec" id="part1">
+  <div class="wrap">
+    <h2>عن بريتش هيريتج هوستس</h2>
+    <div class="fq-list">
+      <details class="fq"><summary>ما هي بريتش هيريتج هوستس؟</summary><p>نقدم تجارب ثقافية خاصة داخل بيوت بريطانية حقيقية للعائلات الزائرة للمملكة المتحدة. نحن شركة مسجلة في إنجلترا وويلز برقم 17103555.</p></details>
+      <details class="fq"><summary>كيف تختارون المضيفين والمرشدين؟</summary><p>نتحقق من كل مضيف ومرشد وشريك قبل انضمامه إلينا.</p></details>
+      <details class="fq"><summary>هل المضيفون لديكم مؤمَّن عليهم؟</summary><p>نعم. يجب أن يحمل كل مضيف تأمينًا منزليًا يغطي الضيوف بأجر، إضافة إلى تأمين مسؤولية تجاه الغير لا يقل عن 1,000,000 جنيه إسترليني، وذلك قبل أول حجز له.</p></details>
+      <details class="fq"><summary>أين تقام التجارب؟</summary><p>في لندن والريف الإنجليزي. ويمكن لمسار التراث أن يشمل أيضًا ويلز واسكتلندا وأيرلندا الشمالية.</p></details>
+    </div>
+  </div>
+</section>
+<section class="fq-sec" id="part2">
+  <div class="wrap">
+    <h2>الحجز والدفع</h2>
+    <div class="fq-list">
+      <details class="fq"><summary>كيف أحجز؟</summary><p>أرسلوا استفسارًا، وستصلكم عرضكم الخاص، ثم وافقوا عليه وادفعوا. يُؤكَّد حجزكم فور استلام الدفعة.</p></details>
+      <details class="fq"><summary>متى ستردّون عليّ؟</summary><p>نرد عليكم شخصيًا، وغالبًا في اليوم نفسه.</p></details>
+      <details class="fq"><summary>كم التكلفة؟</summary><p>تُسعَّر كل تجربة للعائلة الواحدة، ونرسل لكم السعر شخصيًا عند الاستفسار.</p></details>
+      <details class="fq"><summary>كيف ندفع، وبأي عملة؟</summary><p>بالبطاقة، بالجنيه الإسترليني، عبر صفحة دفع آمنة من Stripe. ويُؤكَّد حجزكم فور استلام الدفعة.</p></details>
+      <details class="fq"><summary>قبل كم يومًا يجب أن نحجز؟</summary><p>قبل 7 أيام على الأقل من أول تجربة، حتى يتسنى لنا ترتيب المضيف أو المرشد. وكلما حجزتم مبكرًا اتسع اختيار المواعيد.</p></details>
+      <details class="fq"><summary>هل يمكننا الجمع بين عدة تجارب في زيارة واحدة؟</summary><p>نعم. اختاروا ما تشاؤون في استفسار واحد، وسنرتبها ونسعّرها معًا كزيارة واحدة.</p></details>
+      <details class="fq"><summary>ماذا لو احتجنا إلى الإلغاء؟</summary><p>تُحسب كل تجربة من تاريخها. قبل أكثر من 14 يومًا: استرداد كامل. قبل 7 إلى 14 يومًا: استرداد 50%. قبل أقل من 7 أيام: لا استرداد، إلا إذا أمكننا نقلها إلى موعد آخر. وإذا ألغينا نحن: استرداد كامل. الشروط الكاملة في البند 3 من شروط الخدمة.</p></details>
+      <details class="fq"><summary>هل نحتاج إلى تأمين سفر؟</summary><p>ننصح بشدة بتأمين سفر يغطي الإلغاء والتكاليف الطبية والمسؤولية الشخصية، ونطلب منكم تأكيد ذلك عند الاستفسار.</p></details>
+      <details class="fq"><summary>هل تساعدون في التأشيرات؟</summary><p>لا نتولى ترتيب التأشيرات. ولكن بعد دفع حجزكم يمكنكم تنزيل خطاب تأكيد الحجز متضمنًا رقم الحجز والتواريخ والمبلغ المدفوع، ويمكنكم تقديمه مع طلبكم.</p></details>
+    </div>
+  </div>
+</section>
+<section class="fq-sec" id="part3">
+  <div class="wrap">
+    <h2>زيارة عائلتكم</h2>
+    <div class="fq-list">
+      <details class="fq"><summary>هل سينضم إلينا ضيوف آخرون؟</summary><p>لا. كل تجربة لعائلتكم وحدها.</p></details>
+      <details class="fq"><summary>كيف يُحتسب الأطفال؟</summary><p>العائلة شخصان بالغان وطفلان أعمارهما من 3 إلى 11 سنة. ويُحتسب من بلغ 12 سنة فأكثر بالغًا، أما من هم في سن سنتين فأقل فمجانًا.</p></details>
+      <details class="fq"><summary>هل يمكن لعائلة كبيرة أو مجموعة أن تحجز؟</summary><p>نعم، بشرط موافقة المضيف. ويمكن لتجربة الشواء على ضفة النهر أن تستضيف أيضًا حفلًا خاصًا أكبر لضيوفكم.</p></details>
+      <details class="fq"><summary>هل يمكنكم ترتيب تجربة لعيد ميلاد أو ذكرى زواج أو شهر عسل؟</summary><p>نعم. أخبرونا بالمناسبة عند الاستفسار وسنخطط لها.</p></details>
+      <details class="fq"><summary>ماذا يشمل مسار التراث؟</summary><p>مرشد واحد لعدة أيام. نخطط المسار ونشتري تذاكر الدخول ونرافقكم طوال الطريق. وتحجزون أنتم الفندق والسائق.</p></details>
+      <details class="fq"><summary>هل يمكن أن تكون المرشدة امرأة؟</summary><p>نعم، تتوفر مرشدات عند الطلب.</p></details>
+      <details class="fq"><summary>لا نتحدث الإنجليزية جيدًا، هل يمكنكم المساعدة؟</summary><p>نعم. توفر خدمة المترجم الشخصي مترجمًا بلغة عائلتكم.</p></details>
+      <details class="fq"><summary>ما اللغات التي يتحدثها المترجم؟</summary><p>اللغة التي تتحدثها عائلتكم. أخبرونا بها عند الاستفسار.</p></details>
+      <details class="fq"><summary>هل يمكن لأطفالنا تعلّم الإنجليزية أثناء الزيارة؟</summary><p>نعم. يقدم برنامج الانغماس الثقافي دورات مع معاهد معتمدة في لندن، مقسمة حسب العمر.</p></details>
+      <details class="fq"><summary>هل التجارب متاحة طوال العام؟</summary><p>نعم، باستثناء أيام قليلة لا يمكننا فيها ترتيب التجارب، وسينبهكم نموذج الاستفسار إن كان التاريخ غير متاح.</p></details>
+      <details class="fq"><summary>هل يمكننا اختيار المنطقة أو المضيف؟</summary><p>أخبرونا بالمنطقة التي تفضلونها عند الاستفسار، وسنؤكدها في عرضكم. أما المضيفون والمرشدون فنختارهم نحن بما يناسب عائلتكم.</p></details>
+      <details class="fq"><summary>هل تحجزون الفنادق؟</summary><p>لا. تحجزون الفندق بأنفسكم، ونحن نرتب التجارب.</p></details>
+      <details class="fq"><summary>هل ترتبون التنقل وعطلات القوارب النهرية؟</summary><p>نعم، عبر مزودين موثوقين. وتحجزون وتدفعون لهم مباشرة، لا عن طريقنا.</p></details>
+    </div>
+  </div>
+</section>
+<section class="fq-sec" id="part4">
+  <div class="wrap">
+    <h2>الطعام والعبادة</h2>
+    <div class="fq-list">
+      <details class="fq"><summary>هل الطعام حلال وخالٍ من الكحول؟</summary><p>يتوفر طعام حلال، وتُرتَّب أجواء خالية من الكحول عند الطلب، وتُراعى أوقات الصلاة.</p></details>
+      <details class="fq"><summary>هل تراعون أنظمة غذائية أخرى؟</summary><p>نعم: نباتي، أو نباتي صرف، أو خالٍ من الغلوتين، أو أي شيء آخر تخبروننا به.</p></details>
+    </div>
+  </div>
+</section>
+<section class="fq-sec" id="part5">
+  <div class="wrap">
+    <h2>خصوصيتكم</h2>
+    <div class="fq-list">
+      <details class="fq"><summary>هل تبقى معلوماتي خاصة؟</summary><p>نعم. نستخدم بياناتكم فقط للرد على استفساركم وترتيب زيارتكم، ولا نشاركها مع أي أحد خارج التجربة التي نرتبها لكم.</p></details>
+    </div>
+  </div>
+</section>
+
+<section class="fq-ask" id="ask">
+  <div class="wrap">
+    <h2>اسألونا</h2>
+    <p>نقرأ كل سؤال بأنفسنا، ونرد عليكم بالبريد الإلكتروني، وقد نضيف السؤال إلى هذه الصفحة بعد الإجابة عنه دون ذكر اسمكم.</p>
+    <form name="faq-question" method="POST" data-netlify="true" netlify-honeypot="bot-field" id="askForm">
+      <input type="hidden" name="form-name" value="faq-question">
+      <input type="hidden" name="Page Language" value="Arabic">
+      <p class="fq-hidden"><label>Leave this empty <input name="bot-field" tabindex="-1" autocomplete="off"></label></p>
+      <label for="qName">الاسم</label>
+      <input id="qName" name="Name" required maxlength="120" autocomplete="name">
+      <label for="qEmail">البريد الإلكتروني</label>
+      <input id="qEmail" name="Email" type="email" required maxlength="200" autocomplete="email">
+      <label for="qText">سؤالكم</label>
+      <textarea id="qText" name="Question" required maxlength="2000"></textarea>
+      <label class="ck"><input type="checkbox" name="GDPR Consent" value="Yes" required> <span>أوافق على أن تستخدم بريتش هيريتج هوستس المحدودة اسمي وبريدي الإلكتروني للرد على هذا السؤال، وفق سياسة الخصوصية.</span></label>
+      <button type="submit" id="askBtn">أرسل سؤالي</button>
+      <div id="askMsg" role="status"></div>
+    </form>
+  </div>
+</section>
+
+<section class="xcta">
+  <div class="wrap">
+    <h2>هل أنتم مستعدون للتخطيط لزيارتكم؟</h2>
+    <div class="xbtns"><a class="xbtn" href="/ar/#enquire">خططوا لزيارتكم الخاصة</a></div>
+  </div>
+</section>
+</main>
+
+<footer class="xfoot">
+  <div class="wrap">
+    <p>بريتش هيريتج هوستس المحدودة &nbsp;&middot;&nbsp; Monomark House, 27 Old Gloucester Street, London WC1N 3AX</p>
+    <p><a href="mailto:info@britishheritagehosts.com">info@britishheritagehosts.com</a> &nbsp;&middot;&nbsp; <a href="tel:+442031371973">+44 20 3137 1973</a></p>
+    <p>مسجلة في إنجلترا وويلز برقم 17103555.</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+  var f = document.getElementById("askForm"), b = document.getElementById("askBtn"), m = document.getElementById("askMsg");
+  function say(t, ok) { m.className = "fq-msg " + (ok ? "ok" : "bad"); m.textContent = t; }
+  f.addEventListener("submit", function (e) {
+    e.preventDefault();
+    if (!f.reportValidity()) return;
+    b.disabled = true;
+    fetch("/", { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: new URLSearchParams(new FormData(f)).toString() })
+      .then(function (r) {
+        if (!r.ok) throw new Error(r.status);
+        f.reset(); say("شكرًا لكم. وصلنا سؤالكم وسنرد عليكم بالبريد الإلكتروني، غالبًا في اليوم نفسه.", true);
+      })
+      .catch(function () { say("تعذّر إرسال سؤالكم. يرجى المحاولة مرة أخرى، أو الكتابة إلى info@britishheritagehosts.com.", false); })
+      .then(function () { b.disabled = false; });
+  });
+})();
+</script>
+</body>
+</html>

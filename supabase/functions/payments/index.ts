@@ -295,6 +295,9 @@ async function actionCheckout(body: Row) {
     "payment_intent_data[metadata][reference]": String(p.reference),
     "payment_intent_data[description]": `British Heritage Hosts booking ${p.reference}`,
     expires_at: String(Math.floor(Date.now() / 1000) + 60 * 60),
+    // Guests pay in pounds sterling, as the Terms say. Stripe's own currency
+    // switch adds a conversion fee for the guest, so it is turned off here.
+    "adaptive_pricing[enabled]": "false",
   };
   items.forEach((it, i) => {
     params[`line_items[${i}][quantity]`] = "1";
@@ -368,7 +371,11 @@ async function handleWebhook(req: Request) {
     const { data: p } = await admin.from("proposals").select("*").eq("reference", ref).maybeSingle();
     if (!p) return new Response("unknown reference", { status: 200 });
     if (p.status !== "sent") return new Response("already settled", { status: 200 });
-    if (Number(s.amount_total) !== Number(p.total_pence) || String(s.currency) !== "gbp") {
+    // If a guest ever paid in another currency, Stripe reports the pounds
+    // amount under currency_conversion; that is the figure to check.
+    const gbpTotal = s.currency_conversion?.source_currency === "gbp" ? Number(s.currency_conversion.amount_total) : Number(s.amount_total);
+    const gbpCurrency = s.currency_conversion?.source_currency ?? s.currency;
+    if (gbpTotal !== Number(p.total_pence) || String(gbpCurrency) !== "gbp") {
       console.error("amount mismatch", ref, s.amount_total, p.total_pence);
       await sendEmail(DIRECTOR_EMAIL, `Check payment ${ref}`, `<p>Stripe reported ${esc(s.amount_total)} ${esc(s.currency)} for ${esc(ref)}, but the proposal total is ${esc(p.total_pence)} pence. The booking was NOT confirmed. Please check Stripe.</p>`).catch(() => {});
       return new Response("amount mismatch", { status: 200 });
