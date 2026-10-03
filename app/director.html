@@ -69,6 +69,12 @@
     </section>
 
     <section class="card">
+      <h2>Website questions</h2>
+      <p class="lead">Questions visitors send from the FAQ page. Reply from your email; the visitor's address is already in it. Then mark the question answered here.</p>
+      <div id="questions"><p class="lead">Loading.</p></div>
+    </section>
+
+    <section class="card">
       <h2>Booking rules</h2>
       <label for="lead">Families must enquire at least this many days ahead</label>
       <input id="lead" type="number" min="0" max="365">
@@ -183,6 +189,13 @@
       el("blocked").innerHTML = r.settings.unavailable_notes.length
         ? '<table class="rules">' + r.settings.unavailable_notes.map(function (d) { return "<tr><td>" + esc(nice(d.day)) + (d.note ? ' <span class="small">' + esc(d.note) + "</span>" : "") + '</td><td><button class="inline quiet" data-unblock="' + esc(d.day) + '">Make available</button></td></tr>'; }).join("") + "</table>"
         : '<p class="small">No dates are marked unavailable.</p>';
+      var qs = r.questions || [];
+      el("questions").innerHTML = qs.length ? qs.map(function (q) {
+        var acts = (q.status === "new" ? '<button class="inline" data-q="answered" data-id="' + q.id + '">Mark answered</button>' : '<button class="inline quiet" data-q="new" data-id="' + q.id + '">Mark not answered</button>') +
+          '<button class="inline quiet" data-q="hidden" data-id="' + q.id + '">Remove from list</button>' +
+          '<a class="inline-link" href="mailto:' + esc(q.email) + '?subject=' + encodeURIComponent("Your question to British Heritage Hosts") + '">Reply by email</a>';
+        return '<div class="item"><div><div class="ref">' + (q.status === "new" ? "Not answered yet" : "Answered") + " · " + (q.lang === "ar" ? "Arabic page" : "English page") + " · " + esc(nice(q.created_at)) + '</div><div class="service">' + esc(q.name) + ' <span class="small">' + esc(q.email) + '</span></div><p>' + esc(q.question) + "</p>" + acts + "</div></div>";
+      }).join("") : '<p class="lead">No questions yet.</p>';
       if (!r.proposals.length) { el("list").innerHTML = '<p class="lead">No proposals yet.</p>'; return; }
       el("list").innerHTML = r.proposals.map(function (p) {
         var acts = '<button class="inline quiet" data-copy="' + esc(p.link) + '">Copy guest link</button>';
@@ -200,6 +213,7 @@
   document.addEventListener("click", function (e) {
     var b = e.target.closest("button"); if (!b) return;
     if (b.dataset.copy) { navigator.clipboard.writeText(b.dataset.copy).then(function () { b.textContent = "Copied"; }); return; }
+    if (b.dataset.q) { b.disabled = true; call("d_question", { id: b.dataset.id, status: b.dataset.q }).then(load); return; }
     if (b.dataset.unblock) { call("d_settings", { unblock: b.dataset.unblock }).then(load); return; }
     if (b.dataset.act) {
       var text = { d_resend: "Email the payment link again?", d_withdraw: "Withdraw this unpaid proposal?",

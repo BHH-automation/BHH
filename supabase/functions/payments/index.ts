@@ -20,6 +20,7 @@
 //   checkout  { ref, key }         makes the Stripe payment page, returns its address
 //   cancel    { ref, key }         the guest asks to cancel; refund worked out
 //   letter    { ref, key }         details for the booking confirmation letter
+//   ask       { name, email, question, lang, consent }  a question from the FAQ page
 //
 // Director, after signing in with a code sent to the company inbox:
 //   d_start / d_verify { code } / d_signout
@@ -30,6 +31,7 @@
 //   d_refund  { id }               approves and sends the refund the guest asked for
 //   d_cancel  { id }               BHH cancels: full refund (clause 3)
 //   d_settings { min_lead_days, block, unblock, note }
+//   d_question { id, status }      marks a FAQ question answered or hides it
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.4";
 
@@ -143,7 +145,7 @@ function refundFor(items: Item[], cancelledBy: "guest" | "bhh", today = londonTo
 
 // ------------------------------------------------------------ email
 
-async function sendEmail(to: string, subject: string, bodyHtml: string) {
+async function sendEmail(to: string, subject: string, bodyHtml: string, replyTo?: string) {
   if (!RESEND_API_KEY) throw new Error("Resend is not configured");
   const html = `
 <div style="font-family:Georgia,serif;background:#F5F0E8;padding:28px">
@@ -158,7 +160,7 @@ async function sendEmail(to: string, subject: string, bodyHtml: string) {
   const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: { Authorization: `Bearer ${RESEND_API_KEY}`, "Content-Type": "application/json" },
-    body: JSON.stringify({ from: `British Heritage Hosts <${FROM_EMAIL}>`, to: [to], subject, html }),
+    body: JSON.stringify({ from: `British Heritage Hosts <${FROM_EMAIL}>`, to: [to], subject, html, ...(replyTo ? { reply_to: replyTo } : {}) }),
   });
   if (!res.ok) throw new Error(`Resend ${res.status}: ${await res.text()}`);
 }
@@ -353,6 +355,50 @@ async function actionLetter(body: Row) {
   });
 }
 
+
+// ------------------------------------------------------------ FAQ questions
+
+// A visitor asks a question on the FAQ page. It is kept for the Director, he
+// is emailed (a reply goes straight back to the visitor), and the visitor gets
+// a short acknowledgement in the page's language. Nothing is published.
+async function actionAsk(body: Row) {
+  if (String(body.website ?? "").trim()) return json({ ok: true }); // robot trap
+  const name = String(body.name ?? "").trim().slice(0, 120);
+  const email = String(body.email ?? "").trim().toLowerCase().slice(0, 200);
+  const question = String(body.question ?? "").trim().slice(0, 2000);
+  const lang = body.lang === "ar" ? "ar" : "en";
+  if (!name || !question) return fail("missing", lang === "ar" ? "يرجى كتابة الاسم والسؤال." : "Please give your name and your question.", 400);
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return fail("bad_email", lang === "ar" ? "يرجى كتابة بريد إلكتروني صحيح." : "Please give a valid email address.", 400);
+  if (body.consent !== true) return fail("consent", lang === "ar" ? "يرجى الموافقة على استخدام بياناتكم للرد." : "Please tick the consent box.", 400);
+
+  const hourAgo = new Date(Date.now() - 3600000).toISOString();
+  const { count } = await admin.from("faq_questions").select("id", { count: "exact", head: true }).eq("email", email).gt("created_at", hourAgo);
+  if ((count ?? 0) >= 3) return json({ ok: true });
+
+  const { error } = await admin.from("faq_questions").insert({ name, email, question, lang });
+  if (error) return fail("db_error", lang === "ar" ? "تعذّر حفظ سؤالكم، يرجى المحاولة لاحقًا." : "Your question could not be saved. Please try again.", 500);
+
+  try {
+    await sendEmail(DIRECTOR_EMAIL, `New website question from ${name}`, `
+      <p><strong>${esc(name)}</strong> (${esc(email)}) asked on the ${lang === "ar" ? "Arabic" : "English"} FAQ page:</p>
+      <blockquote style="border-left:3px solid #C9A84C;margin:0;padding:8px 14px;background:#F5F0E8">${esc(question).replace(/\n/g, "<br>")}</blockquote>
+      <p>Reply to this email to answer them directly. The question is also listed on your Director page.</p>
+      ${button(`${SITE_URL}/app/director.html`, "OPEN THE DIRECTOR PAGE")}`, email);
+    if (lang === "ar") {
+      await sendEmail(email, "وصلنا سؤالكم، بريتش هيريتج هوستس", `<div dir="rtl" style="text-align:right">
+        <p>مرحبًا ${esc(name)}،</p>
+        <p>شكرًا لكم على سؤالكم. وصلنا وسنرد عليكم شخصيًا بالبريد الإلكتروني، غالبًا في اليوم نفسه.</p>
+        <p style="color:#666055">سؤالكم: ${esc(question)}</p></div>`);
+    } else {
+      await sendEmail(email, "We have received your question, British Heritage Hosts", `
+        <p>Dear ${esc(name)},</p>
+        <p>Thank you for your question. It has reached us and we will reply to you personally by email, usually the same day.</p>
+        <p style="color:#666055">Your question: ${esc(question)}</p>`);
+    }
+  } catch (e) { console.error("question email failed", String(e)); }
+  return json({ ok: true });
+}
+
 // ------------------------------------------------------------ Stripe webhook
 
 async function handleWebhook(req: Request) {
@@ -539,9 +585,16 @@ async function directorAction(action: string, body: Row) {
   if (action === "d_list") {
     const { data } = await admin.from("proposals").select("*").order("created_at", { ascending: false }).limit(200);
     const list = (data ?? []).map((p) => ({ ...p, link: guestLink(p), cancel_preview: p.status === "paid" ? refundFor(p.items as Item[], "guest") : null }));
-    return json({ ok: true, proposals: list, settings: await settings(), sellable: SELLABLE, today: londonToday() });
+    const { data: qs } = await admin.from("faq_questions").select("*").neq("status", "hidden").order("created_at", { ascending: false }).limit(100);
+    return json({ ok: true, proposals: list, questions: qs ?? [], settings: await settings(), sellable: SELLABLE, today: londonToday() });
   }
   if (action === "d_create") return await dCreate(body);
+  if (action === "d_question") {
+    const status = String(body.status ?? "");
+    if (!["new", "answered", "hidden"].includes(status)) return fail("bad_status", "Unknown status.", 400);
+    await admin.from("faq_questions").update({ status }).eq("id", String(body.id ?? ""));
+    return json({ ok: true });
+  }
 
   if (action === "d_settings") {
     if (body.min_lead_days !== undefined) {
@@ -601,6 +654,7 @@ Deno.serve(async (req) => {
     if (action === "checkout") return await actionCheckout(body);
     if (action === "cancel") return await actionCancel(body);
     if (action === "letter") return await actionLetter(body);
+    if (action === "ask") return await actionAsk(body);
     if (action === "d_start") return await dStart();
     if (action === "d_verify") return await dVerify(body);
     if (action.startsWith("d_")) return await directorAction(action, body);

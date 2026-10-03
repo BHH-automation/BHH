@@ -60,3 +60,4 @@ table.rules tr.sum td { font-weight: 500; color: var(--navy); border-bottom: non
 .terms h2, .terms h3 { font-size: 18px; margin: 10px 0 6px; }
 .hidden { display: none !important; }
 footer { text-align: center; padding: 8px 16px 40px; font-size: 13px; color: var(--muted); }
+a.inline-link { display: inline-block; margin: 6px 6px 0 0; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--navy); }

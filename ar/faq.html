@@ -4,7 +4,8 @@
   Owner: Faleh al Bishi, Director, British Heritage Hosts Ltd
   Written 3 October 2026. Built from faq/build.py so the English and Arabic
   pages always carry the same 29 questions.
-  Visitor questions arrive through the Netlify form "faq-question". Nothing is
+  Visitor questions go to the BHH payments function (action "ask"), which keeps
+  them for the Director, emails him, and acknowledges the visitor. Nothing is
   added to this page until the Director has answered and approved it.
 -->
 <html lang="ar" dir="rtl">
@@ -166,17 +167,15 @@ html[lang="ar"] .fq-hero .xeyebrow,html[lang="ar"] .fq-hero nav a,html[lang="ar"
   <div class="wrap">
     <h2>اسألونا</h2>
     <p>نقرأ كل سؤال بأنفسنا، ونرد عليكم بالبريد الإلكتروني، وقد نضيف السؤال إلى هذه الصفحة بعد الإجابة عنه دون ذكر اسمكم.</p>
-    <form name="faq-question" method="POST" data-netlify="true" netlify-honeypot="bot-field" id="askForm">
-      <input type="hidden" name="form-name" value="faq-question">
-      <input type="hidden" name="Page Language" value="Arabic">
-      <p class="fq-hidden"><label>Leave this empty <input name="bot-field" tabindex="-1" autocomplete="off"></label></p>
+    <form id="askForm" novalidate>
+      <p class="fq-hidden"><label>Leave this empty <input name="website" tabindex="-1" autocomplete="off"></label></p>
       <label for="qName">الاسم</label>
-      <input id="qName" name="Name" required maxlength="120" autocomplete="name">
+      <input id="qName" name="name" required maxlength="120" autocomplete="name">
       <label for="qEmail">البريد الإلكتروني</label>
-      <input id="qEmail" name="Email" type="email" required maxlength="200" autocomplete="email">
+      <input id="qEmail" name="email" type="email" required maxlength="200" autocomplete="email">
       <label for="qText">سؤالكم</label>
-      <textarea id="qText" name="Question" required maxlength="2000"></textarea>
-      <label class="ck"><input type="checkbox" name="GDPR Consent" value="Yes" required> <span>أوافق على أن تستخدم بريتش هيريتج هوستس المحدودة اسمي وبريدي الإلكتروني للرد على هذا السؤال، وفق سياسة الخصوصية.</span></label>
+      <textarea id="qText" name="question" required maxlength="2000"></textarea>
+      <label class="ck"><input type="checkbox" id="qConsent" required> <span>أوافق على أن تستخدم بريتش هيريتج هوستس المحدودة اسمي وبريدي الإلكتروني للرد على هذا السؤال، وفق سياسة الخصوصية.</span></label>
       <button type="submit" id="askBtn">أرسل سؤالي</button>
       <div id="askMsg" role="status"></div>
     </form>
@@ -208,9 +207,12 @@ html[lang="ar"] .fq-hero .xeyebrow,html[lang="ar"] .fq-hero nav a,html[lang="ar"
     e.preventDefault();
     if (!f.reportValidity()) return;
     b.disabled = true;
-    fetch("/", { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: new URLSearchParams(new FormData(f)).toString() })
+    fetch("https://pwqdzitsezblncmewxsf.supabase.co/functions/v1/Payments", { method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "ask", lang: "ar", name: f.elements["name"].value, email: f.elements["email"].value, question: f.elements["question"].value, website: f.elements["website"].value, consent: document.getElementById("qConsent").checked }) })
       .then(function (r) {
-        if (!r.ok) throw new Error(r.status);
+        return r.json().then(function (j) { if (!j.ok) throw new Error(j.message || "failed"); });
+      })
+      .then(function () {
         f.reset(); say("شكرًا لكم. وصلنا سؤالكم وسنرد عليكم بالبريد الإلكتروني، غالبًا في اليوم نفسه.", true);
       })
       .catch(function () { say("تعذّر إرسال سؤالكم. يرجى المحاولة مرة أخرى، أو الكتابة إلى info@britishheritagehosts.com.", false); })
