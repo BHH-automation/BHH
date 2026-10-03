@@ -7,9 +7,12 @@
 // the refund under the cancellation policy (Terms clause 3), and sends that
 // refund only after the Director approves it.
 //
-// Only the six services British Heritage Hosts sells can ever be priced here.
-// Transport, Narrowboat Holiday and the Canal Day Cruise are refused, because
-// clause 12 says BHH never sells or takes payment for them.
+// Only the services British Heritage Hosts sells can ever be priced here.
+// Transport and the Narrowboat Holiday are refused, because clause 12 says BHH
+// never sells or takes payment for them. The Canal Day Cruise is sold, but only
+// on its own (decided 3 October 2026): it is a boat carrying passengers, so it
+// is never in the same proposal as another service, and a cruise payment and
+// any other BHH payment for the same guest are always at least 25 hours apart.
 //
 // Requests, all POST JSON with an "action", except Stripe's own webhook calls,
 // which carry a Stripe-Signature header and are recognised by it.
@@ -66,7 +69,11 @@ const SELLABLE = [
   "Riverside Grill",
   "Cultural Immersion Programme",
   "Personal Interpreter Service",
+  "Canal Day Cruise",
 ];
+// Sold only on its own: alone in its proposal, and a full day apart from any
+// other BHH payment by the same guest.
+const SOLO = ["Canal Day Cruise"];
 
 const admin = createClient(SUPABASE_URL, SERVICE_ROLE_KEY, {
   auth: { persistSession: false, autoRefreshToken: false },
@@ -292,8 +299,10 @@ async function actionCheckout(body: Row) {
   // The one day gap: no BHH payment within 25 hours after an introduction to
   // a transport or boat partner was sent to the same guest.
   const introSent = await recentIntroduction(String(p.guest_email), String(p.guest_phone ?? ""));
-  if (introSent) {
-    return fail("gap", `Payment for this proposal opens on ${londonTime(plusGap(introSent))}, London time. Please come back to this page then. If you have a question, reply to our email.`, 409);
+  const soloPaid = await recentSoloClash(p);
+  const waitFrom = [introSent ?? "", soloPaid ?? ""].filter(Boolean).sort().pop();
+  if (waitFrom) {
+    return fail("gap", `Payment for this proposal opens on ${londonTime(plusGap(waitFrom))}, London time. Please come back to this page then. If you have a question, reply to our email.`, 409);
   }
 
   const items = p.items as Item[];
@@ -419,7 +428,7 @@ async function actionAsk(body: Row) {
 // ------------------------------------------------------------ introductions
 
 // The only services BHH introduces and never sells (Terms clause 12).
-const INTRO_SERVICES = ["Airport Transfer", "Chauffeured Hire", "Canal Day Cruise", "Narrowboat Holiday"];
+const INTRO_SERVICES = ["Airport Transfer", "Chauffeured Hire", "Narrowboat Holiday"];
 const INTRO_SERVICES_AR: Record<string, string> = {
   "Airport Transfer": "النقل من المطار", "Chauffeured Hire": "سيارة مع سائق",
   "Canal Day Cruise": "رحلة نهارية في القناة", "Narrowboat Holiday": "عطلة القارب الضيق",
@@ -446,6 +455,19 @@ async function recentPayment(email: string, phone: string): Promise<string | nul
   const since = new Date(Date.now() - GAP_HOURS * 3600000).toISOString();
   const { data } = await admin.from("proposals").select("guest_email, guest_phone, paid_at").gt("paid_at", since);
   const hits = (data ?? []).filter((p) => sameGuest(email, phone, p.guest_email, p.guest_phone)).map((p) => String(p.paid_at));
+  return hits.sort().pop() ?? null;
+}
+function hasSolo(items: unknown): boolean {
+  return Array.isArray(items) && (items as Item[]).some((it) => SOLO.includes(it.service));
+}
+// The latest other BHH payment by this guest within the last 25 hours where
+// either that booking or this one holds the Canal Day Cruise, or null.
+async function recentSoloClash(p: Row): Promise<string | null> {
+  const since = new Date(Date.now() - GAP_HOURS * 3600000).toISOString();
+  const { data } = await admin.from("proposals").select("id, guest_email, guest_phone, paid_at, items").gt("paid_at", since);
+  const mine = hasSolo(p.items);
+  const hits = (data ?? []).filter((o) => o.id !== p.id && sameGuest(String(p.guest_email).toLowerCase(), String(p.guest_phone ?? ""), o.guest_email, o.guest_phone) && (mine || hasSolo(o.items)))
+    .map((o) => String(o.paid_at));
   return hits.sort().pop() ?? null;
 }
 // The latest moment an introduction was sent to this guest within the last 25 hours, or null.
@@ -616,7 +638,7 @@ function cleanItems(raw: unknown): Item[] | string {
   for (const r of raw as Row[]) {
     const service = String(r.service ?? "").trim();
     if (!SELLABLE.includes(service)) {
-      return `${service || "That service"} cannot be sold by BHH. Transport, Narrowboat Holiday and the Canal Day Cruise are booked and paid directly with the provider (Terms clause 12).`;
+      return `${service || "That service"} cannot be sold by BHH. Transport and the Narrowboat Holiday are booked and paid directly with the provider (Terms clause 12).`;
     }
     if (!validDate(r.date)) return `Please give a date for ${service}.`;
     const price = Math.round(Number(r.price_pence));
@@ -627,6 +649,9 @@ function cleanItems(raw: unknown): Item[] | string {
       children: Math.max(0, Math.round(Number(r.children) || 0)),
       note: String(r.note ?? "").slice(0, 300),
     });
+  }
+  if (out.length > 1 && out.some((it) => SOLO.includes(it.service))) {
+    return "The Canal Day Cruise is booked on its own. Make it a separate proposal with nothing else in it.";
   }
   out.sort((a, b) => a.date.localeCompare(b.date));
   return out;

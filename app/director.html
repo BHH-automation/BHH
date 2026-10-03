@@ -46,7 +46,7 @@
 
     <section class="card">
       <h2>New proposal</h2>
-      <p class="lead">Saving sends the guest an email with the total and a secure link to pay by card. Only the six services BHH sells can be priced. Transport, Narrowboat Holiday and the Canal Day Cruise are booked directly with the provider.</p>
+      <p class="lead">Saving sends the guest an email with the total and a secure link to pay by card. Only the services BHH sells can be priced. The Canal Day Cruise must be a proposal on its own, and its payment is kept a full day apart from any other payment by the same guest. Transport and the Narrowboat Holiday are booked directly with the provider.</p>
       <div class="grid2">
         <div><label for="gName">Guest name</label><input id="gName" placeholder="Mr A. Example"></div>
         <div><label for="gEmail">Guest email</label><input id="gEmail" type="email"></div>
@@ -106,7 +106,7 @@
   "use strict";
   var FN = "https://pwqdzitsezblncmewxsf.supabase.co/functions/v1/Payments";
   var KEY = "bhh director session";
-  var SERVICES = ["British Dinner", "English Tea", "Heritage Guide", "Riverside Grill", "Cultural Immersion Programme", "Personal Interpreter Service"];
+  var SERVICES = ["British Dinner", "English Tea", "Heritage Guide", "Riverside Grill", "Cultural Immersion Programme", "Personal Interpreter Service", "Canal Day Cruise"];
   var el = function (id) { return document.getElementById(id); };
   var show = function (id) { el(id).classList.remove("hidden"); };
   var hide = function (id) { el(id).classList.add("hidden"); };

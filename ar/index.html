@@ -242,12 +242,12 @@ function openTransportMode(mode, service){
   if(!sel) return;
   function opt(v){ return sel.querySelector('option[value="' + v + '"]'); }
   function show(o, on){ if(o){ o.hidden = !on; o.disabled = !on; } }   // hidden+disabled = out of the dropdown AND unselectable
-  var ph = opt(''), at = opt('Airport Transfer'), ch = opt('Chauffeured Hire'), nb = opt('Narrowboat Holiday'), cd = opt('Canal Day Cruise');
+  var ph = opt(''), at = opt('Airport Transfer'), ch = opt('Chauffeured Hire'), nb = opt('Narrowboat Holiday');
   if(mode === 'narrowboat'){                        // locked to Narrowboat (only selectable option) — still submitted
-    show(ph,false); show(at,false); show(ch,false); show(nb,true); show(cd,true);
-    sel.value = (service === 'Canal Day Cruise') ? 'Canal Day Cruise' : 'Narrowboat Holiday';
+    show(ph,false); show(at,false); show(ch,false); show(nb,true);
+    sel.value = 'Narrowboat Holiday';
   } else {                                          // transport: Airport Transfer + Chauffeured Hire only
-    show(ph,true); show(at,true); show(ch,true); show(nb,false); show(cd,false);
+    show(ph,true); show(at,true); show(ch,true); show(nb,false);
     sel.value = (service === 'Airport Transfer' || service === 'Chauffeured Hire') ? service : '';
   }
 }
@@ -743,7 +743,7 @@ function bhhJumpToEnquire(){
     {n:"02",title:"العشاء البريطاني",desc:"وجبة الأحد التقليدية كاملة في غرفة طعام إنجليزية حقيقية، مع العائلة المضيفة على المائدة، ولعائلتكم وحدها.",img:"/images/private-family-dinner-host-and-guest-fam.webp",href:"/experiences/britishdinner.html",cta:"اكتشف المزيد"},
     {n:"03",title:"شواء على ضفاف النهر",desc:"يوم خاص في كوخ إنجليزي على ضفاف النهر من 10 صباحًا حتى 8 مساءً. أسياخ لحم على الفحم الحقيقي بجانب نهر صافٍ جارٍ، لعائلتكم وحدها، واللحم الحلال متوفر. ومتاح أيضًا لحفلة خاصة أكبر مع ضيوفكم.",img:"/images/riverside grill family.webp",href:"/experiences/riversidegrill.html",cta:"اكتشف المزيد"},
     {n:"04",title:"مرشد التراث",desc:"مرشد تراث بريطاني خاص يصحب عائلتكم عبر أعرق المناظر والمعالم التاريخية في المملكة المتحدة، ليوم واحد أو لمسار عدة أيام. تتوفر مرشدات عند الطلب.",img:"/images/heritage-tour-family-tour-at-english-cas.webp",href:"/experiences/heritageguide.html",cta:"اكتشف المزيد"},
-    {n:"05",title:"رحلة نهارية في القناة",desc:"رحلة نهارية خاصة في الممرات المائية التاريخية في إنجلترا، يوم هادئ على الماء. تُرتَّب عبر مزوّد موثوق، ويكون الحجز والدفع معه مباشرة وليس عن طريقنا.",img:"/images/narrowboat cabin tea.webp",href:"/experiences/canaldaycruise.html",cta:"اكتشف المزيد"},
+    {n:"05",title:"رحلة نهارية في القناة",desc:"رحلة نهارية خاصة في الممرات المائية التاريخية في إنجلترا، يوم هادئ على الماء، نرتبه ونسعّره بأنفسنا، ويُحجز وحده.",img:"/images/narrowboat cabin tea.webp",href:"/experiences/canaldaycruise.html",cta:"اكتشف المزيد"},
     {n:"06",title:"عطلة القارب الضيق",desc:"عطلة لعدة أيام على قارب ضيق في الريف الإنجليزي، إجازة كاملة على قوارب القنوات. تُرتَّب عبر مزوّد موثوق، ويكون الحجز والدفع معه مباشرة وليس عن طريقنا.",img:"/images/private-canal-cruise-narrowboat-on-engli.jpg",href:"/experiences/narrowboatholiday.html",cta:"اطلب التعريف بالمزوّد"},
     {n:"07",title:"النقل",desc:"سيارة مع سائق محترف طوال إقامتكم، للاستقبال من المطار وللاستئجار ليوم أو لعدة أيام. تُرتَّب عبر مزوّد موثوق، وتحجزون وتدفعون له مباشرة وليس عن طريقنا.",img:"/images/airport-private-transportation-airport-p.jpg",href:"/experiences/transportation.html",cta:"اطلب التعريف بالمزوّد"},
     {n:"08",title:"برنامج الانغماس الثقافي",desc:"تعلّموا الإنجليزية أو حسّنوها خلال إقامتكم. دورات مرنة مع معاهد معتمدة في لندن، مقسّمة حسب العمر، من بضع حصص إلى برنامج كامل، تتخللها الجولات والمتاحف والأنشطة الثقافية.",img:"/images/cip-2.webp",href:"/experiences/culturalimmersionprogramme.html",cta:"اكتشف المزيد"},
@@ -891,7 +891,7 @@ function bhhJumpToEnquire(){
         <div class="service-card-content">
           <div class="service-card-num">05 / 09</div>
           <h3>رحلة نهارية في القناة</h3>
-          <p class="service-card-desc">رحلة نهارية خاصة في الممرات المائية التاريخية في إنجلترا، يوم هادئ على الماء. تُرتَّب عبر مزوّد موثوق، ويكون الحجز والدفع معه مباشرة وليس عن طريقنا.</p>
+          <p class="service-card-desc">رحلة نهارية خاصة في الممرات المائية التاريخية في إنجلترا، يوم هادئ على الماء، نرتبه ونسعّره بأنفسنا، ويُحجز وحده.</p>
           <span class="service-card-arrow">اكتشف المزيد ←</span>
         </div>
       </a>
@@ -1073,7 +1073,7 @@ function bhhTrailEnquire(e){
     tries++;
     if(typeof switchTab !== 'function'){ if(tries < 40){ return setTimeout(go, 100); } return; }
     if(mode === 'transport' || mode === 'narrowboat'){
-      if(typeof goToTransportTab === 'function'){ goToTransportTab(mode, svc); }
+      if(typeof goToTransportTab === 'function'){ goToTransportTab(mode); }
     } else if(svc){
       switchTab('guest');
       /* 25 September 2026: several experiences can arrive together, separated by commas */
@@ -1544,7 +1544,8 @@ function bhhTrailEnquire(e){
                Experience Tier = "Service1: Tier; Service2: Tier" pairs. -->
           <div class="form-group">
             <label>التجارب التي تهمكم <span style="color:#C9A84C">*</span></label>
-            <p style="font-size:0.82rem;color:rgba(245,240,232,0.75);margin:-0.2rem 0 0.8rem;font-style:italic">اختاروا تجربة أو أكثر مما سبق، ونرتبها ونسعّرها معًا كزيارة واحدة. النقل والرحلة النهارية في القناة وعطلة القارب الضيق غير مدرجة هنا لأن حجزها ودفعها يكونان مع المزوّد مباشرة، فاستخدموا تبويب النقل والقارب الضيق لهما.</p>
+            <p style="font-size:0.82rem;color:rgba(245,240,232,0.75);margin:-0.2rem 0 0.8rem;font-style:italic">اختاروا تجربة أو أكثر مما سبق، ونرتبها ونسعّرها معًا كزيارة واحدة. النقل وعطلة القارب الضيق غير مدرجين هنا لأن حجزهما ودفعهما يكونان مع المزوّد مباشرة، فاستخدموا تبويب النقل والقارب الضيق لهما. أما الرحلة النهارية في القناة فتُحجز وحدها، لذلك يلغي اختيارها التجارب الأخرى.</p>
+            <p id="cruise-solo-note" role="status" style="display:none;font-size:0.85rem;color:#C9A84C;margin:-0.3rem 0 0.8rem"></p>
             <div id="service-card-grid">
               <div class="service-card-v8" data-service="Dinner" onclick="toggleService(this)">
                 <span class="svc-label">العشاء البريطاني</span>
@@ -1556,6 +1557,10 @@ function bhhTrailEnquire(e){
               </div>
               <div class="service-card-v8" data-service="Heritage Guide" onclick="toggleService(this)">
                 <span class="svc-label">مرشد التراث</span>
+                <span class="service-card-check"></span>
+              </div>
+              <div class="service-card-v8" data-service="Canal Day Cruise" onclick="toggleService(this)">
+                <span class="svc-label">رحلة نهارية في القناة</span>
                 <span class="service-card-check"></span>
               </div>
               <div class="service-card-v8" data-service="Cultural Immersion Program" onclick="toggleService(this)">
@@ -2545,7 +2550,7 @@ function bhhTrailEnquire(e){
       <!-- ═══════ TRANSPORT INTRODUCTION (5th tab) — moved from the Guest panel; form unchanged ═══════ -->
       <div id="tab-transport" class="enquire-panel" style="max-width:560px;margin:0 auto;opacity:1;display:none;background:#FFFFFF;border-radius:14px;padding:1.8rem 1.5rem 2.2rem;border-top:5px solid #A991C0;box-shadow:0 1px 4px rgba(13,27,42,0.08)"><img src="/images/private-canal-cruise-narrowboat-on-engli.jpg" alt="Private narrowboat cruise on an English canal" style="display:block;width:100%;height:200px;object-fit:cover;border-radius:10px;margin-bottom:1.6rem">
         <h3 style="font-family:'Cormorant Garamond',serif;font-weight:300;font-size:1.6rem;color:var(--cream);margin-bottom:0.6rem;text-align:center">النقل والقارب الضيق، بالترتيب مع مزوّدينا</h3>
-        <p class="lead" style="font-size:0.85rem;line-height:1.7;color:rgba(245,240,232,0.75);margin:0 auto 1.8rem;text-align:center">يقدّم خدمات النقل من المطار والسيارة مع سائق والرحلات النهارية في القناة وعطلات القارب الضيق لعدة أيام مزوّدون مستقلون موثوقون. نعرّفكم بهم، وتحجزون وتدفعون للمزوّد مباشرة، فلا سعر ولا مستوى هنا. اختاروا خيارًا أدناه للبدء.</p>
+        <p class="lead" style="font-size:0.85rem;line-height:1.7;color:rgba(245,240,232,0.75);margin:0 auto 1.8rem;text-align:center">يقدّم خدمات النقل من المطار والسيارة مع سائق وعطلات القارب الضيق لعدة أيام مزوّدون مستقلون موثوقون. نعرّفكم بهم، وتحجزون وتدفعون للمزوّد مباشرة، فلا سعر ولا مستوى هنا. اختاروا خيارًا أدناه للبدء.</p>
         <div id="transport-choice" class="transport-choice">
           <button type="button" class="tchoice" onclick="openTransportMode('transport','Airport Transfer')">
             <span class="tchoice-media service-card-carousel" style="height:120px">
@@ -2569,13 +2574,6 @@ function bhhTrailEnquire(e){
               <span class="tchoice-sub">سيارة وسائق ليوم أو أكثر</span>
             </span>
           </button>
-          <button type="button" class="tchoice" onclick="openTransportMode('narrowboat','Canal Day Cruise')">
-            <span class="tchoice-media"><img src="/images/narrowboat cabin tea.webp" alt="Tea in the cabin of a canal boat" loading="lazy"></span>
-            <span class="tchoice-body">
-              <span class="tchoice-title">رتّبوا لي رحلة نهارية في القناة</span>
-              <span class="tchoice-sub">يوم خاص على القنوات</span>
-            </span>
-          </button>
           <button type="button" class="tchoice" onclick="openTransportMode('narrowboat')">
             <span class="tchoice-media"><img src="/images/private-canal-cruise-narrowboat-on-engli.jpg" alt="Narrowboat on an English canal" loading="lazy"></span>
             <span class="tchoice-body">
@@ -2597,7 +2595,6 @@ function bhhTrailEnquire(e){
                           <option value="">اختر…</option>
                           <option value="Airport Transfer">النقل من المطار (من المطار إلى الفندق والعودة)</option>
                           <option value="Chauffeured Hire">سيارة مع سائق (سيارة وسائق ليوم أو أكثر)</option>
-                          <option value="Canal Day Cruise">رحلة نهارية في القناة (يوم خاص على القنوات)</option>
                           <option value="Narrowboat Holiday">عطلة القارب الضيق (إجازة لعدة أيام على قوارب القنوات)</option>
                         </select>
                       </div>
@@ -2921,7 +2918,7 @@ var TIER_COPY = {
 // Visible display-name overrides for tier block headings only.
 // Internal identifiers (data-service values, TIER_COPY keys) are intentionally left unchanged.
 var SERVICE_DISPLAY_NAMES = { 'English Tea':'الشاي الإنجليزي', 'Dinner':'العشاء البريطاني', 'British Dinner':'العشاء البريطاني', 'Riverside Grill':'شواء على ضفاف النهر', 'Heritage Guide':'مرشد التراث', 'Canal Day Cruise':'رحلة نهارية في القناة', 'Cultural Immersion Program':'برنامج الانغماس الثقافي', 'Cultural Immersion Programme':'برنامج الانغماس الثقافي', 'Personal Interpreter Service':'خدمة المترجم الشخصي', 'Heritage Trail':'مسار التراث' };
-// TIER 2 note: Airport Transfer, Chauffeured Hire, Canal Day Cruise and Narrowboat Holiday are introduce-only services.
+// TIER 2 note: Airport Transfer, Chauffeured Hire, and Narrowboat Holiday are introduce-only services.
 // They are deliberately NOT keyed here and NOT present in #service-card-grid,
 // so they can never be selected, priced, or reach updatePricingSummary().
 
@@ -4274,7 +4271,7 @@ function closeThankyouModal(modalId) {
     <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">These terms (&ldquo;Terms&rdquo;) govern your use of the services provided by British Heritage Hosts Ltd (&ldquo;BHH&rdquo;), Company No. 17103555, Monomark House, 27 Old Gloucester Street, London WC1N 3AX. By submitting an enquiry, making a booking, or applying to become a host or partner, you agree to be bound by these Terms.</p>
 
     <h3>1. Our Services</h3>
-    <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">BHH provides premium, enquiry based hospitality experiences connecting international families with approved hosts across the United Kingdom. <strong>Services BHH provides, arranges and invoices</strong> are Heritage Guide, English Tea, British Dinner, Cultural Immersion Programme, Personal Interpreter Service and Riverside Grill. All such services are bespoke, subject to availability, with prices provided individually upon enquiry. Certain services are not provided, sold or invoiced by BHH: currently Airport Transfer, Chauffeured Hire, Canal Day Cruise and Narrowboat Holiday. For these, BHH acts solely as an introducer to an independent partner, with whom booking and payment are made directly (see clause 12).</p>
+    <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">BHH provides premium, enquiry based hospitality experiences connecting international families with approved hosts across the United Kingdom. <strong>Services BHH provides, arranges and invoices</strong> are Heritage Guide, English Tea, British Dinner, Canal Day Cruise (booked on its own, never in the same booking as another service), Cultural Immersion Programme, Personal Interpreter Service and Riverside Grill. All such services are bespoke, subject to availability, with prices provided individually upon enquiry. Certain services are not provided, sold or invoiced by BHH: currently Airport Transfer, Chauffeured Hire and Narrowboat Holiday. For these, BHH acts solely as an introducer to an independent partner, with whom booking and payment are made directly (see clause 12).</p>
 
     <h3>2. Bookings and Payment</h3>
     <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">All bookings are confirmed only upon receipt of full payment, processed securely by card through Stripe. A booking reference will be issued upon confirmation. BHH reserves the right to decline any booking at its discretion.</p>
@@ -4307,7 +4304,7 @@ function closeThankyouModal(modalId) {
     <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">We may update these Terms from time to time. Continued use of our services constitutes acceptance of the revised Terms.</p>
 
     <h3>12. Services We Provide vs. Partners We Introduce</h3>
-    <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">BHH offers two distinct categories of service. <strong>(a) Services we provide.</strong> Heritage Guide, English Tea, British Dinner, Cultural Immersion Programme, Personal Interpreter Service and Riverside Grill are arranged, sold and invoiced by BHH, and these Terms govern them in full. <strong>(b) Partners we introduce.</strong> For certain services, currently Airport Transfer, Chauffeured Hire, Canal Day Cruise and Narrowboat Holiday, BHH acts solely as an introducer. On the website, Airport Transfer and Chauffeured Hire are shown together as a single Transportation card. We connect you with an independent third party partner, and any contract, booking and payment for those services are made directly between you and that partner. BHH does not sell, supply, invoice or take payment for introduced services, is not a party to any resulting agreement, and accepts no liability for their provision. The partner's own terms, pricing, insurance and cancellation policy apply.</p>
+    <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">BHH offers two distinct categories of service. <strong>(a) Services we provide.</strong> Heritage Guide, English Tea, British Dinner, Canal Day Cruise (booked on its own, never in the same booking as another service), Cultural Immersion Programme, Personal Interpreter Service and Riverside Grill are arranged, sold and invoiced by BHH, and these Terms govern them in full. <strong>(b) Partners we introduce.</strong> For certain services, currently Airport Transfer, Chauffeured Hire and Narrowboat Holiday, BHH acts solely as an introducer. On the website, Airport Transfer and Chauffeured Hire are shown together as a single Transportation card. We connect you with an independent third party partner, and any contract, booking and payment for those services are made directly between you and that partner. BHH does not sell, supply, invoice or take payment for introduced services, is not a party to any resulting agreement, and accepts no liability for their provision. The partner's own terms, pricing, insurance and cancellation policy apply.</p>
 
     <h3>13. Contact Us</h3>
     <p style="color:var(--muted);line-height:1.9;font-size:0.95rem">British Heritage Hosts Ltd, Monomark House, 27 Old Gloucester Street, London WC1N 3AX. Email: <a href="mailto:info@britishheritagehosts.com" style="color:var(--gold-ink)"><bdi dir="ltr">info@britishheritagehosts.com</bdi></a></p>
@@ -4777,7 +4774,7 @@ function closeLegalModal(type) {
     { name:'English Tea',                   type:'guest',     imgs:['/images/english-tea-traditional-afternoon-tea.webp','/images/english-tea-english-village.webp','/images/english tea serving.webp'] },
     { name:'Dinner',                        type:'guest',     imgs:['/images/private-family-dinner-host-and-guest-fam.webp','/images/private-family-dinner-traditional-englis.webp','/images/dinner roast carving.webp'] },
     { name:'Transportation',                type:'transport', imgs:['/images/airport-private-transportation-airport-p.jpg','/images/chauffeured hire hotel door.webp','/images/chauffeured hire night city.webp'] },
-    { name:'Canal Day Cruise',              type:'transport',     imgs:['/images/narrowboat cabin tea.webp','/images/private-canal-cruise-cosy-interior.webp','/images/canal cruise deck.webp'] },
+    { name:'Canal Day Cruise',              type:'guest',     imgs:['/images/narrowboat cabin tea.webp','/images/private-canal-cruise-cosy-interior.webp','/images/canal cruise deck.webp'] },
     { name:'Narrowboat Holiday',            type:'transport', imgs:['/images/private-canal-cruise-narrowboat-on-engli.jpg','/images/private-canal-cruise-cabin.webp'] },
     { name:'Cultural Immersion Program',    type:'guest',     imgs:['/images/cip-2.webp','/images/cip-3.webp'] },
     { name:'Personal Interpreter Service',  type:'guest',     imgs:['/images/interpreter-saudi-men.webp','/images/interpreter-saudi-woman.webp','/images/interpreter-russian-man.webp'] },
@@ -4841,7 +4838,7 @@ function closeLegalModal(type) {
   function routeToForm(svc){
     if(!svc) return;
     if(svc.type === 'transport'){
-      var mode = (svc.name === 'Narrowboat Holiday' || svc.name === 'Canal Day Cruise') ? 'narrowboat' : 'transport';
+      var mode = (svc.name === 'Narrowboat Holiday') ? 'narrowboat' : 'transport';
       if(typeof goToTransportTab === 'function'){ goToTransportTab(mode, svc.name); }
     } else {
       if(typeof switchTab === 'function'){ switchTab('guest'); }
@@ -5765,5 +5762,6 @@ if ("serviceWorker" in navigator) {
 </script>
 <script src="/bookingrules.js" defer></script>
 <script src="/introductions.js" defer></script>
+<script src="/cruiserule.js" defer></script>
 </body>
 </html>
