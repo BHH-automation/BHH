@@ -1,6 +1,6 @@
 // British Heritage Hosts Ltd, payments Edge Function
 // Owner: Faleh al Bishi, Director, British Heritage Hosts Ltd
-// Written 2 October 2026. Deno runtime.
+// Written 2 October 2026, introductions and the one day gap added 3 October 2026. Deno runtime.
 //
 // Turns a priced proposal into one exact card payment through Stripe, confirms
 // the booking the moment Stripe reports the payment (Terms clause 2), works out
@@ -21,6 +21,7 @@
 //   cancel    { ref, key }         the guest asks to cancel; refund worked out
 //   letter    { ref, key }         details for the booking confirmation letter
 //   ask       { name, email, question, lang, consent }  a question from the FAQ page
+//   introduce { service, name, email, phone, ... }   a request for a transport or boat introduction
 //
 // Director, after signing in with a code sent to the company inbox:
 //   d_start / d_verify { code } / d_signout
@@ -32,6 +33,14 @@
 //   d_cancel  { id }               BHH cancels: full refund (clause 3)
 //   d_settings { min_lead_days, block, unblock, note }
 //   d_question { id, status }      marks a FAQ question answered or hides it
+//   d_intro    { id, status }      marks an introduction sent or declined (refused while on hold)
+//
+// The one day gap (decided 3 October 2026, from the 27 August classification):
+// an introduction to a transport or boat partner is never sent within 25 hours
+// after the same guest paid BHH, and a BHH payment is never taken within 25
+// hours after an introduction was sent. The guest is matched by email address
+// or phone number. This keeps a BHH booking and a partner booking from ever
+// forming a linked travel arrangement under the Package Travel Regulations 2018.
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.4";
 
@@ -166,7 +175,7 @@ async function sendEmail(to: string, subject: string, bodyHtml: string, replyTo?
 }
 
 function button(href: string, label: string): string {
-  return `<p style="margin:22px 0"><a href="${esc(href)}" style="background:#C9A84C;color:#0D1B2A;padding:14px 22px;text-decoration:none;letter-spacing:0.1em;font-family:Arial,sans-serif;font-size:14px">${esc(label)}</a></p>`;
+  return `<p style="margin:22px 0"><a href="${esc(href)}" style="display:inline-block;background:#C9A84C;color:#0D1B2A;padding:14px 20px;text-decoration:none;letter-spacing:0.06em;font-family:Arial,sans-serif;font-size:13px;line-height:1.3;white-space:nowrap">${esc(label)}</a></p>`;
 }
 function itemsTable(items: Item[]): string {
   return `<table style="width:100%;border-collapse:collapse;font-size:15px">${items.map((it) =>
@@ -279,6 +288,13 @@ async function actionCheckout(body: Row) {
   const p = await proposalByRef(body.ref, body.key);
   if (!p) return fail("not_found", "We could not find this proposal.", 404);
   if (p.status !== "sent") return fail("not_payable", "This proposal is no longer waiting for payment.", 409);
+
+  // The one day gap: no BHH payment within 25 hours after an introduction to
+  // a transport or boat partner was sent to the same guest.
+  const introSent = await recentIntroduction(String(p.guest_email), String(p.guest_phone ?? ""));
+  if (introSent) {
+    return fail("gap", `Payment for this proposal opens on ${londonTime(plusGap(introSent))}, London time. Please come back to this page then. If you have a question, reply to our email.`, 409);
+  }
 
   const items = p.items as Item[];
   // A proposal whose first experience is already in the past cannot be paid.
@@ -397,6 +413,117 @@ async function actionAsk(body: Row) {
     }
   } catch (e) { console.error("question email failed", String(e)); }
   return json({ ok: true });
+}
+
+
+// ------------------------------------------------------------ introductions
+
+// The only services BHH introduces and never sells (Terms clause 12).
+const INTRO_SERVICES = ["Airport Transfer", "Chauffeured Hire", "Canal Day Cruise", "Narrowboat Holiday"];
+const INTRO_SERVICES_AR: Record<string, string> = {
+  "Airport Transfer": "النقل من المطار", "Chauffeured Hire": "سيارة مع سائق",
+  "Canal Day Cruise": "رحلة نهارية في القناة", "Narrowboat Holiday": "عطلة القارب الضيق",
+};
+const GAP_HOURS = 25; // a full day, plus an hour so a clock change can never shorten it
+
+function phoneKey(s: unknown): string {
+  const d = String(s ?? "").replace(/\D/g, "");
+  return d.length >= 7 ? d.slice(-9) : "";
+}
+function plusGap(iso: string): string {
+  return new Date(new Date(iso).getTime() + GAP_HOURS * 3600000).toISOString();
+}
+function londonTime(iso: string, lang: "en" | "ar" = "en"): string {
+  const opts: Intl.DateTimeFormatOptions = { timeZone: "Europe/London", weekday: "long", day: "numeric", month: "long", hour: "2-digit", minute: "2-digit", hour12: false };
+  return new Date(iso).toLocaleString(lang === "ar" ? "ar-u-nu-latn" : "en-GB", opts);
+}
+function sameGuest(email: string, phone: string, otherEmail: unknown, otherPhone: unknown): boolean {
+  const k = phoneKey(phone);
+  return String(otherEmail ?? "").toLowerCase() === email || (!!k && phoneKey(otherPhone) === k);
+}
+// The latest moment this guest paid BHH within the last 25 hours, or null.
+async function recentPayment(email: string, phone: string): Promise<string | null> {
+  const since = new Date(Date.now() - GAP_HOURS * 3600000).toISOString();
+  const { data } = await admin.from("proposals").select("guest_email, guest_phone, paid_at").gt("paid_at", since);
+  const hits = (data ?? []).filter((p) => sameGuest(email, phone, p.guest_email, p.guest_phone)).map((p) => String(p.paid_at));
+  return hits.sort().pop() ?? null;
+}
+// The latest moment an introduction was sent to this guest within the last 25 hours, or null.
+async function recentIntroduction(email: string, phone: string): Promise<string | null> {
+  const since = new Date(Date.now() - GAP_HOURS * 3600000).toISOString();
+  const { data } = await admin.from("introductions").select("email, phone, sent_at").gt("sent_at", since);
+  const hits = (data ?? []).filter((i) => sameGuest(email, phone, i.email, i.phone)).map((i) => String(i.sent_at));
+  return hits.sort().pop() ?? null;
+}
+// When an introduction may be sent: never before its own release time, and
+// never within 25 hours after the guest's latest BHH payment.
+async function introReleaseAt(i: Row): Promise<string> {
+  const paid = await recentPayment(String(i.email), String(i.phone ?? ""));
+  const times = [String(i.release_at), paid ? plusGap(paid) : ""].filter(Boolean).sort();
+  return times.pop() as string;
+}
+
+async function actionIntroduce(body: Row) {
+  if (String(body.website ?? "").trim()) return json({ ok: true, held: false }); // robot trap
+  const lang = body.lang === "ar" ? "ar" : "en";
+  const ar = lang === "ar";
+  const service = String(body.service ?? "").trim();
+  const name = String(body.name ?? "").trim().slice(0, 120);
+  const email = String(body.email ?? "").trim().toLowerCase().slice(0, 200);
+  const phone = (String(body.country_code ?? "").trim() + " " + String(body.phone ?? "").trim()).trim().slice(0, 40);
+  if (!INTRO_SERVICES.includes(service)) return fail("bad_service", ar ? "يرجى اختيار الخدمة." : "Please choose a service.", 400);
+  if (!name) return fail("missing", ar ? "يرجى كتابة الاسم." : "Please give your name.", 400);
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return fail("bad_email", ar ? "يرجى كتابة بريد إلكتروني صحيح." : "Please give a valid email address.", 400);
+  if (body.consent !== true) return fail("consent", ar ? "يرجى الموافقة على استخدام بياناتكم." : "Please tick the consent box.", 400);
+
+  const hourAgo = new Date(Date.now() - 3600000).toISOString();
+  const { count } = await admin.from("introductions").select("id", { count: "exact", head: true }).eq("email", email).gt("created_at", hourAgo);
+  if ((count ?? 0) >= 3) return json({ ok: true, held: false });
+
+  const now = new Date().toISOString();
+  const paid = await recentPayment(email, phone);
+  const release = paid ? plusGap(paid) : now;
+  const held = release > now;
+  const row = {
+    service, name, email, phone: phone || null,
+    date_from: validDate(body.date_from) ? body.date_from : null,
+    date_to: validDate(body.date_to) ? body.date_to : null,
+    party_size: Math.max(0, Math.min(60, Math.round(Number(body.party_size) || 0))) || null,
+    notes: String(body.notes ?? "").trim().slice(0, 2000) || null,
+    lang, status: held ? "held" : "ready", release_at: release,
+    held_because: held ? `Guest paid a BHH booking on ${londonTime(paid as string)}` : null,
+  };
+  const { error } = await admin.from("introductions").insert(row);
+  if (error) return fail("db_error", ar ? "تعذّر حفظ طلبكم، يرجى المحاولة لاحقًا." : "Your request could not be saved. Please try again.", 500);
+
+  const when = londonTime(release, lang);
+  try {
+    await sendEmail(DIRECTOR_EMAIL, `${held ? "On hold: " : ""}Introduction request, ${service}, ${name}`, `
+      ${held ? `<p style="background:#FFF6E0;border:1px solid #EAD7A0;padding:10px 14px"><strong>Do not send this introduction before ${esc(londonTime(release))}, London time.</strong> ${esc(row.held_because)}. Sending it sooner could link the two bookings. The Director page will not let you mark it sent before then.</p>` : `<p>This introduction can be sent now.</p>`}
+      <table style="width:100%;font-size:15px;border-collapse:collapse">
+        <tr><td style="padding:4px 0;color:#666055">Service</td><td>${esc(service)}</td></tr>
+        <tr><td style="padding:4px 0;color:#666055">Name</td><td>${esc(name)}</td></tr>
+        <tr><td style="padding:4px 0;color:#666055">Email</td><td>${esc(email)}</td></tr>
+        <tr><td style="padding:4px 0;color:#666055">Phone</td><td>${esc(phone)}</td></tr>
+        <tr><td style="padding:4px 0;color:#666055">Dates</td><td>${esc(row.date_from ?? "")} to ${esc(row.date_to ?? "")}</td></tr>
+        <tr><td style="padding:4px 0;color:#666055">Party size</td><td>${esc(row.party_size ?? "")}</td></tr>
+        <tr><td style="padding:4px 0;color:#666055;vertical-align:top">Notes</td><td>${esc(row.notes ?? "").replace(/\n/g, "<br>")}</td></tr>
+        <tr><td style="padding:4px 0;color:#666055">Page</td><td>${ar ? "Arabic" : "English"}</td></tr>
+      </table>
+      ${button(`${SITE_URL}/app/director.html`, "OPEN THE DIRECTOR PAGE")}`, email);
+    if (ar) {
+      await sendEmail(email, "وصلنا طلبكم، بريتش هيريتج هوستس", `<div dir="rtl" style="text-align:right">
+        <p>مرحبًا ${esc(name)}،</p>
+        <p>شكرًا لكم. وصلنا طلب التعريف بمزوّد خدمة ${esc(INTRO_SERVICES_AR[service])}. ${held ? `سنرسل إليكم بيانات المزوّد بالبريد الإلكتروني يوم ${esc(when)} بتوقيت لندن.` : "سنرسل إليكم بيانات المزوّد بالبريد الإلكتروني، غالبًا في اليوم نفسه."}</p>
+        <p>يكون الحجز والدفع مع المزوّد مباشرة، وليس عن طريق بريتش هيريتج هوستس.</p></div>`);
+    } else {
+      await sendEmail(email, "We have received your request, British Heritage Hosts", `
+        <p>Dear ${esc(name)},</p>
+        <p>Thank you. Your request for an introduction (${esc(service)}) has reached us. ${held ? `We will email you the provider's details on ${esc(when)}, London time.` : "We will email you the provider's details, usually the same day."}</p>
+        <p>The booking and the payment are made directly with the provider, not with British Heritage Hosts.</p>`);
+    }
+  } catch (e) { console.error("introduction email failed", String(e)); }
+  return json({ ok: true, held, release_text: held ? when : "" });
 }
 
 // ------------------------------------------------------------ Stripe webhook
@@ -586,13 +713,38 @@ async function directorAction(action: string, body: Row) {
     const { data } = await admin.from("proposals").select("*").order("created_at", { ascending: false }).limit(200);
     const list = (data ?? []).map((p) => ({ ...p, link: guestLink(p), cancel_preview: p.status === "paid" ? refundFor(p.items as Item[], "guest") : null }));
     const { data: qs } = await admin.from("faq_questions").select("*").neq("status", "hidden").order("created_at", { ascending: false }).limit(100);
-    return json({ ok: true, proposals: list, questions: qs ?? [], settings: await settings(), sellable: SELLABLE, today: londonToday() });
+    const { data: intros } = await admin.from("introductions").select("*").neq("status", "declined").order("created_at", { ascending: false }).limit(100);
+    const now = new Date().toISOString();
+    const introList = [];
+    for (const i of intros ?? []) {
+      if (i.status === "sent") { introList.push({ ...i, state: "sent" }); continue; }
+      const at = await introReleaseAt(i);
+      introList.push({ ...i, state: at > now ? "held" : "ready", release_at: at, release_text: londonTime(at) });
+    }
+    return json({ ok: true, proposals: list, questions: qs ?? [], introductions: introList, settings: await settings(), sellable: SELLABLE, today: londonToday() });
   }
   if (action === "d_create") return await dCreate(body);
   if (action === "d_question") {
     const status = String(body.status ?? "");
     if (!["new", "answered", "hidden"].includes(status)) return fail("bad_status", "Unknown status.", 400);
     await admin.from("faq_questions").update({ status }).eq("id", String(body.id ?? ""));
+    return json({ ok: true });
+  }
+
+  if (action === "d_intro") {
+    const status = String(body.status ?? "");
+    if (!["sent", "declined", "ready"].includes(status)) return fail("bad_status", "Unknown status.", 400);
+    const { data: i } = await admin.from("introductions").select("*").eq("id", String(body.id ?? "")).maybeSingle();
+    if (!i) return fail("not_found", "Introduction not found.", 404);
+    if (status === "sent") {
+      const at = await introReleaseAt(i);
+      if (at > new Date().toISOString()) {
+        return fail("on_hold", `Not yet. This introduction is on hold until ${londonTime(at)}, London time, because the guest paid a BHH booking less than a day ago.`, 409);
+      }
+      await admin.from("introductions").update({ status: "sent", sent_at: new Date().toISOString() }).eq("id", i.id);
+    } else {
+      await admin.from("introductions").update({ status, sent_at: null }).eq("id", i.id);
+    }
     return json({ ok: true });
   }
 
@@ -655,6 +807,7 @@ Deno.serve(async (req) => {
     if (action === "cancel") return await actionCancel(body);
     if (action === "letter") return await actionLetter(body);
     if (action === "ask") return await actionAsk(body);
+    if (action === "introduce") return await actionIntroduce(body);
     if (action === "d_start") return await dStart();
     if (action === "d_verify") return await dVerify(body);
     if (action.startsWith("d_")) return await directorAction(action, body);

@@ -75,6 +75,12 @@
     </section>
 
     <section class="card">
+      <h2>Introduction requests</h2>
+      <p class="lead">Guests asking to be introduced to a transport or boat partner. Send the introduction from your email, then mark it sent here. A request is held for a full day after the same guest paid BHH, and cannot be marked sent before then.</p>
+      <div id="intros"><p class="lead">Loading.</p></div>
+    </section>
+
+    <section class="card">
       <h2>Booking rules</h2>
       <label for="lead">Families must enquire at least this many days ahead</label>
       <input id="lead" type="number" min="0" max="365">
@@ -196,6 +202,24 @@
           '<a class="inline-link" href="mailto:' + esc(q.email) + '?subject=' + encodeURIComponent("Your question to British Heritage Hosts") + '">Reply by email</a>';
         return '<div class="item"><div><div class="ref">' + (q.status === "new" ? "Not answered yet" : "Answered") + " · " + (q.lang === "ar" ? "Arabic page" : "English page") + " · " + esc(nice(q.created_at)) + '</div><div class="service">' + esc(q.name) + ' <span class="small">' + esc(q.email) + '</span></div><p>' + esc(q.question) + "</p>" + acts + "</div></div>";
       }).join("") : '<p class="lead">No questions yet.</p>';
+      var is = r.introductions || [];
+      el("intros").innerHTML = is.length ? is.map(function (i) {
+        var state = i.state === "sent" ? '<span class="pill pill-paid">Sent ' + esc(nice(i.sent_at)) + "</span>"
+          : i.state === "held" ? '<span class="pill pill-cancel_requested">On hold until ' + esc(i.release_text) + ", London time</span>"
+          : '<span class="pill">Ready to send</span>';
+        var acts = i.state === "sent"
+          ? '<button class="inline quiet" data-intro="ready" data-id="' + i.id + '">Mark not sent</button>'
+          : (i.state === "held"
+              ? '<button class="inline" type="button" disabled>Can be sent from ' + esc(i.release_text) + "</button>"
+              : '<button class="inline" data-intro="sent" data-id="' + i.id + '">Mark introduction sent</button>' +
+                '<a class="inline-link" href="mailto:' + esc(i.email) + "?subject=" + encodeURIComponent("Your introduction from British Heritage Hosts") + '">Email the guest</a>') +
+            '<button class="inline quiet" data-intro="declined" data-id="' + i.id + '">Remove from list</button>';
+        var dates = (i.date_from || i.date_to) ? "<br>Dates: " + esc(nice(i.date_from)) + " to " + esc(nice(i.date_to)) : "";
+        return '<div class="item"><div><div class="ref">' + esc(i.service) + " · " + (i.lang === "ar" ? "Arabic page" : "English page") + " · " + esc(nice(i.created_at)) + "</div>" +
+          '<div class="service">' + esc(i.name) + ' <span class="small">' + esc(i.email) + (i.phone ? ", " + esc(i.phone) : "") + "</span></div>" +
+          '<div class="small">' + (i.party_size ? "Party of " + esc(i.party_size) : "") + dates + (i.notes ? "<br>Notes: " + esc(i.notes) : "") + "</div>" +
+          '<p style="margin-top:8px">' + state + "</p>" + acts + "</div></div>";
+      }).join("") : '<p class="lead">No introduction requests yet.</p>';
       if (!r.proposals.length) { el("list").innerHTML = '<p class="lead">No proposals yet.</p>'; return; }
       el("list").innerHTML = r.proposals.map(function (p) {
         var acts = '<button class="inline quiet" data-copy="' + esc(p.link) + '">Copy guest link</button>';
@@ -213,6 +237,7 @@
   document.addEventListener("click", function (e) {
     var b = e.target.closest("button"); if (!b) return;
     if (b.dataset.copy) { navigator.clipboard.writeText(b.dataset.copy).then(function () { b.textContent = "Copied"; }); return; }
+    if (b.dataset.intro) { b.disabled = true; call("d_intro", { id: b.dataset.id, status: b.dataset.intro }).then(function (r) { if (!r.ok) alert(r.message); load(); }); return; }
     if (b.dataset.q) { b.disabled = true; call("d_question", { id: b.dataset.id, status: b.dataset.q }).then(load); return; }
     if (b.dataset.unblock) { call("d_settings", { unblock: b.dataset.unblock }).then(load); return; }
     if (b.dataset.act) {
