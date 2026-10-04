@@ -8,11 +8,12 @@
 // refund only after the Director approves it.
 //
 // Only the services British Heritage Hosts sells can ever be priced here.
-// Transport and the Narrowboat Holiday are refused, because clause 12 says BHH
-// never sells or takes payment for them. The Canal Day Cruise is sold, but only
-// on its own (decided 3 October 2026): it is a boat carrying passengers, so it
-// is never in the same proposal as another service, and a cruise payment and
-// any other BHH payment for the same guest are always at least 25 hours apart.
+// Chauffeured Hire and the Narrowboat Holiday are refused, because clause 12
+// says BHH never sells or takes payment for them. The Canal Day Cruise and the
+// Airport Transfer are sold, but only on their own (decided 3 October 2026):
+// each carries passengers, so it is never in the same proposal as another
+// service, and its payment and any other BHH payment for the same guest are
+// always at least 25 hours apart.
 //
 // Requests, all POST JSON with an "action", except Stripe's own webhook calls,
 // which carry a Stripe-Signature header and are recognised by it.
@@ -70,10 +71,11 @@ const SELLABLE = [
   "Cultural Immersion Programme",
   "Personal Interpreter Service",
   "Canal Day Cruise",
+  "Airport Transfer",
 ];
-// Sold only on its own: alone in its proposal, and a full day apart from any
-// other BHH payment by the same guest.
-const SOLO = ["Canal Day Cruise"];
+// Sold only on their own: alone in their proposal, and a full day apart from
+// any other BHH payment by the same guest.
+const SOLO = ["Canal Day Cruise", "Airport Transfer"];
 
 const admin = createClient(SUPABASE_URL, SERVICE_ROLE_KEY, {
   auth: { persistSession: false, autoRefreshToken: false },
@@ -428,7 +430,7 @@ async function actionAsk(body: Row) {
 // ------------------------------------------------------------ introductions
 
 // The only services BHH introduces and never sells (Terms clause 12).
-const INTRO_SERVICES = ["Airport Transfer", "Chauffeured Hire", "Narrowboat Holiday"];
+const INTRO_SERVICES = ["Chauffeured Hire", "Narrowboat Holiday"];
 const INTRO_SERVICES_AR: Record<string, string> = {
   "Airport Transfer": "النقل من المطار", "Chauffeured Hire": "سيارة مع سائق",
   "Canal Day Cruise": "رحلة نهارية في القناة", "Narrowboat Holiday": "عطلة القارب الضيق",
@@ -461,7 +463,7 @@ function hasSolo(items: unknown): boolean {
   return Array.isArray(items) && (items as Item[]).some((it) => SOLO.includes(it.service));
 }
 // The latest other BHH payment by this guest within the last 25 hours where
-// either that booking or this one holds the Canal Day Cruise, or null.
+// either that booking or this one holds a service sold only on its own, or null.
 async function recentSoloClash(p: Row): Promise<string | null> {
   const since = new Date(Date.now() - GAP_HOURS * 3600000).toISOString();
   const { data } = await admin.from("proposals").select("id, guest_email, guest_phone, paid_at, items").gt("paid_at", since);
@@ -638,7 +640,7 @@ function cleanItems(raw: unknown): Item[] | string {
   for (const r of raw as Row[]) {
     const service = String(r.service ?? "").trim();
     if (!SELLABLE.includes(service)) {
-      return `${service || "That service"} cannot be sold by BHH. Transport and the Narrowboat Holiday are booked and paid directly with the provider (Terms clause 12).`;
+      return `${service || "That service"} cannot be sold by BHH. Chauffeured Hire and the Narrowboat Holiday are booked and paid directly with the provider (Terms clause 12).`;
     }
     if (!validDate(r.date)) return `Please give a date for ${service}.`;
     const price = Math.round(Number(r.price_pence));
@@ -650,8 +652,9 @@ function cleanItems(raw: unknown): Item[] | string {
       note: String(r.note ?? "").slice(0, 300),
     });
   }
-  if (out.length > 1 && out.some((it) => SOLO.includes(it.service))) {
-    return "The Canal Day Cruise is booked on its own. Make it a separate proposal with nothing else in it.";
+  const solo = out.find((it) => SOLO.includes(it.service));
+  if (out.length > 1 && solo) {
+    return `The ${solo.service} is booked on its own. Make it a separate proposal with nothing else in it.`;
   }
   out.sort((a, b) => a.date.localeCompare(b.date));
   return out;
