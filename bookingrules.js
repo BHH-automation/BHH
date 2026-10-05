@@ -74,18 +74,30 @@
     var min = earliest(input);
     var days = leadFor(input);
     var msg = "";
-    if (input.value < min && transferOnly(input)) {
-      msg = softHint(input);
-    } else if (input.value < min) {
-      msg = AR
-        ? "يرجى اختيار تاريخ بعد " + days + " أيام على الأقل من اليوم، حتى يتسنى لنا ترتيب حجزكم."
-        : "Please choose a date at least " + days + " days from today, so we have time to arrange your booking.";
-    } else if (rules.unavailable.indexOf(input.value) !== -1) {
+    // iPhone and some other browsers do not grey out early dates, so an early
+    // choice is moved to the first date we can accept, and the guest is told.
+    if (input.value < min) {
+      input.value = min;
+      var moved = AR ? " نقلنا التاريخ إلى " + nice(min) + "." : " We have moved your date to " + nice(min) + ".";
+      var why = transferOnly(input) ? softHint(input)
+        : (AR ? "يجب الحجز قبل " + days + " أيام على الأقل من اليوم، حتى يتسنى لنا ترتيب حجزكم."
+              : "Bookings must be made at least " + days + " days from today, so we have time to arrange your booking.");
+      if (rules.unavailable.indexOf(input.value) === -1) {
+        input.setCustomValidity("");
+        input.setAttribute("data-bhh-moved", input.value);
+        input.setAttribute("data-bhh-moved-note", why + moved);
+        note(input, why + moved);
+        return;
+      }
+    }
+    if (rules.unavailable.indexOf(input.value) !== -1) {
       msg = AR
         ? "نعتذر، لا يمكننا ترتيب تجارب يوم " + nice(input.value) + ". يرجى اختيار تاريخ آخر."
         : "Sorry, we cannot arrange experiences on " + nice(input.value) + ". Please choose another date.";
     }
     input.setCustomValidity(msg);
+    // keep the "we moved your date" note while the moved date is unchanged
+    if (!msg && input.getAttribute("data-bhh-moved") === input.value) msg = input.getAttribute("data-bhh-moved-note") || "";
     note(input, msg);
   }
   function apply(root) {
