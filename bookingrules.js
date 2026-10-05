@@ -6,17 +6,16 @@
    every "Date From" and "Date To" box on the page, including the enquiry boxes
    that the experience pages build after the page has loaded. If the rules
    cannot be read, the form works exactly as before.
-   5 October 2026: an Airport Transfer or a Canal Day Cruise booked on its own works to 48 hours'
-   notice as a guide, not a hard rule (the Director's decision). Any date from
-   today is accepted; inside 48 hours the guest sees a gentle note that we will
-   confirm whether it can be arranged. Every other experience keeps the
-   Director's own setting as a firm minimum. */
+   5 October 2026 (the Director's decision): an Airport Transfer or a Canal Day
+   Cruise booked on its own needs 48 hours' notice. Today and tomorrow are
+   blocked in the date picker, and a line under the date says why. Every other
+   experience keeps the Director's own setting. */
 (function () {
   "use strict";
   var FN = "https://pwqdzitsezblncmewxsf.supabase.co/functions/v1/Payments";
   var AR = (document.documentElement.lang || "").toLowerCase().indexOf("ar") === 0;
   var rules = null;
-  var TRANSFER_GUIDE_DAYS = 2; // 48 hours, a guide only
+  var TRANSFER_GUIDE_DAYS = 2; // 48 hours
 
   // Services on a 48 hour guide, with their names for the note.
   var SOFT = {
@@ -33,11 +32,16 @@
     return SOFT.hasOwnProperty(svc) ? svc : "";
   }
   function transferOnly(input) { return !!softService(input); }
-  // Firm days of notice for this date box: none for an Airport Transfer on its
-  // own (today onwards), otherwise the Director's setting.
+  // Days of notice for this date box: 2 (48 hours) for an Airport Transfer or
+  // Canal Day Cruise on its own, otherwise the Director's setting.
   function leadFor(input) {
     if (!rules) return 0;
-    return transferOnly(input) ? 0 : rules.min_lead_days;
+    return transferOnly(input) ? TRANSFER_GUIDE_DAYS : rules.min_lead_days;
+  }
+  function softHint(input) {
+    return AR
+      ? "يجب الحجز قبل 48 ساعة على الأقل، لذلك لا يتاح اليوم والغد."
+      : "Reservations must be made at least 48 hours in advance, so today and tomorrow are not available.";
   }
 
   function iso(d) {
@@ -65,22 +69,17 @@
     box.style.display = text ? "" : "none";
   }
   function check(input) {
-    if (!rules || !input.value) { note(input, ""); return; }
+    if (!rules) { note(input, ""); return; }
+    if (!input.value) { input.setCustomValidity(""); note(input, transferOnly(input) ? softHint(input) : ""); return; }
     var min = earliest(input);
     var days = leadFor(input);
     var msg = "";
-    if (input.value < min) {
+    if (input.value < min && transferOnly(input)) {
+      msg = softHint(input);
+    } else if (input.value < min) {
       msg = AR
         ? "يرجى اختيار تاريخ بعد " + days + " أيام على الأقل من اليوم، حتى يتسنى لنا ترتيب حجزكم."
         : "Please choose a date at least " + days + " days from today, so we have time to arrange your booking.";
-    } else if (transferOnly(input) && input.value < (function () { var d = new Date(); d.setDate(d.getDate() + TRANSFER_GUIDE_DAYS); return iso(d); })()) {
-      // Inside 48 hours: accepted, with a gentle note only.
-      input.setCustomValidity("");
-      var soft = SOFT[softService(input)];
-      note(input, AR
-        ? "نحتاج عادةً إلى 48 ساعة لترتيب " + soft.ar + ". يمكنكم الإرسال، وسنؤكد لكم إن كان بالإمكان ترتيبه."
-        : "We usually need 48 hours to arrange " + soft.en + ". You can still send this, and we will confirm whether we can arrange it.");
-      return;
     } else if (rules.unavailable.indexOf(input.value) !== -1) {
       msg = AR
         ? "نعتذر، لا يمكننا ترتيب تجارب يوم " + nice(input.value) + ". يرجى اختيار تاريخ آخر."
@@ -109,13 +108,17 @@
       if (!r || !r.ok) return;
       rules = { min_lead_days: Number(r.min_lead_days) || 0, unavailable: r.unavailable || [] };
       apply(document);
+      setTimeout(function () {
+        var boxes = document.querySelectorAll('input[type="date"][data-bhh-rules]');
+        for (var i = 0; i < boxes.length; i++) check(boxes[i]);
+      }, 600);
       // Choosing or clearing an experience can change the notice needed.
       document.addEventListener("click", function (e) {
         if (!e.target.closest || !e.target.closest("#service-card-grid, .tchoice")) return;
         setTimeout(function () {
           apply(document);
           var boxes = document.querySelectorAll('input[type="date"][data-bhh-rules]');
-          for (var i = 0; i < boxes.length; i++) if (boxes[i].value) check(boxes[i]);
+          for (var i = 0; i < boxes.length; i++) check(boxes[i]);
         }, 0);
       });
       if (window.MutationObserver) {
