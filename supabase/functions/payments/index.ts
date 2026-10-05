@@ -1,6 +1,7 @@
 // British Heritage Hosts Ltd, payments Edge Function
 // Owner: Faleh al Bishi, Director, British Heritage Hosts Ltd
-// Written 2 October 2026, introductions and the one day gap added 3 October 2026. Deno runtime.
+// Written 2 October 2026, introductions and the one day gap added 3 October 2026,
+// fast requests to partners added 5 October 2026. Deno runtime.
 //
 // Turns a priced proposal into one exact card payment through Stripe, confirms
 // the booking the moment Stripe reports the payment (Terms clause 2), works out
@@ -26,6 +27,9 @@
 //   letter    { ref, key }         details for the booking confirmation letter
 //   ask       { name, email, question, lang, consent }  a question from the FAQ page
 //   introduce { service, name, email, phone, ... }   a request for a transport or boat introduction
+//   rapid     { service, name, email, phone, date, ... }  a fast request: partners are asked at once
+//   offer_view   { o, k }           a partner opens a fast request
+//   offer_answer { o, k, answer, price, note }  a partner accepts or declines it
 //
 // Director, after signing in with a code sent to the company inbox:
 //   d_start / d_verify { code } / d_signout
@@ -38,6 +42,8 @@
 //   d_settings { min_lead_days, block, unblock, note }
 //   d_question { id, status }      marks a FAQ question answered or hides it
 //   d_intro    { id, status }      marks an introduction sent or declined (refused while on hold)
+//   d_partner  { partner }         adds or edits a partner for fast requests
+//   d_dispatch { id, status }      closes a fast request (cancelled)
 //
 // The one day gap (decided 3 October 2026, from the 27 August classification):
 // an introduction to a transport or boat partner is never sent within 25 hours
@@ -55,6 +61,11 @@ const STRIPE_SECRET_KEY = Deno.env.get("STRIPE_SECRET_KEY") ?? "";
 const STRIPE_WEBHOOK_SECRET = Deno.env.get("STRIPE_WEBHOOK_SECRET") ?? "";
 const SITE_URL = (Deno.env.get("BHH_SITE_URL") ?? "https://britishheritagehosts.com").replace(/\/$/, "");
 const DIRECTOR_EMAIL = Deno.env.get("BHH_DIRECTOR_EMAIL") ?? "info@britishheritagehosts.com";
+// WhatsApp Business (Meta Cloud API). Until these three are set, fast requests
+// go by email only.
+const WA_TOKEN = Deno.env.get("WHATSAPP_TOKEN") ?? "";
+const WA_PHONE_ID = Deno.env.get("WHATSAPP_PHONE_ID") ?? "";
+const WA_TEMPLATE = Deno.env.get("WHATSAPP_TEMPLATE") ?? "bhh_booking_request";
 
 const FROM_EMAIL = "enquiries@britishheritagehosts.com";
 const CODE_MINUTES = 10;
@@ -550,6 +561,173 @@ async function actionIntroduce(body: Row) {
   return json({ ok: true, held, release_text: held ? when : "" });
 }
 
+
+// ------------------------------------------------------------ fast requests
+
+// Every service BHH sells can be sent to partners for a quick yes or no.
+const FAST_SERVICES = SELLABLE;
+
+async function sendWhatsApp(to: string, body: string[], linkSuffix: string): Promise<boolean> {
+  if (!WA_TOKEN || !WA_PHONE_ID) return false;
+  const number = String(to ?? "").replace(/\D/g, "");
+  if (number.length < 8) return false;
+  const res = await fetch(`https://graph.facebook.com/v21.0/${WA_PHONE_ID}/messages`, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${WA_TOKEN}`, "Content-Type": "application/json" },
+    body: JSON.stringify({
+      messaging_product: "whatsapp", to: number, type: "template",
+      template: {
+        name: WA_TEMPLATE, language: { code: "en_GB" },
+        components: [
+          { type: "body", parameters: body.map((t) => ({ type: "text", text: t.slice(0, 900) })) },
+          { type: "button", sub_type: "url", index: "0", parameters: [{ type: "text", text: linkSuffix }] },
+        ],
+      },
+    }),
+  });
+  if (!res.ok) { console.error("whatsapp", res.status, await res.text()); return false; }
+  return true;
+}
+
+function offerLink(offerId: string, key: string): string {
+  return `${SITE_URL}/app/accept.html?o=${encodeURIComponent(offerId)}&k=${encodeURIComponent(key)}`;
+}
+
+async function actionRapid(body: Row) {
+  if (String(body.website ?? "").trim()) return json({ ok: true });
+  const lang = body.lang === "ar" ? "ar" : "en";
+  const service = String(body.service ?? "").trim();
+  const name = String(body.name ?? "").trim().slice(0, 120);
+  const email = String(body.email ?? "").trim().toLowerCase().slice(0, 200);
+  const phone = (String(body.country_code ?? "").trim() + " " + String(body.phone ?? "").trim()).trim().slice(0, 40);
+  if (!FAST_SERVICES.includes(service) || !name || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || !validDate(body.date)) {
+    return fail("bad_request", "The request is incomplete.", 400);
+  }
+  const hourAgo = new Date(Date.now() - 3600000).toISOString();
+  const { count } = await admin.from("dispatches").select("id", { count: "exact", head: true }).eq("guest_email", email).gt("created_at", hourAgo);
+  if ((count ?? 0) >= 10) return json({ ok: true });
+
+  const adults = Math.max(0, Math.round(Number(body.adults) || 0));
+  const children = Math.max(0, Math.round(Number(body.children) || 0));
+  const dayTo = validDate(body.date_to) && String(body.date_to) > String(body.date) ? String(body.date_to) : null;
+  const { data: d, error } = await admin.from("dispatches").insert({
+    service, guest_name: name, guest_email: email, guest_phone: phone || null, day: body.date, day_to: dayTo,
+    party_size: adults + children || null, details: String(body.details ?? "").trim().slice(0, 2000) || null, lang,
+  }).select("*").single();
+  if (error || !d) return fail("db_error", "The request could not be saved.", 500);
+
+  const { data: partners } = await admin.from("partners").select("*").eq("active", true).contains("services", [service]);
+  const list = partners ?? [];
+  const when = niceDate(String(body.date)) + (dayTo ? " to " + niceDate(dayTo) : "");
+  const party = d.party_size ? `${d.party_size} people` : "party size not given";
+  const det = d.details ? String(d.details) : "No further details.";
+  let sent = 0;
+  for (const p of list) {
+    const key = randomHex(16);
+    const { data: offer } = await admin.from("dispatch_offers").insert({ dispatch_id: d.id, partner_id: p.id, key }).select("id").single();
+    if (!offer) continue;
+    const link = offerLink(offer.id, key);
+    try {
+      if (p.email) {
+        await sendEmail(String(p.email), `Booking request: ${service}, ${when}`, `
+          <p>Dear ${esc(p.name)},</p>
+          <p>We have a new request and would like to know quickly whether you can take it.</p>
+          <table style="width:100%;font-size:15px;border-collapse:collapse">
+            <tr><td style="padding:4px 0;color:#666055">Service</td><td>${esc(service)}</td></tr>
+            <tr><td style="padding:4px 0;color:#666055">Date</td><td>${esc(when)}</td></tr>
+            <tr><td style="padding:4px 0;color:#666055">Party</td><td>${esc(party)}</td></tr>
+            <tr><td style="padding:4px 0;color:#666055;vertical-align:top">Details</td><td>${esc(det).replace(/\n/g, "<br>")}</td></tr>
+          </table>
+          <p>The first partner to accept takes the booking.</p>
+          ${button(link, "ACCEPT OR DECLINE")}`);
+        sent++;
+      }
+      if (p.whatsapp && await sendWhatsApp(String(p.whatsapp), [service, when, `${party}. ${det}`], `o=${offer.id}&k=${key}`)) sent++;
+    } catch (e) { console.error("partner notice failed", String(e)); }
+  }
+  try {
+    await sendEmail(DIRECTOR_EMAIL, `${list.length ? "Fast request sent" : "Fast request, NO PARTNER ON FILE"}: ${service}, ${when}`, `
+      <p><strong>${esc(name)}</strong> (${esc(email)}${phone ? ", " + esc(phone) : ""}) asked for <strong>${esc(service)}</strong> on ${esc(when)}, ${esc(party)}.</p>
+      <p>${esc(det).replace(/\n/g, "<br>")}</p>
+      <p>${list.length ? `Sent to ${list.length} partner${list.length === 1 ? "" : "s"}. You will be emailed the moment one accepts.` : `No active partner is on file for ${esc(service)}, so nobody was asked. Please arrange it yourself.`}</p>
+      ${button(`${SITE_URL}/app/director.html`, "OPEN THE DIRECTOR PAGE")}`, email);
+  } catch (e) { console.error(String(e)); }
+  return json({ ok: true, partners: list.length, sent });
+}
+
+async function offerByKey(o: unknown, k: unknown) {
+  const id = String(o ?? ""), key = String(k ?? "");
+  if (!/^[0-9a-f-]{36}$/.test(id) || key.length < 20) return null;
+  const { data } = await admin.from("dispatch_offers").select("*").eq("id", id).maybeSingle();
+  if (!data || !sameText(String(data.key), key)) return null;
+  const { data: d } = await admin.from("dispatches").select("*").eq("id", data.dispatch_id).maybeSingle();
+  const { data: p } = await admin.from("partners").select("id, name").eq("id", data.partner_id).maybeSingle();
+  return d && p ? { offer: data, dispatch: d, partner: p } : null;
+}
+
+async function actionOfferView(body: Row) {
+  const x = await offerByKey(body.o, body.k);
+  if (!x) return fail("not_found", "This link is not valid.", 404);
+  const d = x.dispatch;
+  return json({ ok: true, partner: x.partner.name, answer: x.offer.answer,
+    taken: d.status !== "open", mine: d.accepted_by === x.partner.id,
+    request: { service: d.service, date: d.day, nice_date: niceDate(String(d.day)) + (d.day_to ? " to " + niceDate(String(d.day_to)) : ""), party_size: d.party_size, details: d.details } });
+}
+
+async function actionOfferAnswer(body: Row) {
+  const x = await offerByKey(body.o, body.k);
+  if (!x) return fail("not_found", "This link is not valid.", 404);
+  const now = new Date().toISOString();
+  const d = x.dispatch;
+  if (body.answer === "decline") {
+    if (x.offer.answer === "pending") await admin.from("dispatch_offers").update({ answer: "declined", answered_at: now }).eq("id", x.offer.id);
+    const { data: rest } = await admin.from("dispatch_offers").select("answer").eq("dispatch_id", d.id);
+    if (d.status === "open" && (rest ?? []).every((r) => r.answer === "declined")) {
+      await admin.from("dispatches").update({ status: "declined" }).eq("id", d.id).eq("status", "open");
+      await sendEmail(DIRECTOR_EMAIL, `Fast request declined by all partners: ${d.service}, ${niceDate(String(d.day))}`,
+        `<p>Every partner declined ${esc(d.service)} for ${esc(d.guest_name)} on ${esc(niceDate(String(d.day)))}. Please reply to the guest yourself.</p>`, String(d.guest_email)).catch(() => {});
+    }
+    return json({ ok: true, result: "declined" });
+  }
+  if (body.answer !== "accept") return fail("bad_answer", "Please choose accept or decline.", 400);
+  const price = Math.round(Number(body.price) * 100);
+  const pricePence = Number.isFinite(price) && price > 0 ? price : null;
+  const note = String(body.note ?? "").trim().slice(0, 500) || null;
+  // First to accept wins: only an open request can be taken.
+  const { data: won } = await admin.from("dispatches").update({
+    status: "accepted", accepted_by: x.partner.id, accepted_at: now, price_pence: pricePence, partner_note: note,
+  }).eq("id", d.id).eq("status", "open").select("id");
+  if (!won || !won.length) {
+    if (x.offer.answer === "pending") await admin.from("dispatch_offers").update({ answer: "late", answered_at: now }).eq("id", x.offer.id);
+    return json({ ok: true, result: d.accepted_by === x.partner.id ? "accepted" : "taken" });
+  }
+  await admin.from("dispatch_offers").update({ answer: "accepted", answered_at: now }).eq("id", x.offer.id);
+  await admin.from("dispatch_offers").update({ answer: "late" }).eq("dispatch_id", d.id).eq("answer", "pending");
+  const when = niceDate(String(d.day)) + (d.day_to ? " to " + niceDate(String(d.day_to)) : "");
+  const AR_NAME: Record<string, string> = { "Airport Transfer": "النقل من المطار", "Canal Day Cruise": "الرحلة النهارية في القناة",
+    "British Dinner": "العشاء البريطاني", "English Tea": "الشاي الإنجليزي", "Heritage Guide": "مرشد التراث", "Riverside Grill": "شواء على ضفاف النهر",
+    "Cultural Immersion Programme": "برنامج الانغماس الثقافي", "Personal Interpreter Service": "خدمة المترجم الشخصي" };
+  try {
+    if (d.lang === "ar") {
+      await sendEmail(String(d.guest_email), "تأكيد التوفر، بريتش هيريتج هوستس", `<div dir="rtl" style="text-align:right">
+        <p>مرحبًا ${esc(d.guest_name)}،</p>
+        <p>يسعدنا إبلاغكم بأن ${esc(AR_NAME[d.service] ?? d.service)} متاح في ${esc(new Date(String(d.day) + "T12:00:00Z").toLocaleDateString("ar-u-nu-latn", { weekday: "long", day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }))}.</p>
+        <p>سنرسل إليكم قريبًا رابط الحجز والدفع.</p></div>`);
+    } else {
+      await sendEmail(String(d.guest_email), `Good news: your ${d.service} is available`, `
+        <p>Dear ${esc(d.guest_name)},</p>
+        <p>Good news: your ${esc(d.service)} on ${esc(when)} is available.</p>
+        <p>We will send you the booking and payment link shortly.</p>`);
+    }
+    await sendEmail(DIRECTOR_EMAIL, `Accepted: ${d.service}, ${when}, by ${x.partner.name}${pricePence ? ", " + pounds(pricePence) : ""}`, `
+      <p><strong>${esc(x.partner.name)}</strong> accepted ${esc(d.service)} for ${esc(d.guest_name)} on ${esc(when)}${pricePence ? ` at <strong>${pounds(pricePence)}</strong>` : ""}.</p>
+      ${note ? `<p>Their note: ${esc(note)}</p>` : ""}
+      <p>The guest has been told it is available. Please send the booking and payment link from the Director page.</p>
+      ${button(`${SITE_URL}/app/director.html`, "OPEN THE DIRECTOR PAGE")}`, String(d.guest_email));
+  } catch (e) { console.error("accept email failed", String(e)); }
+  return json({ ok: true, result: "accepted" });
+}
+
 // ------------------------------------------------------------ Stripe webhook
 
 async function handleWebhook(req: Request) {
@@ -749,7 +927,11 @@ async function directorAction(action: string, body: Row) {
       const at = await introReleaseAt(i);
       introList.push({ ...i, state: at > now ? "held" : "ready", release_at: at, release_text: londonTime(at) });
     }
-    return json({ ok: true, proposals: list, questions: qs ?? [], introductions: introList, settings: await settings(), sellable: SELLABLE, today: londonToday() });
+    const { data: partners } = await admin.from("partners").select("*").order("name");
+    const { data: dispatches } = await admin.from("dispatches").select("*").order("created_at", { ascending: false }).limit(50);
+    const names = Object.fromEntries((partners ?? []).map((p) => [p.id, p.name]));
+    const fastList = (dispatches ?? []).map((d) => ({ ...d, accepted_by_name: d.accepted_by ? names[d.accepted_by] ?? "" : "" }));
+    return json({ ok: true, proposals: list, questions: qs ?? [], introductions: introList, partners: partners ?? [], dispatches: fastList, fast_services: FAST_SERVICES, settings: await settings(), sellable: SELLABLE, today: londonToday() });
   }
   if (action === "d_create") return await dCreate(body);
   if (action === "d_question") {
@@ -773,6 +955,27 @@ async function directorAction(action: string, body: Row) {
     } else {
       await admin.from("introductions").update({ status, sent_at: null }).eq("id", i.id);
     }
+    return json({ ok: true });
+  }
+
+  if (action === "d_partner") {
+    const p = (body.partner ?? {}) as Row;
+    const name = String(p.name ?? "").trim().slice(0, 120);
+    if (!name) return fail("bad_name", "Please give the partner's name.", 400);
+    const services = (Array.isArray(p.services) ? p.services : []).map(String).filter((s) => FAST_SERVICES.includes(s));
+    if (!services.length) return fail("bad_services", "Tick at least one service.", 400);
+    const email = String(p.email ?? "").trim().toLowerCase() || null;
+    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return fail("bad_email", "That email address does not look right.", 400);
+    const row = { name, services, email, whatsapp: String(p.whatsapp ?? "").trim() || null, active: p.active !== false, notes: String(p.notes ?? "").slice(0, 500) || null };
+    if (!row.email && !row.whatsapp) return fail("no_contact", "Give an email address or a WhatsApp number.", 400);
+    const res = p.id ? await admin.from("partners").update(row).eq("id", String(p.id)) : await admin.from("partners").insert(row);
+    if (res.error) return fail("db_error", res.error.message, 500);
+    return json({ ok: true });
+  }
+  if (action === "d_dispatch") {
+    if (String(body.status) !== "cancelled") return fail("bad_status", "Unknown status.", 400);
+    await admin.from("dispatches").update({ status: "cancelled" }).eq("id", String(body.id ?? ""));
+    await admin.from("dispatch_offers").update({ answer: "late" }).eq("dispatch_id", String(body.id ?? "")).eq("answer", "pending");
     return json({ ok: true });
   }
 
@@ -836,6 +1039,9 @@ Deno.serve(async (req) => {
     if (action === "letter") return await actionLetter(body);
     if (action === "ask") return await actionAsk(body);
     if (action === "introduce") return await actionIntroduce(body);
+    if (action === "rapid") return await actionRapid(body);
+    if (action === "offer_view") return await actionOfferView(body);
+    if (action === "offer_answer") return await actionOfferAnswer(body);
     if (action === "d_start") return await dStart();
     if (action === "d_verify") return await dVerify(body);
     if (action.startsWith("d_")) return await directorAction(action, body);

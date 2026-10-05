@@ -92,6 +92,28 @@
     function copy() { if (form.getAttribute("data-one-day") && from && to) to.value = from.value; }
     if (from) { from.addEventListener("change", copy); from.addEventListener("input", copy); }
     form.addEventListener("submit", copy, true);
+    // Fast request: every experience in a guest enquiry is also sent straight
+    // to the BHH system, which asks that service's partners at once. The
+    // normal enquiry still goes through as before.
+    var NAMES = { "Dinner": "British Dinner", "Cultural Immersion Program": "Cultural Immersion Programme" };
+    form.addEventListener("submit", function (e) {
+      if (e.defaultPrevented) return;
+      function v(n) { var f = form.elements[n]; return f ? String(f.value || "").trim() : ""; }
+      var picked = grid.querySelectorAll(".service-card-v8.selected");
+      Array.prototype.forEach.call(picked, function (card) {
+        var svc = card.getAttribute("data-service");
+        try {
+          fetch("https://pwqdzitsezblncmewxsf.supabase.co/functions/v1/Payments", {
+            method: "POST", keepalive: true, headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ action: "rapid", lang: ar ? "ar" : "en", service: NAMES[svc] || svc,
+              name: v("Full Name"), email: v("email"), country_code: v("Country Code"), phone: v("Phone Number"),
+              date: v("Date From"), date_to: form.getAttribute("data-one-day") ? "" : v("Date To"),
+              adults: v("Number of Adults"), children: v("Number of Children"),
+              details: v("Special Requests"), website: v("bot-field") })
+          }).catch(function () {});
+        } catch (err) {}
+      });
+    }, false);
     grid.addEventListener("click", function () { setTimeout(syncOneDay, 0); });
     setTimeout(syncOneDay, 300); setTimeout(syncOneDay, 1500);
   })();

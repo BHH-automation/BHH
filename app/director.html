@@ -75,6 +75,32 @@
     </section>
 
     <section class="card">
+      <h2>Fast requests</h2>
+      <p class="lead">Guest requests sent to your partners for a quick yes or no. When a partner accepts, the guest is told it is available; then send the booking and payment link with the button here.</p>
+      <div id="fast"><p class="lead">Loading.</p></div>
+    </section>
+
+    <section class="card">
+      <h2>Partners for fast requests</h2>
+      <p class="lead">Every active partner ticked for a service is asked at once. Give an email address, a WhatsApp number, or both.</p>
+      <div id="partners"><p class="lead">Loading.</p></div>
+      <h3 style="margin-top:18px" id="pTitle">Add a partner</h3>
+      <input id="pId" type="hidden">
+      <label for="pName">Company name</label><input id="pName">
+      <div class="grid2">
+        <div><label for="pEmail">Email</label><input id="pEmail" type="email"></div>
+        <div><label for="pWa">WhatsApp number, with country code</label><input id="pWa" placeholder="+44 7911 123456"></div>
+      </div>
+      <label>Services this partner provides</label>
+      <div id="pServices"></div>
+      <label class="check"><input type="checkbox" id="pActive" checked> Active</label>
+      <label for="pNotes">Notes</label><input id="pNotes">
+      <button id="pSave" type="button">Save partner</button>
+      <button id="pClear" class="quiet" type="button">Clear the form</button>
+      <div id="pMsg"></div>
+    </section>
+
+    <section class="card">
       <h2>Introduction requests</h2>
       <p class="lead">Guests asking to be introduced to a transport or boat partner. Send the introduction from your email, then mark it sent here. A request is held for a full day after the same guest paid BHH, and cannot be marked sent before then.</p>
       <div id="intros"><p class="lead">Loading.</p></div>
@@ -202,6 +228,26 @@
           '<a class="inline-link" href="mailto:' + esc(q.email) + '?subject=' + encodeURIComponent("Your question to British Heritage Hosts") + '">Reply by email</a>';
         return '<div class="item"><div><div class="ref">' + (q.status === "new" ? "Not answered yet" : "Answered") + " · " + (q.lang === "ar" ? "Arabic page" : "English page") + " · " + esc(nice(q.created_at)) + '</div><div class="service">' + esc(q.name) + ' <span class="small">' + esc(q.email) + '</span></div><p>' + esc(q.question) + "</p>" + acts + "</div></div>";
       }).join("") : '<p class="lead">No questions yet.</p>';
+      var FW = { open: "Waiting for a partner", accepted: "Accepted", declined: "Declined by all partners", cancelled: "Closed" };
+      var ds = r.dispatches || [];
+      el("fast").innerHTML = ds.length ? ds.map(function (d) {
+        var pill = d.status === "accepted" ? "pill pill-paid" : d.status === "open" ? "pill pill-cancel_requested" : "pill";
+        var acts = "";
+        if (d.status === "accepted") acts += '<button class="inline" data-propose="' + d.id + '">Make the proposal</button>';
+        if (d.status === "open") acts += '<button class="inline quiet" data-fastclose="' + d.id + '">Close</button>';
+        return '<div class="item"><div><div class="ref">' + esc(d.service) + " · " + esc(nice(d.created_at)) + '</div><div class="service">' + esc(d.guest_name) + ' <span class="small">' + esc(d.guest_email) + (d.guest_phone ? ", " + esc(d.guest_phone) : "") + "</span></div>" +
+          '<div class="small">Date: ' + esc(nice(d.day)) + (d.party_size ? ", " + esc(d.party_size) + " people" : "") + (d.details ? "<br>" + esc(d.details) : "") +
+          (d.accepted_by_name ? "<br>Accepted by " + esc(d.accepted_by_name) + (d.price_pence ? " at " + pounds(d.price_pence) : "") + (d.partner_note ? ", note: " + esc(d.partner_note) : "") : "") + "</div>" +
+          '<p style="margin-top:8px"><span class="' + pill + '">' + esc(FW[d.status] || d.status) + "</span></p>" + acts + "</div></div>";
+      }).join("") : '<p class="lead">No fast requests yet.</p>';
+      window.__fast = ds;
+      var ps = r.partners || [];
+      window.__partners = ps;
+      el("partners").innerHTML = ps.length ? ps.map(function (p) {
+        return '<div class="item"><div><div class="ref">' + esc((p.services || []).join(", ")) + (p.active ? "" : " · not active") + '</div><div class="service">' + esc(p.name) + '</div><div class="small">' +
+          esc(p.email || "") + (p.whatsapp ? (p.email ? ", " : "") + "WhatsApp " + esc(p.whatsapp) : "") + (p.notes ? "<br>" + esc(p.notes) : "") +
+          '</div><button class="inline quiet" data-pedit="' + p.id + '">Edit</button></div></div>';
+      }).join("") : '<p class="lead">No partners yet. Add the first one below.</p>';
       var is = r.introductions || [];
       el("intros").innerHTML = is.length ? is.map(function (i) {
         var state = i.state === "sent" ? '<span class="pill pill-paid">Sent ' + esc(nice(i.sent_at)) + "</span>"
@@ -237,6 +283,30 @@
   document.addEventListener("click", function (e) {
     var b = e.target.closest("button"); if (!b) return;
     if (b.dataset.copy) { navigator.clipboard.writeText(b.dataset.copy).then(function () { b.textContent = "Copied"; }); return; }
+    if (b.dataset.fastclose) { if (!confirm("Close this request? Partners who have not answered will see it is no longer needed.")) return; call("d_dispatch", { id: b.dataset.fastclose, status: "cancelled" }).then(load); return; }
+    if (b.dataset.propose) {
+      var d = (window.__fast || []).filter(function (x) { return x.id === b.dataset.propose; })[0];
+      if (!d) return;
+      el("gName").value = d.guest_name || ""; el("gEmail").value = d.guest_email || ""; el("gPhone").value = d.guest_phone || "";
+      el("gNote").value = (d.accepted_by_name ? "Partner: " + d.accepted_by_name + ". " : "") + (d.details || "");
+      el("rows").innerHTML = ""; addRow();
+      var row = document.querySelector(".row-item");
+      row.querySelector(".svc").value = d.service; row.querySelector(".dt").value = d.day || "";
+      row.querySelector(".ad").value = d.party_size || 1; row.querySelector(".ch").value = 0;
+      if (d.price_pence) row.querySelector(".pr").value = (d.price_pence / 100).toFixed(2);
+      sum(); window.scrollTo(0, 0);
+      say("saveMsg", "Filled in from the fast request. Set your selling price, then save to email the proposal.", true);
+      return;
+    }
+    if (b.dataset.pedit) {
+      var p = (window.__partners || []).filter(function (x) { return x.id === b.dataset.pedit; })[0];
+      if (!p) return;
+      el("pId").value = p.id; el("pName").value = p.name || ""; el("pEmail").value = p.email || ""; el("pWa").value = p.whatsapp || "";
+      Array.prototype.forEach.call(document.querySelectorAll("#pServices input"), function (c) { c.checked = (p.services || []).indexOf(c.value) !== -1; });
+      el("pActive").checked = !!p.active; el("pNotes").value = p.notes || ""; el("pTitle").textContent = "Edit " + p.name;
+      el("pName").scrollIntoView({ block: "center" });
+      return;
+    }
     if (b.dataset.intro) { b.disabled = true; call("d_intro", { id: b.dataset.id, status: b.dataset.intro }).then(function (r) { if (!r.ok) alert(r.message); load(); }); return; }
     if (b.dataset.q) { b.disabled = true; call("d_question", { id: b.dataset.id, status: b.dataset.q }).then(load); return; }
     if (b.dataset.unblock) { call("d_settings", { unblock: b.dataset.unblock }).then(load); return; }
@@ -248,6 +318,23 @@
       b.disabled = true;
       call(b.dataset.act, { id: b.dataset.id }).then(function (r) { if (!r.ok) alert(r.message); load(); });
     }
+  });
+
+  el("pServices").innerHTML = SERVICES.map(function (s) { return '<label class="check"><input type="checkbox" value="' + s + '"> ' + s + "</label>"; }).join("");
+  function clearPartner() {
+    ["pId", "pName", "pEmail", "pWa", "pNotes"].forEach(function (id) { el(id).value = ""; });
+    Array.prototype.forEach.call(document.querySelectorAll("#pServices input"), function (c) { c.checked = false; }); el("pActive").checked = true; el("pTitle").textContent = "Add a partner";
+  }
+  el("pClear").addEventListener("click", function () { clearPartner(); say("pMsg", "", true); });
+  el("pSave").addEventListener("click", function () {
+    var services = Array.prototype.filter.call(document.querySelectorAll("#pServices input"), function (c) { return c.checked; }).map(function (c) { return c.value; });
+    el("pSave").disabled = true;
+    call("d_partner", { partner: { id: el("pId").value || undefined, name: el("pName").value, email: el("pEmail").value, whatsapp: el("pWa").value,
+      services: services, active: el("pActive").checked, notes: el("pNotes").value } }).then(function (r) {
+      el("pSave").disabled = false;
+      if (!r.ok) { say("pMsg", esc(r.message), false); return; }
+      say("pMsg", "Saved.", true); clearPartner(); load();
+    });
   });
 
   el("saveLead").addEventListener("click", function () { call("d_settings", { min_lead_days: el("lead").value }).then(function (r) { say("ruleMsg", r.ok ? "Saved." : r.message, r.ok); }); });
