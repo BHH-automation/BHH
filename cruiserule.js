@@ -55,6 +55,12 @@
     if (typeof window.switchTab === "function") window.switchTab("guest");
     var card = grid.querySelector('.service-card-v8[data-service="' + svc + '"]');
     if (card && !card.classList.contains("selected")) window.toggleService(card);
+    var pimg = document.querySelector("#tab-guest > img");
+    var PIC = { "Airport Transfer": "/images/airport-private-transportation-airport-p.jpg", "Canal Day Cruise": "/images/narrowboat cabin tea.webp" };
+    if (pimg && PIC[svc]) {
+      if (!pimg.getAttribute("data-orig")) { pimg.setAttribute("data-orig", pimg.getAttribute("src")); pimg.setAttribute("data-orig-alt", pimg.alt); }
+      pimg.src = PIC[svc];
+    }
     grid.scrollIntoView({ behavior: "smooth", block: "center" });
   };
 })();

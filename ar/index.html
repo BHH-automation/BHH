@@ -5534,6 +5534,8 @@ if ("serviceWorker" in navigator) {
 
   window.bhhUnfocus = function(){
     document.documentElement.classList.remove('bhh-focus');
+    var pimg=document.querySelector('#tab-guest > img');
+    if(pimg && pimg.getAttribute('data-orig')){ pimg.src=pimg.getAttribute('data-orig'); pimg.alt=pimg.getAttribute('data-orig-alt')||''; }
     document.documentElement.classList.remove('bhh-one');
     var oneBack=document.getElementById('bhhOneBack'); if(oneBack) oneBack.style.display='none';
     var head=document.getElementById('bhhFocusHead'); if(head) head.style.display='none';
@@ -5559,6 +5561,18 @@ if ("serviceWorker" in navigator) {
       tabs.parentNode.insertBefore(head, tabs.nextSibling);
     }
     if(head){ head.style.display=''; head.querySelector('.bhh-focus-name').textContent = nameOf(svc); }
+    /* 5 October 2026: the picture at the top of the form matches the experience chosen */
+    var FOCUS_IMG = { 'Airport Transfer':'/images/airport-private-transportation-airport-p.jpg', 'Canal Day Cruise':'/images/narrowboat cabin tea.webp',
+      'English Tea':'/images/english-tea-traditional-afternoon-tea.webp', 'Dinner':'/images/private-family-dinner-host-and-guest-fam.webp',
+      'British Dinner':'/images/private-family-dinner-host-and-guest-fam.webp', 'Riverside Grill':'/images/riverside grill family.webp',
+      'Cultural Immersion Program':'/images/cip-2.webp', 'Cultural Immersion Programme':'/images/cip-2.webp',
+      'Personal Interpreter Service':'/images/interpreter-saudi-men.webp' };
+    var pimg=document.querySelector('#tab-guest > img');
+    if(pimg){
+      if(!pimg.getAttribute('data-orig')){ pimg.setAttribute('data-orig', pimg.getAttribute('src')); pimg.setAttribute('data-orig-alt', pimg.alt); }
+      var fsrc = FOCUS_IMG[svc.split(',')[0].trim()];
+      if(fsrc){ pimg.src = fsrc; pimg.alt = nameOf(svc); }
+    }
 
     var grid=document.getElementById('service-card-grid');
     if(grid){
