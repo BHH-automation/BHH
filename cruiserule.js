@@ -47,8 +47,54 @@
         ? "أُلغي اختيار " + nameOf(clearedSolo) + " لأنه يُحجز وحده. يمكنكم إرسال طلب منفصل له."
         : nameOf(clearedSolo) + " has been cleared because it is booked on its own. You can send a separate enquiry for it.");
     }
-    return original(card);
+    var out = original(card);
+    setTimeout(syncOneDay, 0);
+    return out;
   };
+
+  // 5 October 2026: an Airport Transfer or a Canal Day Cruise happens on one
+  // day, so the form asks for one date only. The second date box is hidden
+  // and quietly given the same date, so the enquiry still arrives complete.
+  function syncOneDay() {
+    var form = grid.closest("form");
+    var from = form && form.querySelector('input[name="Date From"]');
+    var to = form && form.querySelector('input[name="Date To"]');
+    if (!from || !to) return;
+    var picked = grid.querySelectorAll(".service-card-v8.selected");
+    var one = picked.length === 1 && SOLO.hasOwnProperty(picked[0].getAttribute("data-service"));
+    var row = to.parentNode;
+    var others = Array.prototype.filter.call(row.children, function (c) { return c !== from; });
+    var more = document.getElementById("bhhMoreExp");
+    var label = form.querySelector('label[for="' + from.id + '"]');
+    var hint = row.parentNode.querySelector("p[style*='italic']");
+    if (label && !label.hasAttribute("data-orig")) label.setAttribute("data-orig", label.innerHTML);
+    if (one) {
+      to.required = false; to.value = from.value;
+      others.forEach(function (c) { c.style.setProperty("display", "none", "important"); });
+      if (more) more.style.setProperty("display", "none", "important");
+      if (hint) hint.style.display = "none";
+      if (label) label.innerHTML = (ar ? "التاريخ" : "Date") + ' <span style="color:#C9A84C">*</span>';
+      form.setAttribute("data-one-day", "1");
+    } else if (form.getAttribute("data-one-day")) {
+      to.required = true;
+      others.forEach(function (c) { c.style.removeProperty("display"); });
+      if (more) more.style.removeProperty("display");
+      if (hint) hint.style.display = "";
+      if (label) label.innerHTML = label.getAttribute("data-orig");
+      form.removeAttribute("data-one-day");
+    }
+  }
+  (function () {
+    var form = grid.closest("form");
+    if (!form) return;
+    var from = form.querySelector('input[name="Date From"]');
+    var to = form.querySelector('input[name="Date To"]');
+    function copy() { if (form.getAttribute("data-one-day") && from && to) to.value = from.value; }
+    if (from) { from.addEventListener("change", copy); from.addEventListener("input", copy); }
+    form.addEventListener("submit", copy, true);
+    grid.addEventListener("click", function () { setTimeout(syncOneDay, 0); });
+    setTimeout(syncOneDay, 300); setTimeout(syncOneDay, 1500);
+  })();
 
   // Used by the "Book My Airport Transfer" choice in the Transport tab.
   window.bhhBookOnItsOwn = function (svc) {
@@ -61,6 +107,7 @@
       if (!pimg.getAttribute("data-orig")) { pimg.setAttribute("data-orig", pimg.getAttribute("src")); pimg.setAttribute("data-orig-alt", pimg.alt); }
       pimg.src = PIC[svc];
     }
+    syncOneDay();
     grid.scrollIntoView({ behavior: "smooth", block: "center" });
   };
 })();
