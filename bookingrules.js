@@ -15,7 +15,7 @@
   var FN = "https://pwqdzitsezblncmewxsf.supabase.co/functions/v1/Payments";
   var AR = (document.documentElement.lang || "").toLowerCase().indexOf("ar") === 0;
   var rules = null;
-  var TRANSFER_GUIDE_DAYS = 2; // 48 hours
+  var TRANSFER_GUIDE_DAYS = 0; // 5 October 2026: same day allowed, partners answer fast requests at once
 
   // Services on a 48 hour guide, with their names for the note.
   var SOFT = {
@@ -40,8 +40,8 @@
   }
   function softHint(input) {
     return AR
-      ? "يجب الحجز قبل 48 ساعة على الأقل، لذلك لا يتاح اليوم والغد."
-      : "Reservations must be made at least 48 hours in advance, so today and tomorrow are not available.";
+      ? "لا يمكن الحجز لتاريخ مضى."
+      : "Please choose today or a later date.";
   }
 
   function iso(d) {
@@ -70,7 +70,7 @@
   }
   function check(input) {
     if (!rules) { note(input, ""); return; }
-    if (!input.value) { input.setCustomValidity(""); note(input, transferOnly(input) ? softHint(input) : ""); return; }
+    if (!input.value) { input.setCustomValidity(""); note(input, ""); return; }
     var min = earliest(input);
     var days = leadFor(input);
     var msg = "";
