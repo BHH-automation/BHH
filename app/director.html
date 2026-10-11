@@ -21,6 +21,12 @@
 <meta name="theme-color" content="#0D1B2A">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="stylesheet" href="/app/app.css">
+<style>
+.rate-hint { grid-column: 1 / -1; background: #FFF8E6; border: 1px solid #C9A84C; border-radius: 8px; padding: 8px 12px; font-size: 14px; line-height: 1.5; color: #0D1B2A; }
+.rate-warn { color: #B5503F; font-weight: bold; margin-top: 4px; }
+.rate-table input { width: 100%; margin: 0; }
+.rate-table td { vertical-align: middle; }
+</style>
 </head>
 <body>
 <header>
@@ -107,6 +113,14 @@
     </section>
 
     <section class="card">
+      <h2>Your price reminders</h2>
+      <p class="lead">Your own low and high selling price for each service. They are shown beside the price box when you make a proposal, as a reminder only. Guests and partners never see them.</p>
+      <div id="rateRows"></div>
+      <button id="saveRates" class="quiet" type="button">Save price reminders</button>
+      <div id="rateMsg"></div>
+    </section>
+
+    <section class="card">
       <h2>Booking rules</h2>
       <label for="lead">Families must enquire at least this many days ahead</label>
       <input id="lead" type="number" min="0" max="365">
@@ -177,10 +191,13 @@
       '<div><label>Adults</label><input class="ad" type="number" min="0" value="2"></div>' +
       '<div><label>Children</label><input class="ch" type="number" min="0" value="0"></div>' +
       '<div><label>Price £</label><input class="pr" type="number" min="1" step="0.01"></div>' +
-      '<div><button class="inline quiet rm" type="button">Remove</button></div>';
+      '<div><button class="inline quiet rm" type="button">Remove</button></div>' +
+      '<div class="rate-hint"></div>';
     el("rows").appendChild(div);
     div.querySelector(".rm").addEventListener("click", function () { div.remove(); sum(); });
-    div.querySelector(".pr").addEventListener("input", sum);
+    div.querySelector(".pr").addEventListener("input", function () { sum(); hint(div); });
+    div.querySelector(".svc").addEventListener("change", function () { hint(div); });
+    hint(div);
   }
   function rows() {
     return Array.prototype.map.call(document.querySelectorAll(".row-item"), function (d) {
@@ -192,6 +209,48 @@
     });
   }
   function sum() { el("sum").textContent = pounds(rows().reduce(function (s, r) { return s + r.price_pence; }, 0)); }
+  // 5 October 2026: price reminder under each experience. Shows your low and
+  // high rate for that service, the partner's price when the row came from a
+  // fast request, and a warning if the price typed is outside them.
+  window.__rates = window.__rates || {};
+  function gbp(n) { return "£" + Number(n).toLocaleString("en-GB", { maximumFractionDigits: 2 }); }
+  function hint(div) {
+    var box = div.querySelector(".rate-hint"); if (!box) return;
+    var r = window.__rates[div.querySelector(".svc").value] || {};
+    var cost = div.dataset.cost ? Number(div.dataset.cost) : null;
+    var price = Number(div.querySelector(".pr").value) || 0;
+    var parts = [];
+    if (r.low != null || r.high != null) parts.push("Your rates: low <b>" + (r.low != null ? gbp(r.low) : "not set") + "</b>, high <b>" + (r.high != null ? gbp(r.high) : "not set") + "</b>");
+    else parts.push('No price reminder saved for this service yet (see "Your price reminders" below)');
+    if (r.note) parts.push(esc(r.note));
+    if (cost != null) parts.push("Partner's price: <b>" + gbp(cost) + "</b>" + (price > cost ? ", you keep " + gbp(price - cost) : ""));
+    var warn = "";
+    if (price && cost != null && price <= cost) warn = "This is not above the partner's price.";
+    else if (price && r.low != null && price < r.low) warn = "This is below your low rate.";
+    else if (price && r.high != null && price > r.high) warn = "This is above your high rate.";
+    box.innerHTML = "💡 " + parts.join(" · ") + (warn ? '<div class="rate-warn">⚠ ' + warn + "</div>" : "");
+  }
+  function drawRates() {
+    el("rateRows").innerHTML = '<table class="rules rate-table"><tr><td><b>Service</b></td><td><b>Low £</b></td><td><b>High £</b></td><td><b>Reminder note</b></td></tr>' +
+      SERVICES.map(function (s) { var r = window.__rates[s] || {};
+        return '<tr data-svc="' + s + '"><td>' + s + '</td><td><input class="rl" type="number" min="0" step="1" value="' + (r.low != null ? r.low : "") + '"></td>' +
+          '<td><input class="rh" type="number" min="0" step="1" value="' + (r.high != null ? r.high : "") + '"></td>' +
+          '<td><input class="rn" placeholder="for example high in summer and last minute" value="' + esc(r.note || "") + '"></td></tr>'; }).join("") + "</table>";
+  }
+  el("saveRates").addEventListener("click", function () {
+    var rates = {};
+    Array.prototype.forEach.call(document.querySelectorAll("#rateRows tr[data-svc]"), function (tr) {
+      rates[tr.dataset.svc] = { low: tr.querySelector(".rl").value, high: tr.querySelector(".rh").value, note: tr.querySelector(".rn").value };
+    });
+    el("saveRates").disabled = true;
+    call("d_settings", { rates: rates }).then(function (r) {
+      el("saveRates").disabled = false;
+      if (!r.ok) { say("rateMsg", esc(r.message || "Not saved."), false); return; }
+      window.__rates = r.rates || {}; drawRates();
+      Array.prototype.forEach.call(document.querySelectorAll(".row-item"), hint);
+      say("rateMsg", "Saved.", true);
+    });
+  });
   el("addRow").addEventListener("click", addRow);
   addRow();
 
@@ -218,6 +277,8 @@
     call("d_list").then(function (r) {
       if (!r.ok) { el("list").innerHTML = '<p class="lead">' + esc(r.message) + "</p>"; return; }
       el("lead").value = r.settings.min_lead_days;
+      window.__rates = r.rates || {}; drawRates();
+      Array.prototype.forEach.call(document.querySelectorAll(".row-item"), hint);
       el("blocked").innerHTML = r.settings.unavailable_notes.length
         ? '<table class="rules">' + r.settings.unavailable_notes.map(function (d) { return "<tr><td>" + esc(nice(d.day)) + (d.note ? ' <span class="small">' + esc(d.note) + "</span>" : "") + '</td><td><button class="inline quiet" data-unblock="' + esc(d.day) + '">Make available</button></td></tr>'; }).join("") + "</table>"
         : '<p class="small">No dates are marked unavailable.</p>';
@@ -293,9 +354,10 @@
       var row = document.querySelector(".row-item");
       row.querySelector(".svc").value = d.service; row.querySelector(".dt").value = d.day || "";
       row.querySelector(".ad").value = d.party_size || 1; row.querySelector(".ch").value = 0;
-      if (d.price_pence) row.querySelector(".pr").value = (d.price_pence / 100).toFixed(2);
+      if (d.price_pence) row.dataset.cost = String(d.price_pence / 100);
+      row.querySelector(".pr").value = ""; hint(row);
       sum(); window.scrollTo(0, 0);
-      say("saveMsg", "Filled in from the fast request. Set your selling price, then save to email the proposal.", true);
+      say("saveMsg", "Filled in from the fast request. Type your selling price, using the reminder under the price box, then save to email the proposal.", true);
       return;
     }
     if (b.dataset.pedit) {

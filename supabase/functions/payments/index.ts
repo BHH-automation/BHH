@@ -39,7 +39,7 @@
 //   d_withdraw { id }              withdraws an unpaid proposal
 //   d_refund  { id }               approves and sends the refund the guest asked for
 //   d_cancel  { id }               BHH cancels: full refund (clause 3)
-//   d_settings { min_lead_days, block, unblock, note }
+//   d_settings { min_lead_days, block, unblock, note } or { rates } (Director price reminders)
 //   d_question { id, status }      marks a FAQ question answered or hides it
 //   d_intro    { id, status }      marks an introduction sent or declined (refused while on hold)
 //   d_partner  { partner }         adds or edits a partner for fast requests
@@ -287,6 +287,14 @@ function guestView(p: Row) {
   };
   if (p.status === "paid") out.cancel_preview = refundFor(items, "guest");
   return out;
+}
+
+// 5 October 2026: the Director's own low and high selling rates for each
+// service, shown as a reminder when he prices a proposal. Private: returned
+// only to the signed in Director, never by the public "settings" action.
+async function directorRates(): Promise<Record<string, { low: number | null; high: number | null; note: string }>> {
+  const { data } = await admin.from("booking_settings").select("value").eq("key", "director_rates").maybeSingle();
+  try { return data?.value ? JSON.parse(String(data.value)) : {}; } catch { return {}; }
 }
 
 async function settings() {
@@ -931,7 +939,7 @@ async function directorAction(action: string, body: Row) {
     const { data: dispatches } = await admin.from("dispatches").select("*").order("created_at", { ascending: false }).limit(50);
     const names = Object.fromEntries((partners ?? []).map((p) => [p.id, p.name]));
     const fastList = (dispatches ?? []).map((d) => ({ ...d, accepted_by_name: d.accepted_by ? names[d.accepted_by] ?? "" : "" }));
-    return json({ ok: true, proposals: list, questions: qs ?? [], introductions: introList, partners: partners ?? [], dispatches: fastList, fast_services: FAST_SERVICES, settings: await settings(), sellable: SELLABLE, today: londonToday() });
+    return json({ ok: true, proposals: list, questions: qs ?? [], introductions: introList, partners: partners ?? [], dispatches: fastList, fast_services: FAST_SERVICES, settings: await settings(), rates: await directorRates(), sellable: SELLABLE, today: londonToday() });
   }
   if (action === "d_create") return await dCreate(body);
   if (action === "d_question") {
@@ -983,6 +991,18 @@ async function directorAction(action: string, body: Row) {
     if (body.min_lead_days !== undefined) {
       const n = Math.max(0, Math.min(365, Math.round(Number(body.min_lead_days))));
       await admin.from("booking_settings").upsert({ key: "min_lead_days", value: String(n), updated_at: new Date().toISOString() });
+    }
+    if (body.rates && typeof body.rates === "object") {
+      const clean: Record<string, { low: number | null; high: number | null; note: string }> = {};
+      for (const svc of SELLABLE) {
+        const r = (body.rates as Row)[svc] as Row | undefined;
+        if (!r) continue;
+        const num = (v: unknown) => { const n = Number(v); return v === "" || v == null || !isFinite(n) || n < 0 ? null : Math.round(n * 100) / 100; };
+        const low = num(r.low), high = num(r.high), note = String(r.note ?? "").trim().slice(0, 200);
+        if (low !== null || high !== null || note) clean[svc] = { low, high, note };
+      }
+      await admin.from("booking_settings").upsert({ key: "director_rates", value: JSON.stringify(clean), updated_at: new Date().toISOString() });
+      return json({ ok: true, rates: clean });
     }
     if (validDate(body.block)) await admin.from("unavailable_dates").upsert({ day: body.block, note: String(body.note ?? "").slice(0, 200) || null });
     if (validDate(body.unblock)) await admin.from("unavailable_dates").delete().eq("day", body.unblock);
