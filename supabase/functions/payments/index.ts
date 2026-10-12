@@ -44,6 +44,8 @@
 //   d_intro    { id, status }      marks an introduction sent or declined (refused while on hold)
 //   d_partner  { partner }         adds or edits a partner for fast requests, with logo, rating, level and usual price
 //   d_ask      { id, partner_ids }  asks only the partners the Director ticked for a fast request
+//   reminders  {}                  run every 15 minutes by the database timer: emails the Director
+//                                  when a partner has not answered in time (added 12 October 2026)
 //   d_dispatch { id, status }      closes a fast request (cancelled)
 //
 // The one day gap (decided 3 October 2026, from the 27 August classification):
@@ -649,6 +651,47 @@ async function actionRapid(body: Row) {
   return json({ ok: true, partners: list.length, sent: 0 });
 }
 
+// How long a partner has to answer before the Director is warned: 1 hour
+// when the trip is within 2 days of the moment the partner was asked,
+// otherwise 4 hours. Decided by the Director on 12 October 2026.
+function answerLimitMs(day: unknown, askedAt: string): number {
+  const trip = new Date(String(day) + "T12:00:00Z").getTime();
+  return trip - new Date(askedAt).getTime() <= 2 * 86400000 ? 3600000 : 4 * 3600000;
+}
+
+// The moment the oldest unanswered offer on a request runs out, or null.
+// deno-lint-ignore no-explicit-any
+function dueAt(d: any, offers: any[]): string | null {
+  const pending = offers.filter((o) => o.dispatch_id === d.id && o.answer === "pending");
+  if (d.status !== "open" || !pending.length) return null;
+  const first = pending.map((o) => String(o.created_at)).sort()[0];
+  return new Date(new Date(first).getTime() + answerLimitMs(d.day, first)).toISOString();
+}
+
+async function actionReminders() {
+  const { data: open } = await admin.from("dispatches").select("*").eq("status", "open").limit(200);
+  const ids = (open ?? []).map((d) => d.id);
+  if (!ids.length) return json({ ok: true, reminded: 0 });
+  const { data: offers } = await admin.from("dispatch_offers").select("dispatch_id, answer, created_at").in("dispatch_id", ids);
+  const { data: memo } = await admin.from("booking_settings").select("value").eq("key", "fast_reminders").maybeSingle();
+  let done: string[] = [];
+  try { done = memo?.value ? JSON.parse(String(memo.value)) : []; } catch { done = []; }
+  const now = new Date().toISOString();
+  let n = 0;
+  for (const d of open ?? []) {
+    const due = dueAt(d, offers ?? []);
+    const tag = `${d.id}:${(offers ?? []).filter((o) => o.dispatch_id === d.id).length}`;
+    if (!due || due > now || done.includes(tag)) continue;
+    await sendEmail(DIRECTOR_EMAIL, `No answer yet: ${d.service}, ${niceDate(String(d.day))}`, `
+      <p>The partner you asked has not answered the request from <strong>${esc(d.guest_name)}</strong> for ${esc(d.service)} on ${esc(niceDate(String(d.day)))}.</p>
+      <p>Please ask another partner from the Director page. When you do, the partner who has not answered can no longer accept it.</p>
+      ${button(`${SITE_URL}/app/director.html`, "OPEN THE DIRECTOR PAGE")}`, String(d.guest_email)).catch(() => {});
+    done.push(tag); n++;
+  }
+  if (n) await admin.from("booking_settings").upsert({ key: "fast_reminders", value: JSON.stringify(done.slice(-300)), updated_at: now });
+  return json({ ok: true, reminded: n });
+}
+
 // Sends the request to the partners the Director ticked. Partners already
 // asked for this request are skipped, so asking more later is safe.
 // deno-lint-ignore no-explicit-any
@@ -699,7 +742,7 @@ async function actionOfferView(body: Row) {
   if (!x) return fail("not_found", "This link is not valid.", 404);
   const d = x.dispatch;
   return json({ ok: true, partner: x.partner.name, answer: x.offer.answer,
-    taken: d.status !== "open", mine: d.accepted_by === x.partner.id,
+    taken: d.status !== "open" || x.offer.answer === "late", mine: d.accepted_by === x.partner.id,
     request: { service: d.service, date: d.day, nice_date: niceDate(String(d.day)) + (d.day_to ? " to " + niceDate(String(d.day_to)) : ""), party_size: d.party_size, details: d.details } });
 }
 
@@ -719,6 +762,8 @@ async function actionOfferAnswer(body: Row) {
     return json({ ok: true, result: "declined" });
   }
   if (body.answer !== "accept") return fail("bad_answer", "Please choose accept or decline.", 400);
+  // A partner who did not answer in time, and was replaced, can no longer accept.
+  if (x.offer.answer === "late") return json({ ok: true, result: "taken" });
   const price = Math.round(Number(body.price) * 100);
   const pricePence = Number.isFinite(price) && price > 0 ? price : null;
   const note = String(body.note ?? "").trim().slice(0, 500) || null;
@@ -960,9 +1005,11 @@ async function directorAction(action: string, body: Row) {
     const { data: dispatches } = await admin.from("dispatches").select("*").order("created_at", { ascending: false }).limit(50);
     const names = Object.fromEntries((partners ?? []).map((p) => [p.id, p.name]));
     const ids = (dispatches ?? []).map((d) => d.id);
-    const { data: offers } = ids.length ? await admin.from("dispatch_offers").select("dispatch_id, partner_id, answer").in("dispatch_id", ids) : { data: [] };
+    const { data: offers } = ids.length ? await admin.from("dispatch_offers").select("dispatch_id, partner_id, answer, created_at").in("dispatch_id", ids) : { data: [] };
+    const nowIso = new Date().toISOString();
     const fastList = (dispatches ?? []).map((d) => ({ ...d, accepted_by_name: d.accepted_by ? names[d.accepted_by] ?? "" : "",
-      asked: (offers ?? []).filter((o) => o.dispatch_id === d.id).map((o) => ({ partner_id: o.partner_id, name: names[o.partner_id] ?? "", answer: o.answer })) }));
+      asked: (offers ?? []).filter((o) => o.dispatch_id === d.id).map((o) => ({ partner_id: o.partner_id, name: names[o.partner_id] ?? "", answer: o.answer })),
+      due_at: dueAt(d, offers ?? []), overdue: (() => { const due = dueAt(d, offers ?? []); return !!due && due <= nowIso; })() }));
     const profiles = await partnerProfiles();
     const partnerList = (partners ?? []).map((p) => ({ ...p, profile: profiles[p.id] ?? null }));
     return json({ ok: true, proposals: list, questions: qs ?? [], introductions: introList, partners: partnerList, dispatches: fastList, fast_services: FAST_SERVICES, settings: await settings(), rates: await directorRates(), sellable: SELLABLE, today: londonToday() });
@@ -1030,6 +1077,14 @@ async function directorAction(action: string, body: Row) {
     const list = (ps ?? []).filter((p) => !already.has(p.id));
     if (!list.length) return fail("none_left", "Those partners were already asked, or are not active for this service.", 400);
     if (d.status === "declined") await admin.from("dispatches").update({ status: "open" }).eq("id", d.id);
+    // Partners who did not answer in time can no longer accept once others are asked.
+    const { data: mine } = await admin.from("dispatch_offers").select("id, dispatch_id, answer, created_at").eq("dispatch_id", d.id).eq("answer", "pending");
+    const now = new Date().toISOString();
+    for (const o of mine ?? []) {
+      if (new Date(new Date(o.created_at).getTime() + answerLimitMs(d.day, o.created_at)).toISOString() <= now) {
+        await admin.from("dispatch_offers").update({ answer: "late", answered_at: now }).eq("id", o.id).eq("answer", "pending");
+      }
+    }
     const sent = await askPartners(d, list);
     return json({ ok: true, asked: list.length, sent });
   }
@@ -1113,6 +1168,7 @@ Deno.serve(async (req) => {
     if (action === "ask") return await actionAsk(body);
     if (action === "introduce") return await actionIntroduce(body);
     if (action === "rapid") return await actionRapid(body);
+    if (action === "reminders") return await actionReminders();
     if (action === "offer_view") return await actionOfferView(body);
     if (action === "offer_answer") return await actionOfferAnswer(body);
     if (action === "d_start") return await dStart();

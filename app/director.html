@@ -34,6 +34,7 @@
 .stars { color: #C9A84C; letter-spacing: 1px; }
 .chip { display: inline-block; background: var(--cream); border-radius: 999px; padding: 1px 10px; margin: 3px 6px 0 0; font-size: 13px; }
 .asked { margin-top: 6px; font-size: 13px; }
+.pill-cancel { background: #FBEDEA; color: #B5503F; border-color: #EBC4BC; }
 .sortrow { display: flex; gap: 8px; align-items: center; font-size: 14px; margin-top: 8px; }
 .sortrow select { width: auto; margin: 0; padding: 4px 8px; }
 #pLogoPrev { max-width: 80px; max-height: 80px; display: none; margin: 6px 0; border: 1px solid var(--line); border-radius: 8px; }
@@ -311,10 +312,12 @@
       window.__partners = r.partners || [];
       el("fast").innerHTML = ds.length ? ds.map(function (d) {
         var asked = d.asked || [];
-        var label = d.status === "open" && !asked.length ? "Waiting for you to choose partners" : FW[d.status] || d.status;
-        var pill = d.status === "accepted" ? "pill pill-paid" : d.status === "open" ? "pill pill-cancel_requested" : "pill";
+        var label = d.status === "open" && !asked.length ? "Waiting for you to choose partners" : d.overdue ? "No answer in time" : FW[d.status] || d.status;
+        var pill = d.status === "accepted" ? "pill pill-paid" : d.overdue ? "pill pill-cancel" : d.status === "open" ? "pill pill-cancel_requested" : "pill";
         var acts = "";
         if (d.status === "accepted") acts += '<button class="inline" data-propose="' + d.id + '">Make the proposal</button>';
+        if (d.overdue) acts += '<div class="rate-warn" style="margin-top:6px">No answer in time. Ask another partner below; the partner who did not answer can then no longer accept.</div>';
+        else if (d.due_at) acts += '<div class="asked">Waiting for an answer until ' + esc(new Date(d.due_at).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/London" })) + ", London time.</div>";
         if (asked.length) acts = '<div class="asked">Asked: ' + asked.map(function (a) { return esc(a.name) + " (" + esc({ pending: "no answer yet", accepted: "accepted", declined: "declined", late: "too late" }[a.answer] || a.answer) + ")"; }).join(", ") + "</div>" + acts;
         if (d.status === "open" || d.status === "declined") acts += picker(d);
         if (d.status === "open") acts += '<button class="inline quiet" data-fastclose="' + d.id + '">Close</button>';
