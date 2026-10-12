@@ -27,7 +27,7 @@
 //   letter    { ref, key }         details for the booking confirmation letter
 //   ask       { name, email, question, lang, consent }  a question from the FAQ page
 //   introduce { service, name, email, phone, ... }   a request for a transport or boat introduction
-//   rapid     { service, name, email, phone, date, ... }  a fast request: partners are asked at once
+//   rapid     { service, name, email, phone, date, ... }  a fast request: it waits for the Director to choose partners (changed 12 October 2026)
 //   offer_view   { o, k }           a partner opens a fast request
 //   offer_answer { o, k, answer, price, note }  a partner accepts or declines it
 //
@@ -42,7 +42,8 @@
 //   d_settings { min_lead_days, block, unblock, note } or { rates } (Director price reminders)
 //   d_question { id, status }      marks a FAQ question answered or hides it
 //   d_intro    { id, status }      marks an introduction sent or declined (refused while on hold)
-//   d_partner  { partner }         adds or edits a partner for fast requests
+//   d_partner  { partner }         adds or edits a partner for fast requests, with logo, rating, level and usual price
+//   d_ask      { id, partner_ids }  asks only the partners the Director ticked for a fast request
 //   d_dispatch { id, status }      closes a fast request (cancelled)
 //
 // The one day gap (decided 3 October 2026, from the 27 August classification):
@@ -294,6 +295,14 @@ function guestView(p: Row) {
 // only to the signed in Director, never by the public "settings" action.
 async function directorRates(): Promise<Record<string, { low: number | null; high: number | null; note: string }>> {
   const { data } = await admin.from("booking_settings").select("value").eq("key", "director_rates").maybeSingle();
+  try { return data?.value ? JSON.parse(String(data.value)) : {}; } catch { return {}; }
+}
+
+// Each partner's logo, star rating, level and usual price to BHH, kept as one
+// private setting so no table change is needed. Added 12 October 2026.
+type Profile = { logo: string; rating: number | null; level: string; price: number | null };
+async function partnerProfiles(): Promise<Record<string, Profile>> {
+  const { data } = await admin.from("booking_settings").select("value").eq("key", "partner_profiles").maybeSingle();
   try { return data?.value ? JSON.parse(String(data.value)) : {}; } catch { return {}; }
 }
 
@@ -624,9 +633,28 @@ async function actionRapid(body: Row) {
   }).select("*").single();
   if (error || !d) return fail("db_error", "The request could not be saved.", 500);
 
-  const { data: partners } = await admin.from("partners").select("*").eq("active", true).contains("services", [service]);
+  // Nobody is asked yet: the Director chooses which partners to ask on the Director page.
+  const { data: partners } = await admin.from("partners").select("id").eq("active", true).contains("services", [service]);
   const list = partners ?? [];
   const when = niceDate(String(body.date)) + (dayTo ? " to " + niceDate(dayTo) : "");
+  const party = d.party_size ? `${d.party_size} people` : "party size not given";
+  const det = d.details ? String(d.details) : "No further details.";
+  try {
+    await sendEmail(DIRECTOR_EMAIL, `Fast request, choose partners: ${service}, ${when}`, `
+      <p><strong>${esc(name)}</strong> (${esc(email)}${phone ? ", " + esc(phone) : ""}) asked for <strong>${esc(service)}</strong> on ${esc(when)}, ${esc(party)}.</p>
+      <p>${esc(det).replace(/\n/g, "<br>")}</p>
+      <p>${list.length ? `${list.length} active partner${list.length === 1 ? " offers" : "s offer"} this service. Nobody has been asked yet: open the Director page, tick the partners you want, and click Ask.` : `No active partner is on file for ${esc(service)}. Please arrange it yourself.`}</p>
+      ${button(`${SITE_URL}/app/director.html`, "OPEN THE DIRECTOR PAGE")}`, email);
+  } catch (e) { console.error(String(e)); }
+  return json({ ok: true, partners: list.length, sent: 0 });
+}
+
+// Sends the request to the partners the Director ticked. Partners already
+// asked for this request are skipped, so asking more later is safe.
+// deno-lint-ignore no-explicit-any
+async function askPartners(d: any, list: any[]): Promise<number> {
+  const service = String(d.service);
+  const when = niceDate(String(d.day)) + (d.day_to ? " to " + niceDate(String(d.day_to)) : "");
   const party = d.party_size ? `${d.party_size} people` : "party size not given";
   const det = d.details ? String(d.details) : "No further details.";
   let sent = 0;
@@ -653,14 +681,7 @@ async function actionRapid(body: Row) {
       if (p.whatsapp && await sendWhatsApp(String(p.whatsapp), [service, when, `${party}. ${det}`], `o=${offer.id}&k=${key}`)) sent++;
     } catch (e) { console.error("partner notice failed", String(e)); }
   }
-  try {
-    await sendEmail(DIRECTOR_EMAIL, `${list.length ? "Fast request sent" : "Fast request, NO PARTNER ON FILE"}: ${service}, ${when}`, `
-      <p><strong>${esc(name)}</strong> (${esc(email)}${phone ? ", " + esc(phone) : ""}) asked for <strong>${esc(service)}</strong> on ${esc(when)}, ${esc(party)}.</p>
-      <p>${esc(det).replace(/\n/g, "<br>")}</p>
-      <p>${list.length ? `Sent to ${list.length} partner${list.length === 1 ? "" : "s"}. You will be emailed the moment one accepts.` : `No active partner is on file for ${esc(service)}, so nobody was asked. Please arrange it yourself.`}</p>
-      ${button(`${SITE_URL}/app/director.html`, "OPEN THE DIRECTOR PAGE")}`, email);
-  } catch (e) { console.error(String(e)); }
-  return json({ ok: true, partners: list.length, sent });
+  return sent;
 }
 
 async function offerByKey(o: unknown, k: unknown) {
@@ -693,7 +714,7 @@ async function actionOfferAnswer(body: Row) {
     if (d.status === "open" && (rest ?? []).every((r) => r.answer === "declined")) {
       await admin.from("dispatches").update({ status: "declined" }).eq("id", d.id).eq("status", "open");
       await sendEmail(DIRECTOR_EMAIL, `Fast request declined by all partners: ${d.service}, ${niceDate(String(d.day))}`,
-        `<p>Every partner declined ${esc(d.service)} for ${esc(d.guest_name)} on ${esc(niceDate(String(d.day)))}. Please reply to the guest yourself.</p>`, String(d.guest_email)).catch(() => {});
+        `<p>Every partner you asked declined ${esc(d.service)} for ${esc(d.guest_name)} on ${esc(niceDate(String(d.day)))}. You can ask other partners from the Director page, or reply to the guest yourself.</p>`, String(d.guest_email)).catch(() => {});
     }
     return json({ ok: true, result: "declined" });
   }
@@ -938,8 +959,13 @@ async function directorAction(action: string, body: Row) {
     const { data: partners } = await admin.from("partners").select("*").order("name");
     const { data: dispatches } = await admin.from("dispatches").select("*").order("created_at", { ascending: false }).limit(50);
     const names = Object.fromEntries((partners ?? []).map((p) => [p.id, p.name]));
-    const fastList = (dispatches ?? []).map((d) => ({ ...d, accepted_by_name: d.accepted_by ? names[d.accepted_by] ?? "" : "" }));
-    return json({ ok: true, proposals: list, questions: qs ?? [], introductions: introList, partners: partners ?? [], dispatches: fastList, fast_services: FAST_SERVICES, settings: await settings(), rates: await directorRates(), sellable: SELLABLE, today: londonToday() });
+    const ids = (dispatches ?? []).map((d) => d.id);
+    const { data: offers } = ids.length ? await admin.from("dispatch_offers").select("dispatch_id, partner_id, answer").in("dispatch_id", ids) : { data: [] };
+    const fastList = (dispatches ?? []).map((d) => ({ ...d, accepted_by_name: d.accepted_by ? names[d.accepted_by] ?? "" : "",
+      asked: (offers ?? []).filter((o) => o.dispatch_id === d.id).map((o) => ({ partner_id: o.partner_id, name: names[o.partner_id] ?? "", answer: o.answer })) }));
+    const profiles = await partnerProfiles();
+    const partnerList = (partners ?? []).map((p) => ({ ...p, profile: profiles[p.id] ?? null }));
+    return json({ ok: true, proposals: list, questions: qs ?? [], introductions: introList, partners: partnerList, dispatches: fastList, fast_services: FAST_SERVICES, settings: await settings(), rates: await directorRates(), sellable: SELLABLE, today: londonToday() });
   }
   if (action === "d_create") return await dCreate(body);
   if (action === "d_question") {
@@ -976,9 +1002,36 @@ async function directorAction(action: string, body: Row) {
     if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return fail("bad_email", "That email address does not look right.", 400);
     const row = { name, services, email, whatsapp: String(p.whatsapp ?? "").trim() || null, active: p.active !== false, notes: String(p.notes ?? "").slice(0, 500) || null };
     if (!row.email && !row.whatsapp) return fail("no_contact", "Give an email address or a WhatsApp number.", 400);
-    const res = p.id ? await admin.from("partners").update(row).eq("id", String(p.id)) : await admin.from("partners").insert(row);
-    if (res.error) return fail("db_error", res.error.message, 500);
+    const res = p.id ? await admin.from("partners").update(row).eq("id", String(p.id)).select("id").single() : await admin.from("partners").insert(row).select("id").single();
+    if (res.error || !res.data) return fail("db_error", res.error?.message ?? "Not saved.", 500);
+    const logo = String(p.logo ?? "");
+    if (logo && (!/^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+/=]+$/.test(logo) || logo.length > 120000)) return fail("bad_logo", "The logo picture is too large or not a picture. Try a smaller image.", 400);
+    const rating = Math.round(Number(p.rating));
+    const priceN = Number(p.price);
+    const profiles = await partnerProfiles();
+    profiles[res.data.id] = {
+      logo,
+      rating: rating >= 1 && rating <= 5 ? rating : null,
+      level: ["Standard", "Executive", "Luxury"].includes(String(p.level)) ? String(p.level) : "",
+      price: String(p.price ?? "").trim() !== "" && priceN >= 0 && priceN < 100000 ? Math.round(priceN * 100) / 100 : null,
+    };
+    await admin.from("booking_settings").upsert({ key: "partner_profiles", value: JSON.stringify(profiles), updated_at: new Date().toISOString() });
     return json({ ok: true });
+  }
+  if (action === "d_ask") {
+    const { data: d } = await admin.from("dispatches").select("*").eq("id", String(body.id ?? "")).maybeSingle();
+    if (!d) return fail("not_found", "Request not found.", 404);
+    if (d.status !== "open" && d.status !== "declined") return fail("not_open", "This request is no longer open.", 409);
+    const want = (Array.isArray(body.partner_ids) ? body.partner_ids : []).map(String);
+    if (!want.length) return fail("none_ticked", "Tick at least one partner.", 400);
+    const { data: done } = await admin.from("dispatch_offers").select("partner_id").eq("dispatch_id", d.id);
+    const already = new Set((done ?? []).map((o) => o.partner_id));
+    const { data: ps } = await admin.from("partners").select("*").eq("active", true).contains("services", [d.service]).in("id", want);
+    const list = (ps ?? []).filter((p) => !already.has(p.id));
+    if (!list.length) return fail("none_left", "Those partners were already asked, or are not active for this service.", 400);
+    if (d.status === "declined") await admin.from("dispatches").update({ status: "open" }).eq("id", d.id);
+    const sent = await askPartners(d, list);
+    return json({ ok: true, asked: list.length, sent });
   }
   if (action === "d_dispatch") {
     if (String(body.status) !== "cancelled") return fail("bad_status", "Unknown status.", 400);
