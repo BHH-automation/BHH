@@ -93,8 +93,8 @@
     if (from) { from.addEventListener("change", copy); from.addEventListener("input", copy); }
     form.addEventListener("submit", copy, true);
     // Fast request: every experience in a guest enquiry is also sent straight
-    // to the BHH system, which asks that service's partners at once. The
-    // normal enquiry still goes through as before.
+    // to the BHH system, where it waits for the Director to choose which
+    // partners to ask (12 October 2026). The normal enquiry still goes through.
     var NAMES = { "Dinner": "British Dinner", "Cultural Immersion Program": "Cultural Immersion Programme" };
     form.addEventListener("submit", function (e) {
       if (e.defaultPrevented) return;
@@ -107,7 +107,9 @@
             method: "POST", keepalive: true, headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ action: "rapid", lang: ar ? "ar" : "en", service: NAMES[svc] || svc,
               name: v("Full Name"), email: v("email"), country_code: v("Country Code"), phone: v("Phone Number"),
-              date: v("Date From"), date_to: form.getAttribute("data-one-day") ? "" : v("Date To"),
+              // 13 October 2026: each experience is sent with its own date.
+              date: (window.bhhExperienceDate && window.bhhExperienceDate(svc)) || v("Date From"),
+              date_to: (window.bhhExperienceDate && window.bhhExperienceDate(svc)) || form.getAttribute("data-one-day") ? "" : v("Date To"),
               adults: v("Number of Adults"), children: v("Number of Children"),
               details: v("Special Requests"), website: v("bot-field") })
           }).catch(function () {});
