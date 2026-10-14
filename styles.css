@@ -2523,3 +2523,9 @@ a[href*="joinus"], a[href^="/join/"], a[href*="becomehost"], a[href*="becomepart
 .enquire-panel .tier-slot-capacity { color: var(--text); }
 .enquire-panel #per-service-tier-container label span,
 .enquire-panel #per-service-tier-container > p { color: var(--muted) !important; }
+
+/* Dark gold for gold text on the white enquiry panel (14 October 2026, the
+   Director's request): the light gold #C9A84C was hard to read on white. */
+#cruise-solo-note { color: #8A6A1F !important; font-weight: 500; }
+.enquire-panel .tier-slot-header { color: #8A6A1F; font-weight: 600; }
+.enquire-panel .bhh-more-exp { color: #8A6A1F !important; font-weight: 500; }
