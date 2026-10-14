@@ -133,11 +133,11 @@
       document.querySelectorAll('.services-preview__tile').forEach(function(t){
         t.addEventListener('click', function(){
           render(t.getAttribute('data-i')); bhhFitServices();
-          /* on a phone the big card sits below the nine, so bring it into view */
-          if(window.innerWidth <= 900){
-            var box = document.getElementById('servicesExpand');
-            if(box && box.scrollIntoView) box.scrollIntoView({behavior:'smooth', block:'nearest'});
-          }
+          /* 14 October 2026: on any screen, if the big card with "Discover more" is
+             not fully in view after a tap, bring it into view (it used to happen on phones only). */
+          var box = document.getElementById('servicesExpand');
+          if(box && box.scrollIntoView){ var br = box.getBoundingClientRect();
+            if(br.bottom > window.innerHeight || br.top < 0) box.scrollIntoView({behavior:'smooth', block:'nearest'}); }
         });
       });
       /* On a laptop the first card is open from the start. On a phone the big

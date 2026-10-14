@@ -121,17 +121,45 @@
     }
     land();
   }
-  // Runs before the tile's own click, so the tile's showcase does not open.
+  // 14 October 2026 (the Director's decision): the gold button on a tile first
+  // shows that experience's details card below the tiles, the same as tapping
+  // the picture. The card then carries its own gold button next to
+  // "Discover more", and that one goes to the form.
+  var expand = document.getElementById("servicesExpand");
+  function addCardButton() {
+    if (!expand || expand.querySelector(".services-preview__cardbook")) return;
+    var active = grid.querySelector(".services-preview__tile.is-active");
+    var info = expand.querySelector(".info");
+    if (!active || !info || !MAP[active.getAttribute("data-i")]) return;
+    var i = active.getAttribute("data-i"), m = MAP[i];
+    var cb = document.createElement("span");
+    cb.className = "services-preview__book services-preview__cardbook";
+    cb.setAttribute("role", "link"); cb.setAttribute("tabindex", "0");
+    cb.setAttribute("data-i", i); cb.setAttribute("data-go", "1");
+    cb.setAttribute("data-tip", TIPS[m.kind]);
+    cb.textContent = WORDS[m.kind] + (AR ? " ‹" : " ›");
+    info.appendChild(cb);
+  }
+  if (expand && window.MutationObserver) {
+    new MutationObserver(addCardButton).observe(expand, { childList: true });
+    addCardButton();
+  }
+  css.textContent += ".services-preview__cardbook{position:static;display:inline-block;margin:0.6rem " + (AR ? "0.8rem 0 0" : "0 0 0.8rem") + ";font-size:13px;padding:7px 14px;vertical-align:middle}";
   document.addEventListener("click", function (e) {
     var b = e.target.closest && e.target.closest(".services-preview__book");
     if (!b) return;
-    e.preventDefault(); e.stopPropagation();
-    go(b.getAttribute("data-i"));
+    if (b.getAttribute("data-go") === "1" || !expand) {
+      e.preventDefault(); e.stopPropagation();
+      go(b.getAttribute("data-i"));
+    }
+    // a tile button: let the click reach the tile, which opens its card
+    hideTip();
   }, true);
   document.addEventListener("keydown", function (e) {
     var b = e.target.closest && e.target.closest(".services-preview__book");
     if (!b || (e.key !== "Enter" && e.key !== " ")) return;
     e.preventDefault(); e.stopPropagation();
-    go(b.getAttribute("data-i"));
+    if (b.getAttribute("data-go") === "1" || !expand) go(b.getAttribute("data-i"));
+    else { var tl = b.closest(".services-preview__tile"); if (tl) tl.click(); }
   }, true);
 })();
