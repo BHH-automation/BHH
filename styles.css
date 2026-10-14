@@ -2514,3 +2514,12 @@ a[href*="joinus"], a[href^="/join/"], a[href*="becomehost"], a[href*="becomepart
 #tab-host, #tab-partner, #tab-scout,
 .enquire-tab[data-tab="host"], .enquire-tab[data-tab="partner"], .enquire-tab[data-tab="scout"]{ display:none !important; }
 /* END RECRUITMENT PAUSED */
+
+/* Experience Tier cards on the white enquiry panel (14 October 2026).
+   The tier text was cream, made for the old navy form, so on the white
+   panel "Standard", "Premium" and their descriptions looked empty. */
+.enquire-panel .tier-slot-card-name { color: var(--text); font-weight: 600; }
+.enquire-panel .tier-slot-card-desc { color: var(--muted); font-size: 0.78rem; }
+.enquire-panel .tier-slot-capacity { color: var(--text); }
+.enquire-panel #per-service-tier-container label span,
+.enquire-panel #per-service-tier-container > p { color: var(--muted) !important; }
