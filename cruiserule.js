@@ -155,7 +155,7 @@
               name: v("Full Name"), email: v("email"), country_code: v("Country Code"), phone: v("Phone Number"),
               // 13 October 2026: each experience is sent with its own date.
               date: (window.bhhExperienceDate && window.bhhExperienceDate(svc)) || v("Date From"),
-              date_to: (window.bhhExperienceDate && window.bhhExperienceDate(svc)) || form.getAttribute("data-one-day") ? "" : v("Date To"),
+              date_to: window.bhhExperienceDateTo ? window.bhhExperienceDateTo(svc) : (form.getAttribute("data-one-day") ? "" : v("Date To")),
               adults: v("Number of Adults"), children: v("Number of Children"),
               details: v("Special Requests"), website: v("bot-field") })
           }).catch(function () {});

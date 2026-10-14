@@ -25,6 +25,9 @@
   if (!form || !from || !to) return;
   var AR = (document.documentElement.lang || "").toLowerCase().indexOf("ar") === 0;
   var SAME_DAY = { "Airport Transfer": 1, "Canal Day Cruise": 1 };
+  // 14 October 2026 (the Director's decision): these can last several days,
+  // so they get a "from" and a "to" date.
+  var RANGE = { "Heritage Guide": 1, "Cultural Immersion Program": 1, "Personal Interpreter Service": 1 };
   var rules = { min_lead_days: 7, unavailable: [] };
 
   // The old dates box is kept but taken out of sight (not display:none, so it
@@ -47,8 +50,8 @@
   box.style.display = "none";
   box.innerHTML = '<label>' + (AR ? "تاريخ كل تجربة" : "Date for each experience") + ' <span style="color:#C9A84C">*</span></label>' +
     '<p class="bhh-exp-hint" style="font-size:0.82rem;margin:-0.2rem 0 0.8rem;font-style:italic">' +
-    (AR ? "اختاروا تاريخًا لكل تجربة، ويمكن أن تختلف التواريخ من تجربة إلى أخرى."
-        : "Choose a date for each experience. Each one can be on a different day.") + "</p>" +
+    (AR ? "اختاروا تاريخًا لكل تجربة، ويمكن أن تختلف التواريخ من تجربة إلى أخرى. للمرشد وبرنامج الانغماس والمترجم اختاروا تاريخ البداية والنهاية."
+        : "Choose a date for each experience. Each one can be on a different day. For the guide, the immersion programme and the interpreter, choose a start and an end date.") + "</p>" +
     '<div class="bhh-exp-rows"></div>';
   var tier = document.getElementById("per-service-tier-container");
   var anchor = tier || grid.closest(".form-group");
@@ -59,7 +62,7 @@
   var hintEl = box.querySelector(".bhh-exp-hint");
   if (hintSrc) hintEl.style.cssText = hintSrc.style.cssText;
   hintEl.style.setProperty("color", hintSrc ? getComputedStyle(hintSrc).color : "#666055", "important");
-  var kept = {}; // dates already typed, kept when cards are ticked again
+  var kept = {}, keptTo = {}; // dates already typed, kept when cards are ticked again
 
   function iso(d) { return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
   function earliest(svc) { var d = new Date(); d.setDate(d.getDate() + (SAME_DAY[svc] ? 0 : rules.min_lead_days)); return iso(d); }
@@ -93,10 +96,24 @@
   }
 
   // Copies the chosen dates into the fields that are sent.
+  function checkTo(input) {
+    var row = input.closest(".bhh-exp-row"), svc = input.getAttribute("data-exp-to");
+    var start = row.querySelector("input[data-exp-date]").value;
+    keptTo[svc] = input.value;
+    if (input.value && start && input.value < start) {
+      input.value = start; keptTo[svc] = start;
+      note(row, AR ? "يجب أن يكون تاريخ النهاية بعد تاريخ البداية أو في اليوم نفسه." : "The end date must be on or after the start date.");
+    }
+    fill();
+  }
   function fill() {
     var inputs = rowsEl.querySelectorAll("input[data-exp-date]"), dates = [], parts = [];
     Array.prototype.forEach.call(inputs, function (i) {
-      if (i.value) { dates.push(i.value); parts.push(i.getAttribute("data-exp-label") + ": " + i.value); }
+      if (!i.value) return;
+      var end = i.closest(".bhh-exp-row").querySelector("input[data-exp-to]");
+      var last = end && end.value && end.value > i.value ? end.value : "";
+      dates.push(i.value); if (last) dates.push(last);
+      parts.push(i.getAttribute("data-exp-label") + ": " + i.value + (last ? " to " + last : ""));
     });
     dates.sort();
     from.value = dates[0] || "";
@@ -113,12 +130,20 @@
       var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); };
       return '<div class="bhh-exp-row" style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:0.6rem">' +
         '<span style="flex:1 1 180px;color:' + labelColor + '">' + esc(x.label) + "</span>" +
-        '<input type="date" required data-exp-date="' + esc(x.svc) + '" data-exp-label="' + esc(x.label) + '" min="' + earliest(x.svc) + '" value="' + esc(kept[x.svc] || "") + '" style="flex:1 1 180px" aria-label="' + esc(x.label) + '">' +
+        (RANGE[x.svc]
+          ? '<span style="flex:2 1 260px;display:flex;gap:8px;align-items:center">' +
+            '<input type="date" required data-exp-date="' + esc(x.svc) + '" data-exp-label="' + esc(x.label) + '" min="' + earliest(x.svc) + '" value="' + esc(kept[x.svc] || "") + '" style="flex:1;min-width:0" aria-label="' + esc(x.label) + (AR ? "، من" : ", from") + '">' +
+            '<span style="color:' + labelColor + ';opacity:0.6;font-size:0.85rem">' + (AR ? "إلى" : "to") + "</span>" +
+            '<input type="date" required data-exp-to="' + esc(x.svc) + '" min="' + earliest(x.svc) + '" value="' + esc(keptTo[x.svc] || "") + '" style="flex:1;min-width:0" aria-label="' + esc(x.label) + (AR ? "، إلى" : ", to") + '"></span>'
+          : '<input type="date" required data-exp-date="' + esc(x.svc) + '" data-exp-label="' + esc(x.label) + '" min="' + earliest(x.svc) + '" value="' + esc(kept[x.svc] || "") + '" style="flex:1 1 180px" aria-label="' + esc(x.label) + '">') +
         '<p class="bhh-exp-note" role="alert" style="display:none;flex-basis:100%;font-size:0.85rem;color:#B5503F;margin:0.2rem 0 0"></p></div>';
     }).join("");
     Array.prototype.forEach.call(rowsEl.querySelectorAll("input[data-exp-date]"), function (i) {
-      i.addEventListener("change", function () { check(i); });
+      i.addEventListener("change", function () { check(i); var e = i.closest(".bhh-exp-row").querySelector("input[data-exp-to]"); if (e) { e.min = i.value || e.min; if (e.value) checkTo(e); } });
       i.addEventListener("input", function () { check(i); });
+    });
+    Array.prototype.forEach.call(rowsEl.querySelectorAll("input[data-exp-to]"), function (i) {
+      i.addEventListener("change", function () { checkTo(i); });
     });
     fill();
   }
@@ -139,5 +164,10 @@
   window.bhhExperienceDate = function (svc) {
     var i = rowsEl.querySelector('input[data-exp-date="' + svc + '"]');
     return i ? i.value : "";
+  };
+  // The end date for an experience that lasts several days, or "".
+  window.bhhExperienceDateTo = function (svc) {
+    var i = rowsEl.querySelector('input[data-exp-to="' + svc + '"]');
+    return i && i.value ? i.value : "";
   };
 })();
