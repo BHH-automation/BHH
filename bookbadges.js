@@ -29,15 +29,28 @@
   var WORDS = AR
     ? { book: "احجزوا", intro: "تعريف", both: "الخيارات" }
     : { book: "Book", intro: "Introduce", both: "Options" };
+  // 14 October 2026 (the Director's decision): resting the mouse on a button,
+  // or focusing it, shows what it means.
+  var TIPS = AR
+    ? { book: "ترتبها بريتش هيريتج هوستس وتحجزها لكم.",
+        intro: "نعرّفكم بشركة قوارب موثوقة، وتحجزون وتدفعون لها مباشرة.",
+        both: "احجزوا النقل من المطار معنا، أو اطلبوا تعريفًا بشركة سيارات مع سائق." }
+    : { book: "British Heritage Hosts arranges and books this for you.",
+        intro: "We introduce you to a trusted boat company. You book and pay them directly.",
+        both: "Book an Airport Transfer with us, or ask for an introduction to a chauffeur company." };
 
   var css = document.createElement("style");
   css.textContent =
-    ".services-preview__book{position:absolute;top:0.3rem;" + (AR ? "left" : "right") + ":0.3rem;z-index:2;" +
-    "background:var(--gold,#C9A84C);color:#0D1B2A;font-family:var(--ff-body);font-weight:700;font-size:0.6rem;" +
-    "letter-spacing:0.03em;line-height:1;padding:0.32rem 0.5rem;border-radius:999px;white-space:nowrap;cursor:pointer;" +
+    ".services-preview__book{position:absolute;top:5px;" + (AR ? "left" : "right") + ":5px;z-index:2;" +
+    "background:var(--gold,#C9A84C);color:#0D1B2A;font-family:var(--ff-body);font-weight:700;font-size:11px;" +
+    "letter-spacing:0.03em;line-height:1;padding:5px 8px;border-radius:999px;white-space:nowrap;cursor:pointer;" +
     "box-shadow:0 1px 3px rgba(13,27,42,0.35)}" +
     ".services-preview__book:hover,.services-preview__book:focus-visible{background:#fff;outline:none}" +
-    "@media (max-width:900px){.services-preview__book{font-size:0.62rem}}";
+    ".bhh-book-tip{position:fixed;z-index:9999;max-width:240px;background:#0D1B2A;color:#F5F0E8;font-family:var(--ff-body);" +
+    "font-size:13px;line-height:1.4;padding:8px 10px;border-radius:8px;border:1px solid var(--gold,#C9A84C);" +
+    "box-shadow:0 4px 14px rgba(13,27,42,0.35);text-align:" + (AR ? "right" : "left") + ";pointer-events:none;opacity:0;transition:opacity 0.15s}" +
+    ".bhh-book-tip.on{opacity:1}" +
+    "@media (max-width:480px){.services-preview__book{font-size:10px;padding:4px 7px}}";
   document.head.appendChild(css);
 
   Array.prototype.forEach.call(grid.querySelectorAll(".services-preview__tile"), function (tile) {
@@ -49,8 +62,35 @@
     b.setAttribute("tabindex", "0");
     b.setAttribute("data-i", tile.getAttribute("data-i"));
     b.textContent = WORDS[m.kind] + (AR ? " ‹" : " ›");
+    b.setAttribute("aria-label", WORDS[m.kind] + ". " + TIPS[m.kind]);
     tile.appendChild(b);
+    b.setAttribute("data-tip", TIPS[m.kind]);
   });
+
+  // One floating note for all buttons, placed just under the button so it is
+  // never cut off by the tile's edge.
+  var tip = document.createElement("div");
+  tip.className = "bhh-book-tip"; tip.setAttribute("aria-hidden", "true");
+  document.body.appendChild(tip);
+  function showTip(b) {
+    tip.textContent = b.getAttribute("data-tip") || "";
+    tip.classList.add("on");
+    var r = b.getBoundingClientRect(), w = tip.offsetWidth, h = tip.offsetHeight;
+    var x = AR ? r.left : r.right - w;
+    x = Math.max(8, Math.min(x, window.innerWidth - w - 8));
+    var y = r.bottom + 6; if (y + h > window.innerHeight - 8) y = r.top - h - 6;
+    tip.style.left = x + "px"; tip.style.top = y + "px";
+  }
+  function hideTip() { tip.classList.remove("on"); }
+  document.addEventListener("mouseover", function (e) {
+    var b = e.target.closest && e.target.closest(".services-preview__book");
+    if (b) showTip(b); else hideTip();
+  });
+  document.addEventListener("focusin", function (e) {
+    var b = e.target.closest && e.target.closest(".services-preview__book");
+    if (b) showTip(b); else hideTip();
+  });
+  window.addEventListener("scroll", hideTip, { passive: true });
 
   function only(tab) { if (typeof window.bhhOnlyTab === "function") window.bhhOnlyTab(tab); }
   function land() {
