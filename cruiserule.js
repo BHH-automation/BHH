@@ -24,7 +24,51 @@
   }
   function nameOf(svc) { return ar ? SOLO[svc] : "The " + svc; }
 
+  // 14 October 2026 (the Director's decision): instead of clearing choices,
+  // the cards that cannot go together are greyed out. Once a combinable
+  // experience is ticked, the Airport Transfer and the Canal Day Cruise are
+  // greyed out; once one of those two is ticked, every other card is.
+  function lockCards() {
+    var picked = Array.prototype.map.call(grid.querySelectorAll(".service-card-v8.selected"), function (c) { return c.getAttribute("data-service"); });
+    var soloPicked = picked.some(function (s) { return SOLO.hasOwnProperty(s); });
+    var otherPicked = picked.some(function (s) { return !SOLO.hasOwnProperty(s); });
+    Array.prototype.forEach.call(grid.querySelectorAll(".service-card-v8"), function (c) {
+      var s = c.getAttribute("data-service");
+      var lock = !c.classList.contains("selected") && (soloPicked || (otherPicked && SOLO.hasOwnProperty(s)));
+      c.classList.toggle("bhh-locked", lock);
+      c.setAttribute("aria-disabled", lock ? "true" : "false");
+      c.style.opacity = lock ? "0.4" : "";
+      c.style.cursor = lock ? "not-allowed" : "";
+      if (lock) c.setAttribute("title", ar ? "يُحجز وحده، انظروا الملاحظة أعلاه" : "Booked on its own, see the note above");
+      else c.removeAttribute("title");
+    });
+    // A note always says why some cards are greyed out.
+    var solo = picked.filter(function (s) { return SOLO.hasOwnProperty(s); })[0];
+    if (solo) say(ar
+      ? "التجارب الأخرى باهتة لأن " + SOLO[solo] + " يُحجز وحده. لإضافتها ألغوا اختياره، أو أرسلوا طلبًا منفصلًا لها."
+      : "The other experiences are greyed out because " + nameOf(solo).replace(/^The /, "the ") + " is booked on its own. To add them, untick it, or send a separate enquiry for them.");
+    else if (otherPicked) say(ar
+      ? "النقل من المطار والرحلة النهارية في القناة باهتان لأن كلًا منهما يُحجز وحده. لحجز أحدهما ألغوا اختيار التجارب الأخرى، أو أرسلوا طلبًا منفصلًا له."
+      : "The Airport Transfer and the Canal Day Cruise are greyed out because each is booked on its own. To book one of them, untick the other experiences, or send a separate enquiry for it.");
+    else say("");
+  }
+  function lockedNote(card) {
+    var mine = card.getAttribute("data-service");
+    var solo = Array.prototype.map.call(grid.querySelectorAll(".service-card-v8.selected"), function (c) { return c.getAttribute("data-service"); })
+      .filter(function (s) { return SOLO.hasOwnProperty(s); })[0];
+    if (solo) say(ar
+      ? nameOf(solo) + " يُحجز وحده. ألغوا اختياره أولًا لاختيار تجارب أخرى، أو أرسلوا طلبًا منفصلًا لها."
+      : nameOf(solo) + " is booked on its own. Untick it first to choose other experiences, or send a separate enquiry for them.");
+    else say(ar
+      ? nameOf(mine) + " يُحجز وحده. ألغوا اختيار التجارب الأخرى أولًا، أو أرسلوا طلبًا منفصلًا له."
+      : nameOf(mine) + " is booked on its own. Untick the other experiences first, or send a separate enquiry for it.");
+  }
+
   window.toggleService = function (card) {
+    // Only a guest's own click on a greyed card is refused; a page that
+    // picks an experience for the guest still works as before.
+    var ev = window.event, byClick = ev && ev.type === "click" && card && ev.target && card.contains(ev.target);
+    if (card && card.classList.contains("bhh-locked") && byClick && !window.__bhhForceSolo) { lockedNote(card); return; }
     var selecting = card && !card.classList.contains("selected");
     if (selecting) {
       var mine = card.getAttribute("data-service");
@@ -48,9 +92,11 @@
         : nameOf(clearedSolo) + " has been cleared because it is booked on its own. You can send a separate enquiry for it.");
     }
     var out = original(card);
+    lockCards();
     setTimeout(syncOneDay, 0);
     return out;
   };
+  setTimeout(lockCards, 300); setTimeout(lockCards, 1500);
 
   // 5 October 2026: an Airport Transfer or a Canal Day Cruise happens on one
   // day, so the form asks for one date only. The second date box is hidden
@@ -124,7 +170,9 @@
   window.bhhBookOnItsOwn = function (svc) {
     if (typeof window.switchTab === "function") window.switchTab("guest");
     var card = grid.querySelector('.service-card-v8[data-service="' + svc + '"]');
+    window.__bhhForceSolo = true;
     if (card && !card.classList.contains("selected")) window.toggleService(card);
+    window.__bhhForceSolo = false;
     var pimg = document.querySelector("#tab-guest > img");
     var PIC = { "Airport Transfer": "/images/airport-private-transportation-airport-p.jpg", "Canal Day Cruise": "/images/narrowboat cabin tea.webp" };
     if (pimg && PIC[svc]) {
