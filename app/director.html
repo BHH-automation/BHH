@@ -322,7 +322,7 @@
         if (d.status === "open" || d.status === "declined") acts += picker(d);
         if (d.status === "open") acts += '<button class="inline quiet" data-fastclose="' + d.id + '">Close</button>';
         return '<div class="item"><div><div class="ref">' + esc(d.service) + " · " + esc(nice(d.created_at)) + '</div><div class="service">' + esc(d.guest_name) + ' <span class="small">' + esc(d.guest_email) + (d.guest_phone ? ", " + esc(d.guest_phone) : "") + "</span></div>" +
-          '<div class="small">Date: ' + esc(nice(d.day)) + (d.party_size ? ", " + esc(d.party_size) + " people" : "") + (d.details ? "<br>" + esc(d.details) : "") +
+          '<div class="small">Date: ' + esc(nice(d.day)) + (d.day_to ? " to " + esc(nice(d.day_to)) : "") + (d.party_size ? ", " + esc(d.party_size) + " people" : "") + (d.details ? "<br>" + esc(d.details) : "") +
           (d.accepted_by_name ? "<br>Accepted by " + esc(d.accepted_by_name) + (d.price_pence ? " at " + pounds(d.price_pence) : "") + (d.partner_note ? ", note: " + esc(d.partner_note) : "") : "") + "</div>" +
           '<p style="margin-top:8px"><span class="' + pill + '">' + esc(label) + "</span></p>" + acts + "</div></div>";
       }).join("") : '<p class="lead">No fast requests yet.</p>';
@@ -431,7 +431,9 @@
       el("rows").innerHTML = ""; addRow();
       var row = document.querySelector(".row-item");
       row.querySelector(".svc").value = d.service; row.querySelector(".dt").value = d.day || "";
-      row.querySelector(".ad").value = d.party_size || 1; row.querySelector(".ch").value = 0;
+      // 15 October 2026: adults and children come from the start of the details.
+      var pm = /^Adults (\d+), children (\d+)\./.exec(d.details || "");
+      row.querySelector(".ad").value = pm ? pm[1] : (d.party_size || 1); row.querySelector(".ch").value = pm ? pm[2] : 0;
       if (d.price_pence) row.dataset.cost = String(d.price_pence / 100);
       row.querySelector(".pr").value = ""; hint(row);
       sum(); window.scrollTo(0, 0);

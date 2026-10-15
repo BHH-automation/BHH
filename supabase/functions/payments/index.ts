@@ -189,12 +189,21 @@ async function sendEmail(to: string, subject: string, bodyHtml: string, replyTo?
     <div style="padding:14px 24px 22px;color:#666055;font-size:13px">British Heritage Hosts Ltd, Company No. 17103555, registered in England and Wales.</div>
   </div>
 </div>`;
-  const res = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: { Authorization: `Bearer ${RESEND_API_KEY}`, "Content-Type": "application/json" },
-    body: JSON.stringify({ from: `British Heritage Hosts <${FROM_EMAIL}>`, to: [to], subject, html, ...(replyTo ? { reply_to: replyTo } : {}) }),
-  });
-  if (!res.ok) throw new Error(`Resend ${res.status}: ${await res.text()}`);
+  // 15 October 2026: Resend allows only a few emails a second, so when a guest
+  // picks several experiences at once one email could be refused (the Riverside
+  // Grill email was lost in the 14 October test). A refused email now waits and
+  // tries again, up to 4 times.
+  let res: Response | null = null;
+  for (let attempt = 0; attempt < 5; attempt++) {
+    res = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${RESEND_API_KEY}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ from: `British Heritage Hosts <${FROM_EMAIL}>`, to: [to], subject, html, ...(replyTo ? { reply_to: replyTo } : {}) }),
+    });
+    if (res.status !== 429 && res.status < 500) break;
+    await new Promise((r) => setTimeout(r, 700 * (attempt + 1) + Math.floor(Math.random() * 400)));
+  }
+  if (!res || !res.ok) throw new Error(`Resend ${res ? res.status : 0}: ${res ? await res.text() : ""}`);
 }
 
 function button(href: string, label: string): string {
@@ -631,7 +640,10 @@ async function actionRapid(body: Row) {
   const dayTo = validDate(body.date_to) && String(body.date_to) > String(body.date) ? String(body.date_to) : null;
   const { data: d, error } = await admin.from("dispatches").insert({
     service, guest_name: name, guest_email: email, guest_phone: phone || null, day: body.date, day_to: dayTo,
-    party_size: adults + children || null, details: String(body.details ?? "").trim().slice(0, 2000) || null, lang,
+    // 15 October 2026: adults and children are kept apart at the start of the
+    // details, so the proposal form fills both boxes correctly.
+    party_size: adults + children || null,
+    details: ((adults || children ? `Adults ${adults}, children ${children}. ` : "") + String(body.details ?? "").trim()).slice(0, 2000) || null, lang,
   }).select("*").single();
   if (error || !d) return fail("db_error", "The request could not be saved.", 500);
 
