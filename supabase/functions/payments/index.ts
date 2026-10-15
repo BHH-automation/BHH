@@ -663,6 +663,59 @@ async function actionRapid(body: Row) {
   return json({ ok: true, partners: list.length, sent: 0 });
 }
 
+// 15 October 2026 (the Director's decision): one guest enquiry with several
+// experiences now sends ONE email to the Director listing all of them, instead
+// of one email per experience. Each experience is still saved as its own
+// request on the Director page, so partners are chosen for each separately.
+async function actionRapidBatch(body: Row) {
+  if (String(body.website ?? "").trim()) return json({ ok: true });
+  const lang = body.lang === "ar" ? "ar" : "en";
+  const name = String(body.name ?? "").trim().slice(0, 120);
+  const email = String(body.email ?? "").trim().toLowerCase().slice(0, 200);
+  const phone = (String(body.country_code ?? "").trim() + " " + String(body.phone ?? "").trim()).trim().slice(0, 40);
+  const raw = Array.isArray(body.items) ? (body.items as Row[]).slice(0, 10) : [];
+  const items = raw.map((it) => ({
+    service: String(it.service ?? "").trim(),
+    date: String(it.date ?? ""),
+    date_to: validDate(it.date_to) && String(it.date_to) > String(it.date) ? String(it.date_to) : null,
+  })).filter((it) => FAST_SERVICES.includes(it.service) && validDate(it.date));
+  if (!items.length || !name || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return fail("bad_request", "The request is incomplete.", 400);
+  }
+  const hourAgo = new Date(Date.now() - 3600000).toISOString();
+  const { count } = await admin.from("dispatches").select("id", { count: "exact", head: true }).eq("guest_email", email).gt("created_at", hourAgo);
+  if ((count ?? 0) >= 20) return json({ ok: true });
+
+  const adults = Math.max(0, Math.round(Number(body.adults) || 0));
+  const children = Math.max(0, Math.round(Number(body.children) || 0));
+  const details = ((adults || children ? `Adults ${adults}, children ${children}. ` : "") + String(body.details ?? "").trim()).slice(0, 2000) || null;
+  const rows = items.map((it) => ({
+    service: it.service, guest_name: name, guest_email: email, guest_phone: phone || null, day: it.date, day_to: it.date_to,
+    party_size: adults + children || null, details, lang,
+  }));
+  const { data: saved, error } = await admin.from("dispatches").insert(rows).select("id");
+  if (error || !saved) return fail("db_error", "The request could not be saved.", 500);
+
+  const { data: partners } = await admin.from("partners").select("services").eq("active", true);
+  const offered = (svc: string) => (partners ?? []).filter((p) => ((p.services ?? []) as string[]).includes(svc)).length;
+  const lines = items.map((it) => {
+    const when = niceDate(it.date) + (it.date_to ? " to " + niceDate(it.date_to) : "");
+    const n = offered(it.service);
+    return `<tr><td style="padding:6px 8px 6px 0;border-bottom:1px solid #eee;vertical-align:top"><strong>${esc(it.service)}</strong><br><span style="color:#666055;font-size:13px">${n ? n + " active partner" + (n === 1 ? "" : "s") : "No active partner on file"}</span></td><td style="padding:6px 0;border-bottom:1px solid #eee;vertical-align:top">${esc(when)}</td></tr>`;
+  }).join("");
+  const party = adults || children ? `${adults} adult${adults === 1 ? "" : "s"}, ${children} child${children === 1 ? "" : "ren"}` : "party size not given";
+  const extra = String(body.details ?? "").trim();
+  try {
+    await sendEmail(DIRECTOR_EMAIL, `Fast request, choose partners: ${name}, ${items.length} experience${items.length === 1 ? "" : "s"}`, `
+      <p><strong>${esc(name)}</strong> (${esc(email)}${phone ? ", " + esc(phone) : ""}) asked for ${items.length} experience${items.length === 1 ? "" : "s"}, ${esc(party)}.</p>
+      <table style="width:100%;border-collapse:collapse;font-size:15px">${lines}</table>
+      <p>${extra ? esc(extra).replace(/\n/g, "<br>") : "No further details."}</p>
+      <p>Nobody has been asked yet: open the Director page, tick the partners you want for each experience, and click Ask.</p>
+      ${button(`${SITE_URL}/app/director.html`, "OPEN THE DIRECTOR PAGE")}`, email);
+  } catch (e) { console.error(String(e)); }
+  return json({ ok: true, saved: saved.length });
+}
+
 // How long a partner has to answer before the Director is warned: 1 hour
 // when the trip is within 2 days of the moment the partner was asked,
 // otherwise 4 hours. Decided by the Director on 12 October 2026.
@@ -1180,6 +1233,7 @@ Deno.serve(async (req) => {
     if (action === "ask") return await actionAsk(body);
     if (action === "introduce") return await actionIntroduce(body);
     if (action === "rapid") return await actionRapid(body);
+    if (action === "rapid_batch") return await actionRapidBatch(body);
     if (action === "reminders") return await actionReminders();
     if (action === "offer_view") return await actionOfferView(body);
     if (action === "offer_answer") return await actionOfferAnswer(body);

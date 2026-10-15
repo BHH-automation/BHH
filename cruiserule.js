@@ -146,21 +146,25 @@
       if (e.defaultPrevented) return;
       function v(n) { var f = form.elements[n]; return f ? String(f.value || "").trim() : ""; }
       var picked = grid.querySelectorAll(".service-card-v8.selected");
-      Array.prototype.forEach.call(picked, function (card) {
+      // 15 October 2026 (the Director's decision): all the experiences go in ONE
+      // call, so the Director gets one email for the whole enquiry. Each
+      // experience still has its own date and its own request on the Director page.
+      var items = Array.prototype.map.call(picked, function (card) {
         var svc = card.getAttribute("data-service");
-        try {
-          fetch("https://pwqdzitsezblncmewxsf.supabase.co/functions/v1/Payments", {
-            method: "POST", keepalive: true, headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ action: "rapid", lang: ar ? "ar" : "en", service: NAMES[svc] || svc,
-              name: v("Full Name"), email: v("email"), country_code: v("Country Code"), phone: v("Phone Number"),
-              // 13 October 2026: each experience is sent with its own date.
-              date: (window.bhhExperienceDate && window.bhhExperienceDate(svc)) || v("Date From"),
-              date_to: window.bhhExperienceDateTo ? window.bhhExperienceDateTo(svc) : (form.getAttribute("data-one-day") ? "" : v("Date To")),
-              adults: v("Number of Adults"), children: v("Number of Children"),
-              details: v("Special Requests"), website: v("bot-field") })
-          }).catch(function () {});
-        } catch (err) {}
+        return { service: NAMES[svc] || svc,
+          date: (window.bhhExperienceDate && window.bhhExperienceDate(svc)) || v("Date From"),
+          date_to: window.bhhExperienceDateTo ? window.bhhExperienceDateTo(svc) : (form.getAttribute("data-one-day") ? "" : v("Date To")) };
       });
+      if (!items.length) return;
+      try {
+        fetch("https://pwqdzitsezblncmewxsf.supabase.co/functions/v1/Payments", {
+          method: "POST", keepalive: true, headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ action: "rapid_batch", lang: ar ? "ar" : "en", items: items,
+            name: v("Full Name"), email: v("email"), country_code: v("Country Code"), phone: v("Phone Number"),
+            adults: v("Number of Adults"), children: v("Number of Children"),
+            details: v("Special Requests"), website: v("bot-field") })
+        }).catch(function () {});
+      } catch (err) {}
     }, false);
     grid.addEventListener("click", function () { setTimeout(syncOneDay, 0); });
     setTimeout(syncOneDay, 300); setTimeout(syncOneDay, 1500);
