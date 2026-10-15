@@ -329,14 +329,21 @@
           (d.accepted_by_name ? "<br>Accepted by " + esc(d.accepted_by_name) + (d.price_pence ? " at " + pounds(d.price_pence) : "") + (d.partner_note ? ", note: " + esc(d.partner_note) : "") : "") + "</div>" +
           '<p style="margin-top:8px"><span class="' + pill + '">' + esc(label) + "</span></p>" + acts + "</div></div>";
       }
-      // 15 October 2026 (the Director's request): only requests received in the
-      // last 24 hours are shown. Older ones, and any whose trip date has passed,
-      // wait behind "View older requests" so they do not distract.
-      var dayAgo = Date.now() - 86400000, todayIso = new Date().toISOString().slice(0, 10);
-      var isOld = function (d) { return new Date(d.created_at).getTime() < dayAgo || String(d.day_to || d.day || "") < todayIso; };
+      // 15 October 2026 (the Director's request): only requests still waiting
+      // for you are shown. A request you have dealt with (closed, or a proposal
+      // already made for that guest, service and date) and any whose trip date
+      // has passed wait behind "View finished requests".
+      var todayIso = new Date().toISOString().slice(0, 10), props = r.proposals || [];
+      var proposed = function (d) {
+        return props.some(function (p) {
+          return String(p.guest_email || "").toLowerCase() === String(d.guest_email || "").toLowerCase() &&
+            (p.items || []).some(function (it) { return it.service === d.service && it.date === d.day; });
+        });
+      };
+      var isOld = function (d) { return d.status === "cancelled" || proposed(d) || String(d.day_to || d.day || "") < todayIso; };
       var fresh = ds.filter(function (d) { return !isOld(d); }), older = ds.filter(isOld);
-      el("fast").innerHTML = (fresh.length ? fresh.map(fastCard).join("") : '<p class="lead">No new requests in the last 24 hours.</p>') +
-        (older.length ? '<button type="button" class="quiet" id="oldToggle" style="margin-top:14px">' + (window.__showOld ? "Hide older requests" : "View older requests (" + older.length + ")") + '</button><div id="oldFast"' + (window.__showOld ? "" : ' class="hidden"') + '>' + older.map(fastCard).join("") + "</div>" : "");
+      el("fast").innerHTML = (fresh.length ? fresh.map(fastCard).join("") : '<p class="lead">Nothing waiting for you. Well done.</p>') +
+        (older.length ? '<button type="button" class="quiet" id="oldToggle" style="margin-top:14px">' + (window.__showOld ? "Hide finished requests" : "View finished requests (" + older.length + ")") + '</button><div id="oldFast"' + (window.__showOld ? "" : ' class="hidden"') + '>' + older.map(fastCard).join("") + "</div>" : "");
       window.__fast = ds;
       var ps = r.partners || [];
       el("partners").innerHTML = ps.length ? ps.map(function (p) {
@@ -433,7 +440,7 @@
       call("d_ask", { id: b.dataset.ask, partner_ids: ids }).then(function (r) { if (!r.ok) alert(r.message); load(); });
       return;
     }
-    if (b.id === "oldToggle") { window.__showOld = !window.__showOld; el("oldFast").classList.toggle("hidden", !window.__showOld); b.textContent = window.__showOld ? "Hide older requests" : "View older requests (" + el("oldFast").querySelectorAll(".item").length + ")"; return; }
+    if (b.id === "oldToggle") { window.__showOld = !window.__showOld; el("oldFast").classList.toggle("hidden", !window.__showOld); b.textContent = window.__showOld ? "Hide finished requests" : "View finished requests (" + el("oldFast").querySelectorAll(".item").length + ")"; return; }
     if (b.dataset.fastclose) { if (!confirm("Close this request? Partners who have not answered will see it is no longer needed.")) return; call("d_dispatch", { id: b.dataset.fastclose, status: "cancelled" }).then(load); return; }
     if (b.dataset.propose) {
       var d = (window.__fast || []).filter(function (x) { return x.id === b.dataset.propose; })[0];
