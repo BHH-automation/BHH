@@ -350,7 +350,8 @@ main.wide { max-width: 1320px; }
         });
       };
       var isOld = function (d) { return d.status === "cancelled" || proposed(d) || String(d.day_to || d.day || "") < todayIso; };
-      var fresh = ds.filter(function (d) { return !isOld(d); }), older = ds.filter(isOld);
+      // first come, first served: the oldest waiting request is the first box
+      var fresh = ds.filter(function (d) { return !isOld(d); }).sort(function (x, y) { return new Date(x.created_at) - new Date(y.created_at); }), older = ds.filter(isOld);
       el("fast").innerHTML = (fresh.length ? fresh.map(fastCard).join("") : '<p class="lead">Nothing waiting for you. Well done.</p>') +
         (older.length ? '<button type="button" class="quiet" id="oldToggle" style="margin-top:14px">' + (window.__showOld ? "Hide finished requests" : "View finished requests (" + older.length + ")") + '</button><div id="oldFast"' + (window.__showOld ? "" : ' class="hidden"') + '>' + older.map(fastCard).join("") + "</div>" : "");
       window.__fast = ds;
