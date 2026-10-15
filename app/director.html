@@ -514,5 +514,92 @@
   if (session()) { hide("signIn"); show("desk"); load(); }
 })();
 </script>
+<script>
+/* 15 October 2026 (the Director's request: "too big page, divide into blocks,
+   number them and say what each is for"). The page now opens on a numbered menu
+   of 8 blocks in working order, and only the chosen block is shown. */
+(function () {
+  "use strict";
+  var desk = document.getElementById("desk");
+  if (!desk) return;
+  var PLAN = [
+    ["Fast requests", "Fast requests", "New guest requests. Tick the partners to ask, then make the proposal."],
+    ["New proposal", "New proposal", "Price a booking and email the guest their payment link."],
+    ["Proposals and bookings", "Proposals and bookings", "Proposals you sent: waiting for payment, paid or withdrawn. Withdraw or refund here."],
+    ["Partners for fast requests", "Partners", "Add or edit a partner: services, rating, level, price and logo."],
+    ["Introduction requests", "Introduction requests", "Guests who asked to be introduced to a chauffeur or boat company."],
+    ["Website questions", "Website questions", "Questions visitors sent from the FAQ page."],
+    ["Your price reminders", "Price reminders", "Your own low and high selling price for each service."],
+    ["Booking rules", "Booking rules", "Days of notice families must give, and dates you are not available."]
+  ];
+  var css = document.createElement("style");
+  css.textContent =
+    "#bhhMenu{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin:0 0 18px}" +
+    "#bhhMenu button{all:unset;box-sizing:border-box;cursor:pointer;background:#fff;border:1px solid #E5DCC6;border-radius:10px;padding:12px 14px;display:flex;gap:10px;align-items:flex-start;color:#0D1B2A;font-family:inherit}" +
+    "#bhhMenu button:hover{border-color:#C9A84C}" +
+    "#bhhMenu button.on{background:#0D1B2A;color:#fff;border-color:#0D1B2A}" +
+    "#bhhMenu .n{flex:none;width:28px;height:28px;border-radius:50%;background:#C9A84C;color:#0D1B2A;font-weight:700;display:flex;align-items:center;justify-content:center;font-size:14px}" +
+    "#bhhMenu .t{font-weight:600;font-size:15px;line-height:1.25}" +
+    "#bhhMenu .c{display:inline-block;margin-left:6px;background:#B5503F;color:#fff;border-radius:999px;font-size:12px;padding:1px 7px;font-weight:700}" +
+    "#bhhMenu .c[hidden]{display:none}" +
+    ".bhh-num{display:inline-flex;width:30px;height:30px;border-radius:50%;background:#C9A84C;color:#0D1B2A;font-weight:700;align-items:center;justify-content:center;font-size:15px;margin-right:10px;vertical-align:middle;font-family:Arial,sans-serif}" +
+    ".bhh-use{margin:-4px 0 14px;padding:8px 12px;background:#FFF8E6;border-left:3px solid #C9A84C;color:#0D1B2A;font-size:14px}" +
+    ".bhh-off{display:none!important}";
+  document.head.appendChild(css);
+
+  var cards = Array.prototype.filter.call(desk.querySelectorAll(":scope > section.card"), function (s) { return s.querySelector("h2"); });
+  var blocks = [];
+  PLAN.forEach(function (row, i) {
+    var sec = cards.filter(function (s) { return s.querySelector("h2").textContent.trim() === row[0]; })[0];
+    if (!sec) return;
+    var h = sec.querySelector("h2");
+    h.insertAdjacentHTML("afterbegin", '<span class="bhh-num">' + (i + 1) + "</span>");
+    h.insertAdjacentHTML("afterend", '<div class="bhh-use">' + row[2] + "</div>");
+    blocks.push({ n: i + 1, sec: sec, label: row[1] });
+  });
+  var menu = document.createElement("nav");
+  menu.id = "bhhMenu";
+  menu.innerHTML = blocks.map(function (b) {
+    return '<button type="button" data-blk="' + b.n + '"><span class="n">' + b.n + '</span><span class="t">' + b.label + '<span class="c" hidden></span></span></button>';
+  }).join("");
+  desk.insertBefore(menu, desk.firstChild);
+  // put the blocks in working order, right after the menu
+  var anchor = menu;
+  blocks.forEach(function (b) { anchor.parentNode.insertBefore(b.sec, anchor.nextSibling); anchor = b.sec; });
+
+  function pick(n, scroll) {
+    blocks.forEach(function (b) { b.sec.classList.toggle("bhh-off", b.n !== n); });
+    Array.prototype.forEach.call(menu.querySelectorAll("button"), function (x) { x.classList.toggle("on", Number(x.getAttribute("data-blk")) === n); });
+    try { sessionStorage.setItem("bhh director block", String(n)); } catch (e) {}
+    if (scroll) window.scrollTo(0, 0);
+  }
+  menu.addEventListener("click", function (e) {
+    var b = e.target.closest("button[data-blk]");
+    if (b) pick(Number(b.getAttribute("data-blk")), true);
+  });
+  // "Make the proposal" fills block 2, so open block 2
+  document.addEventListener("click", function (e) {
+    if (e.target.closest && e.target.closest("[data-propose]")) setTimeout(function () { pick(2, true); }, 0);
+  });
+  var start = 1;
+  try { start = Number(sessionStorage.getItem("bhh director block")) || 1; } catch (e) {}
+  pick(start, false);
+
+  // red counters: requests waiting for you, and unanswered questions
+  function count() {
+    var fast = blocks.filter(function (b) { return b.n === 1; })[0];
+    var faq = blocks.filter(function (b) { return b.n === 6; })[0];
+    function set(n, v) {
+      var c = menu.querySelector('button[data-blk="' + n + '"] .c');
+      if (!c) return;
+      if (v) { c.textContent = v; c.hidden = false; } else c.hidden = true;
+    }
+    if (fast) set(1, (fast.sec.textContent.match(/Waiting for you to choose partners/g) || []).length);
+    if (faq) set(6, (faq.sec.textContent.match(/Not answered yet/gi) || []).length);
+  }
+  new MutationObserver(function () { clearTimeout(count.t); count.t = setTimeout(count, 150); }).observe(desk, { childList: true, subtree: true });
+  count();
+})();
+</script>
 </body>
 </html>
