@@ -313,7 +313,7 @@
       var FW = { open: "Waiting for a partner", accepted: "Accepted", declined: "Declined by every partner asked", cancelled: "Closed" };
       var ds = r.dispatches || [];
       window.__partners = r.partners || [];
-      el("fast").innerHTML = ds.length ? ds.map(function (d) {
+      function fastCard(d) {
         var asked = d.asked || [];
         var label = d.status === "open" && !asked.length ? "Waiting for you to choose partners" : d.overdue ? "No answer in time" : FW[d.status] || d.status;
         var pill = d.status === "accepted" ? "pill pill-paid" : d.overdue ? "pill pill-cancel" : d.status === "open" ? "pill pill-cancel_requested" : "pill";
@@ -328,7 +328,15 @@
           '<div class="small">Date: ' + esc(nice(d.day)) + (d.day_to ? " to " + esc(nice(d.day_to)) : "") + (d.party_size ? ", " + esc(d.party_size) + " people" : "") + (d.details ? "<br>" + esc(d.details) : "") +
           (d.accepted_by_name ? "<br>Accepted by " + esc(d.accepted_by_name) + (d.price_pence ? " at " + pounds(d.price_pence) : "") + (d.partner_note ? ", note: " + esc(d.partner_note) : "") : "") + "</div>" +
           '<p style="margin-top:8px"><span class="' + pill + '">' + esc(label) + "</span></p>" + acts + "</div></div>";
-      }).join("") : '<p class="lead">No fast requests yet.</p>';
+      }
+      // 15 October 2026 (the Director's request): only requests received in the
+      // last 24 hours are shown. Older ones, and any whose trip date has passed,
+      // wait behind "View older requests" so they do not distract.
+      var dayAgo = Date.now() - 86400000, todayIso = new Date().toISOString().slice(0, 10);
+      var isOld = function (d) { return new Date(d.created_at).getTime() < dayAgo || String(d.day_to || d.day || "") < todayIso; };
+      var fresh = ds.filter(function (d) { return !isOld(d); }), older = ds.filter(isOld);
+      el("fast").innerHTML = (fresh.length ? fresh.map(fastCard).join("") : '<p class="lead">No new requests in the last 24 hours.</p>') +
+        (older.length ? '<button type="button" class="quiet" id="oldToggle" style="margin-top:14px">' + (window.__showOld ? "Hide older requests" : "View older requests (" + older.length + ")") + '</button><div id="oldFast"' + (window.__showOld ? "" : ' class="hidden"') + '>' + older.map(fastCard).join("") + "</div>" : "");
       window.__fast = ds;
       var ps = r.partners || [];
       el("partners").innerHTML = ps.length ? ps.map(function (p) {
@@ -425,6 +433,7 @@
       call("d_ask", { id: b.dataset.ask, partner_ids: ids }).then(function (r) { if (!r.ok) alert(r.message); load(); });
       return;
     }
+    if (b.id === "oldToggle") { window.__showOld = !window.__showOld; el("oldFast").classList.toggle("hidden", !window.__showOld); b.textContent = window.__showOld ? "Hide older requests" : "View older requests (" + el("oldFast").querySelectorAll(".item").length + ")"; return; }
     if (b.dataset.fastclose) { if (!confirm("Close this request? Partners who have not answered will see it is no longer needed.")) return; call("d_dispatch", { id: b.dataset.fastclose, status: "cancelled" }).then(load); return; }
     if (b.dataset.propose) {
       var d = (window.__fast || []).filter(function (x) { return x.id === b.dataset.propose; })[0];
@@ -594,7 +603,9 @@
       if (!c) return;
       if (v) { c.textContent = v; c.hidden = false; } else c.hidden = true;
     }
-    if (fast) set(1, (fast.sec.textContent.match(/Waiting for you to choose partners/g) || []).length);
+    if (fast) set(1, Array.prototype.filter.call(fast.sec.querySelectorAll(".item"), function (it) {
+      return !it.closest("#oldFast") && /Waiting for you to choose partners|Make the proposal/.test(it.textContent);
+    }).length);
     if (faq) set(6, (faq.sec.textContent.match(/Not answered yet/gi) || []).length);
   }
   new MutationObserver(function () { clearTimeout(count.t); count.t = setTimeout(count, 150); }).observe(desk, { childList: true, subtree: true });
