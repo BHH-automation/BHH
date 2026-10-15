@@ -25,6 +25,15 @@
 /* 15 October 2026 (the Director's request): the grey detail lines were hard to read, so on this page they are near black. */
 .small { color: #1A1A1A; font-size: 14px; }
 .ref { color: #0D1B2A; font-weight: 700; font-size: 13px; }
+/* 15 October 2026 (the Director's request): fast requests shown as boxes side by side, one box per request. */
+main.wide { max-width: 1320px; }
+#fast, #oldFast { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; align-items: start; }
+#oldFast.hidden { display: none; }
+#fast > .item, #oldFast > .item { display: block; border: 1.5px solid #D9C89A; border-radius: 10px; padding: 14px 16px; background: #fff; margin: 0; box-shadow: 0 1px 3px rgba(13,27,42,0.06); }
+#fast > .item:hover { border-color: #C9A84C; }
+#oldFast > .item { opacity: 0.75; }
+#fast > #oldToggle, #fast > #oldFast, #fast > p.lead { grid-column: 1 / -1; }
+#fast .pcard { margin-top: 6px; }
 .rate-hint { grid-column: 1 / -1; background: #FFF8E6; border: 1px solid #C9A84C; border-radius: 8px; padding: 8px 12px; font-size: 14px; line-height: 1.5; color: #0D1B2A; }
 .rate-warn { color: #B5503F; font-weight: bold; margin-top: 4px; }
 .rate-table input { width: 100%; margin: 0; }
