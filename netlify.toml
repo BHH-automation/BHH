@@ -11,6 +11,14 @@
 [context.production]
   environment = { CONTEXT = "production" }
 
+# 17 October 2026: an old leftover file in the _to_delete folder is still in the
+# repository, so it is hidden from the public site here.
+[[redirects]]
+  from = "/_to_delete/*"
+  to = "/"
+  status = 404
+  force = true
+
 # RECRUITMENT PAUSED 1 October 2026, at his request, until the website is finished.
 # Every Join and Become address goes to the home page for now (302 = temporary).
 # To reopen recruitment, delete everything from this line down to "END RECRUITMENT PAUSED".
