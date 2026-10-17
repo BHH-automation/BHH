@@ -9,3 +9,6 @@ deploy site backup 18 September 2026.bat
 Thumbs.db
 desktop.ini
 supabase/.temp/
+
+# 17 October 2026: old copies kept out of the main folder so only one deploy file shows.
+Old backups/
